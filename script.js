@@ -115,6 +115,244 @@
     ];
 
     /* ============================================================
+       1.5 DATOS — Lecciones didácticas por nivel
+       Cada lección define: objetivos, herramientas, caso práctico,
+       quiz y misión real. Renderizado en .lesson-intro / .lesson-outro
+       de cada sección de nivel.
+       ============================================================ */
+    const LESSONS_DATA = {
+        1: {
+            title: 'Tu primer día con Claude Code',
+            objectives: [
+                'Instalar Claude Code en tu sistema y autenticarte con OAuth.',
+                'Iniciar una sesión en un proyecto real y entender qué carga automáticamente.',
+                'Usar los slash commands esenciales (/help, /init, /clear, /model) con soltura.',
+                'Mencionar archivos con @ para darle contexto explícito sin pasar contenido innecesario.',
+                'Crear y mantener un CLAUDE.md como tu "system prompt" persistente del proyecto.',
+            ],
+            tools: ['npm', 'claude', '/help', '/init', '/model', '@archivo', 'CLAUDE.md', '/clear'],
+            subtopics: [
+                { name: 'Instalación multiplataforma', desc: 'npm vs instalador rápido. Node 18+.' },
+                { name: 'Flujo OAuth', desc: 'Login automático, seguro, sin API keys en archivos.' },
+                { name: 'CLAUDE.md: tu system prompt', desc: 'Estructura: stack, convenciones, comandos útiles, reglas de código.' },
+                { name: 'Mención de archivos (@)', desc: 'Técnica para inyectar contexto sin sobrecargar en cada prompt.' },
+            ],
+            caseStudy: {
+                title: '🛠️ Caso práctico: dale vida a un repo nuevo',
+                context: 'Acabas de clonar un proyecto Next.js que no conoces. Quieres entender qué hace y dejar configurado un CLAUDE.md para que las próximas sesiones sean rápidas.',
+                steps: [
+                    { cmd: 'cd mi-repo && claude', what: 'Inicia sesión en el directorio del proyecto.' },
+                    { cmd: '/init', what: 'Claude analiza el repo y propone un CLAUDE.md inicial.' },
+                    { cmd: 'Revisa @package.json y @README.md y completa el CLAUDE.md con el stack y los scripts más usados.', what: 'Le das contexto explícito mencionando archivos clave.' },
+                    { cmd: '/model claude-sonnet-4-6', what: 'Cambias a Sonnet para tareas rápidas (ahorra tokens).' },
+                ],
+                expected: 'Un archivo CLAUDE.md en la raíz con stack, scripts npm y convenciones detectadas.',
+            },
+            quiz: [
+                {
+                    q: '¿Qué hace el comando /init?',
+                    options: [
+                        'Reinicia la sesión actual borrando el historial.',
+                        'Genera un CLAUDE.md analizando el proyecto.',
+                        'Instala Claude Code globalmente.',
+                    ],
+                    correct: 1,
+                    explain: '/init analiza el repo (package.json, estructura, README) y crea un CLAUDE.md base. Para borrar historial usa /clear.',
+                },
+                {
+                    q: '¿Cuál es la forma recomendada de autenticar?',
+                    options: [
+                        'Pegar la API key en .claude/settings.json.',
+                        'OAuth con `claude auth login`.',
+                        'Pasar la key en cada comando con --key.',
+                    ],
+                    correct: 1,
+                    explain: 'OAuth es más seguro y no deja secretos en archivos versionados.',
+                },
+                {
+                    q: 'Si quiero que Claude lea un archivo específico, ¿cómo se lo indico en mi prompt?',
+                    options: [
+                        'Pego el contenido completo del archivo.',
+                        'Lo menciono con @ruta/al/archivo.',
+                        'Uso /read archivo.',
+                    ],
+                    correct: 1,
+                    explain: 'La sintaxis @ es la nativa para referenciar archivos sin pegarlos.',
+                },
+            ],
+            mission: {
+                title: '🎯 Misión final del Nivel 1',
+                goal: 'Generar un CLAUDE.md completo para uno de tus propios repositorios.',
+                steps: [
+                    'Abre Claude Code en tu proyecto: `cd tu-repo && claude`',
+                    'Ejecuta `/init` y revisa el archivo generado.',
+                    'Mejóralo: añade arquitectura, convenciones de código y comandos npm útiles.',
+                    'Verifica con `/doctor` que todo está bien configurado.',
+                ],
+                success: 'Tu próxima sesión cargará automáticamente el CLAUDE.md y Claude entenderá tu proyecto sin que tengas que explicárselo.',
+                troubleshooting: [
+                    '**`/init` no encuentra nada útil** → asegúrate de tener un README.md o package.json en la raíz.',
+                    '**`claude` no abre** → ejecuta `claude --version` para verificar instalación, o `claude auth login` si te falta sesión.',
+                ],
+            },
+        },
+
+        2: {
+            title: 'Trabajando con proyectos grandes',
+            objectives: [
+                'Vigilar tu ventana de contexto con /context y /usage para evitar sorpresas.',
+                'Compactar el historial sin perder lo importante con /compact y instrucciones precisas.',
+                'Conectar servidores MCP (filesystem, GitHub, Postgres) y consumir sus herramientas automáticamente.',
+                'Persistir conocimiento del proyecto entre sesiones con /memory.',
+                'Configurar .mcp.json declarativo para reproducibilidad en equipo.',
+            ],
+            tools: ['/context', '/compact', '/usage', '/mcp', 'claude mcp add', '/memory', '.mcp.json'],
+            subtopics: [
+                { name: 'Gestión de contexto', desc: '/context muestra desglose. /compact preserva lo crítico.' },
+                { name: 'MCP stdio vs SSE', desc: 'Local rápido vs remoto escalable. Manejo de errores.' },
+                { name: 'Memoria entre sesiones', desc: '/memory = persistencia de decisiones arquitectónicas.' },
+                { name: '.mcp.json declarativo', desc: 'Versionea en git. Variables de entorno para secretos.' },
+            ],
+            caseStudy: {
+                title: '🛠️ Caso práctico: refactor largo sin morir en el contexto',
+                context: 'Llevas dos horas refactorizando un módulo grande, has leído 30 archivos y el contexto está al 75%. Necesitas seguir trabajando sin perder el plan.',
+                steps: [
+                    { cmd: '/context', what: 'Mides cuánto contexto consume cada parte (sistema, archivos, conversación).' },
+                    { cmd: '/compact mantén el plan de refactor y los 4 archivos ya migrados; descarta logs y errores resueltos', what: 'Compactas con instrucciones explícitas — la calidad depende de qué le pides preservar.' },
+                    { cmd: '/memory add "Refactor UserService: separamos en Repository + Service + Validator. Patrón a seguir en módulos similares."', what: 'Guardas la decisión arquitectónica para futuras sesiones.' },
+                    { cmd: 'claude mcp add filesystem -- npx -y @modelcontextprotocol/server-filesystem /ruta/proyecto', what: 'Conectas un MCP que le da a Claude acceso estructurado a tu sistema de archivos.' },
+                ],
+                expected: 'Contexto bajado de 75% → ~20%, plan preservado, decisión guardada en memoria, MCP listo para la siguiente fase.',
+            },
+            quiz: [
+                {
+                    q: '¿Cuál es la diferencia entre /compact y /memory?',
+                    options: [
+                        'Son sinónimos, hacen lo mismo.',
+                        '/compact resume la sesión actual; /memory persiste entre sesiones.',
+                        '/memory borra contexto y /compact lo añade.',
+                    ],
+                    correct: 1,
+                    explain: '/compact es para gestionar la ventana actual; /memory escribe en almacenamiento que sobrevive a /clear y a sesiones nuevas.',
+                },
+                {
+                    q: 'Cuando tu contexto pasa el 70%, lo más profesional es:',
+                    options: [
+                        'Cerrar la sesión y empezar de cero.',
+                        'Compactar con instrucciones explícitas sobre qué preservar.',
+                        'Ignorar la advertencia y seguir.',
+                    ],
+                    correct: 1,
+                    explain: 'Compactar guiado preserva tu trabajo. Cerrar pierde todo el progreso conversacional.',
+                },
+                {
+                    q: '¿Dónde debe vivir el token de un servidor MCP?',
+                    options: [
+                        'En `.mcp.json` versionado en git.',
+                        'En una variable de entorno referenciada con ${VAR}.',
+                        'Hardcodeado en el código del servidor.',
+                    ],
+                    correct: 1,
+                    explain: 'Nunca commitees secretos. `.mcp.json` referencia variables que viven en tu shell.',
+                },
+            ],
+            mission: {
+                title: '🎯 Misión final del Nivel 2',
+                goal: 'Configurar un .mcp.json funcional con al menos un servidor y resolver una tarea con él.',
+                steps: [
+                    'Crea `.mcp.json` en tu proyecto con un servidor (filesystem o GitHub).',
+                    'Reinicia Claude y verifica con `/mcp` que aparezca conectado.',
+                    'Pide algo que requiera ese servidor (ej: "lista mis 5 últimos commits" si es GitHub).',
+                    'Cuando termines, ejecuta `/curso-checkpoint` para guardar progreso.',
+                ],
+                success: 'Claude usa la herramienta MCP automáticamente y devuelve datos reales del servicio.',
+                troubleshooting: [
+                    '**MCP aparece como "failed"** → revisa que el comando del servidor exista (`npx -y @modelcontextprotocol/server-x`) y que las variables de entorno estén exportadas.',
+                    '**No usa el MCP aunque está conectado** → menciona explícitamente la herramienta o el servicio en el prompt ("usa el MCP de GitHub para...").',
+                ],
+            },
+        },
+
+        3: {
+            title: 'Construyendo tu propio Claude',
+            objectives: [
+                'Dominar la anatomía de un Skill: frontmatter (metadatos) + cuerpo (instrucción).',
+                'Crear Skills con argumentos dinámicos ($1, $2, $ARGUMENTS) para reutilización.',
+                'Inyectar comandos shell (!`git diff`) directamente en Skills con allowed-tools restringidos.',
+                'Configurar hooks que se disparen automáticamente tras eventos (PostToolUse, PreToolUse).',
+                'Orquestar sub-agentes en paralelo para tareas complejas.',
+            ],
+            tools: ['SKILL.md', '$ARGUMENTS', '!`cmd`', 'allowed-tools', 'hooks', 'Task', 'sub-agents', '/fork'],
+            subtopics: [
+                { name: 'Anatomía Skill + frontmatter', desc: 'name, description (auto-trigger), allowed-tools (mínimo privilegio).' },
+                { name: 'Argumentos dinámicos', desc: '$1, $2, $ARGUMENTS para skills parametrizadas.' },
+                { name: 'Shell injection segura', desc: '!`comando` con allowed-tools restrictivas. Prevenir inyección.' },
+                { name: 'Hooks: automación', desc: 'PostToolUse para formatear código tras Write. Pre/Post patterns.' },
+                { name: 'Sub-agentes en paralelo', desc: 'Task para orquestar agentes independientes. Escalabilidad.' },
+            ],
+            caseStudy: {
+                title: '🛠️ Caso práctico: tu propia /code-review',
+                context: 'Quieres que cualquier miembro del equipo pueda pedir una revisión exhaustiva del último PR con un solo comando.',
+                steps: [
+                    { cmd: 'mkdir -p .claude/skills/code-review', what: 'Creas el directorio del Skill dentro del proyecto (versionable en git).' },
+                    { cmd: 'Edita .claude/skills/code-review/SKILL.md con frontmatter (name, description, allowed-tools) y un cuerpo con el checklist.', what: 'El frontmatter le dice a Claude cuándo dispararlo; el cuerpo es la instrucción.' },
+                    { cmd: '/code-review', what: 'Invocas tu Skill. Claude ejecuta git diff, analiza y devuelve feedback.' },
+                    { cmd: 'git add .claude/skills/code-review && git commit -m "feat: skill code-review"', what: 'Lo compartes con el equipo — todos lo tienen al hacer pull.' },
+                ],
+                expected: 'Cualquiera del equipo escribe `/code-review` y obtiene revisión consistente del último commit.',
+            },
+            quiz: [
+                {
+                    q: '¿Qué hace el campo `allowed-tools` en el frontmatter de un Skill?',
+                    options: [
+                        'Define qué modelo se usa.',
+                        'Restringe qué herramientas puede usar el Skill (principio de mínimo privilegio).',
+                        'Lista los argumentos esperados.',
+                    ],
+                    correct: 1,
+                    explain: 'allowed-tools limita el blast radius del Skill — un Skill que solo lee no puede sobrescribir archivos por error.',
+                },
+                {
+                    q: 'Para inyectar argumentos en un Skill se usa:',
+                    options: [
+                        '{{arg1}}',
+                        '$1, $2, $ARGUMENTS',
+                        '%ARG1%',
+                    ],
+                    correct: 1,
+                    explain: 'Sintaxis estilo shell: $1 = primer arg, $ARGUMENTS = todos juntos.',
+                },
+                {
+                    q: '¿Cuándo dispara Claude un Skill automáticamente?',
+                    options: [
+                        'Nunca — siempre requiere /nombre.',
+                        'Cuando el prompt del usuario coincide con su `description`.',
+                        'En cada turno de conversación.',
+                    ],
+                    correct: 1,
+                    explain: 'Por eso la `description` del Skill es crítica: define cuándo se autoinvoca.',
+                },
+            ],
+            mission: {
+                title: '🎯 Misión final del Nivel 3',
+                goal: 'Publicar un Skill funcional `/code-review` en uno de tus repos.',
+                steps: [
+                    'Crea `.claude/skills/code-review/SKILL.md` con frontmatter completo.',
+                    'En el cuerpo, usa `!`git diff HEAD~1`` para inyectar el diff real.',
+                    'Define un checklist: calidad, seguridad, performance, tests.',
+                    'Pruébalo con `/code-review` después de un commit y commitea el Skill.',
+                    'Ejecuta `/curso-checkpoint` para cerrar el curso.',
+                ],
+                success: 'El Skill aparece en `/help`, se ejecuta solo, y devuelve feedback estructurado.',
+                troubleshooting: [
+                    '**El Skill no aparece** → verifica que el directorio sea exactamente `.claude/skills/<name>/SKILL.md` y que tenga frontmatter válido.',
+                    '**Permission denied al ejecutar git** → añade `Bash(git diff:*)` y `Bash(git log:*)` a `allowed-tools`.',
+                ],
+            },
+        },
+    };
+
+    /* ============================================================
        2. ESCENARIOS — Simulador de terminal
        Cada escenario es una secuencia de líneas. type:
          'prompt'  → línea con $ (shell)
@@ -689,6 +927,157 @@
     }
 
     /* ============================================================
+       8.5 COMPONENTES DIDÁCTICOS
+       ============================================================ */
+    function renderLesson(level) {
+        const lesson = LESSONS_DATA[level];
+        const introDiv = document.querySelector(`.lesson-intro[data-lesson="${level}"]`);
+        const outroDiv = document.querySelector(`.lesson-outro[data-lesson="${level}"]`);
+        if (!introDiv || !outroDiv) return;
+
+        // Intro: objetivos + tools + subtopics
+        const toolsHtml = lesson.tools.map(t => `<span class="tool-chip">${escapeHtml(t)}</span>`).join('');
+        const subtopicsHtml = lesson.subtopics ? `
+            <div class="lesson-section">
+                <h3>🎯 Temas principales</h3>
+                <div class="subtopics-grid">
+                    ${lesson.subtopics.map(st => `
+                        <div class="subtopic-card">
+                            <strong>${escapeHtml(st.name)}</strong>
+                            <p>${escapeHtml(st.desc)}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        ` : '';
+
+        introDiv.innerHTML = `
+            <div class="lesson-section">
+                <h3>📍 Objetivos del nivel</h3>
+                <ul class="lesson-objectives">
+                    ${lesson.objectives.map(o => `<li>${escapeHtml(o)}</li>`).join('')}
+                </ul>
+            </div>
+            <div class="lesson-section">
+                <h3>🧰 Herramientas que usarás</h3>
+                <div class="tools-grid">${toolsHtml}</div>
+            </div>
+            ${subtopicsHtml}
+        `;
+
+        // Outro: case + quiz + mission + checkpoint
+        const caseHtml = `
+            <div class="lesson-section">
+                <h3>${lesson.caseStudy.title}</h3>
+                <p><strong>Contexto:</strong> ${escapeHtml(lesson.caseStudy.context)}</p>
+                <div class="case-steps">
+                    ${lesson.caseStudy.steps.map((s, i) => `
+                        <div class="case-step">
+                            <strong>Paso ${i + 1}:</strong> <code>${escapeHtml(s.cmd)}</code>
+                            <p>${escapeHtml(s.what)}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                <p><strong>Resultado esperado:</strong> ${escapeHtml(lesson.caseStudy.expected)}</p>
+            </div>
+        `;
+
+        const quizHtml = `
+            <div class="lesson-section">
+                <h3>✅ Quiz de refuerzo</h3>
+                <div class="quiz-container" data-level="${level}">
+                    ${lesson.quiz.map((q, i) => `
+                        <div class="quiz-card" data-q="${i}">
+                            <p class="quiz-question">${escapeHtml(q.q)}</p>
+                            <div class="quiz-options">
+                                ${q.options.map((opt, j) => `
+                                    <label class="quiz-option">
+                                        <input type="radio" name="q${i}" value="${j}">
+                                        ${escapeHtml(opt)}
+                                    </label>
+                                `).join('')}
+                            </div>
+                            <div class="quiz-feedback" hidden></div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        const missionHtml = `
+            <div class="lesson-section">
+                <h3>${lesson.mission.title}</h3>
+                <p><strong>Objetivo:</strong> ${escapeHtml(lesson.mission.goal)}</p>
+                <ol class="mission-steps">
+                    ${lesson.mission.steps.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+                </ol>
+                <div class="info-banner info-banner--tip">
+                    <strong>✨ Al completar:</strong> ${escapeHtml(lesson.mission.success)}
+                </div>
+                <details class="mission-troubleshooting">
+                    <summary>Troubleshooting</summary>
+                    <ul>
+                        ${lesson.mission.troubleshooting.map(t => `<li>${t}</li>`).join('')}
+                    </ul>
+                </details>
+            </div>
+        `;
+
+        const checkpointHtml = `
+            <div class="lesson-section checkpoint-section">
+                <button class="checkpoint-btn" data-level="${level}">🏁 Marcar Nivel ${level} completado</button>
+            </div>
+        `;
+
+        outroDiv.innerHTML = caseHtml + quizHtml + missionHtml + checkpointHtml;
+    }
+
+    function initQuiz() {
+        document.addEventListener('change', (e) => {
+            if (!e.target.matches('input[type="radio"]')) return;
+            const card = e.target.closest('.quiz-card');
+            const level = parseInt(e.target.name.replace('q', ''));
+            const qIdx = parseInt(card.dataset.q);
+            const lesson = LESSONS_DATA[parseInt(card.closest('.quiz-container').dataset.level)];
+            const q = lesson.quiz[qIdx];
+            const chosen = parseInt(e.target.value);
+            const feedback = card.querySelector('.quiz-feedback');
+
+            if (chosen === q.correct) {
+                feedback.className = 'quiz-feedback quiz-feedback--ok';
+                feedback.textContent = '✓ Correcto. ' + q.explain;
+            } else {
+                feedback.className = 'quiz-feedback quiz-feedback--ko';
+                feedback.textContent = '✗ Incorrecto. ' + q.explain;
+            }
+            feedback.hidden = false;
+        });
+    }
+
+    function initCheckpoints() {
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.checkpoint-btn');
+            if (!btn) return;
+            const level = parseInt(btn.dataset.level);
+            localStorage.setItem(`cc-level-${level}-completed`, new Date().toISOString());
+            btn.disabled = true;
+            btn.textContent = `✓ Nivel ${level} completado (${new Date().toLocaleDateString()})`;
+            updateLevelBadges();
+        });
+    }
+
+    function updateLevelBadges() {
+        for (let i = 1; i <= 3; i++) {
+            const badge = document.querySelector(`.nav-badge.nivel-${i}`);
+            if (!badge) continue;
+            if (localStorage.getItem(`cc-level-${i}-completed`)) {
+                badge.textContent = '✓';
+                badge.style.opacity = '0.7';
+            }
+        }
+    }
+
+    /* ============================================================
        9. UTILIDADES
        ============================================================ */
     function sleep(ms) {
@@ -725,6 +1114,11 @@
         renderCommandsTable('commands-table-nivel-2', 2);
         renderCommandsTable('commands-table-nivel-3', 3);
 
+        // 1.5) Lecciones didácticas
+        renderLesson(1);
+        renderLesson(2);
+        renderLesson(3);
+
         // 2) Navegación
         setupNavigation();
 
@@ -739,6 +1133,11 @@
 
         // 5) Copiado
         setupCopyButtons();
+
+        // 5.5) Didáctico: quiz, checkpoints
+        initQuiz();
+        initCheckpoints();
+        updateLevelBadges();
 
         // 6) Terminal
         setupTerminal();

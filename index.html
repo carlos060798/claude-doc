@@ -51,6 +51,8 @@
 
                 <p class="nav-group-title">Producción</p>
                 <ul class="nav-list">
+                    <li><a href="#memoria" class="nav-link" data-section="memoria">
+                        <span class="nav-icon">💾</span> Tu Progreso</a></li>
                     <li><a href="#seguridad" class="nav-link" data-section="seguridad">
                         <span class="nav-icon">⛨</span> Seguridad & Hardening</a></li>
                     <li><a href="#casos-uso" class="nav-link" data-section="casos-uso">
@@ -173,6 +175,8 @@
                     </p>
                 </div>
 
+                <div class="lesson-intro" data-lesson="1"></div>
+
                 <h3 class="block-title">1.1 — Instalación</h3>
                 <p>Claude Code requiere <strong>Node.js 18+</strong> (recomendado 22 LTS). Hay dos vías oficiales:</p>
 
@@ -252,6 +256,8 @@ claude -p "Hola, ¿funcionas?"</code></pre>
                     <code>CLAUDE.md</code> en la raíz con el stack, convenciones de código y
                     estructura de carpetas. Claude lo lee automáticamente al iniciar cada sesión.
                 </div>
+
+                <div class="lesson-outro" data-lesson="1"></div>
             </section>
 
             <!-- ====== SECCIÓN: NIVEL 2 ====== -->
@@ -264,6 +270,8 @@ claude -p "Hola, ¿funcionas?"</code></pre>
                         aprende a gestionar tu ventana de contexto como un profesional.
                     </p>
                 </div>
+
+                <div class="lesson-intro" data-lesson="2"></div>
 
                 <h3 class="block-title">2.1 — Model Context Protocol (MCP)</h3>
                 <p>
@@ -392,6 +400,8 @@ Claude: Según tu memoria, usas PostgreSQL en AWS RDS con Redis de cache.
                     cuando una salida MCP supera 10.000 tokens. Configura
                     <code>MAX_MCP_OUTPUT_TOKENS</code> (por defecto 25.000) según tus necesidades.
                 </div>
+
+                <div class="lesson-outro" data-lesson="2"></div>
             </section>
 
             <!-- ====== SECCIÓN: NIVEL 3 ====== -->
@@ -405,6 +415,8 @@ Claude: Según tu memoria, usas PostgreSQL en AWS RDS con Redis de cache.
                         (<code>/nombre-skill</code>) o de forma autónoma cuando detecta el contexto.
                     </p>
                 </div>
+
+                <div class="lesson-intro" data-lesson="3"></div>
 
                 <h3 class="block-title">3.0 — Comandos disponibles en Nivel 3</h3>
                 <p>
@@ -557,6 +569,57 @@ Luego revisa cambios y haz commit.
     ]
   }
 }</code></pre>
+                </div>
+
+                <div class="lesson-outro" data-lesson="3"></div>
+            </section>
+
+            <!-- ====== SECCIÓN: MEMORIA ====== -->
+            <section class="content-section" data-section="memoria">
+                <div class="section-header">
+                    <span class="breadcrumb">Producción / Tu Progreso</span>
+                    <h2>💾 Sistema de Memoria Persistente</h2>
+                    <p class="section-lead">
+                        Cuando el contexto se agota o termina la sesión, guarda tu avance
+                        en el sistema de memoria persistente. Retoma exactamente dónde te quedaste.
+                    </p>
+                </div>
+
+                <h3 class="block-title">¿Por qué existe?</h3>
+                <p>
+                    La ventana de contexto de Claude Code es valiosa. Si trabajas en un curso,
+                    investigación o proyecto largo, el historial conversacional eventualmente
+                    consume espacio. El sistema de memoria te permite:
+                </p>
+                <ul class="bullet-list">
+                    <li><strong>Guardar checkpoints</strong> — nivel actual, capítulo, misión, notas.</li>
+                    <li><strong>Retomar automáticamente</strong> — Claude lee tu snapshot y continúa.</li>
+                    <li><strong>Preservar decisiones</strong> — arquitectura, patrones, aprrendizajes.</li>
+                </ul>
+
+                <h3 class="block-title">Los dos comandos custom</h3>
+                <p>Están en <code>~/.claude/commands/</code> y están listos para usar:</p>
+
+                <div class="code-block" data-lang="bash" data-title="/curso-checkpoint — guardar avance">
+                    <pre><code>/curso-checkpoint
+
+Ejecuta este comando antes de que se acabe el contexto.
+Lee la conversación actual, deduce tu nivel, capítulo y pendientes,
+y los escribe en ~/.claude/curso-claude-code/progreso.md.</code></pre>
+                </div>
+
+                <div class="code-block" data-lang="bash" data-title="/curso-retomar — continuar desde checkpoint">
+                    <pre><code>/curso-retomar
+
+Lee ~/.claude/curso-claude-code/progreso.md y resume dónde te quedaste.
+Luego pregunta si continúas desde ahí o cambias de tema.</code></pre>
+                </div>
+
+                <h3 class="block-title">Flujo recomendado</h3>
+                <div class="info-banner">
+                    <strong>Sesión 1:</strong> Trabajas en el curso. Antes de irte: <code>/curso-checkpoint</code>
+                    <br><strong>Sesión 2:</strong> Dices "sigamos con el curso". Claude ejecuta <code>/curso-retomar</code>.
+                    <br><strong>Resultado:</strong> Contexto limpio, sabes dónde estabas, continúas sin perder el hilo.
                 </div>
             </section>
 
