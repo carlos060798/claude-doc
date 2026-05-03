@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía interactiva para dominar Claude Code: desde la instalación hasta la creación de Skills y MCP avanzados.">
+    <title>Claude Code Mastery — Guía Interactiva en Español</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- =========================================================
+         ESTRUCTURA: Layout tipo "Dashboard" con sidebar fijo + main
+         ESCALABILIDAD: Para añadir nuevas secciones, basta con
+         agregar un <li> al sidebar y una <section> al main con
+         el mismo data-section. El JS las enlaza automáticamente.
+         ========================================================= -->
+
+    <div class="app-shell">
+
+        <!-- ============== SIDEBAR DE NAVEGACIÓN ============== -->
+        <aside class="sidebar" aria-label="Navegación principal">
+            <div class="brand">
+                <div class="brand-logo" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 6h16M4 12h10M4 18h16"/>
+                        <circle cx="20" cy="12" r="2" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="brand-title">Claude Code</h1>
+                    <span class="brand-subtitle">Mastery Guide</span>
+                </div>
+            </div>
+
+            <nav>
+                <p class="nav-group-title">Inicio</p>
+                <ul class="nav-list">
+                    <li><a href="#dashboard" class="nav-link active" data-section="dashboard">
+                        <span class="nav-icon">▣</span> Dashboard</a></li>
+                </ul>
+
+                <p class="nav-group-title">Niveles de Aprendizaje</p>
+                <ul class="nav-list">
+                    <li><a href="#nivel-1" class="nav-link" data-section="nivel-1">
+                        <span class="nav-badge nivel-1">1</span> Fundamentos</a></li>
+                    <li><a href="#nivel-2" class="nav-link" data-section="nivel-2">
+                        <span class="nav-badge nivel-2">2</span> Avanzado (MCP)</a></li>
+                    <li><a href="#nivel-3" class="nav-link" data-section="nivel-3">
+                        <span class="nav-badge nivel-3">3</span> Experto (Skills)</a></li>
+                </ul>
+
+                <p class="nav-group-title">Producción</p>
+                <ul class="nav-list">
+                    <li><a href="#seguridad" class="nav-link" data-section="seguridad">
+                        <span class="nav-icon">⛨</span> Seguridad & Hardening</a></li>
+                    <li><a href="#casos-uso" class="nav-link" data-section="casos-uso">
+                        <span class="nav-icon">⚙</span> Casos de Uso</a></li>
+                    <li><a href="#terminal" class="nav-link" data-section="terminal">
+                        <span class="nav-icon">▶</span> Simulador Terminal</a></li>
+                    <li><a href="#recursos" class="nav-link" data-section="recursos">
+                        <span class="nav-icon">↗</span> Recursos Externos</a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                <span class="status-text">Documentación oficial · v2.x</span>
+            </div>
+        </aside>
+
+        <!-- ============== ÁREA PRINCIPAL ============== -->
+        <main class="main-content">
+
+            <!-- Topbar con buscador global -->
+            <header class="topbar">
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle sidebar" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="search-wrapper">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                    <input
+                        type="search"
+                        id="command-search"
+                        class="search-input"
+                        placeholder="Buscar comandos en tiempo real... ej: /compact, mcp, skills"
+                        autocomplete="off"
+                        aria-label="Buscador de comandos">
+                    <kbd class="search-shortcut">Ctrl + K</kbd>
+                </div>
+                <div class="topbar-actions">
+                    <span class="user-pill" title="Modo activo">
+                        <span class="status-dot online"></span> Modo Senior
+                    </span>
+                </div>
+            </header>
+
+            <!-- Resultados de búsqueda (overlay) -->
+            <div id="search-results" class="search-results" hidden></div>
+
+            <!-- ====== SECCIÓN: DASHBOARD ====== -->
+            <section class="content-section active" data-section="dashboard">
+                <div class="section-header">
+                    <span class="breadcrumb">Inicio / Dashboard</span>
+                    <h2>Bienvenido a la Guía de Claude Code</h2>
+                    <p class="section-lead">
+                        Domina la herramienta agéntica de Anthropic desde principiante hasta experto.
+                        Esta guía está estructurada en tres niveles, con simulador de terminal, buscador
+                        de comandos en tiempo real y casos de uso reales basados en la documentación oficial.
+                    </p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Comandos cubiertos</span>
+                        <span class="stat-value" id="stat-commands">—</span>
+                        <span class="stat-trend">Built-in + Custom</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Niveles</span>
+                        <span class="stat-value">3</span>
+                        <span class="stat-trend">Fundamentos → Experto</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Casos prácticos</span>
+                        <span class="stat-value">6+</span>
+                        <span class="stat-trend">Refactor, Review, MCP</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">MCP Transports</span>
+                        <span class="stat-value">3</span>
+                        <span class="stat-trend">stdio · SSE · HTTP</span>
+                    </div>
+                </div>
+
+                <div class="card-grid">
+                    <a href="#nivel-1" class="path-card path-card--1" data-jump="nivel-1">
+                        <span class="path-level">Nivel 1</span>
+                        <h3>Fundamentos</h3>
+                        <p>Instalación con npm, comandos básicos, navegación y primeros prompts.</p>
+                        <span class="path-arrow">→</span>
+                    </a>
+                    <a href="#nivel-2" class="path-card path-card--2" data-jump="nivel-2">
+                        <span class="path-level">Nivel 2</span>
+                        <h3>Avanzado: MCP</h3>
+                        <p>Model Context Protocol, gestión de tokens y compactación de contexto.</p>
+                        <span class="path-arrow">→</span>
+                    </a>
+                    <a href="#nivel-3" class="path-card path-card--3" data-jump="nivel-3">
+                        <span class="path-level">Nivel 3</span>
+                        <h3>Experto: Skills</h3>
+                        <p>Crea Skills personalizadas, automatiza flujos y orquesta sub-agentes.</p>
+                        <span class="path-arrow">→</span>
+                    </a>
+                </div>
+
+                <div class="info-banner">
+                    <strong>💡 Tip de senior:</strong> Lee el archivo <code>CLAUDE.md</code> de cada
+                    proyecto antes de iniciar la sesión. Es el equivalente a un <em>system prompt</em>
+                    persistente y el primer punto de configuración profesional.
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: NIVEL 1 ====== -->
+            <section class="content-section" data-section="nivel-1">
+                <div class="section-header">
+                    <span class="breadcrumb">Niveles / Nivel 1</span>
+                    <h2><span class="level-tag level-tag--1">Nivel 1</span> Fundamentos</h2>
+                    <p class="section-lead">
+                        Tu primera sesión productiva con Claude Code: instalar, autenticar y conocer
+                        los comandos esenciales que usarás a diario.
+                    </p>
+                </div>
+
+                <h3 class="block-title">1.1 — Instalación</h3>
+                <p>Claude Code requiere <strong>Node.js 18+</strong> (recomendado 22 LTS). Hay dos vías oficiales:</p>
+
+                <div class="code-block" data-lang="bash" data-title="Instalación vía npm (multiplataforma)">
+                    <pre><code># Instalación global con npm
+npm install -g @anthropic-ai/claude-code
+
+# Verificar la instalación
+claude --version
+
+# Iniciar la primera sesión en tu proyecto
+cd mi-proyecto/
+claude</code></pre>
+                </div>
+
+                <div class="code-block" data-lang="bash" data-title="Instalador rápido (alternativa oficial)">
+                    <pre><code># macOS, Linux, WSL
+curl -fsSL https://claude.ai/install.sh | bash
+
+# Windows PowerShell
+irm https://claude.ai/install.ps1 | iex</code></pre>
+                </div>
+
+                <h3 class="block-title">1.2 — Autenticación</h3>
+                <p>
+                    Antes de tu primera sesión, debes autenticar con Anthropic. Claude Code soporta
+                    dos modos: <strong>OAuth</strong> (recomendado) o <strong>API Key manual</strong>.
+                </p>
+
+                <div class="code-block" data-lang="bash" data-title="Autenticación vía OAuth (recomendado)">
+                    <pre><code># Abre tu navegador automáticamente para login
+claude auth login
+
+# Tras autenticar, verifica que estés logueado
+claude --version
+# Salida: claude-code 2.1.x | Authenticated as: tu@email.com</code></pre>
+                </div>
+
+                <div class="code-block" data-lang="bash" data-title="Autenticación con API Key (alternativa)">
+                    <pre><code># Obtén tu API Key en https://console.anthropic.com
+# Luego exporta la variable de entorno
+export ANTHROPIC_API_KEY="sk-ant-***tu-clave-secreta***"
+
+# Verifica que funciona
+claude -p "Hola, ¿funcionas?"</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--warn">
+                    <strong>🔐 Seguridad:</strong> Nunca escribas tu API Key en archivos versionados
+                    (git) o .claude/settings.json. Usa variables de entorno o la autenticación OAuth.
+                </div>
+
+                <h3 class="block-title">1.3 — Comandos esenciales (slash commands)</h3>
+                <p>
+                    Una vez dentro de Claude Code, los comandos comienzan con <code>/</code>.
+                    Escribe <code>/</code> para ver la lista completa con autocompletado.
+                </p>
+
+                <div class="commands-table-wrapper" id="commands-table-nivel-1">
+                    <!-- Generada dinámicamente por JS desde COMMANDS_DATA -->
+                </div>
+
+                <h3 class="block-title">1.4 — Navegación de archivos con <code>@</code></h3>
+                <p>
+                    Claude Code permite mencionar archivos y directorios directamente con el carácter
+                    <code>@</code> dentro de un prompt — similar a un IDE moderno.
+                </p>
+
+                <div class="code-block" data-lang="text" data-title="Ejemplo de navegación contextual">
+                    <pre><code>> Lee @src/auth/login.ts y compáralo con @src/auth/register.ts.
+  Identifica duplicación lógica y propón una refactorización
+  a un módulo @src/auth/shared/validators.ts</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--tip">
+                    <strong>📌 Buena práctica:</strong> Para proyectos grandes, crea un
+                    <code>CLAUDE.md</code> en la raíz con el stack, convenciones de código y
+                    estructura de carpetas. Claude lo lee automáticamente al iniciar cada sesión.
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: NIVEL 2 ====== -->
+            <section class="content-section" data-section="nivel-2">
+                <div class="section-header">
+                    <span class="breadcrumb">Niveles / Nivel 2</span>
+                    <h2><span class="level-tag level-tag--2">Nivel 2</span> Avanzado: MCP & Tokens</h2>
+                    <p class="section-lead">
+                        Conecta Claude Code a herramientas externas vía Model Context Protocol y
+                        aprende a gestionar tu ventana de contexto como un profesional.
+                    </p>
+                </div>
+
+                <h3 class="block-title">2.1 — Model Context Protocol (MCP)</h3>
+                <p>
+                    MCP es un estándar abierto creado por Anthropic que permite a Claude Code
+                    comunicarse con servicios externos (GitHub, Postgres, Slack, navegadores) vía
+                    servidores que exponen herramientas, recursos y prompts. Soporta tres transportes:
+                    <strong>stdio</strong> (local, baja latencia), <strong>SSE</strong> (remoto streaming)
+                    y <strong>HTTP</strong>.
+                </p>
+
+                <div class="code-block" data-lang="bash" data-title="Añadir un servidor MCP (GitHub)">
+                    <pre><code># Exporta tu token como variable de entorno (NO lo escribas en el JSON)
+export GITHUB_TOKEN="ghp_tu_token_aqui"
+
+# Registra el servidor MCP de GitHub (transporte stdio por defecto)
+claude mcp add github -e GITHUB_TOKEN -- npx -y @modelcontextprotocol/server-github
+
+# Verifica que esté conectado
+claude mcp list
+# Salida esperada:  github: connected (stdio)</code></pre>
+                </div>
+
+                <div class="code-block" data-lang="bash" data-title="Servidor MCP remoto vía SSE/HTTP">
+                    <pre><code># Servidor remoto SSE
+claude mcp add --transport sse my-remote https://mi-servidor.com/mcp/sse
+
+# Servidor remoto HTTP con headers de auth
+claude mcp add --transport http composio-server "https://mcp.composio.dev/..." \
+  --headers "X-API-Key:TU_API_KEY"</code></pre>
+                </div>
+
+                <h3 class="block-title">2.2 — Gestión de tokens y contexto</h3>
+                <p>
+                    El recurso más caro en una sesión agéntica es la <strong>ventana de contexto</strong>.
+                    Estos comandos te permiten observar y reducir consumo:
+                </p>
+
+                <div class="commands-table-wrapper" id="commands-table-nivel-2">
+                    <!-- Generada dinámicamente por JS -->
+                </div>
+
+                <h3 class="block-title">2.3 — Memoria persistente con <code>/memory</code></h3>
+                <p>
+                    A diferencia de <code>/compact</code> que resume el historial actual,
+                    <code>/memory</code> guarda información de forma permanente que persiste
+                    entre sesiones. Perfecta para contexto del proyecto, decisiones arquitectónicas
+                    o información sensible que no quieres perder.
+                </p>
+
+                <div class="code-block" data-lang="text" data-title="Uso de /memory en sesiones múltiples">
+                    <pre><code># Sesión 1: Documentar la arquitectura
+> /memory add "Stack: Next.js 14 + Prisma + PostgreSQL. DB en AWS RDS. Redis cache."
+
+# Sesión 2 (después de cerrar): Claude recuerda automáticamente
+> ¿Qué base de datos usamos?
+Claude: Según tu memoria, usas PostgreSQL en AWS RDS con Redis de cache.
+
+# Ver toda la memoria del proyecto
+> /memory show
+
+# Borrar una entrada
+> /memory delete "Stack: ..."</code></pre>
+                </div>
+
+                <h3 class="block-title">2.4 — Configuración declarativa de MCP con <code>.mcp.json</code></h3>
+                <p>
+                    En lugar de ejecutar comandos <code>claude mcp add</code> manualmente,
+                    puedes declarar tus servidores MCP en un archivo <code>.mcp.json</code>
+                    en la raíz del proyecto. Claude Code lo cargará automáticamente al iniciar.
+                </p>
+
+                <div class="code-block" data-lang="json" data-title=".mcp.json — Configuración declarativa">
+                    <pre><code>{
+  "mcpServers": [
+    {
+      "name": "github",
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    {
+      "name": "postgres",
+      "transport": "stdio",
+      "command": "node",
+      "args": ["./mcp-servers/postgres.js"],
+      "env": {
+        "DB_URL": "${DATABASE_URL}"
+      }
+    },
+    {
+      "name": "api-docs",
+      "transport": "sse",
+      "url": "https://mi-api.com/mcp/sse"
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--tip">
+                    <strong>💡 Tip:</strong> Versionea <code>.mcp.json</code> en git (sin secrets).
+                    Las variables <code>${...}</code> se leen de variables de entorno en tiempo de ejecución.
+                </div>
+
+                <h3 class="block-title">2.5 — El comando <code>/compact</code> en profundidad</h3>
+                <p>
+                    Cuando una sesión larga acumula miles de tokens (lecturas de archivos, salidas de
+                    comandos, iteraciones), <code>/compact</code> resume el historial preservando
+                    decisiones clave y código modificado, pero descartando ruido.
+                </p>
+
+                <div class="code-block" data-lang="text" data-title="Flujo profesional de compactación">
+                    <pre><code># Antes de un cambio importante, mira tu uso de contexto
+> /context
+
+# Si superas ~70% de la ventana, compacta con un foco claro
+> /compact mantén el plan de migración a TypeScript y los archivos
+  ya refactorizados; descarta los logs de errores resueltos</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--warn">
+                    <strong>⚠ Aviso de tokens MCP:</strong> Cada servidor MCP conectado añade
+                    descripciones de herramientas al contexto. Claude Code muestra una alerta
+                    cuando una salida MCP supera 10.000 tokens. Configura
+                    <code>MAX_MCP_OUTPUT_TOKENS</code> (por defecto 25.000) según tus necesidades.
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: NIVEL 3 ====== -->
+            <section class="content-section" data-section="nivel-3">
+                <div class="section-header">
+                    <span class="breadcrumb">Niveles / Nivel 3</span>
+                    <h2><span class="level-tag level-tag--3">Nivel 3</span> Experto: Skills & Automatización</h2>
+                    <p class="section-lead">
+                        Las <strong>Skills</strong> son la evolución de los antiguos slash commands:
+                        archivos <code>SKILL.md</code> que Claude puede invocar manualmente
+                        (<code>/nombre-skill</code>) o de forma autónoma cuando detecta el contexto.
+                    </p>
+                </div>
+
+                <h3 class="block-title">3.0 — Comandos disponibles en Nivel 3</h3>
+                <p>
+                    Los siguientes comandos están diseñados para automatización, orquestación
+                    y creación de Skills personalizadas:
+                </p>
+
+                <div class="commands-table-wrapper" id="commands-table-nivel-3">
+                    <!-- Generada dinámicamente por JS -->
+                </div>
+
+                <h3 class="block-title">3.1 — Anatomía de una Skill</h3>
+                <p>Una Skill es simplemente un directorio con un <code>SKILL.md</code>:</p>
+
+                <div class="code-block" data-lang="text" data-title="Estructura de archivos">
+                    <pre><code>~/.claude/skills/             # Personal (todos los proyectos)
+└── security-audit/
+    └── SKILL.md
+
+.claude/skills/               # Proyecto (compartido en git)
+└── code-review/
+    ├── SKILL.md
+    └── checklist.md          # archivos referenciados</code></pre>
+                </div>
+
+                <h3 class="block-title">3.2 — Crear tu primera Skill: <code>/security-audit</code></h3>
+
+                <div class="code-block" data-lang="markdown" data-title=".claude/skills/security-audit/SKILL.md">
+                    <pre><code>---
+name: security-audit
+description: Audita el código en busca de vulnerabilidades comunes
+  (SQLi, XSS, secretos expuestos, configuraciones inseguras). Úsalo
+  cuando el usuario mencione seguridad, hardening o revisión de
+  vulnerabilidades.
+allowed-tools: Read, Grep, Glob, Bash(git diff:*)
+model: claude-opus-4-7
+---
+
+# Auditoría de Seguridad
+
+Analiza el código del proyecto buscando:
+
+1. **Inyección SQL** — queries construidas por concatenación
+2. **XSS** — output sin escapar en plantillas / DOM
+3. **Secretos expuestos** — keys, tokens, contraseñas en código
+4. **Configuraciones inseguras** — CORS abierto, debug=true, etc.
+5. **Dependencias vulnerables** — revisa package.json / requirements
+
+Para cada hallazgo, devuelve:
+- Archivo y línea exacta
+- Severidad (crítica / alta / media / baja)
+- Código actual + parche recomendado
+- Referencia OWASP cuando aplique</code></pre>
+                </div>
+
+                <p>
+                    Una vez guardado, la Skill está disponible inmediatamente. Invócala con
+                    <code>/security-audit</code> o deja que Claude la dispare automáticamente
+                    cuando detecte intención coincidente con el campo <code>description</code>.
+                </p>
+
+                <h3 class="block-title">3.3 — Skill con argumentos dinámicos</h3>
+
+                <div class="code-block" data-lang="markdown" data-title=".claude/skills/fix-issue/SKILL.md">
+                    <pre><code>---
+name: fix-issue
+description: Resuelve un issue de GitHub siguiendo nuestras convenciones
+argument-hint: [issue-number] [priority]
+allowed-tools: Read, Edit, Bash(gh:*), Bash(git:*)
+---
+
+Resuelve el issue #$1 con prioridad $2.
+
+Pasos:
+1. `gh issue view $1` para leer la descripción
+2. Crear branch `fix/issue-$1`
+3. Implementar cambios respetando convenciones de CLAUDE.md
+4. Ejecutar tests relevantes
+5. Crear commit + PR enlazado al issue</code></pre>
+                </div>
+
+                <p>Uso: <code>/fix-issue 247 high</code></p>
+
+                <h3 class="block-title">3.3+ — Orquestación de sub-agentes</h3>
+                <p>
+                    Claude Code puede crear y orquestar <strong>sub-agentes</strong> — instancias paralelas
+                    de Claude que trabajan en paralelo en diferentes tareas. Perfecto para:
+                </p>
+                <ul style="margin: 1rem 0; padding-left: 1.5rem; line-height: 1.8;">
+                    <li><strong>Investigación + Implementación:</strong> Un agente revisa requisitos mientras otro implementa.</li>
+                    <li><strong>Revisión paralela:</strong> Un agente audita seguridad, otro revisa tests, otro style.</li>
+                    <li><strong>Pipelines de datos:</strong> Agentes en serie: fetch → transform → validate → upload.</li>
+                </ul>
+
+                <div class="code-block" data-lang="markdown" data-title="Ejemplo: Skill que orquesta sub-agentes">
+                    <pre><code>---
+name: parallel-refactor
+description: Refactoriza el código en paralelo
+allowed-tools: Read, Edit, Bash(git:*), Task
+---
+
+# Refactorización en paralelo
+
+Con la herramienta Task, crea dos sub-agentes:
+
+```
+!`claude task --name investigar -- grep -r "deprecated_func" src/`
+!`claude task --name implementar -- "Reemplaza todas las llamadas encontradas"`
+```
+
+Espera a que ambas terminen (ambos agentes reportan estado).
+Luego revisa cambios y haz commit.
+</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--tip">
+                    <strong>🚀 Escalabilidad:</strong> Los sub-agentes heredan el contexto
+                    (CLAUDE.md, archivo.md, archivos mencionados) pero ejecutan independientemente.
+                    Úsalos para paralelizar trabajo costoso en tokens o tiempo.
+                </div>
+
+                <h3 class="block-title">3.5 — Automatización con hooks</h3>
+                <p>
+                    Los <strong>hooks</strong> ejecutan comandos shell en respuesta a eventos
+                    de Claude Code (PreToolUse, PostToolUse, etc.). Configurables en
+                    <code>.claude/settings.json</code>:
+                </p>
+
+                <div class="code-block" data-lang="json" data-title=".claude/settings.json">
+                    <pre><code>{
+  "model": "claude-sonnet-4-6",
+  "permissions": {
+    "allowedTools": ["Read", "Write", "Bash(git:*)", "Bash(npm:*)"],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Write(./production.config.*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write(*.py)",
+        "hooks": [{ "type": "command", "command": "ruff format $file" }]
+      },
+      {
+        "matcher": "Write(*.ts)",
+        "hooks": [{ "type": "command", "command": "prettier --write $file" }]
+      }
+    ]
+  }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: SEGURIDAD ====== -->
+            <section class="content-section" data-section="seguridad">
+                <div class="section-header">
+                    <span class="breadcrumb">Producción / Seguridad</span>
+                    <h2>Seguridad & Hardening</h2>
+                    <p class="section-lead">
+                        Trabajar con un agente que tiene acceso a tu sistema de archivos requiere
+                        una postura defensiva. Estas son las prácticas mínimas que un perfil senior
+                        debe aplicar antes de poner Claude Code en un entorno con datos reales.
+                    </p>
+                </div>
+
+                <h3 class="block-title">🛡 1. Prevenir fuga de archivos <code>.env</code> y secretos</h3>
+                <p>
+                    El bloqueo se hace a nivel de <strong>permisos</strong> del agente, no solo del
+                    <code>.gitignore</code>. La directiva <code>deny</code> impide explícitamente que
+                    Claude lea o escriba sobre rutas sensibles, incluso si tú se lo pides.
+                </p>
+
+                <div class="code-block" data-lang="json" data-title=".claude/settings.json — bloqueo de secretos">
+                    <pre><code>{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/secrets/**)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Read(./id_rsa)",
+      "Write(./production.config.*)",
+      "Bash(curl * | sh)",
+      "Bash(rm -rf /*)"
+    ]
+  }
+}</code></pre>
+                </div>
+
+                <h3 class="block-title">🛡 2. Archivo <code>.claudeignore</code> / patrones de exclusión</h3>
+                <p>
+                    Además de los permisos, define patrones para que Claude ni siquiera indexe
+                    ciertos archivos al cargar el contexto del proyecto. Replica la sintaxis de
+                    <code>.gitignore</code>.
+                </p>
+
+                <div class="code-block" data-lang="gitignore" data-title=".claudeignore (raíz del proyecto)">
+                    <pre><code># Secretos y credenciales
+.env
+.env.*
+*.pem
+*.key
+id_rsa
+**/secrets/**
+**/credentials.json
+
+# Datos sensibles
+**/customer-data/**
+**/*.sql.dump
+**/backups/**
+
+# Artefactos pesados (innecesarios para el contexto)
+node_modules/
+dist/
+build/
+.next/
+coverage/
+**/*.log
+
+# Archivos personales
+.DS_Store
+.idea/
+.vscode/settings.json</code></pre>
+                </div>
+
+                <h3 class="block-title">🛡 3. MCP: tokens vía variables de entorno</h3>
+                <p>
+                    <strong>Nunca</strong> escribas tokens directamente en <code>.mcp.json</code>.
+                    Usa la flag <code>-e</code> al registrar el servidor — el token vive en tu shell,
+                    no en archivos versionados.
+                </p>
+
+                <div class="code-block" data-lang="bash" data-title="Registro seguro de MCP">
+                    <pre><code># ❌ MAL: token literal en JSON (acaba en git)
+# claude mcp add github --env "GITHUB_TOKEN=ghp_xxx" ...
+
+# ✅ BIEN: variable de entorno por referencia
+export GITHUB_TOKEN="ghp_..."
+claude mcp add github -e GITHUB_TOKEN -- npx -y @modelcontextprotocol/server-github</code></pre>
+                </div>
+
+                <h3 class="block-title">🛡 4. Mitigar sesgos de seguridad en código generado</h3>
+                <p>
+                    Los LLMs tienden a generar patrones inseguros si no se les corrige (ej.
+                    queries por concatenación, validación cliente-only, CORS abierto). Estrategias:
+                </p>
+                <ul class="bullet-list">
+                    <li><strong>CLAUDE.md con reglas explícitas:</strong> «Toda query SQL DEBE usar parámetros preparados. Nunca <code>SELECT * FROM x WHERE id = ${id}</code>.»</li>
+                    <li><strong>Hook PostToolUse</strong> que ejecute un linter de seguridad (semgrep, bandit) tras cada Write.</li>
+                    <li><strong>Skill <code>/security-audit</code></strong> obligatoria antes de mergear.</li>
+                    <li><strong>Principio de mínimo privilegio</strong> en <code>allowedTools</code>: no concedas <code>Bash(*)</code>; lista comandos uno a uno.</li>
+                </ul>
+
+                <h3 class="block-title">🛡 5. Auditoría de servidores MCP de terceros</h3>
+                <div class="info-banner info-banner--warn">
+                    <strong>⚠ Crítico:</strong> Un servidor MCP es código que se ejecuta con tus
+                    permisos. Antes de instalar uno de la comunidad: revisa el repositorio,
+                    fija la versión exacta (<code>@1.2.3</code>, nunca <code>@latest</code>),
+                    y prefiere tokens de solo lectura cuando el caso de uso lo permita.
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: CASOS DE USO ====== -->
+            <section class="content-section" data-section="casos-uso">
+                <div class="section-header">
+                    <span class="breadcrumb">Producción / Casos de Uso</span>
+                    <h2>Casos de Uso Prácticos</h2>
+                    <p class="section-lead">
+                        Flujos reales que usamos en equipos profesionales, listos para copiar
+                        y adaptar a tu stack.
+                    </p>
+                </div>
+
+                <h3 class="block-title">📦 Caso 1 — Refactorización de un módulo legacy</h3>
+                <div class="code-block" data-lang="text" data-title="Prompt completo">
+                    <pre><code>> Lee @src/legacy/UserManager.js (es código de 2018, jQuery + callbacks).
+
+  Refactoriza siguiendo este plan:
+  1. Convierte a TypeScript estricto (.ts)
+  2. Reemplaza callbacks por async/await
+  3. Extrae responsabilidades: separa persistencia (UserRepository),
+     validación (UserValidator) y casos de uso (UserService)
+  4. Añade tests Jest cubriendo los happy paths y 2 edge cases
+     por método público
+  5. NO cambies la firma pública del módulo: otros archivos lo
+     importan y no quiero romperlos. Verifica con grep antes.
+
+  Procede archivo por archivo y enséñame el diff antes de escribir.</code></pre>
+                </div>
+
+                <h3 class="block-title">📦 Caso 2 — Code Review de un PR</h3>
+                <div class="code-block" data-lang="markdown" data-title=".claude/skills/code-review/SKILL.md">
+                    <pre><code>---
+name: code-review
+description: Revisión exhaustiva del último commit/PR
+allowed-tools: Read, Grep, Bash(git diff:*), Bash(git log:*)
+---
+
+## Cambios a revisar
+!`git diff --name-only HEAD~1`
+
+## Diff completo
+!`git diff HEAD~1`
+
+## Checklist de revisión
+Analiza los cambios de arriba contra:
+
+1. **Calidad** — legibilidad, complejidad ciclomática, naming
+2. **Seguridad** — inyecciones, secretos, validación de input
+3. **Performance** — N+1, loops innecesarios, memoización
+4. **Tests** — ¿cubre casos felices y de error?
+5. **Documentación** — JSDoc/docstrings actualizados
+
+Devuelve feedback agrupado por prioridad (🔴 bloqueante,
+🟡 sugerencia, 🟢 nit) con líneas concretas.</code></pre>
+                </div>
+
+                <h3 class="block-title">📦 Caso 3 — Configuración recomendada para equipos</h3>
+                <div class="code-block" data-lang="markdown" data-title="CLAUDE.md (raíz del repo)">
+                    <pre><code># Proyecto: Plataforma E-commerce
+
+## Stack
+- **Frontend**: Next.js 14 + TypeScript + Tailwind + Zustand
+- **Backend**: Node.js 22 + Fastify + Prisma
+- **DB**: PostgreSQL 16
+- **Tests**: Vitest (unit), Playwright (e2e)
+
+## Convenciones
+- TypeScript estricto: NO usar `any`. Si dudas, usa `unknown` + type guards.
+- Componentes funcionales con hooks. Sin clases.
+- Imports absolutos desde `@/` (ya configurado en tsconfig).
+- Tests al lado del código: `Foo.ts` → `Foo.test.ts`.
+
+## Arquitectura
+- /src/app          → rutas Next.js
+- /src/components   → UI reutilizable
+- /src/features/*   → módulos de dominio (auth, cart, checkout, ...)
+- /src/lib          → utilidades transversales
+- /src/server       → API Fastify, repos Prisma
+
+## Reglas de seguridad
+- TODA query a DB usa Prisma (no SQL crudo).
+- TODO endpoint valida input con Zod.
+- NUNCA logear PII (emails, nombres, IPs).
+
+## Comandos útiles
+- `npm run dev` — desarrollo
+- `npm run test` — tests
+- `npm run lint` — eslint + prettier --check</code></pre>
+                </div>
+
+                <h3 class="block-title">📦 Caso 4 — Generar tests para código existente</h3>
+                <div class="code-block" data-lang="text" data-title="Prompt">
+                    <pre><code>> Para @src/features/checkout/calculatePrice.ts genera un suite Vitest
+  que cubra:
+  - Caso base (1 producto, sin descuento, sin impuestos)
+  - Cupones: porcentaje, monto fijo, cupón inválido
+  - Múltiples ítems con cantidades
+  - Edge: carrito vacío, precios negativos (debe lanzar)
+  - Tax inclusive vs exclusive
+
+  Usa describe/it anidados, mockea solo lo estrictamente externo
+  (servicio de impuestos), y apunta a >90% de cobertura de líneas.</code></pre>
+                </div>
+
+                <h3 class="block-title">📦 Caso 5 — Migración asistida (JS → TS)</h3>
+                <div class="code-block" data-lang="text" data-title="Workflow iterativo">
+                    <pre><code>> Voy a migrar /src/utils a TypeScript. Hagamos esto:
+
+  1. Listas todos los .js de @src/utils
+  2. Para cada archivo:
+     a. Lee el código y los tests existentes
+     b. Crea la versión .ts con tipos estrictos inferidos del uso
+     c. Añade JSDoc/typedefs donde falten
+     d. Renombra .js → .ts y actualiza imports en todo el repo
+     e. Corre `npm run typecheck` para verificar
+  3. Después de los 5 primeros archivos, hacemos /compact y seguimos.</code></pre>
+                </div>
+
+                <h3 class="block-title">📦 Caso 6 — Investigar un bug en producción</h3>
+                <div class="code-block" data-lang="text" data-title="Prompt diagnóstico">
+                    <pre><code>> Tenemos un bug intermitente: "RangeError: Invalid time value"
+  en producción. Stack trace apunta a @src/lib/dates/format.ts:42.
+
+  Plan:
+  1. Lee el archivo y entiende qué hace la línea 42
+  2. Busca con grep todos los call sites en el repo
+  3. Identifica qué inputs podrían producir un Date inválido
+  4. Propón fix defensivo (validación + fallback)
+  5. Añade un test que reproduzca el bug ANTES del fix
+     (debe fallar) y luego pase con el fix aplicado</code></pre>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: SIMULADOR DE TERMINAL ====== -->
+            <section class="content-section" data-section="terminal">
+                <div class="section-header">
+                    <span class="breadcrumb">Producción / Simulador</span>
+                    <h2>Simulador de Terminal</h2>
+                    <p class="section-lead">
+                        Practica los comandos en un entorno simulado. Selecciona un escenario y
+                        observa la salida esperada — útil para entrevistas, demos y onboarding.
+                    </p>
+                </div>
+
+                <div class="terminal-controls">
+                    <label for="scenario-select" class="control-label">Escenario:</label>
+                    <select id="scenario-select" class="select-input">
+                        <option value="install">1. Instalación e inicio</option>
+                        <option value="basic">2. Comandos básicos (Nivel 1)</option>
+                        <option value="mcp">3. Conexión MCP (Nivel 2)</option>
+                        <option value="compact">4. Compactación de contexto</option>
+                        <option value="skill">5. Crear y usar una Skill (Nivel 3)</option>
+                        <option value="security">6. Configuración de seguridad</option>
+                        <option value="headless">7. Modo headless para CI/CD</option>
+                    </select>
+                    <button id="run-scenario" class="btn-primary">▶ Ejecutar</button>
+                    <button id="clear-terminal" class="btn-ghost">Limpiar</button>
+                </div>
+
+                <div class="terminal-window">
+                    <div class="terminal-titlebar">
+                        <span class="terminal-dot terminal-dot--red"></span>
+                        <span class="terminal-dot terminal-dot--yellow"></span>
+                        <span class="terminal-dot terminal-dot--green"></span>
+                        <span class="terminal-title">claude-code — zsh — 120×30</span>
+                    </div>
+                    <div class="terminal-body" id="terminal-body" role="log" aria-live="polite">
+                        <div class="terminal-line terminal-line--info">
+                            Selecciona un escenario y pulsa "Ejecutar" para simular la salida.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: RECURSOS ====== -->
+            <section class="content-section" data-section="recursos">
+                <div class="section-header">
+                    <span class="breadcrumb">Producción / Recursos</span>
+                    <h2>Lecturas Obligatorias</h2>
+                    <p class="section-lead">
+                        Documentación oficial y especificaciones que todo profesional debería tener
+                        marcadas como referencia.
+                    </p>
+                </div>
+
+                <div class="resources-grid">
+
+                    <a href="https://docs.claude.com/en/docs/claude-code/overview" target="_blank" rel="noopener" class="resource-card">
+                        <span class="resource-cat">Anthropic · Oficial</span>
+                        <h3>Claude Code — Overview</h3>
+                        <p>Punto de entrada oficial: instalación, autenticación y primeros pasos.</p>
+                        <span class="resource-host">docs.claude.com</span>
+                    </a>
+
+                    <a href="https://code.claude.com/docs/en/slash-commands.md" target="_blank" rel="noopener" class="resource-card">
+                        <span class="resource-cat">Anthropic · Oficial</span>
+                        <h3>Slash Commands & Skills</h3>
+                        <p>Lista completa de comandos built-in y guía de creación de Skills.</p>
+                        <span class="resource-host">code.claude.com</span>
+                    </a>
+
+                    <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener" class="resource-card">
+                        <span class="resource-cat">Anthropic · Oficial</span>
+                        <h3>Connect Claude Code via MCP</h3>
+                        <p>Configurar servidores MCP (stdio/SSE/HTTP), permisos y resource mentions.</p>
+                        <span class="resource-host">code.claude.com</span>
+                    </a>
+
+                    <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener" class="resource-card">
+                        <span class="resource-cat">Especificación</span>
+                        <h3>Model Context Protocol</h3>
+                        <p>Sitio oficial del protocolo MCP: spec, SDKs (TS/Python), tutoriales.</p>
+                        <span class="resource-host">modelcontextprotocol.io</span>
+                    </a>
+
+                    <a href="https://modelcontextprotocol.io/docs/develop/build-server" target="_blank" rel="noopener" class="resource-card">
+                        <span class="resource-cat">Tutorial</span>
+                        <h3>Construir un servidor MCP</h3>
+                        <p>Tutorial paso a paso para crear tu propio servidor MCP en TS o Python.</p>
+                        <span class="resource-host">modelcontextprotocol.io</span>
+                    </a>
+
+                    <a href="https://www.npmjs.com/package/@anthropic-ai/claude-code" target="_blank" rel="noopener" class="resource-card">
+                        <span class="resource-cat">npm</span>
+                        <h3>@anthropic-ai/claude-code</h3>
+                        <p>Paquete npm oficial. Versiones, changelog y dependencias.</p>
+                        <span class="resource-host">npmjs.com</span>
+                    </a>
+
+                    <a href="https://www.anthropic.com/engineering/desktop-extensions" target="_blank" rel="noopener" class="resource-card">
+                        <span class="resource-cat">Engineering Blog</span>
+                        <h3>Desktop Extensions (MCPB)</h3>
+                        <p>Empaqueta servidores MCP como extensiones de un solo clic.</p>
+                        <span class="resource-host">anthropic.com</span>
+                    </a>
+
+                    <a href="https://github.com/hesreallyhim/awesome-claude-code" target="_blank" rel="noopener" class="resource-card">
+                        <span class="resource-cat">Comunidad</span>
+                        <h3>Awesome Claude Code</h3>
+                        <p>Lista curada de skills, hooks, sub-agentes y plugins de la comunidad.</p>
+                        <span class="resource-host">github.com</span>
+                    </a>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast para notificaciones (copiado, etc.) -->
+    <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
