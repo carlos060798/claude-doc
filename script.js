@@ -595,6 +595,304 @@
     };
 
     /* ============================================================
+       1.9 DATOS — DESAFÍOS INTERACTIVOS DEL CURSO
+       25 retos progresivos. Cada uno: pregunta + opciones + correcta + explicación.
+       ============================================================ */
+    const CHALLENGES_DATA = [
+        // === FUNDAMENTOS ===
+        {
+            id: 1, category: 'basics', difficulty: 'easy',
+            scenario: 'Acabas de instalar Claude Code y entras a un repo nuevo. ¿Cuál es el PRIMER comando que deberías ejecutar?',
+            options: [
+                'claude --help para ver qué puedo hacer',
+                '/init para que genere un CLAUDE.md analizando el repo',
+                'claude -p "explícame el proyecto" para que lo lea entero',
+                '/clear para empezar limpio',
+            ],
+            correct: 1,
+            explain: '/init analiza package.json, README y estructura para crear un CLAUDE.md base. Eso acelera TODAS las sesiones futuras. Pedir "explícame el proyecto entero" satura el contexto sin valor real.',
+        },
+        {
+            id: 2, category: 'basics', difficulty: 'easy',
+            scenario: '¿Cómo le indicas a Claude que lea un archivo concreto sin pegarle el contenido?',
+            options: ['file:src/auth.ts', '@src/auth.ts', '/read src/auth.ts', '#src/auth.ts'],
+            correct: 1,
+            explain: 'La sintaxis @ es la forma nativa de mencionar archivos. Soporta autocompletado y rangos de líneas como @src/auth.ts:42-80.',
+        },
+        {
+            id: 3, category: 'basics', difficulty: 'easy',
+            scenario: 'Quieres que tu colega tenga las mismas configuraciones de Claude que tú al hacer git pull. ¿Dónde guardas la config?',
+            options: [
+                '~/.claude/settings.json en cada máquina',
+                '.claude/settings.json en la raíz del proyecto (commited)',
+                'CLAUDE.local.md',
+                'Como variables de entorno en .bashrc',
+            ],
+            correct: 1,
+            explain: '.claude/settings.json en el repo se versiona en git y todos heredan la misma config. ~/.claude/* es solo para tus preferencias personales (no compartidas).',
+        },
+        {
+            id: 4, category: 'basics', difficulty: 'medium',
+            scenario: 'Hiciste un cambio que no esperabas. ¿Cómo vuelves al estado anterior sin perder toda la sesión?',
+            options: [
+                '/clear y empiezo de cero',
+                'git checkout . para descartar cambios',
+                'Esc Esc o /rewind para abrir el menú de checkpoints',
+                'Cierro la terminal y vuelvo a abrirla',
+            ],
+            correct: 2,
+            explain: '/rewind (o Esc Esc) abre el menú de checkpoints — restauras un estado anterior preservando el contexto conversacional. /clear borraría toda la sesión.',
+        },
+
+        // === CONTEXTO ===
+        {
+            id: 5, category: 'context', difficulty: 'easy',
+            scenario: 'Tu /context muestra 71%. Quieres seguir trabajando en la misma tarea sin perder el plan. ¿Qué haces?',
+            options: [
+                '/clear y reexplico todo desde cero',
+                '/compact "preserva el plan de migración y los archivos ya migrados"',
+                'Cambio a Haiku para usar menos tokens',
+                'Sigo trabajando, ya se compactará automáticamente',
+            ],
+            correct: 1,
+            explain: 'Compactación dirigida: le dices QUÉ preservar y qué descartar. Mucho mejor que /clear (pierdes todo) o /compact sin instrucciones (puede tirar lo importante).',
+        },
+        {
+            id: 6, category: 'context', difficulty: 'medium',
+            scenario: 'Diferencia entre /memory y /compact:',
+            options: [
+                'Son sinónimos, hacen lo mismo',
+                '/compact resume la sesión actual; /memory persiste entre sesiones',
+                '/memory borra contexto y /compact lo añade',
+                '/compact es para CI, /memory para uso interactivo',
+            ],
+            correct: 1,
+            explain: '/compact gestiona la ventana ACTUAL. /memory escribe almacenamiento que sobrevive a /clear y a sesiones nuevas — perfecto para decisiones arquitectónicas que quieres recordar siempre.',
+        },
+        {
+            id: 7, category: 'context', difficulty: 'medium',
+            scenario: 'Quieres hacer una pregunta lateral (curiosidad sobre tokens) sin que entre en el historial conversacional principal. Comando:',
+            options: ['/btw', '/aside', '/question', '/temp'],
+            correct: 0,
+            explain: '/btw es perfecto para preguntas laterales — la respuesta no se guarda en el historial, así no contaminas el contexto de tu tarea principal.',
+        },
+        {
+            id: 8, category: 'context', difficulty: 'hard',
+            scenario: 'Trabajas en 2 features distintas en paralelo en el mismo repo. ¿La forma profesional?',
+            options: [
+                'Cierro y abro Claude para cada feature, perdiendo el progreso',
+                'Mezclo todo en una misma sesión',
+                'Uso `claude --worktree feature-A` en una terminal y `claude --worktree feature-B` en otra',
+                'Hago /clear cada vez que cambio de feature',
+            ],
+            correct: 2,
+            explain: 'Worktrees crean copias aisladas del repo en directorios separados. Sesiones paralelas independientes, sin conflictos de archivos ni contexto mezclado.',
+        },
+
+        // === MCP ===
+        {
+            id: 9, category: 'mcp', difficulty: 'easy',
+            scenario: 'Quieres conectar el MCP de GitHub al proyecto sin commitear el token. Comando correcto:',
+            options: [
+                'claude mcp add github --env "TOKEN=ghp_xxx" -- npx ...',
+                'export GITHUB_TOKEN="ghp_xxx" && claude mcp add github -e GITHUB_TOKEN -- npx -y @modelcontextprotocol/server-github',
+                'Edito .mcp.json y pego el token directamente',
+                'claude mcp add github --token ghp_xxx',
+            ],
+            correct: 1,
+            explain: 'La flag -e referencia una variable de entorno por nombre — el token vive en tu shell, NO en archivos versionados. Pegar el token literal en .mcp.json es el error #1 de seguridad.',
+        },
+        {
+            id: 10, category: 'mcp', difficulty: 'medium',
+            scenario: 'Quieres que un MCP esté disponible en TODOS tus proyectos personales (Linear, por ejemplo). Scope correcto:',
+            options: ['--scope local', '--scope project', '--scope user', '--scope global'],
+            correct: 2,
+            explain: 'Scope user = en todos tus proyectos (guardado en ~/.claude.json). Scope project = solo este repo (en .mcp.json). Scope local = solo este repo, NO compartido.',
+        },
+        {
+            id: 11, category: 'mcp', difficulty: 'medium',
+            scenario: 'Tu MCP aparece como "failed" en /mcp. ¿Primer paso de debugging?',
+            options: [
+                'Lo desinstalo y vuelvo a instalar',
+                'Reinicio Claude Code',
+                'claude mcp get NAME para ver detalles + verifico variables de entorno',
+                'Cambio el transport de stdio a HTTP',
+            ],
+            correct: 2,
+            explain: 'claude mcp get muestra el detalle exacto del error. Lo más común: variable de entorno no exportada en la shell actual o comando del servidor que no existe.',
+        },
+        {
+            id: 12, category: 'mcp', difficulty: 'hard',
+            scenario: 'Tu equipo conecta 25 MCPs. El contexto inicial está al 30% antes de empezar. ¿Cómo lo arreglas sin desconectar nada?',
+            options: [
+                'No hay solución, hay que desconectar MCPs',
+                'export ENABLE_TOOL_SEARCH=auto:5 — defiere la carga de herramientas',
+                'Uso un modelo más grande (Opus) que tiene más contexto',
+                'Hago /compact al inicio de cada sesión',
+            ],
+            correct: 1,
+            explain: 'Tool Search defiere las definiciones de herramientas hasta que Claude las necesita. Solo carga los nombres al inicio. auto:5 = carga upfront si caben en 5% del contexto, si no defiere.',
+        },
+
+        // === SKILLS ===
+        {
+            id: 13, category: 'skills', difficulty: 'easy',
+            scenario: 'Quieres crear una Skill que solo tu equipo use. Ubicación correcta:',
+            options: [
+                '~/.claude/skills/mi-skill/SKILL.md',
+                '.claude/skills/mi-skill/SKILL.md (versionado en git)',
+                '/usr/local/claude/skills/',
+                'package.json scripts',
+            ],
+            correct: 1,
+            explain: '.claude/skills/ se compromete en git. Todos los miembros lo heredan al hacer pull. ~/.claude/skills/ es para tus skills personales (preferencias de estilo, etc).',
+        },
+        {
+            id: 14, category: 'skills', difficulty: 'medium',
+            scenario: 'En el frontmatter de una Skill, ¿qué campo controla cuándo Claude la auto-invoca?',
+            options: ['name', 'description', 'argument-hint', 'allowed-tools'],
+            correct: 1,
+            explain: 'description es CRÍTICO: Claude analiza el intent del usuario y si coincide, invoca la Skill automáticamente. Una description vaga = auto-trigger pobre.',
+        },
+        {
+            id: 15, category: 'skills', difficulty: 'medium',
+            scenario: 'Quieres que tu Skill /code-review pueda hacer git diff pero NO pueda escribir archivos. allowed-tools correcto:',
+            options: [
+                'Bash(*)',
+                'Read, Bash(git diff:*), Bash(git log:*)',
+                'Read, Write, Bash',
+                'Lo dejo vacío, para que pueda hacer todo',
+            ],
+            correct: 1,
+            explain: 'Principio de mínimo privilegio. Lista los comandos exactos. Bash(git diff:*) permite SOLO git diff con cualquier flag, no otros git ni otros bash. NUNCA uses Bash(*) en producción.',
+        },
+        {
+            id: 16, category: 'skills', difficulty: 'medium',
+            scenario: 'Dentro del cuerpo de una Skill, ¿cómo inyectas el output de un comando bash en el prompt?',
+            options: [
+                '$(git diff)',
+                '`git diff`',
+                '!`git diff` (con backtick + bash entre comillas)',
+                '${git diff}',
+            ],
+            correct: 2,
+            explain: 'La sintaxis !`comando` ejecuta el comando ANTES de enviar el prompt y reemplaza con su stdout. Solo funciona si allowed-tools incluye el bash correspondiente.',
+        },
+        {
+            id: 17, category: 'skills', difficulty: 'hard',
+            scenario: 'Quieres una Skill que SOLO Claude pueda invocar automáticamente (no manualmente con /). Frontmatter:',
+            options: [
+                'auto-only: true',
+                'user-invocable: false',
+                'disable-model-invocation: true',
+                'hidden: true',
+            ],
+            correct: 1,
+            explain: 'user-invocable: false oculta la Skill del menú. Claude SÍ puede auto-invocarla. Lo opuesto: disable-model-invocation: true permite solo invocación manual.',
+        },
+
+        // === SDK & API ===
+        {
+            id: 18, category: 'sdk', difficulty: 'medium',
+            scenario: 'Diferencia clave entre Agent SDK y Claude API estándar:',
+            options: [
+                'Son lo mismo, solo cambia el nombre',
+                'Agent SDK maneja el bucle de tools automáticamente; con la API estándar lo implementas tú',
+                'Agent SDK es solo Python, API es solo TypeScript',
+                'Agent SDK es para producción, API es para desarrollo',
+            ],
+            correct: 1,
+            explain: 'Con la API estándar haces el bucle: response → ejecutar tool → mandar tool_result → next response. El Agent SDK hace todo eso por ti, además de tener Skills, hooks y subagents listos.',
+        },
+        {
+            id: 19, category: 'sdk', difficulty: 'medium',
+            scenario: 'Vas a procesar 5000 tickets de soporte para clasificarlos. ¿Mejor estrategia?',
+            options: [
+                'Llamar a /v1/messages 5000 veces secuencialmente',
+                'Llamar a /v1/messages 5000 veces en paralelo (Promise.all)',
+                'Usar /v1/messages/batches con las 5000 solicitudes — 50% descuento',
+                'Pegar los 5000 tickets en un solo prompt enorme',
+            ],
+            correct: 2,
+            explain: 'Batch API: hasta 10K solicitudes con 50% descuento. Procesa async (hasta 24h) pero costo bajísimo. Para 5K tickets de clasificación es la opción correcta sin duda.',
+        },
+        {
+            id: 20, category: 'sdk', difficulty: 'hard',
+            scenario: 'Tienes un agente que consulta un manual de 50K tokens en cada llamada. Quieres reducir costos. ¿Qué activas?',
+            options: [
+                'Cambias a Haiku',
+                'Marcas el manual con cache_control: {type: "ephemeral"} — prompt caching',
+                'Resumen el manual en cada llamada',
+                'Subes el manual a Files API y referencio por ID',
+            ],
+            correct: 1,
+            explain: 'Prompt caching reduce costos hasta 90% y latencia hasta 85% en contenido reutilizado. La 2da llamada en menos de 5 min lee del cache. Files API también ayuda pero caching es la solución directa al patrón "manual reutilizado".',
+        },
+        {
+            id: 21, category: 'sdk', difficulty: 'hard',
+            scenario: 'En Agent SDK Python, quieres bloquear ediciones a archivos en /production sin importar lo que pida el usuario. ¿Cómo?',
+            options: [
+                'Agregar "production" a allowed-tools',
+                'Hook PreToolUse que retorna {"decision": "block"} cuando file_path incluye "production"',
+                'Configurar permission_mode: "dontAsk"',
+                'Pedirle por favor en el prompt',
+            ],
+            correct: 1,
+            explain: 'Hooks PreToolUse pueden interceptar y BLOQUEAR herramientas antes de ejecutarse. El return {"decision": "block", "reason": "..."} previene la acción independientemente del prompt. Es determinista, a prueba de jailbreaks.',
+        },
+
+        // === SEGURIDAD ===
+        {
+            id: 22, category: 'security', difficulty: 'easy',
+            scenario: 'Quieres asegurarte de que Claude NUNCA lea tu .env. ¿Mecanismo más robusto?',
+            options: [
+                'Solo confiar en .gitignore',
+                '.claudeignore con .env*',
+                'permissions.deny en .claude/settings.json con "Read(./.env)" y "Read(./.env.*)"',
+                'Renombrar el archivo a .env.hidden',
+            ],
+            correct: 2,
+            explain: 'permissions.deny bloquea a NIVEL DEL AGENTE — Claude no puede leerlo aunque se lo pidas. .claudeignore solo controla la indexación inicial, deny es la barrera final.',
+        },
+        {
+            id: 23, category: 'security', difficulty: 'medium',
+            scenario: 'En CI no supervisado, ¿qué flag activas con cuidado?',
+            options: [
+                '--dangerously-skip-permissions (solo en sandbox aislado)',
+                '--no-tests',
+                '--ignore-claude-md',
+                '--unsafe',
+            ],
+            correct: 0,
+            explain: '--dangerously-skip-permissions desactiva todas las preguntas. Solo úsalo en CI con sandbox completamente aislado (contenedores efímeros). NUNCA en una máquina con datos reales.',
+        },
+        {
+            id: 24, category: 'security', difficulty: 'medium',
+            scenario: 'Tu equipo va a usar un MCP de la comunidad (no oficial). Buena práctica:',
+            options: [
+                'Instalar la última versión, ya estarán probadas',
+                'Revisar el repo, fijar la versión exacta (@1.2.3 no @latest), preferir tokens read-only',
+                'Confiar porque tiene muchas estrellas en GitHub',
+                'Ejecutarlo con sudo para que tenga todos los permisos',
+            ],
+            correct: 1,
+            explain: 'Un MCP es código que se ejecuta con tus permisos. Versión fija = no te sorprende un update con malware. Token read-only = blast radius limitado.',
+        },
+        {
+            id: 25, category: 'security', difficulty: 'hard',
+            scenario: 'Encuentras que tu CLAUDE.md tiene "TODA query SQL DEBE usar Prisma". Aún así Claude generó SQL crudo en un PR. ¿Cómo lo previenes determinísticamente?',
+            options: [
+                'Reforzar la regla con MAYÚSCULAS en CLAUDE.md',
+                'Hook PostToolUse que ejecuta semgrep buscando patrones de SQL crudo y rechaza el cambio',
+                'Pedirlo más amablemente en el prompt',
+                'Cambiar a Opus, hace menos errores',
+            ],
+            correct: 1,
+            explain: 'Las reglas en CLAUDE.md son advisory — Claude PUEDE saltárselas. Hooks son determinísticos: si el linter encuentra el patrón malo, se rechaza el cambio sí o sí. La doble defensa es: instrucción + verificación automatizada.',
+        },
+    ];
+
+    /* ============================================================
        2. ESCENARIOS — Simulador de terminal
        Cada escenario es una secuencia de líneas. type:
          'prompt'  → línea con $ (shell)
@@ -1442,6 +1740,185 @@
     }
 
     /* ============================================================
+       8.7 DESAFÍOS INTERACTIVOS DEL CURSO
+       Renderiza retos, valida respuestas, persiste progreso.
+       ============================================================ */
+    function renderChallenges(filter = 'all') {
+        const container = document.getElementById('challenges-container');
+        if (!container) return;
+
+        const items = filter === 'all'
+            ? CHALLENGES_DATA
+            : CHALLENGES_DATA.filter(c => c.category === filter);
+
+        const state = JSON.parse(localStorage.getItem('cc-challenges') || '{}');
+
+        container.innerHTML = items.map(c => {
+            const userAnswer = state[c.id];
+            const isCorrect = userAnswer !== undefined && userAnswer === c.correct;
+            const isAnswered = userAnswer !== undefined;
+
+            return `
+                <article class="challenge-card ${isAnswered ? (isCorrect ? 'challenge-card--correct' : 'challenge-card--incorrect') : ''}" data-challenge="${c.id}">
+                    <header class="challenge-header">
+                        <span class="challenge-id">#${String(c.id).padStart(2, '0')}</span>
+                        <span class="challenge-category challenge-category--${c.category}">${c.category}</span>
+                        <span class="challenge-difficulty challenge-difficulty--${c.difficulty}">${c.difficulty}</span>
+                        ${isAnswered ? `<span class="challenge-status">${isCorrect ? '✓' : '✗'}</span>` : ''}
+                    </header>
+                    <p class="challenge-scenario">${escapeHtml(c.scenario)}</p>
+                    <div class="challenge-options">
+                        ${c.options.map((opt, i) => `
+                            <label class="challenge-option ${isAnswered && i === c.correct ? 'challenge-option--correct' : ''} ${isAnswered && i === userAnswer && i !== c.correct ? 'challenge-option--wrong' : ''}">
+                                <input type="radio" name="ch-${c.id}" value="${i}" ${isAnswered ? 'disabled' : ''} ${userAnswer === i ? 'checked' : ''}>
+                                <span>${escapeHtml(opt)}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    ${isAnswered ? `
+                        <div class="challenge-explain ${isCorrect ? 'challenge-explain--ok' : 'challenge-explain--ko'}">
+                            <strong>${isCorrect ? '✓ Correcto.' : '✗ Incorrecto.'}</strong> ${escapeHtml(c.explain)}
+                        </div>
+                        <button class="challenge-retry" data-retry="${c.id}">↻ Volver a intentar</button>
+                    ` : ''}
+                </article>
+            `;
+        }).join('');
+
+        updateChallengesStats();
+    }
+
+    function updateChallengesStats() {
+        const state = JSON.parse(localStorage.getItem('cc-challenges') || '{}');
+        const attempted = Object.keys(state).length;
+        const correct = Object.entries(state).filter(([id, ans]) => {
+            const ch = CHALLENGES_DATA.find(c => c.id === parseInt(id));
+            return ch && ch.correct === ans;
+        }).length;
+        const accuracy = attempted ? Math.round((correct / attempted) * 100) + '%' : '—';
+
+        const correctEl = document.getElementById('challenges-correct');
+        const attemptedEl = document.getElementById('challenges-attempted');
+        const accuracyEl = document.getElementById('challenges-accuracy');
+        if (correctEl) correctEl.textContent = correct;
+        if (attemptedEl) attemptedEl.textContent = attempted;
+        if (accuracyEl) accuracyEl.textContent = accuracy;
+    }
+
+    function setupChallenges() {
+        const container = document.getElementById('challenges-container');
+        if (!container) return;
+
+        // Render inicial
+        renderChallenges('all');
+
+        // Filtros
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderChallenges(btn.dataset.filter);
+            });
+        });
+
+        // Selección de respuesta
+        container.addEventListener('change', (e) => {
+            if (!e.target.matches('input[type="radio"][name^="ch-"]')) return;
+            const id = parseInt(e.target.name.replace('ch-', ''));
+            const value = parseInt(e.target.value);
+            const state = JSON.parse(localStorage.getItem('cc-challenges') || '{}');
+            state[id] = value;
+            localStorage.setItem('cc-challenges', JSON.stringify(state));
+
+            const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+            renderChallenges(activeFilter);
+        });
+
+        // Volver a intentar
+        container.addEventListener('click', (e) => {
+            const btn = e.target.closest('.challenge-retry');
+            if (!btn) return;
+            const id = parseInt(btn.dataset.retry);
+            const state = JSON.parse(localStorage.getItem('cc-challenges') || '{}');
+            delete state[id];
+            localStorage.setItem('cc-challenges', JSON.stringify(state));
+            const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+            renderChallenges(activeFilter);
+        });
+
+        // Reset global
+        const resetBtn = document.getElementById('reset-challenges');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                if (confirm('¿Resetear todo tu progreso de desafíos?')) {
+                    localStorage.removeItem('cc-challenges');
+                    const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+                    renderChallenges(activeFilter);
+                }
+            });
+        }
+    }
+
+    /* ============================================================
+       8.8 PROGRESO DEL CURSO (roadmap visual)
+       Muestra módulos completados según localStorage.
+       ============================================================ */
+    function updateCourseProgress() {
+        const fill = document.getElementById('progress-fill');
+        const label = document.getElementById('progress-label');
+        if (!fill || !label) return;
+
+        // Mapeo de módulos a checkpoints existentes (3 niveles + 4 secciones avanzadas)
+        const moduleStatus = {
+            1: !!localStorage.getItem('cc-level-1-completed'),
+            2: !!localStorage.getItem('cc-flow-completed'),
+            3: !!localStorage.getItem('cc-level-2-completed'),
+            4: !!localStorage.getItem('cc-mcp-completed'),
+            5: !!localStorage.getItem('cc-level-3-completed'),
+            6: !!localStorage.getItem('cc-sdk-completed'),
+            7: !!localStorage.getItem('cc-capstone-completed'),
+        };
+
+        const completed = Object.values(moduleStatus).filter(Boolean).length;
+        const pct = Math.round((completed / 7) * 100);
+
+        fill.style.width = pct + '%';
+        label.textContent = `${completed} / 7 módulos completados (${pct}%)`;
+
+        // Marcar visualmente los módulos completados en el roadmap
+        document.querySelectorAll('.roadmap-module').forEach(m => {
+            const num = parseInt(m.dataset.module);
+            if (moduleStatus[num]) m.classList.add('roadmap-module--done');
+        });
+    }
+
+    /* ============================================================
+       8.9 CAPSTONE CHECKLIST (persistido)
+       ============================================================ */
+    function setupCapstoneChecklist() {
+        document.querySelectorAll('input[type="checkbox"][data-capstone]').forEach(cb => {
+            const key = `cc-capstone-${cb.dataset.capstone}`;
+            cb.checked = !!localStorage.getItem(key);
+
+            cb.addEventListener('change', () => {
+                if (cb.checked) localStorage.setItem(key, '1');
+                else localStorage.removeItem(key);
+
+                // Si todos están marcados, completar el capstone
+                const all = document.querySelectorAll('input[data-capstone]');
+                const done = Array.from(all).every(c => c.checked);
+                if (done) {
+                    localStorage.setItem('cc-capstone-completed', new Date().toISOString());
+                    showToast('🎉 Capstone completado — eres un experto Claude Code');
+                } else {
+                    localStorage.removeItem('cc-capstone-completed');
+                }
+                updateCourseProgress();
+            });
+        });
+    }
+
+    /* ============================================================
        9. UTILIDADES
        ============================================================ */
     function sleep(ms) {
@@ -1467,6 +1944,10 @@
     function updateStats() {
         const el = document.getElementById('stat-commands');
         if (el) el.textContent = COMMANDS_DATA.length;
+        const cases = document.getElementById('stat-cases');
+        if (cases) cases.textContent = '10+';
+        const skills = document.getElementById('stat-skills');
+        if (skills) skills.textContent = '12+';
     }
 
     /* ============================================================
@@ -1508,6 +1989,11 @@
 
         // 6) Terminal
         setupTerminal();
+
+        // 6.5) Curso interactivo
+        setupChallenges();
+        setupCapstoneChecklist();
+        updateCourseProgress();
 
         // 7) Stats
         updateStats();

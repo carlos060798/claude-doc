@@ -37,6 +37,20 @@
                 <ul class="nav-list">
                     <li><a href="#dashboard" class="nav-link active" data-section="dashboard">
                         <span class="nav-icon">▣</span> Dashboard</a></li>
+                    <li><a href="#curso" class="nav-link" data-section="curso" data-mode="technical">
+                        <span class="nav-icon">🎓</span> Curso Interactivo</a></li>
+                </ul>
+
+                <p class="nav-group-title">Curso · Práctica</p>
+                <ul class="nav-list">
+                    <li><a href="#desafios" class="nav-link" data-section="desafios" data-mode="technical">
+                        <span class="nav-icon">🧠</span> Desafíos</a></li>
+                    <li><a href="#flujos-dev" class="nav-link" data-section="flujos-dev" data-mode="technical">
+                        <span class="nav-icon">🔄</span> Flujos Dev Reales</a></li>
+                    <li><a href="#cheatsheet" class="nav-link" data-section="cheatsheet" data-mode="technical">
+                        <span class="nav-icon">📄</span> Cheat Sheets</a></li>
+                    <li><a href="#capstone" class="nav-link" data-section="capstone" data-mode="technical">
+                        <span class="nav-icon">🏆</span> Capstone Project</a></li>
                 </ul>
 
                 <p class="nav-group-title">Niveles de Aprendizaje (Técnico)</p>
@@ -219,6 +233,1258 @@
                     <strong>💡 Tip de senior:</strong> Lee el archivo <code>CLAUDE.md</code> de cada
                     proyecto antes de iniciar la sesión. Es el equivalente a un <em>system prompt</em>
                     persistente y el primer punto de configuración profesional.
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: CURSO INTERACTIVO (HOME) ====== -->
+            <section class="content-section" data-section="curso" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Inicio / Curso Interactivo</span>
+                    <h2>🎓 Curso Interactivo: De Cero a Experto en Claude Code</h2>
+                    <p class="section-lead">
+                        Un programa de aprendizaje estructurado en <strong>7 módulos progresivos</strong>,
+                        diseñado para developers que quieren dominar Claude Code en su flujo de trabajo
+                        diario — desde la primera instalación hasta agentes autónomos en producción.
+                    </p>
+                </div>
+
+                <div class="course-hero">
+                    <div class="course-hero-stats">
+                        <div class="hero-stat"><span class="hero-stat-num">7</span><span class="hero-stat-label">Módulos</span></div>
+                        <div class="hero-stat"><span class="hero-stat-num">25+</span><span class="hero-stat-label">Desafíos</span></div>
+                        <div class="hero-stat"><span class="hero-stat-num">10</span><span class="hero-stat-label">Flujos Dev reales</span></div>
+                        <div class="hero-stat"><span class="hero-stat-num">1</span><span class="hero-stat-label">Capstone Project</span></div>
+                        <div class="hero-stat"><span class="hero-stat-num">~6h</span><span class="hero-stat-label">Tiempo estimado</span></div>
+                    </div>
+                    <div class="course-progress-summary" id="course-progress-summary">
+                        <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div>
+                        <span class="progress-label" id="progress-label">0 / 7 módulos completados</span>
+                    </div>
+                </div>
+
+                <h3 class="block-title">🗺️ El Roadmap Completo</h3>
+                <p>Cada módulo construye sobre el anterior. Te recomendamos seguir el orden, pero puedes saltar a cualquier parte si ya dominas los fundamentos.</p>
+
+                <div class="roadmap">
+                    <!-- MÓDULO 1 -->
+                    <div class="roadmap-module" data-module="1">
+                        <div class="roadmap-marker">01</div>
+                        <div class="roadmap-content">
+                            <div class="roadmap-meta">
+                                <span class="roadmap-tag roadmap-tag--easy">Principiante</span>
+                                <span class="roadmap-time">~30 min</span>
+                            </div>
+                            <h4>Setup & Primer Contacto</h4>
+                            <p>Instalación multiplataforma, autenticación OAuth, primera sesión, comandos esenciales.</p>
+                            <ul class="roadmap-bullets">
+                                <li>Instalar Claude Code en tu sistema</li>
+                                <li>Configurar OAuth o API Key</li>
+                                <li>Crear tu primer CLAUDE.md con <code>/init</code></li>
+                                <li>Mencionar archivos con <code>@</code></li>
+                            </ul>
+                            <div class="roadmap-project">🎯 <strong>Proyecto:</strong> Configurar Claude Code en tu repo personal</div>
+                            <a href="#nivel-1" class="roadmap-cta" data-jump="nivel-1">Comenzar Módulo 1 →</a>
+                        </div>
+                    </div>
+
+                    <!-- MÓDULO 2 -->
+                    <div class="roadmap-module" data-module="2">
+                        <div class="roadmap-marker">02</div>
+                        <div class="roadmap-content">
+                            <div class="roadmap-meta">
+                                <span class="roadmap-tag roadmap-tag--easy">Principiante</span>
+                                <span class="roadmap-time">~45 min</span>
+                            </div>
+                            <h4>Workflow Diario del Developer</h4>
+                            <p>Patrones que usarás cada día: leer código nuevo, refactorizar, debuggear, crear commits y PRs con Claude.</p>
+                            <ul class="roadmap-bullets">
+                                <li>Onboarding rápido a un repo desconocido</li>
+                                <li>Refactorizar funciones legacy con seguridad</li>
+                                <li>Debuggear errores con stack traces reales</li>
+                                <li>Generar commits y PRs descriptivos</li>
+                            </ul>
+                            <div class="roadmap-project">🎯 <strong>Proyecto:</strong> Refactorizar un módulo legacy a TypeScript estricto</div>
+                            <a href="#flujos-dev" class="roadmap-cta" data-jump="flujos-dev">Ver Flujos Dev →</a>
+                        </div>
+                    </div>
+
+                    <!-- MÓDULO 3 -->
+                    <div class="roadmap-module" data-module="3">
+                        <div class="roadmap-marker">03</div>
+                        <div class="roadmap-content">
+                            <div class="roadmap-meta">
+                                <span class="roadmap-tag roadmap-tag--medium">Intermedio</span>
+                                <span class="roadmap-time">~50 min</span>
+                            </div>
+                            <h4>Maestría del Contexto</h4>
+                            <p>El recurso más caro de Claude es la ventana de contexto. Aprende a observarla, comprimirla y persistirla.</p>
+                            <ul class="roadmap-bullets">
+                                <li>Diagnóstico con <code>/context</code> y <code>/usage</code></li>
+                                <li>Compactación dirigida con <code>/compact "preserva X"</code></li>
+                                <li>Memoria persistente con <code>/memory</code></li>
+                                <li>Sesiones nombradas con <code>/rename</code> y <code>/resume</code></li>
+                            </ul>
+                            <div class="roadmap-project">🎯 <strong>Proyecto:</strong> Sobrevivir una sesión de 4 horas sin perder contexto</div>
+                            <a href="#nivel-2" class="roadmap-cta" data-jump="nivel-2">Comenzar Módulo 3 →</a>
+                        </div>
+                    </div>
+
+                    <!-- MÓDULO 4 -->
+                    <div class="roadmap-module" data-module="4">
+                        <div class="roadmap-marker">04</div>
+                        <div class="roadmap-content">
+                            <div class="roadmap-meta">
+                                <span class="roadmap-tag roadmap-tag--medium">Intermedio</span>
+                                <span class="roadmap-time">~60 min</span>
+                            </div>
+                            <h4>MCP: Conexión a Herramientas Externas</h4>
+                            <p>Conecta Claude a GitHub, bases de datos, Slack, Sentry, navegadores. Transports stdio/HTTP/SSE y scopes (local/project/user).</p>
+                            <ul class="roadmap-bullets">
+                                <li>Registrar servidores MCP públicos y privados</li>
+                                <li>Auth con OAuth y headers personalizados</li>
+                                <li>Configuración declarativa <code>.mcp.json</code></li>
+                                <li>Tool Search para escalar a 100+ herramientas</li>
+                            </ul>
+                            <div class="roadmap-project">🎯 <strong>Proyecto:</strong> Configurar 3 MCPs (GitHub + Postgres + Sentry) y resolver una tarea real</div>
+                            <a href="#nivel-2" class="roadmap-cta" data-jump="nivel-2">Continuar en Módulo 4 →</a>
+                        </div>
+                    </div>
+
+                    <!-- MÓDULO 5 -->
+                    <div class="roadmap-module" data-module="5">
+                        <div class="roadmap-marker">05</div>
+                        <div class="roadmap-content">
+                            <div class="roadmap-meta">
+                                <span class="roadmap-tag roadmap-tag--hard">Avanzado</span>
+                                <span class="roadmap-time">~75 min</span>
+                            </div>
+                            <h4>Skills, Hooks & Sub-Agentes</h4>
+                            <p>Crea Skills para tu equipo. Configura hooks deterministas. Orquesta sub-agentes especializados en paralelo.</p>
+                            <ul class="roadmap-bullets">
+                                <li>Anatomía completa del frontmatter</li>
+                                <li>5 Skills de producción (review, deploy, tests…)</li>
+                                <li>Hooks <code>PreToolUse</code> / <code>PostToolUse</code> / <code>SessionStart</code></li>
+                                <li>Sub-agentes con <code>AgentDefinition</code></li>
+                            </ul>
+                            <div class="roadmap-project">🎯 <strong>Proyecto:</strong> Publicar una librería de Skills compartida con tu equipo</div>
+                            <a href="#nivel-3" class="roadmap-cta" data-jump="nivel-3">Comenzar Módulo 5 →</a>
+                        </div>
+                    </div>
+
+                    <!-- MÓDULO 6 -->
+                    <div class="roadmap-module" data-module="6">
+                        <div class="roadmap-marker">06</div>
+                        <div class="roadmap-content">
+                            <div class="roadmap-meta">
+                                <span class="roadmap-tag roadmap-tag--hard">Avanzado</span>
+                                <span class="roadmap-time">~80 min</span>
+                            </div>
+                            <h4>Agent SDK & API de Anthropic</h4>
+                            <p>Construye agentes programáticamente. Domina la Messages API, tool use, streaming, vision, batch y prompt caching.</p>
+                            <ul class="roadmap-bullets">
+                                <li><code>@anthropic-ai/claude-agent-sdk</code> en TS y Python</li>
+                                <li>Tool use loop y orquestación multi-agente</li>
+                                <li>Prompt caching (-90% costos)</li>
+                                <li>Batch API (-50% costos en volumen)</li>
+                            </ul>
+                            <div class="roadmap-project">🎯 <strong>Proyecto:</strong> Construir un revisor de PRs autónomo con SDK + sub-agentes</div>
+                            <div class="roadmap-cta-group">
+                                <a href="#agente-sdk" class="roadmap-cta" data-jump="agente-sdk">Ver Agent SDK →</a>
+                                <a href="#api-anthropic" class="roadmap-cta roadmap-cta--ghost" data-jump="api-anthropic">Ver API →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MÓDULO 7 -->
+                    <div class="roadmap-module" data-module="7">
+                        <div class="roadmap-marker">07</div>
+                        <div class="roadmap-content">
+                            <div class="roadmap-meta">
+                                <span class="roadmap-tag roadmap-tag--expert">Experto</span>
+                                <span class="roadmap-time">~90 min</span>
+                            </div>
+                            <h4>Producción: CI/CD, Seguridad & Equipos</h4>
+                            <p>Lleva Claude a producción. GitHub Actions, modo headless, hardening, mejores prácticas para equipos y escalado.</p>
+                            <ul class="roadmap-bullets">
+                                <li>Pipelines: review automático en PRs</li>
+                                <li>Hardening: <code>deny</code>, <code>.claudeignore</code>, secretos</li>
+                                <li>Sesiones paralelas con git worktrees</li>
+                                <li>Métricas: tokens, latencia, costos</li>
+                            </ul>
+                            <div class="roadmap-project">🎯 <strong>Capstone:</strong> Sistema completo de asistente de desarrollo para tu equipo</div>
+                            <a href="#capstone" class="roadmap-cta" data-jump="capstone">Ir al Capstone →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="block-title">📚 Cómo aprovechar este curso</h3>
+                <div class="course-tips-grid">
+                    <div class="course-tip-card">
+                        <div class="course-tip-icon">🛠️</div>
+                        <h4>Aprende haciendo</h4>
+                        <p>Cada módulo tiene un proyecto real. Abre tu terminal en un repo de verdad y ejecuta los comandos mientras lees.</p>
+                    </div>
+                    <div class="course-tip-card">
+                        <div class="course-tip-icon">🧠</div>
+                        <h4>Resuelve los desafíos</h4>
+                        <p>Los <a href="#desafios" data-jump="desafios">desafíos interactivos</a> validan tu comprensión. Si fallas, revisa la sección y vuelve a intentar.</p>
+                    </div>
+                    <div class="course-tip-card">
+                        <div class="course-tip-icon">📌</div>
+                        <h4>Marca tu progreso</h4>
+                        <p>Al final de cada nivel, pulsa "Marcar completado". Tu progreso se guarda localmente y se refleja en el dashboard.</p>
+                    </div>
+                    <div class="course-tip-card">
+                        <div class="course-tip-icon">🔄</div>
+                        <h4>Vuelve a las cheat sheets</h4>
+                        <p>Las <a href="#cheatsheet" data-jump="cheatsheet">cheat sheets</a> son tu referencia rápida. Imprímelas o ténlas abiertas mientras trabajas.</p>
+                    </div>
+                </div>
+
+                <div class="info-banner info-banner--tip">
+                    <strong>💡 Consejo del autor:</strong> No intentes hacer todo en una sola sesión.
+                    Recomendamos 1 módulo por día durante una semana, aplicando lo aprendido a tu trabajo
+                    real entre sesiones. La maestría viene de la práctica, no del consumo.
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: DESAFÍOS INTERACTIVOS ====== -->
+            <section class="content-section" data-section="desafios" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Curso / Desafíos</span>
+                    <h2>🧠 Desafíos Interactivos</h2>
+                    <p class="section-lead">
+                        25 retos progresivos para validar lo que aprendiste. Cada desafío te pone
+                        en una situación real de developer y te pide elegir la mejor opción.
+                        Tu progreso se guarda automáticamente.
+                    </p>
+                </div>
+
+                <div class="challenges-stats" id="challenges-stats">
+                    <div class="challenge-stat-card">
+                        <span class="challenge-stat-num" id="challenges-correct">0</span>
+                        <span class="challenge-stat-label">Aciertos</span>
+                    </div>
+                    <div class="challenge-stat-card">
+                        <span class="challenge-stat-num" id="challenges-attempted">0</span>
+                        <span class="challenge-stat-label">Intentados</span>
+                    </div>
+                    <div class="challenge-stat-card">
+                        <span class="challenge-stat-num" id="challenges-accuracy">—</span>
+                        <span class="challenge-stat-label">Precisión</span>
+                    </div>
+                    <div class="challenge-stat-card">
+                        <button class="btn-ghost" id="reset-challenges" style="font-size:0.78em;padding:6px 12px;">Resetear progreso</button>
+                    </div>
+                </div>
+
+                <div class="challenges-filter">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="basics">Fundamentos</button>
+                    <button class="filter-btn" data-filter="context">Contexto</button>
+                    <button class="filter-btn" data-filter="mcp">MCP</button>
+                    <button class="filter-btn" data-filter="skills">Skills</button>
+                    <button class="filter-btn" data-filter="sdk">SDK & API</button>
+                    <button class="filter-btn" data-filter="security">Seguridad</button>
+                </div>
+
+                <div id="challenges-container">
+                    <!-- Renderizado por JS desde CHALLENGES_DATA -->
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: FLUJOS DEV REALES ====== -->
+            <section class="content-section" data-section="flujos-dev" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Curso / Flujos Dev Reales</span>
+                    <h2>🔄 Flujos Reales de Developer</h2>
+                    <p class="section-lead">
+                        10 escenarios completos sacados del día a día de equipos de producción.
+                        Cada flujo incluye contexto, prompts efectivos paso a paso, qué esperar,
+                        y los errores comunes a evitar.
+                    </p>
+                </div>
+
+                <!-- FLUJO 1: ONBOARDING A REPO LEGACY -->
+                <article class="flow-card" data-flow="onboarding">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 01</div>
+                        <h3>🆕 Onboarding a un repo legacy de 5 años</h3>
+                        <p class="flow-context"><strong>Situación:</strong> Te incorporas a un equipo. El repo tiene 200 archivos, sin README útil, mezcla de JS y TS, y nadie tiene tiempo de explicártelo.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Mapa inicial del repo</strong>
+                                <pre class="flow-prompt">> Eres un senior engineer haciendo onboarding. Sin leer nada en detalle:
+  1. Lista los directorios principales con `ls` y describe el propósito de cada uno
+  2. Lee @README.md y @package.json
+  3. Identifica el stack técnico, scripts npm relevantes y entry points
+  4. Devuélvelo como un mapa mental en Markdown</pre>
+                                <span class="flow-tip">💡 No le pidas leer todo al principio — hace consumo brutal de tokens.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Generar CLAUDE.md desde el código real</strong>
+                                <pre class="flow-prompt">> Ejecuta /init para generar un CLAUDE.md base.
+  Después léelo y añade:
+  - Convenciones detectadas (nombres de archivos, imports, tests)
+  - Comandos npm más usados (analiza scripts en package.json)
+  - Áreas peligrosas (TODOs, FIXMEs, código sin tests)
+  - 3 archivos clave para entender el dominio</pre>
+                                <span class="flow-tip">💡 El CLAUDE.md generado se queda en el repo y acelera todas tus sesiones futuras.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>Trazar un flujo crítico</strong>
+                                <pre class="flow-prompt">> Traza el flujo completo de un login desde @src/api/auth/login.ts.
+  Muéstrame: archivos involucrados, llamadas a DB, validaciones, dónde se firma
+  el JWT, dónde se guarda la session. Dame un diagrama ASCII.</pre>
+                                <span class="flow-tip">💡 Pídele un flujo concreto, no "explícame todo el sistema". Mucho más útil.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">4</div>
+                            <div class="flow-step-body">
+                                <strong>Guardar aprendizajes en memoria</strong>
+                                <pre class="flow-prompt">> /memory add "Auth: JWT firmado en src/api/auth/jwt.ts.
+  Sessions en Redis (TTL 24h). Refresh tokens en src/api/auth/refresh.ts.
+  Validación con Zod en src/shared/schemas/."</pre>
+                                <span class="flow-tip">💡 Esta memoria sobrevive al cierre de sesión y futuras Claude sessions la usan.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-pitfalls">
+                        <strong>⚠ Errores comunes:</strong>
+                        <ul>
+                            <li>Pedir "léete todo el repo" — saturas el contexto sin sacar valor</li>
+                            <li>No actualizar CLAUDE.md después del onboarding — pierdes el aprendizaje</li>
+                            <li>Mezclar onboarding con tareas reales — cada cosa en su sesión</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- FLUJO 2: AÑADIR FEATURE CON TDD -->
+                <article class="flow-card" data-flow="tdd-feature">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 02</div>
+                        <h3>🧪 Añadir una feature con TDD</h3>
+                        <p class="flow-context"><strong>Situación:</strong> Te asignan implementar "rate limiting por usuario" en un endpoint. Tu equipo exige tests primero, cobertura ≥85%.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Diseño antes de tocar código</strong>
+                                <pre class="flow-prompt">> Lee @src/api/middleware/ y @CLAUDE.md.
+  Diseña (sin implementar) un middleware de rate-limiting:
+  - Por user.id, no por IP (evita afectar usuarios detrás de NAT)
+  - 100 req/min por defecto, configurable
+  - Storage en Redis (ya lo usamos)
+  - Devuelve 429 con header Retry-After
+
+  Dame: estructura del archivo, interfaces TS, casos de test a cubrir.
+  NO escribas código todavía.</pre>
+                                <span class="flow-tip">💡 Separar diseño de implementación produce mejores resultados.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Tests primero (rojos)</strong>
+                                <pre class="flow-prompt">> Escribe los tests Vitest para el middleware en
+  @src/api/middleware/rate-limit.test.ts.
+  Cubre los casos que listaste: happy path, límite alcanzado,
+  reset de ventana, usuarios distintos no se afectan, Redis caído (fallback).
+  Mockea Redis con @testing-library/redis-mock.
+
+  Los tests DEBEN fallar (rojos) — el archivo de impl aún no existe.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>Implementar hasta verde</strong>
+                                <pre class="flow-prompt">> Ahora implementa @src/api/middleware/rate-limit.ts
+  para que pasen TODOS los tests. Sigue el diseño que definimos.
+  Después de cada cambio, corre `npm test rate-limit` y muéstrame el output.</pre>
+                                <span class="flow-tip">💡 Pídele que ejecute los tests él mismo — atrapa errores antes que tú.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">4</div>
+                            <div class="flow-step-body">
+                                <strong>Refactor con tests verdes</strong>
+                                <pre class="flow-prompt">> Con los tests pasando, refactoriza el middleware:
+  - Extrae constantes mágicas a un objeto config
+  - Mejora nombres de variables si encuentras alguno poco claro
+  - Verifica que TODOS los tests sigan en verde después del refactor</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">5</div>
+                            <div class="flow-step-body">
+                                <strong>PR con contexto</strong>
+                                <pre class="flow-prompt">> Crea un commit con mensaje descriptivo siguiendo Conventional Commits.
+  Después abre un PR con `gh pr create` cuyo body explique:
+  - Por qué hacemos rate-limiting por user.id (no por IP)
+  - Cómo se configura el límite por endpoint
+  - Plan de rollout: feature flag inicialmente</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-pitfalls">
+                        <strong>⚠ Errores comunes:</strong>
+                        <ul>
+                            <li>Saltar el paso de diseño — Claude implementa algo que no encaja con el resto</li>
+                            <li>No pedir que ejecute los tests — quedan errores ocultos hasta CI</li>
+                            <li>PR sin contexto del "por qué" — el reviewer no puede evaluar la decisión</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- FLUJO 3: DEBUGGING -->
+                <article class="flow-card" data-flow="debug">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 03</div>
+                        <h3>🐛 Debugging de bug intermitente en producción</h3>
+                        <p class="flow-context"><strong>Situación:</strong> Sentry reporta <code>RangeError: Invalid time value</code> con 47 ocurrencias en 24h, pero no se reproduce localmente.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Investigación con stack trace real</strong>
+                                <pre class="flow-prompt">> Tengo este error de Sentry:
+
+  RangeError: Invalid time value
+    at Date.toISOString (&lt;anonymous&gt;)
+    at formatTimestamp (src/lib/dates/format.ts:42)
+    at processOrder (src/features/checkout/process.ts:118)
+
+  Lee @src/lib/dates/format.ts y @src/features/checkout/process.ts.
+  Identifica QUÉ inputs podrían producir un Date inválido en formatTimestamp.
+  Dame hipótesis ordenadas por probabilidad, no implementes nada.</pre>
+                                <span class="flow-tip">💡 Pega el stack completo. El número de línea es oro puro.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Test que reproduce el bug</strong>
+                                <pre class="flow-prompt">> Antes de arreglarlo, escribe un test en
+  @src/lib/dates/format.test.ts que reproduzca el bug con cada hipótesis.
+  El test DEBE fallar ahora (demuestra que el bug existe).</pre>
+                                <span class="flow-tip">💡 Test que reproduce ANTES del fix evita "lo arreglé pero no estoy seguro".</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>Fix defensivo + observabilidad</strong>
+                                <pre class="flow-prompt">> Arregla formatTimestamp con:
+  1. Validación al entrar (Date inválido → throw con contexto)
+  2. Logger.warn con el input original cuando se detecta inválido
+  3. Si el caller puede recuperarse, devolver fallback documentado
+
+  Después corre el test que escribimos: debe pasar a verde.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">4</div>
+                            <div class="flow-step-body">
+                                <strong>Buscar otros call sites vulnerables</strong>
+                                <pre class="flow-prompt">> Con grep, encuentra todos los lugares que llaman a formatTimestamp.
+  Para cada uno: ¿de dónde viene el Date? ¿podría ser inválido?
+  Si encuentras otros riesgos, lista las correcciones (no implementes aún).</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-pitfalls">
+                        <strong>⚠ Errores comunes:</strong>
+                        <ul>
+                            <li>Arreglar sin reproducir — un fix sin test es una hipótesis sin verificar</li>
+                            <li>Suprimir el error con try/catch silencioso — solo lo escondes</li>
+                            <li>No buscar otros call sites — el bug puede estar en más lugares</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- FLUJO 4: MIGRACIÓN -->
+                <article class="flow-card" data-flow="migration">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 04</div>
+                        <h3>🔄 Migrar de Express a Fastify (sin downtime)</h3>
+                        <p class="flow-context"><strong>Situación:</strong> 38 endpoints en Express. Migrar a Fastify por performance, pero sin parar producción ni romper clientes.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Inventario y plan por fases</strong>
+                                <pre class="flow-prompt">> Lista todos los endpoints (rutas + métodos) en @src/routes/.
+  Agrúpalos por dominio (auth, users, payments, etc).
+  Diseña un plan de migración por fases:
+  - Fase A: endpoints sin estado/internos
+  - Fase B: endpoints CRUD simples
+  - Fase C: endpoints críticos (payments, auth)
+  Para cada fase: criterios de éxito y plan de rollback.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Suite de tests de contrato</strong>
+                                <pre class="flow-prompt">> Antes de migrar nada, crea tests de contrato (input → output)
+  para los 5 endpoints más críticos. Tests independientes del framework
+  (usan supertest contra HTTP). Estos tests deben pasar tanto con Express
+  como con Fastify después.</pre>
+                                <span class="flow-tip">💡 Tests de contrato son tu red de seguridad durante la migración.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>Migración endpoint por endpoint</strong>
+                                <pre class="flow-prompt">> Migra @src/routes/health.ts (el más simple) a Fastify.
+  Mantén la firma HTTP idéntica. Corre los tests de contrato.
+  Si pasan: commit. Si no: explícame por qué y propon una corrección.
+
+  Después seguimos con el siguiente endpoint.</pre>
+                                <span class="flow-tip">💡 Un endpoint = un commit = un PR. Reviews y rollbacks fáciles.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">4</div>
+                            <div class="flow-step-body">
+                                <strong>Compactar antes de seguir</strong>
+                                <pre class="flow-prompt">> /compact mantén el plan de migración (5 fases),
+  los endpoints ya migrados (health, status, version) y la suite
+  de tests de contrato. Descarta los logs de errores resueltos
+  y las exploraciones iniciales.</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-pitfalls">
+                        <strong>⚠ Errores comunes:</strong>
+                        <ul>
+                            <li>Migrar todo en un solo PR — review imposible y rollback nuclear</li>
+                            <li>Sin tests de contrato — descubres regresiones en producción</li>
+                            <li>Cambiar el contrato HTTP "de paso" — rompes clientes que no controlas</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- FLUJO 5: CODE REVIEW -->
+                <article class="flow-card" data-flow="review">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 05</div>
+                        <h3>👀 Code review profundo asistido</h3>
+                        <p class="flow-context"><strong>Situación:</strong> Te asignan revisar un PR de 800 líneas en 30 minutos. Tienes que dar feedback útil sin perderte detalles importantes.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Resumen ejecutivo del PR</strong>
+                                <pre class="flow-prompt">> Lee el diff actual con `git diff main...HEAD`.
+  Dame un resumen ejecutivo en 5 puntos:
+  - ¿Qué problema resuelve?
+  - ¿Qué archivos toca y por qué?
+  - ¿Hay cambios estructurales (nuevos módulos, refactors grandes)?
+  - ¿Hay tests añadidos? ¿Qué cubren?
+  - ¿Qué NO hace este PR (scope explícito)?</pre>
+                                <span class="flow-tip">💡 El resumen te orienta antes de bucear en líneas concretas.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Revisión por checklist</strong>
+                                <pre class="flow-prompt">> Ejecuta /code-review (nuestro Skill).
+  Quiero output organizado por prioridad:
+  🔴 Bloqueantes — bugs, seguridad, romper compat
+  🟡 Sugerencias — mejoras de diseño, naming
+  🟢 Nits — typos, espaciado, comentarios
+
+  Para cada hallazgo: archivo:línea + por qué + fix sugerido.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>Verificación cruzada</strong>
+                                <pre class="flow-prompt">> Para cada hallazgo bloqueante, dame el código exacto que lo
+  causaría a fallar. Si no puedes producir un caso concreto que falla,
+  reclasifícalo a "sugerencia".</pre>
+                                <span class="flow-tip">💡 Esto evita falsos positivos — bloquea solo lo que realmente bloquea.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-pitfalls">
+                        <strong>⚠ Errores comunes:</strong>
+                        <ul>
+                            <li>Aceptar todo el feedback de Claude sin verificar — incluye falsos positivos</li>
+                            <li>Bloquear nits — frustra al autor y desincentiva PRs pequeños</li>
+                            <li>No pedir resumen ejecutivo — te pierdes en líneas sin contexto</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- FLUJO 6: API DOCS -->
+                <article class="flow-card" data-flow="api-docs">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 06</div>
+                        <h3>📚 Generar documentación OpenAPI desde el código</h3>
+                        <p class="flow-context"><strong>Situación:</strong> Tu API tiene 60 endpoints. Necesitas un OpenAPI 3.1 actualizado para que el equipo de mobile/frontend genere clientes tipados.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Inventario de endpoints</strong>
+                                <pre class="flow-prompt">> Encuentra todos los endpoints en @src/routes/ y @src/controllers/.
+  Para cada uno extrae:
+  - Método y ruta
+  - Schema de request (path/query/body) — busca Zod schemas o tipos TS
+  - Schema de response (success y errores)
+  - Tag de dominio (auth, users, payments…)
+
+  Devuélvelo como tabla Markdown.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Generar OpenAPI YAML</strong>
+                                <pre class="flow-prompt">> Con esa información, genera @docs/openapi.yaml en formato OpenAPI 3.1.
+  Reglas:
+  - Schemas reusables en components/schemas
+  - Errores documentados (400, 401, 403, 404, 500)
+  - Ejemplos por endpoint (mínimo 1)
+  - Servers: dev/staging/prod con URLs reales de @CLAUDE.md</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>Validar el OpenAPI</strong>
+                                <pre class="flow-prompt">> Corre `npx @apidevtools/swagger-cli validate docs/openapi.yaml`.
+  Si hay errores, corrígelos. Si todo está bien, instala
+  @scalar/api-reference y genera una preview HTML del docs.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">4</div>
+                            <div class="flow-step-body">
+                                <strong>Hook para mantener actualizado</strong>
+                                <pre class="flow-prompt">> Crea un hook PostToolUse en @.claude/settings.json:
+  cuando se modifique un archivo en src/routes/ o src/controllers/,
+  ejecutar `npm run docs:generate` que regenera el OpenAPI parcialmente.
+  Así nunca queda desactualizado.</pre>
+                                <span class="flow-tip">💡 Hooks son tu mejor defensa contra docs obsoletas.</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- FLUJO 7: PERFORMANCE -->
+                <article class="flow-card" data-flow="perf">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 07</div>
+                        <h3>⚡ Investigar un cuello de botella de performance</h3>
+                        <p class="flow-context"><strong>Situación:</strong> Tu endpoint <code>GET /api/dashboard</code> tarda 4.2s en p95. Los usuarios se quejan. Tienes que bajar a &lt;500ms.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Trazar la llamada completa</strong>
+                                <pre class="flow-prompt">> Lee @src/api/dashboard.ts. Traza la ejecución completa:
+  qué queries hace, en qué orden, qué se computa en memoria.
+  Identifica candidatos a cuello de botella (N+1, queries sin índice,
+  loops anidados, llamadas síncronas a servicios externos).
+
+  Dame un ranking de hipótesis ordenado por probabilidad.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Medir antes de optimizar</strong>
+                                <pre class="flow-prompt">> Añade timings con console.time/timeEnd en cada sección sospechosa.
+  Corre el endpoint con un payload realista (10 items en dashboard).
+  Pega los timings de vuelta y dame el análisis.</pre>
+                                <span class="flow-tip">💡 Optimizar sin medir = adivinar. Mide siempre primero.</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>Aplicar fix con benchmark</strong>
+                                <pre class="flow-prompt">> Aplica la optimización al cuello de botella #1 (la query N+1).
+  Después corre los timings de nuevo y compara con el baseline.
+  Si la mejora es &lt;30%, descártala y prueba otra hipótesis.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">4</div>
+                            <div class="flow-step-body">
+                                <strong>Test de regresión de performance</strong>
+                                <pre class="flow-prompt">> Añade un test que falle si el endpoint tarda &gt;800ms con el dataset
+  de prueba estándar. Usa vitest con timeout custom. Esto previene
+  regresiones de performance en futuros cambios.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- FLUJO 8: SEGURIDAD -->
+                <article class="flow-card" data-flow="security">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 08</div>
+                        <h3>🛡️ Auditoría de seguridad pre-deploy</h3>
+                        <p class="flow-context"><strong>Situación:</strong> Vas a hacer deploy a producción con datos reales por primera vez. Necesitas asegurar que no hay vulnerabilidades obvias.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Skill de auditoría completa</strong>
+                                <pre class="flow-prompt">> Ejecuta /security-audit a nivel de proyecto.
+  Quiero hallazgos categorizados: SQLi, XSS, secretos, CORS,
+  validación de input, manejo de errores que filtra info.
+
+  Para cada uno: archivo:línea + severidad + fix exacto.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Verificar dependencias</strong>
+                                <pre class="flow-prompt">> Ejecuta `npm audit --audit-level high`.
+  Para cada CVE crítico:
+  - Lee qué hace la dependencia en nuestro código
+  - Decide: ¿afecta nuestro caso de uso?
+  - Si afecta: actualiza o reemplaza
+  - Si no afecta: documenta el por qué en .audit-exceptions.md</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>Endurecer la configuración del agente</strong>
+                                <pre class="flow-prompt">> Revisa @.claude/settings.json y @.claudeignore.
+  Verifica que la lista deny incluye:
+  - .env, .env.* y todos los archivos con secretos
+  - Comandos peligrosos (curl|sh, rm -rf /, eval)
+  - Archivos de producción (production.config.*)
+  Y que .claudeignore excluye node_modules, dist, backups y datos PII.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- FLUJO 9: REFACTOR -->
+                <article class="flow-card" data-flow="refactor">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 09</div>
+                        <h3>🧹 Refactor agresivo con red de seguridad</h3>
+                        <p class="flow-context"><strong>Situación:</strong> Una función God de 600 líneas controla todo el checkout. Quieres dividirla sin romper nada — y tienes 0 tests sobre ella.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Tests de caracterización primero</strong>
+                                <pre class="flow-prompt">> Lee @src/checkout/process.ts (la función God).
+  Identifica TODOS los outputs observables: returns, side effects (DB writes,
+  emails, eventos), errores que lanza.
+
+  Genera tests de caracterización: capturan el comportamiento ACTUAL,
+  no el ideal. Estos tests son tu red — si pasan después del refactor,
+  no rompiste nada externo.</pre>
+                                <span class="flow-tip">💡 No "tests para verificar lo correcto" — "tests para detectar cambios".</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Identificar responsabilidades</strong>
+                                <pre class="flow-prompt">> En la función God, identifica las "fases" lógicas
+  (validación, cálculo de precio, charge al pago, persistencia, notificación).
+  Por cada fase: qué inputs usa, qué outputs produce, dependencias externas.
+
+  Propon una división en módulos sin implementar nada todavía.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>Refactor por fases con commits pequeños</strong>
+                                <pre class="flow-prompt">> Extrae SOLO la fase de validación a un módulo nuevo.
+  La función original sigue funcionando, solo delega esa parte.
+  Corre los tests de caracterización: deben seguir verdes.
+
+  Commit. Después seguimos con la fase de cálculo de precio.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- FLUJO 10: AUTOMATIZACIÓN PERSONAL -->
+                <article class="flow-card" data-flow="automation">
+                    <header class="flow-header">
+                        <div class="flow-tag">Flujo 10</div>
+                        <h3>🤖 Automatizar tu rutina de developer</h3>
+                        <p class="flow-context"><strong>Situación:</strong> Cada mañana repites: pull, npm install, leer Slack de tu equipo, revisar PRs asignados, decidir en qué trabajar. 30 min perdidos.</p>
+                    </header>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">1</div>
+                            <div class="flow-step-body">
+                                <strong>Skill de "buenos días"</strong>
+                                <pre class="flow-prompt">> Crea ~/.claude/skills/morning-brief/SKILL.md que:
+  - Hace `git pull` en el repo actual
+  - Ejecuta `gh pr list --assignee @me` para ver PRs míos
+  - Ejecuta `gh issue list --assignee @me --state open`
+  - Lee mi memoria con /memory para recordar en qué iba ayer
+  - Me da un brief de 5 líneas con: PRs pendientes, issues asignados,
+    en qué quedé ayer, sugerencia de en qué empezar hoy.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">2</div>
+                            <div class="flow-step-body">
+                                <strong>Hook para "fin de día"</strong>
+                                <pre class="flow-prompt">> Configura un hook SessionEnd en ~/.claude/settings.json
+  que ejecute /curso-checkpoint y guarde un resumen de la sesión
+  en ~/.claude/sessions/$(date +%Y-%m-%d).md.
+
+  Mañana cuando vuelva, /morning-brief lo lee como contexto.</pre>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">3</div>
+                            <div class="flow-step-body">
+                                <strong>MCPs de productividad</strong>
+                                <pre class="flow-prompt">> Conecta como user-scope (disponible en todos mis proyectos):
+  - GitHub (PRs, issues, notifications)
+  - Linear o Jira (tickets asignados)
+  - Slack (mentions y DMs sin leer)
+
+  Después /morning-brief tendrá acceso real a todo eso, no solo CLI.</pre>
+                                <span class="flow-tip">💡 user-scope vs project-scope: para herramientas tuyas usa user.</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ====== SECCIÓN: CHEAT SHEETS ====== -->
+            <section class="content-section" data-section="cheatsheet" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Curso / Cheat Sheets</span>
+                    <h2>📄 Cheat Sheets — Referencia Rápida</h2>
+                    <p class="section-lead">
+                        Una tarjeta por área de competencia. Diseñadas para imprimir o tener abiertas
+                        mientras trabajas. Cada bloque cabe en un vistazo.
+                    </p>
+                </div>
+
+                <div class="cheatsheet-grid">
+
+                    <!-- CHEAT 1: COMANDOS ESENCIALES -->
+                    <div class="cheatsheet">
+                        <div class="cheatsheet-header">
+                            <h3>⌨️ Comandos Esenciales</h3>
+                            <span class="cheatsheet-tag">Día a día</span>
+                        </div>
+                        <table class="cheatsheet-table">
+                            <tr><td><code>claude</code></td><td>Iniciar sesión</td></tr>
+                            <tr><td><code>claude -c</code></td><td>Continuar última sesión</td></tr>
+                            <tr><td><code>claude -r</code></td><td>Selector de sesiones previas</td></tr>
+                            <tr><td><code>claude -p "..."</code></td><td>Headless: prompt y salir</td></tr>
+                            <tr><td><code>claude commit</code></td><td>Crear commit con mensaje IA</td></tr>
+                            <tr><td><code>claude --worktree X</code></td><td>Sesión en worktree aislado</td></tr>
+                            <tr><td><code>/help</code></td><td>Comandos disponibles</td></tr>
+                            <tr><td><code>/init</code></td><td>Generar CLAUDE.md inicial</td></tr>
+                            <tr><td><code>/clear</code></td><td>Reiniciar conversación</td></tr>
+                            <tr><td><code>/model</code></td><td>Cambiar modelo</td></tr>
+                            <tr><td><code>/doctor</code></td><td>Diagnóstico de instalación</td></tr>
+                            <tr><td><code>@archivo</code></td><td>Mencionar archivo en prompt</td></tr>
+                            <tr><td><kbd>Esc</kbd></td><td>Detener acción en curso</td></tr>
+                            <tr><td><kbd>Esc Esc</kbd> / <code>/rewind</code></td><td>Restaurar checkpoint anterior</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- CHEAT 2: GESTIÓN DE CONTEXTO -->
+                    <div class="cheatsheet">
+                        <div class="cheatsheet-header">
+                            <h3>🧠 Gestión de Contexto</h3>
+                            <span class="cheatsheet-tag">Tokens</span>
+                        </div>
+                        <table class="cheatsheet-table">
+                            <tr><td><code>/context</code></td><td>Ver uso actual de la ventana</td></tr>
+                            <tr><td><code>/usage</code></td><td>Tokens y costo de la sesión</td></tr>
+                            <tr><td><code>/compact</code></td><td>Comprimir historial</td></tr>
+                            <tr><td><code>/compact "preserva X"</code></td><td>Compactación dirigida</td></tr>
+                            <tr><td><code>/memory add "..."</code></td><td>Persistir entre sesiones</td></tr>
+                            <tr><td><code>/memory show</code></td><td>Ver memoria del proyecto</td></tr>
+                            <tr><td><code>/rename "nombre"</code></td><td>Nombrar sesión actual</td></tr>
+                            <tr><td><code>/resume</code></td><td>Selector de sesiones nombradas</td></tr>
+                            <tr><td><code>/btw</code></td><td>Pregunta lateral fuera del historial</td></tr>
+                        </table>
+                        <div class="cheatsheet-footer">
+                            <strong>Regla:</strong> Compacta antes del 75% del contexto. Sobre 90% y la calidad cae mucho.
+                        </div>
+                    </div>
+
+                    <!-- CHEAT 3: MCP -->
+                    <div class="cheatsheet">
+                        <div class="cheatsheet-header">
+                            <h3>🔌 MCP Quick Reference</h3>
+                            <span class="cheatsheet-tag">Integraciones</span>
+                        </div>
+                        <table class="cheatsheet-table">
+                            <tr><td><code>claude mcp add NAME -- CMD</code></td><td>Servidor stdio</td></tr>
+                            <tr><td><code>--transport http URL</code></td><td>Servidor HTTP remoto</td></tr>
+                            <tr><td><code>--transport sse URL</code></td><td>Servidor SSE (legacy)</td></tr>
+                            <tr><td><code>--scope project</code></td><td>Compartido en .mcp.json</td></tr>
+                            <tr><td><code>--scope user</code></td><td>Todos tus proyectos</td></tr>
+                            <tr><td><code>-e VAR=$VAR</code></td><td>Variable de entorno</td></tr>
+                            <tr><td><code>--header "Auth: Bearer X"</code></td><td>Header HTTP</td></tr>
+                            <tr><td><code>claude mcp list</code></td><td>Listar servidores</td></tr>
+                            <tr><td><code>claude mcp remove NAME</code></td><td>Desconectar</td></tr>
+                            <tr><td><code>/mcp</code></td><td>UI de gestión + OAuth</td></tr>
+                        </table>
+                        <div class="cheatsheet-footer">
+                            <strong>Output limit:</strong> <code>MAX_MCP_OUTPUT_TOKENS=50000</code>
+                        </div>
+                    </div>
+
+                    <!-- CHEAT 4: SKILLS FRONTMATTER -->
+                    <div class="cheatsheet">
+                        <div class="cheatsheet-header">
+                            <h3>🧩 Skills — Frontmatter</h3>
+                            <span class="cheatsheet-tag">.claude/skills/</span>
+                        </div>
+                        <table class="cheatsheet-table">
+                            <tr><td><code>name</code></td><td>Nombre del comando</td></tr>
+                            <tr><td><code>description</code></td><td>Cuándo auto-invocar (clave)</td></tr>
+                            <tr><td><code>allowed-tools</code></td><td>Restricción de tools</td></tr>
+                            <tr><td><code>argument-hint</code></td><td>Hint visible en /help</td></tr>
+                            <tr><td><code>model</code></td><td>Override del modelo</td></tr>
+                            <tr><td><code>effort</code></td><td>low / medium / high / xhigh</td></tr>
+                            <tr><td><code>context: fork</code></td><td>Sub-agente aislado</td></tr>
+                            <tr><td><code>disable-model-invocation</code></td><td>Solo manual</td></tr>
+                            <tr><td><code>$1 $2 $ARGUMENTS</code></td><td>Args en el cuerpo</td></tr>
+                            <tr><td><code>!`comando`</code></td><td>Inyectar shell output</td></tr>
+                        </table>
+                        <div class="cheatsheet-footer">
+                            <strong>Ubicaciones:</strong> <code>~/.claude/skills/</code> personal · <code>.claude/skills/</code> proyecto
+                        </div>
+                    </div>
+
+                    <!-- CHEAT 5: PERMISSION MODES -->
+                    <div class="cheatsheet">
+                        <div class="cheatsheet-header">
+                            <h3>🔒 Permission Modes</h3>
+                            <span class="cheatsheet-tag">Seguridad</span>
+                        </div>
+                        <table class="cheatsheet-table">
+                            <tr><td><code>plan</code></td><td>Solo lectura, propone plan</td></tr>
+                            <tr><td><code>default</code></td><td>Pregunta por cada tool</td></tr>
+                            <tr><td><code>acceptEdits</code></td><td>Auto-acepta ediciones</td></tr>
+                            <tr><td><code>auto</code></td><td>IA aprueba/deniega</td></tr>
+                            <tr><td><code>dontAsk</code></td><td>Solo allowed-tools</td></tr>
+                            <tr><td><code>bypassPermissions</code></td><td>Sin preguntas (sandbox)</td></tr>
+                        </table>
+                        <div class="cheatsheet-footer">
+                            <strong>CI:</strong> <code>--dangerously-skip-permissions</code> + sandbox aislado.<br>
+                            <strong>Local:</strong> <code>plan</code> para explorar, <code>acceptEdits</code> para construir.
+                        </div>
+                    </div>
+
+                    <!-- CHEAT 6: API ENDPOINTS -->
+                    <div class="cheatsheet">
+                        <div class="cheatsheet-header">
+                            <h3>⚡ Anthropic API</h3>
+                            <span class="cheatsheet-tag">SDK</span>
+                        </div>
+                        <table class="cheatsheet-table">
+                            <tr><td><code>POST /v1/messages</code></td><td>Conversación principal</td></tr>
+                            <tr><td><code>POST /v1/messages</code> + stream</td><td>Streaming SSE</td></tr>
+                            <tr><td><code>POST /v1/messages/batches</code></td><td>Hasta 10K req, -50%</td></tr>
+                            <tr><td><code>POST /v1/files</code> (beta)</td><td>Subir documento reutilizable</td></tr>
+                            <tr><td><code>cache_control</code></td><td>Prompt caching, -90%</td></tr>
+                            <tr><td><code>thinking: enabled</code></td><td>Extended thinking (Opus)</td></tr>
+                            <tr><td><code>tools: [...]</code></td><td>Tool use / function calling</td></tr>
+                            <tr><td><code>tool_choice: {"type":"any"}</code></td><td>Forzar uso de tool</td></tr>
+                        </table>
+                        <div class="cheatsheet-footer">
+                            <strong>Modelos:</strong> Haiku (rápido/barato) · Sonnet (default) · Opus (crítico)
+                        </div>
+                    </div>
+
+                    <!-- CHEAT 7: PROMPT PATTERNS -->
+                    <div class="cheatsheet">
+                        <div class="cheatsheet-header">
+                            <h3>💬 Prompts Efectivos</h3>
+                            <span class="cheatsheet-tag">Patrones</span>
+                        </div>
+                        <ul class="cheatsheet-list">
+                            <li><strong>[Contexto]</strong> primero — qué problema resuelves</li>
+                            <li><strong>[Restricciones]</strong> — qué NO hacer</li>
+                            <li><strong>[Archivos]</strong> — menciona con <code>@</code></li>
+                            <li><strong>[Output]</strong> — formato esperado</li>
+                            <li>Separa <strong>diseño</strong> de <strong>implementación</strong></li>
+                            <li>Pide <strong>verificación</strong> (tests, linter)</li>
+                            <li>Una sesión = un objetivo</li>
+                            <li>"NO implementes aún" cuando exploras</li>
+                            <li>Pega stack traces COMPLETOS</li>
+                            <li>Pide hipótesis ordenadas por probabilidad</li>
+                        </ul>
+                    </div>
+
+                    <!-- CHEAT 8: HOOKS -->
+                    <div class="cheatsheet">
+                        <div class="cheatsheet-header">
+                            <h3>⚙️ Hooks</h3>
+                            <span class="cheatsheet-tag">.claude/settings.json</span>
+                        </div>
+                        <table class="cheatsheet-table">
+                            <tr><td><code>PreToolUse</code></td><td>Antes de ejecutar tool</td></tr>
+                            <tr><td><code>PostToolUse</code></td><td>Después de tool</td></tr>
+                            <tr><td><code>SessionStart</code></td><td>Al iniciar sesión</td></tr>
+                            <tr><td><code>SessionEnd</code></td><td>Al cerrar sesión</td></tr>
+                            <tr><td><code>UserPromptSubmit</code></td><td>Antes de enviar prompt</td></tr>
+                            <tr><td><code>Stop</code></td><td>Al detener acción</td></tr>
+                        </table>
+                        <div class="cheatsheet-footer">
+                            <strong>Casos típicos:</strong> Format on save (Post + Write), audit log (Post),
+                            block production files (Pre), inject context (SessionStart).
+                        </div>
+                    </div>
+
+                    <!-- CHEAT 9: TROUBLESHOOTING -->
+                    <div class="cheatsheet">
+                        <div class="cheatsheet-header">
+                            <h3>🔧 Troubleshooting</h3>
+                            <span class="cheatsheet-tag">Cuando algo falla</span>
+                        </div>
+                        <table class="cheatsheet-table">
+                            <tr><td>Skill no aparece</td><td>Verifica frontmatter + ruta exacta</td></tr>
+                            <tr><td>MCP failed</td><td><code>claude mcp get NAME</code> + revisa env vars</td></tr>
+                            <tr><td>Tokens explotan</td><td><code>/context</code> y compactar guiado</td></tr>
+                            <tr><td>Permission denied</td><td><code>/permissions</code> o settings.json</td></tr>
+                            <tr><td>Claude alucina archivos</td><td>Pásalos con <code>@</code> explícito</td></tr>
+                            <tr><td>Loop sin avance</td><td>Después de 2 errores: <code>/clear</code></td></tr>
+                            <tr><td>Lento en CI</td><td>Usa <code>haiku-4-5</code> + caching</td></tr>
+                            <tr><td>API 429</td><td>Backoff exponencial + retry</td></tr>
+                            <tr><td>API 529</td><td>Sobrecarga: reintentar más tarde</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: CAPSTONE ====== -->
+            <section class="content-section" data-section="capstone" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Curso / Capstone</span>
+                    <h2>🏆 Capstone Project: Tu Asistente de Desarrollo Completo</h2>
+                    <p class="section-lead">
+                        El proyecto final que combina TODO lo aprendido. Construirás un asistente
+                        de desarrollo personalizado para tu equipo: Skills, MCPs, hooks, CI, y un
+                        agente programático con SDK que automatiza tareas reales.
+                    </p>
+                </div>
+
+                <div class="capstone-overview">
+                    <h3 class="block-title">📐 Lo que vas a construir</h3>
+                    <p>Un sistema de 4 capas integradas:</p>
+                    <div class="capstone-architecture">
+                        <pre><code>┌──────────────────────────────────────────────────┐
+│  CAPA 4: AGENTE AUTÓNOMO (Agent SDK)             │
+│  • Revisor de PRs en GitHub Actions              │
+│  • Sub-agentes: seguridad, calidad, performance  │
+│  • Comenta en PRs, falla CI si crítico           │
+└──────────────────────┬───────────────────────────┘
+                       │ usa
+┌──────────────────────▼───────────────────────────┐
+│  CAPA 3: SKILLS DEL EQUIPO (.claude/skills/)     │
+│  • /code-review · /deploy-check · /release-notes │
+│  • /security-audit · /onboarding-guide           │
+└──────────────────────┬───────────────────────────┘
+                       │ se conecta a
+┌──────────────────────▼───────────────────────────┐
+│  CAPA 2: MCP SERVERS (.mcp.json)                 │
+│  • GitHub · PostgreSQL · Sentry                  │
+└──────────────────────┬───────────────────────────┘
+                       │ corre sobre
+┌──────────────────────▼───────────────────────────┐
+│  CAPA 1: CONFIG BASE                             │
+│  • CLAUDE.md · .claudeignore · settings.json     │
+│  • Hooks: format on save, audit log              │
+└──────────────────────────────────────────────────┘</code></pre>
+                    </div>
+                </div>
+
+                <h3 class="block-title">🚀 Plan de ejecución (5 sprints)</h3>
+
+                <!-- SPRINT 1 -->
+                <div class="capstone-sprint">
+                    <div class="sprint-header">
+                        <div class="sprint-num">Sprint 1</div>
+                        <div class="sprint-title">Fundación del proyecto (~45 min)</div>
+                    </div>
+                    <ol class="sprint-tasks">
+                        <li>
+                            <strong>Crear el repositorio base</strong>
+                            <pre class="capstone-code">mkdir mi-asistente-dev && cd $_ && git init
+npm init -y
+mkdir -p .claude/{skills,commands} src tests</pre>
+                        </li>
+                        <li>
+                            <strong>CLAUDE.md profesional</strong> — usa el template de la sección
+                            <a href="#mejores-practicas" data-jump="mejores-practicas">Mejores Prácticas</a>.
+                            Documenta stack, convenciones, comandos del proyecto.
+                        </li>
+                        <li>
+                            <strong>Settings y permisos</strong> — copia <code>.claude/settings.json</code>
+                            de la sección de <a href="#seguridad" data-jump="seguridad">Seguridad</a>.
+                            Configura <code>allowedTools</code> mínimo necesario.
+                        </li>
+                        <li>
+                            <strong>.claudeignore</strong> — excluye node_modules, dist, .env*, secrets.
+                        </li>
+                    </ol>
+                    <div class="sprint-deliverable">
+                        ✅ <strong>Entregable:</strong> Repo inicial con configuración base. Verifica con <code>/doctor</code>.
+                    </div>
+                </div>
+
+                <!-- SPRINT 2 -->
+                <div class="capstone-sprint">
+                    <div class="sprint-header">
+                        <div class="sprint-num">Sprint 2</div>
+                        <div class="sprint-title">Suite de Skills del equipo (~60 min)</div>
+                    </div>
+                    <ol class="sprint-tasks">
+                        <li>Implementa estos 5 skills de la sección <a href="#skills-avanzados" data-jump="skills-avanzados">Skills Avanzados</a>:
+                            <ul style="margin: 8px 0 0 20px; line-height: 1.9;">
+                                <li><code>/code-review</code> — revisión por checklist con prioridades</li>
+                                <li><code>/deploy-check</code> — pre-flight (tests, lint, types, audit)</li>
+                                <li><code>/security-audit</code> — auditoría de vulnerabilidades</li>
+                                <li><code>/release-notes</code> — changelog desde commits</li>
+                                <li><code>/onboarding-guide</code> — guía para nuevos miembros</li>
+                            </ul>
+                        </li>
+                        <li>Cada Skill debe tener <code>allowed-tools</code> mínimo necesario.</li>
+                        <li>Prueba cada Skill en una sesión real y ajusta el frontmatter si auto-trigger no funciona bien.</li>
+                    </ol>
+                    <div class="sprint-deliverable">
+                        ✅ <strong>Entregable:</strong> 5 Skills funcionando. Verifica con <code>/help</code> que aparezcan.
+                    </div>
+                </div>
+
+                <!-- SPRINT 3 -->
+                <div class="capstone-sprint">
+                    <div class="sprint-header">
+                        <div class="sprint-num">Sprint 3</div>
+                        <div class="sprint-title">MCPs conectados (~45 min)</div>
+                    </div>
+                    <ol class="sprint-tasks">
+                        <li>Conecta GitHub MCP con tu PAT (scope project):
+                            <pre class="capstone-code">claude mcp add --scope project --transport http github \
+  https://api.githubcopilot.com/mcp/ \
+  --header "Authorization: Bearer $GITHUB_TOKEN"</pre>
+                        </li>
+                        <li>Conecta PostgreSQL (de solo lectura, scope project):
+                            <pre class="capstone-code">claude mcp add --scope project --transport stdio db \
+  -- npx -y @bytebase/dbhub --dsn "$READONLY_DB_URL"</pre>
+                        </li>
+                        <li>Conecta Sentry (scope user — vale para todos tus proyectos):
+                            <pre class="capstone-code">claude mcp add --scope user --transport http sentry \
+  https://mcp.sentry.dev/mcp</pre>
+                        </li>
+                        <li>Verifica con <code>/mcp</code> que los tres aparecen como connected.</li>
+                        <li>Prueba: <em>"Lista mis 3 últimos PRs y los 5 errores más recientes en Sentry"</em>.</li>
+                    </ol>
+                    <div class="sprint-deliverable">
+                        ✅ <strong>Entregable:</strong> 3 MCPs activos. <code>.mcp.json</code> versionado en git (sin secretos).
+                    </div>
+                </div>
+
+                <!-- SPRINT 4 -->
+                <div class="capstone-sprint">
+                    <div class="sprint-header">
+                        <div class="sprint-num">Sprint 4</div>
+                        <div class="sprint-title">Hooks y automatización (~30 min)</div>
+                    </div>
+                    <ol class="sprint-tasks">
+                        <li>Hook <code>PostToolUse</code> que formatea código tras cada Write/Edit (prettier/ruff).</li>
+                        <li>Hook <code>PreToolUse</code> que bloquea Write en archivos de producción.</li>
+                        <li>Hook <code>SessionStart</code> que ejecuta <code>git pull</code> y muestra PRs asignados.</li>
+                        <li>Hook <code>SessionEnd</code> que guarda un resumen en <code>~/.claude/sessions/</code>.</li>
+                    </ol>
+                    <div class="sprint-deliverable">
+                        ✅ <strong>Entregable:</strong> 4 hooks funcionando. Pruébalos haciendo cambios reales.
+                    </div>
+                </div>
+
+                <!-- SPRINT 5 -->
+                <div class="capstone-sprint">
+                    <div class="sprint-header">
+                        <div class="sprint-num">Sprint 5</div>
+                        <div class="sprint-title">Agente autónomo en CI (~60 min)</div>
+                    </div>
+                    <ol class="sprint-tasks">
+                        <li>Crea <code>scripts/pr-reviewer.ts</code> que use el Agent SDK:
+                            <ul style="margin: 8px 0 0 20px; line-height: 1.9;">
+                                <li>Recibe el PR diff por stdin</li>
+                                <li>Lanza 3 sub-agentes en paralelo (security, quality, performance)</li>
+                                <li>Consolida hallazgos en JSON estructurado</li>
+                                <li>Sale con código 1 si hay bloqueantes críticos</li>
+                            </ul>
+                        </li>
+                        <li>GitHub Action <code>.github/workflows/claude-review.yml</code>:
+                            <ul style="margin: 8px 0 0 20px; line-height: 1.9;">
+                                <li>Trigger: <code>pull_request</code></li>
+                                <li>Ejecuta el script con <code>ANTHROPIC_API_KEY</code> de secrets</li>
+                                <li>Comenta hallazgos en el PR vía <code>actions/github-script</code></li>
+                                <li>Falla CI si hay bloqueantes</li>
+                            </ul>
+                        </li>
+                        <li>Prueba con un PR de mentira que tenga un bug intencional.</li>
+                    </ol>
+                    <div class="sprint-deliverable">
+                        ✅ <strong>Entregable:</strong> CI corriendo Claude en cada PR. Comentarios automáticos visibles.
+                    </div>
+                </div>
+
+                <h3 class="block-title">🎓 Verificación final</h3>
+                <p>Tu Capstone está completo cuando puedes responder "sí" a estas preguntas:</p>
+                <div class="capstone-checklist">
+                    <label><input type="checkbox" data-capstone="setup"> Cualquier miembro nuevo puede clonar y empezar a trabajar en &lt;15 min</label>
+                    <label><input type="checkbox" data-capstone="skills"> Los 5 Skills se auto-invocan correctamente según el intent</label>
+                    <label><input type="checkbox" data-capstone="mcps"> Los 3 MCPs responden y aparecen en <code>/mcp</code> como connected</label>
+                    <label><input type="checkbox" data-capstone="hooks"> Los 4 hooks se disparan en los eventos correctos</label>
+                    <label><input type="checkbox" data-capstone="ci"> El CI comenta automáticamente en cada PR abierto</label>
+                    <label><input type="checkbox" data-capstone="security"> No hay secretos en git (verifica con <code>git log -p | grep -i 'sk-ant\|password'</code>)</label>
+                    <label><input type="checkbox" data-capstone="docs"> El CLAUDE.md explica cómo usar todo lo anterior</label>
+                </div>
+
+                <div class="info-banner info-banner--tip" style="margin-top: 32px;">
+                    <strong>🚀 ¿Y ahora qué?</strong> Comparte tu Capstone con el equipo. Lo que construiste
+                    es el comienzo: a partir de aquí cada Skill nueva, cada MCP nuevo, cada hook nuevo
+                    multiplica la productividad de todo el equipo. La maestría no termina con el curso —
+                    empieza el día que tu equipo deja de programar sin Claude.
                 </div>
             </section>
 
