@@ -1,0 +1,3384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Prompt Maestro: Guía técnica completa sobre desarrollo de herramientas en Claude — Comandos, Hooks, Agentes, Skills, MCP, SDK y Prompt Caching.">
+    <title>Prompt Maestro — Desarrollo de Herramientas en Claude</title>
+    <style>
+        /* ============= RESET & BASE ============= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
+
+        /* ============= VARIABLES ============= */
+        :root {
+            --bg-base: #0a0e14;
+            --bg-surface: #11161f;
+            --bg-elevated: #161c27;
+            --border-default: #2a3444;
+            --text-primary: #e6edf3;
+            --text-secondary: #9aa7b8;
+            --accent: #ff7a59;
+            --primary: #5eb8ff;
+            --level-1: #3ddc97;
+            --level-2: #5eb8ff;
+            --level-3: #c084fc;
+            --radius: 8px;
+        }
+
+        /* ============= LAYOUT ============= */
+        body {
+            background: var(--bg-base);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .app-shell {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ============= TOPBAR ============= */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .topbar-brand { font-size: 1.4em; font-weight: 700; color: var(--accent); }
+        .topbar-subtitle { font-size: 0.7em; color: var(--text-secondary); }
+
+        .topbar-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .level-selector {
+            display: flex;
+            gap: 10px;
+            background: var(--bg-elevated);
+            padding: 6px;
+            border-radius: 999px;
+            border: 1px solid var(--border-default);
+        }
+
+        .level-btn {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 999px;
+            font-size: 0.85em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .level-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .level-btn:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        /* ============= SIDEBAR ============= */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-default);
+            overflow-y: auto;
+            padding-top: 80px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            z-index: 999;
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 0.08em;
+        }
+
+        .sidebar-item {
+            list-style: none;
+            padding: 8px 0;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 10px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: all 0.2s;
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+
+        .sidebar-link:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .sidebar-link.active {
+            background: rgba(255, 122, 89, 0.2);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ============= MAIN CONTENT ============= */
+        .main-content {
+            position: absolute;
+            left: 280px;
+            top: 64px;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 40px;
+            background: var(--bg-base);
+            z-index: 1;
+            width: calc(100% - 280px);
+        }
+
+        .content-section {
+            display: none;
+            width: 100%;
+        }
+
+        .content-section.active {
+            display: block;
+            width: 100%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        /* ============= LEVEL-BASED CONTENT ============= */
+        .level-content {
+            display: none;
+        }
+
+        .level-content.active {
+            display: block;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .level-badge.fundamentos { background: rgba(61, 220, 151, 0.2); color: var(--level-1); }
+        .level-badge.intermedio { background: rgba(94, 184, 255, 0.2); color: var(--level-2); }
+        .level-badge.avanzado { background: rgba(192, 132, 252, 0.2); color: var(--level-3); }
+
+        /* ============= CODE BLOCKS ============= */
+        .code-block {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius);
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-base);
+            border-bottom: 1px solid var(--border-default);
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .code-lang { color: var(--accent); }
+
+        .code-copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .code-copy-btn:hover {
+            background: var(--border-default);
+            color: var(--text-primary);
+        }
+
+        .code-copy-btn.copied {
+            color: var(--level-1);
+        }
+
+        pre {
+            padding: 16px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        /* ============= SYNTAX HIGHLIGHTING ============= */
+        .str { color: #85e89d; }
+        .key { color: #79b8ff; }
+        .num { color: #79b8ff; }
+        .bool { color: #f97583; }
+        .com { color: #6a737d; }
+        .punc { color: #d1d5da; }
+
+        /* ============= TEXT ELEMENTS ============= */
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        h2 { font-size: 1.5em; }
+        h3 { font-size: 1.2em; }
+
+        p {
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: var(--bg-elevated);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #85e89d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid var(--border-default);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        th {
+            background: var(--bg-elevated);
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        tr:hover {
+            background: rgba(255, 122, 89, 0.05);
+        }
+
+        /* ============= CALLOUTS ============= */
+        .callout {
+            padding: 16px;
+            border-left: 4px solid;
+            border-radius: 4px;
+            margin: 20px 0;
+            background: rgba(255, 122, 89, 0.1);
+        }
+
+        .callout.info { border-left-color: var(--primary); background: rgba(94, 184, 255, 0.1); }
+        .callout.warning { border-left-color: #ffb454; background: rgba(255, 180, 84, 0.1); }
+        .callout.success { border-left-color: var(--level-1); background: rgba(61, 220, 151, 0.1); }
+
+        /* ============= RESPONSIVE ============= */
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; max-width: 60%; }
+            .main-content { margin-left: 0; padding: 20px; }
+            .topbar { padding: 0 12px; }
+            .topbar-subtitle { display: none; }
+            .level-selector { flex-direction: column; }
+        }
+
+        /* ============= SCROLLBAR ============= */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-base);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-default);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div>
+                <div class="topbar-brand">Prompt Maestro</div>
+                <div class="topbar-subtitle">Desarrollo de Herramientas en Claude</div>
+            </div>
+            <div class="topbar-controls">
+                <div style="display:flex;gap:8px;align-items:center;margin-right:16px;">
+                    <a href="index.html" style="padding:6px 12px;border:1px solid #2a3444;border-radius:999px;font-size:0.8em;color:#9aa7b8;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.color='#e6edf3'" onmouseout="this.style.color='#9aa7b8'">📚 Mastery Guide</a>
+                    <a href="playground.html" style="padding:6px 12px;border:1px solid #2a3444;border-radius:999px;font-size:0.8em;color:#9aa7b8;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.color='#e6edf3'" onmouseout="this.style.color='#9aa7b8'">🧪 Playground</a>
+                </div>
+                <div class="level-selector" id="level-selector">
+                    <button class="level-btn active" data-level="fundamentos">📚 Fundamentos</button>
+                    <button class="level-btn" data-level="intermedio">🔨 Intermedio</button>
+                    <button class="level-btn" data-level="avanzado">🚀 Avanzado</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Temas</div>
+                    <ul>
+                        <li class="sidebar-item"><a class="sidebar-link active" data-topic="intro">📖 Introducción</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" data-topic="comandos">⌨️ Comandos y Hooks</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" data-topic="thinking">🧠 Extended Thinking</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" data-topic="settings">⚙️ Settings.json</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" data-topic="memoria">💾 Sistema de Memoria</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" data-topic="agentes">🤖 Sub-Agentes</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" data-topic="skills">📦 Skills Estrictas</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" data-topic="mcp">🔌 Model Context Protocol</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" data-topic="sdk">⚡ SDK y Prompt Caching</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- INTRO -->
+            <section class="content-section active" data-topic="intro">
+                <h1 class="section-title">Prompt Maestro</h1>
+                <p class="section-subtitle">Guía técnica completa sobre desarrollo de herramientas en Claude — Documentación Oficial + Videos</p>
+
+                <div class="callout info">
+                    <strong>🎯 Objetivo:</strong> Esta guía integra toda la <a href="https://docs.anthropic.com/" target="_blank">documentación oficial de Anthropic</a> con videos de YouTube, casos prácticos, y ejemplos ejecutables. Cubre desde comandos básicos hasta arquitecturas complejas con Agentes Administrados, MCP, Skills y Hooks.
+                </div>
+
+                <h2>📚 Recursos Oficiales de Anthropic</h2>
+                <table>
+                    <tr>
+                        <th>Recurso</th>
+                        <th>Enlace</th>
+                        <th>Descripción</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Claude API Docs</strong></td>
+                        <td><a href="https://docs.anthropic.com/" target="_blank">docs.anthropic.com</a></td>
+                        <td>Documentación oficial completa de la API de Anthropic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Agent SDK</strong></td>
+                        <td><a href="https://docs.anthropic.com/en/docs/claude-code/sdk" target="_blank">Agent SDK Docs</a></td>
+                        <td>SDK para construir agentes con herramientas de ejecución automática</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Claude Code Docs</strong></td>
+                        <td><a href="https://code.claude.com/docs/" target="_blank">code.claude.com/docs</a></td>
+                        <td>Referencia completa de Claude Code, Hooks, MCP y Skills</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anthropic Academy</strong></td>
+                        <td><a href="https://www.anthropic.com/learn/build-with-claude" target="_blank">Aprender a construir</a></td>
+                        <td>Guías interactivas para desarrollo con Claude</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Managed Agents</strong></td>
+                        <td><a href="https://www.anthropic.com/engineering/managed-agents" target="_blank">Documentación</a></td>
+                        <td>Infraestructura administrada para desplegar agentes autónomos</td>
+                    </tr>
+                </table>
+
+                <h2>🎥 Videos de YouTube Recomendados</h2>
+                <div style="margin: 20px 0;">
+                    <h3>The Ultimate Claude Code Guide (Completo)</h3>
+                    <iframe width="100%" height="400" src="https://www.youtube.com/embed/uogzSxOw4LU" frameborder="0" allowfullscreen></iframe>
+                    <p><em>Cubre MCP, Skills, Subagents y todas las características principales de Claude Code</em></p>
+                </div>
+
+                <div class="callout info">
+                    <strong>🎯 Objetivo:</strong> Esta guía cubre todos los aspectos de desarrollo avanzado en el ecosistema de Anthropic, desde comandos básicos hasta optimización de costos con Prompt Caching. Cada sección incluye fundamentales, patrones intermedios, y estrategias avanzadas.
+                </div>
+
+                <h2>Jerarquía de Herramientas</h2>
+                <p>Para entender cómo se conectan todos los conceptos, aquí está la jerarquía de herramientas en Claude Code:</p>
+
+                <pre><code>Sistema Claude Code
+├── Comandos Slash (/help, /model, /context, etc.)
+│   └── Controlados por usuario — ejecuta 1 vez
+├── Hooks (PreToolUse, PostToolUse, etc.)
+│   └── Disparadores automáticos — ejecutan por eventos
+├── Agentes (Personality + Toolset + Memory)
+│   ├── Pueden tener múltiples comandos y hooks
+│   ├── Coordinan sub-agentes via /fork
+│   └── Persisten estado entre sesiones
+├── Skills (Commands parametrizados)
+│   ├── Usan JSON Schema estricto para validación
+│   ├── Invocables vía /nombre args
+│   └── Alojan la lógica reutilizable
+├── MCP (Model Context Protocol)
+│   ├── Expone herramientas locales a Claude
+│   ├── Stdio (local) vs SSE (remoto)
+│   └── Integrable con agentes via /mcp
+└── SDK + Prompt Caching
+    ├── Optimización de tokens
+    ├── Cache de context para múltiples consultas
+    └── Metrics: cost reduction, latency improvement</code></pre>
+
+                <h2>Estructura de esta Guía</h2>
+                <p>Cada tema está dividido en <strong>3 niveles</strong>:</p>
+
+                <table>
+                    <tr>
+                        <th>Nivel</th>
+                        <th>Audiencia</th>
+                        <th>Contenido</th>
+                    </tr>
+                    <tr>
+                        <td><strong>📚 Fundamentos</strong></td>
+                        <td>Nuevos en el ecosistema</td>
+                        <td>Conceptos clave, flujos básicos, primeros ejemplos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>🔨 Intermedio</strong></td>
+                        <td>Con experiencia en AI/LLMs</td>
+                        <td>Patrones comunes, casos reales, troubleshooting</td>
+                    </tr>
+                    <tr>
+                        <td><strong>🚀 Avanzado</strong></td>
+                        <td>Arquitectos y seniors</td>
+                        <td>Optimizaciones, edge cases, arquitecturas complejas</td>
+                    </tr>
+                </table>
+
+                <h2>Cómo usar esta guía</h2>
+                <ol>
+                    <li><strong>Selecciona tu nivel</strong> con los botones en la parte superior</li>
+                    <li><strong>Lee un tema</strong> desde la sidebar</li>
+                    <li><strong>Copia ejemplos</strong> y ejecútalos en tu entorno</li>
+                    <li><strong>Salta entre temas</strong> cuando necesites contexto adicional</li>
+                </ol>
+
+                <div class="callout success">
+                    <strong>✅ Tip:</strong> Todos los ejemplos de código son ejecutables. Los ejemplos Python requieren Python 3.10+ y el SDK de Anthropic instalado.
+                </div>
+            </section>
+
+            <!-- COMANDOS Y HOOKS -->
+            <section class="content-section" data-topic="comandos">
+                <h1 class="section-title">Comandos y Hooks</h1>
+                <p class="section-subtitle">Diferencia entre comandos de usuario y disparadores automáticos en el ciclo de vida del mensaje</p>
+
+                <div style="margin: 20px 0; padding: 15px; background: rgba(94, 184, 255, 0.1); border-left: 4px solid #5eb8ff; border-radius: 4px;">
+                    <strong>📖 Documentación oficial:</strong>
+                    <a href="https://code.claude.com/docs/en/hooks" target="_blank" style="margin-left: 10px;">Hooks Reference — Claude Code Docs</a>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <h3>🎥 Video: Hooks y Automatización en Claude Code</h3>
+                    <iframe width="100%" height="380" src="https://www.youtube.com/embed/uogzSxOw4LU?start=0" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
+                </div>
+
+                <!-- FUNDAMENTOS -->
+                <div class="level-content active" data-level="fundamentos">
+                    <div class="level-badge fundamentos">Fundamentos</div>
+
+                    <h2>¿Qué es un Comando?</h2>
+                    <p>Un <strong>comando</strong> es una instrucción que el usuario inicia explícitamente, comenzando con <code>/</code>. Ejemplos:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Comandos de usuario</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>/help              # Listar todos los comandos disponibles
+/model             # Ver/cambiar modelo actual
+/context           # Ver uso de contexto
+/clear             # Limpiar historial
+/memory            # Gestionar memoria persistente
+/config            # Ver/modificar configuración
+/mcp               # Listar servidores MCP conectados</code></pre>
+                    </div>
+
+                    <p><strong>Características:</strong></p>
+                    <ul>
+                        <li>Iniciados por el usuario explícitamente</li>
+                        <li>Se ejecutan 1 sola vez cuando se invoca</li>
+                        <li>Devuelven respuesta inmediata</li>
+                        <li>No afectan comandos futuros (a menos que cambien estado)</li>
+                    </ul>
+
+                    <h2>¿Qué es un Hook?</h2>
+                    <p>Un <strong>hook</strong> es un disparador automático que se ejecuta automáticamente en ciertos momentos del ciclo de vida. No requiere invocación del usuario.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Tipos de Hooks</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>PreToolUse      → Justo antes de usar una herramienta
+PostToolUse     → Después de que una herramienta devuelve resultado
+PostToolError   → Si una herramienta falla
+OnCompilation   → Cuando compila un cambio de código
+OnModeChange    → Cuando cambia el modelo activo
+OnSessionStart  → Al iniciar una nueva sesión
+OnSessionEnd    → Al finalizar la sesión</code></pre>
+                    </div>
+
+                    <p><strong>Características:</strong></p>
+                    <ul>
+                        <li>Disparados automáticamente por eventos</li>
+                        <li>Se ejecutan cada vez que ocurre el evento</li>
+                        <li>Pueden transformar datos antes/después de operaciones</li>
+                        <li>No requieren intervención del usuario</li>
+                    </ul>
+
+                    <h2>Diferencia Clave</h2>
+                    <table>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Comando</th>
+                            <th>Hook</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Iniciación</strong></td>
+                            <td>Manual (usuario escribe /comando)</td>
+                            <td>Automática (evento)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Frecuencia</strong></td>
+                            <td>Cuando usuario lo invoca</td>
+                            <td>Cada vez que ocurre el evento</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Propósito</strong></td>
+                            <td>Realizar acción puntual</td>
+                            <td>Automatizar procesos repetitivos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ejemplo</strong></td>
+                            <td>/help → muestra comandos</td>
+                            <td>PostToolUse → formatea output</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- INTERMEDIO -->
+                <div class="level-content" data-level="intermedio">
+                    <div class="level-badge intermedio">Intermedio</div>
+
+                    <h2>Los 5 Tipos de Hooks (Documentación Oficial)</h2>
+                    <p>Fuente: <a href="https://code.claude.com/docs/en/hooks" target="_blank">code.claude.com/docs/en/hooks</a></p>
+
+                    <table>
+                        <tr><th>Tipo</th><th>Descripción</th><th>Cuándo usar</th></tr>
+                        <tr><td><code>command</code></td><td>Ejecuta comando shell (stdin=JSON)</td><td>Validaciones, formateo, logging</td></tr>
+                        <tr><td><code>http</code></td><td>POST JSON a URL HTTP</td><td>Webhooks, APIs externas</td></tr>
+                        <tr><td><code>mcp_tool</code></td><td>Llama herramienta de servidor MCP</td><td>Integración con servicios MCP</td></tr>
+                        <tr><td><code>prompt</code></td><td>Evalúa con Claude (sí/no)</td><td>Validación inteligente</td></tr>
+                        <tr><td><code>agent</code></td><td>Spawns subagente (experimental)</td><td>Verificaciones complejas</td></tr>
+                    </table>
+
+                    <h2>Los 24 Lifecycle Events</h2>
+
+                    <table>
+                        <tr><th>Evento</th><th>Se dispara cuando...</th><th>Puede bloquear</th></tr>
+                        <tr><td><code>SessionStart</code></td><td>Sesión inicia o se reanuda</td><td>No</td></tr>
+                        <tr><td><code>Setup</code></td><td>Flag --init-only / --maintenance</td><td>No</td></tr>
+                        <tr><td><code>UserPromptSubmit</code></td><td>Usuario envía prompt</td><td>✅ Sí</td></tr>
+                        <tr><td><code>UserPromptExpansion</code></td><td>Slash command se expande</td><td>✅ Sí</td></tr>
+                        <tr><td><code>PreToolUse</code></td><td>Antes de ejecutar herramienta</td><td>✅ Sí</td></tr>
+                        <tr><td><code>PermissionRequest</code></td><td>Diálogo de permiso</td><td>✅ Sí</td></tr>
+                        <tr><td><code>PostToolUse</code></td><td>Herramienta terminó OK</td><td>✅ Sí</td></tr>
+                        <tr><td><code>PostToolBatch</code></td><td>Lote paralelo resuelto</td><td>No</td></tr>
+                        <tr><td><code>Stop</code></td><td>Claude termina respuesta</td><td>No</td></tr>
+                        <tr><td><code>StopFailure</code></td><td>Error de API</td><td>No</td></tr>
+                        <tr><td><code>Notification</code></td><td>Claude envía notificación</td><td>No</td></tr>
+                        <tr><td><code>FileChanged</code></td><td>Archivo monitoreado cambia</td><td>No</td></tr>
+                        <tr><td><code>CwdChanged</code></td><td>Directorio de trabajo cambia</td><td>No</td></tr>
+                        <tr><td><code>InstructionsLoaded</code></td><td>CLAUDE.md se carga</td><td>No</td></tr>
+                        <tr><td><code>ConfigChange</code></td><td>Configuración cambia</td><td>No</td></tr>
+                        <tr><td><code>SubagentStart</code></td><td>Subagente spawns</td><td>No</td></tr>
+                        <tr><td><code>SubagentStop</code></td><td>Subagente termina</td><td>No</td></tr>
+                        <tr><td><code>TaskCreated</code></td><td>Tarea creada</td><td>No</td></tr>
+                        <tr><td><code>TaskCompleted</code></td><td>Tarea marcada completa</td><td>No</td></tr>
+                        <tr><td><code>PreCompact</code></td><td>Antes de compactación</td><td>No</td></tr>
+                        <tr><td><code>PostCompact</code></td><td>Después de compactación</td><td>No</td></tr>
+                        <tr><td><code>Elicitation</code></td><td>MCP solicita entrada usuario</td><td>No</td></tr>
+                        <tr><td><code>ElicitationResult</code></td><td>Usuario responde elicitación</td><td>No</td></tr>
+                        <tr><td><code>SessionEnd</code></td><td>Sesión termina</td><td>No</td></tr>
+                    </table>
+
+                    <h2>Caso Práctico 1: Bloquear comandos destructivos (PreToolUse)</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — .claude/settings.json</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(rm *)",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-destructive.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — .claude/hooks/block-destructive.sh</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+set -e
+COMMAND=$(jq -r '.tool_input.command')
+
+# Bloquear comandos destructivos
+if echo "$COMMAND" | grep -E '^rm -rf|^:(){:|:|&&&' > /dev/null; then
+  jq -n '{
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      permissionDecision: "deny",
+      permissionDecisionReason: "Comando destructivo bloqueado por seguridad"
+    }
+  }'
+  exit 0
+fi
+
+exit 0  # Permitir todos los demás</code></pre>
+                    </div>
+
+                    <h2>Caso Práctico 2: Formatear código tras Write (PostToolUse)</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Hook auto-format</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/auto-format.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — .claude/hooks/auto-format.sh</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+FILE=$(jq -r '.tool_input.file_path')
+
+case "$FILE" in
+  *.py)  python -m black "$FILE" --quiet ;;
+  *.js|*.ts|*.jsx|*.tsx) npx prettier "$FILE" --write ;;
+  *.go)  gofmt -w "$FILE" ;;
+  *.json) python -m json.tool "$FILE" > /tmp/fmt && mv /tmp/fmt "$FILE" ;;
+esac
+
+exit 0</code></pre>
+                    </div>
+
+                    <h2>Caso Práctico 3: Validar prompt antes de procesar (UserPromptSubmit)</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Validar prompts sensibles</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/validate-prompt.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — validate-prompt.sh</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+PROMPT=$(jq -r '.prompt')
+
+# Bloquear prompts con datos sensibles
+if echo "$PROMPT" | grep -iE 'password|secret|api.?key|token' > /dev/null; then
+  jq -n '{
+    decision: "block",
+    reason: "Prompt contiene información sensible. Por favor no incluyas credenciales."
+  }'
+  exit 0
+fi
+
+# Agregar contexto del ambiente actual
+jq -n '{
+  hookSpecificOutput: {
+    hookEventName: "UserPromptSubmit",
+    additionalContext: "Ambiente: production | Fecha: '"$(date)"'"
+  }
+}'
+exit 0</code></pre>
+                    </div>
+
+                    <h2>Códigos de Salida</h2>
+                    <table>
+                        <tr><th>Código</th><th>Significado</th><th>Comportamiento</th></tr>
+                        <tr><td><code>0</code></td><td>Éxito</td><td>Procesa JSON en stdout, permite acción</td></tr>
+                        <tr><td><code>2</code></td><td>Error bloqueante</td><td>Ignora stdout, bloquea acción, stderr va a Claude</td></tr>
+                        <tr><td>Otro</td><td>Error no bloqueante</td><td>Muestra error pero continúa ejecución</td></tr>
+                    </table>
+                </div>
+
+                <!-- AVANZADO -->
+                <div class="level-content" data-level="avanzado">
+                    <div class="level-badge avanzado">Avanzado</div>
+
+                    <h2>Configuración Completa: Ubicaciones y Alcance</h2>
+                    <table>
+                        <tr><th>Ubicación</th><th>Alcance</th><th>Compartible en git</th></tr>
+                        <tr><td><code>~/.claude/settings.json</code></td><td>Todos los proyectos</td><td>No</td></tr>
+                        <tr><td><code>.claude/settings.json</code></td><td>Proyecto único</td><td>✅ Sí</td></tr>
+                        <tr><td><code>.claude/settings.local.json</code></td><td>Proyecto único</td><td>No</td></tr>
+                        <tr><td>Política administrada</td><td>Organización</td><td>✅ Sí</td></tr>
+                        <tr><td>Plugin <code>hooks/hooks.json</code></td><td>Plugin habilitado</td><td>✅ Sí</td></tr>
+                    </table>
+
+                    <h2>Sistema de Matchers</h2>
+                    <p>Los matchers filtran cuándo se dispara cada hook:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Tipos de matchers</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Bash",          "hooks": [...] },  // exacto
+      { "matcher": "Edit|Write",    "hooks": [...] },  // OR
+      { "matcher": "mcp__.*",       "hooks": [...] },  // regex
+      { "matcher": "mcp__memory__.*", "hooks": [...] }, // regex MCP
+      { "matcher": "",              "hooks": [...] }   // todos (match-all)
+    ],
+    "FileChanged": [
+      { "matcher": ".envrc|.env",   "hooks": [...] }  // nombres de archivo
+    ],
+    "StopFailure": [
+      { "matcher": "rate_limit|server_error", "hooks": [...] }  // tipo de error
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <h2>Hook HTTP: Integración con Webhook</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Hook tipo HTTP</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "http",
+            "url": "http://localhost:8080/hooks/file-written",
+            "timeout": 30,
+            "headers": {
+              "Authorization": "Bearer $WEBHOOK_TOKEN",
+              "Content-Type": "application/json"
+            },
+            "allowedEnvVars": ["WEBHOOK_TOKEN"]
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <h2>Hook MCP Tool: Validación con Servicio MCP</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Hook tipo mcp_tool</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "security_scanner",
+            "tool": "scan_file",
+            "input": {
+              "file_path": "${tool_input.file_path}",
+              "content": "${tool_input.content}"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <h2>Hook Prompt: Validación con IA</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Hook tipo prompt (IA evalúa)</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "¿Este comando bash es seguro de ejecutar en producción? Responde solo 'safe' o 'unsafe': $ARGUMENTS",
+            "model": "claude-haiku-4-5",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <h2>Hooks en Skills y Subagentes</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — SKILL.md con hooks propios</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+name: secure-deploy
+description: "Deploy a production con validaciones de seguridad"
+allowed-tools:
+  - Bash
+  - Read
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./.claude/hooks/pre-deploy-check.sh"
+  PostToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: http
+          url: "https://audit.internal.com/log"
+---
+
+## Proceso de Deploy Seguro
+Antes de hacer deploy, verifico:
+1. Tests pasan
+2. Variables de entorno están configuradas
+3. Backup existe
+...</code></pre>
+                    </div>
+
+                    <h2>SessionStart: Cargar Contexto Automático</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Cargar contexto al iniciar</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/load-context.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — load-context.sh</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+# Exportar variables al ambiente de Claude
+if [ -n "$CLAUDE_ENV_FILE" ]; then
+  echo "export NODE_ENV=production" >> "$CLAUDE_ENV_FILE"
+  echo "export APP_VERSION=$(cat package.json | jq -r .version)" >> "$CLAUDE_ENV_FILE"
+fi
+
+# Proveer contexto adicional a Claude
+BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
+LAST_COMMIT=$(git log -1 --format="%h %s" 2>/dev/null || echo "N/A")
+OPEN_PRS=$(gh pr list --state open --json number --jq length 2>/dev/null || echo "N/A")
+
+jq -n --arg branch "$BRANCH" \
+      --arg commit "$LAST_COMMIT" \
+      --arg prs "$OPEN_PRS" '{
+  hookSpecificOutput: {
+    hookEventName: "SessionStart",
+    additionalContext: "Branch: \($branch) | Último commit: \($commit) | PRs abiertos: \($prs)"
+  }
+}'
+exit 0</code></pre>
+                    </div>
+
+                    <h2>Deshabilitar Hooks</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Deshabilitar todos los hooks</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>// ~/.claude/settings.json o .claude/settings.json
+{
+  "disableAllHooks": true
+}</code></pre>
+                    </div>
+
+                    <div class="callout info">
+                        <strong>💡 Consejo:</strong> Usa <code>/hooks</code> en Claude Code para ver todos los hooks configurados, sus matchers, conteos de ejecución y fuente (User, Project, Plugin).
+                    </div>
+                </div>
+            </section>
+
+            <!-- CREACIÓN DE AGENTES -->
+            <!-- EXTENDED THINKING -->
+            <section class="content-section" data-topic="thinking">
+                <h1 class="section-title">Extended Thinking — Razonamiento Profundo</h1>
+                <p class="section-subtitle">Activar modo de pensamiento extendido para problemas complejos que requieren cadenas de razonamiento</p>
+
+                <div class="callout info">
+                    <strong>📚 Referencia oficial:</strong> <a href="https://platform.claude.com/docs/en/api/extended-thinking" target="_blank" style="color:var(--primary)">Extended Thinking API</a>
+                </div>
+
+                <!-- FUNDAMENTOS -->
+                <div class="level-content active" data-level="fundamentos">
+                    <div class="level-badge fundamentos">Fundamentos</div>
+
+                    <h2>¿Qué es Extended Thinking?</h2>
+                    <p><strong>Extended Thinking</strong> es un modo donde Claude dedica tokens invisibles al usuario a <strong>razonar internamente</strong> antes de responder. La cadena de pensamiento no se muestra, pero mejora significativamente la calidad de respuestas en problemas complejos.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Sin vs Con Extended Thinking</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>Sin Extended Thinking (respuesta rápida):
+- Respuesta inmediata
+- Buena para tareas simples (resúmenes, redacción)
+- ~100-500 tokens
+- Costo: bajo
+
+Con Extended Thinking (respuesta reflexionada):
+- Claude dedica 5-10s a razonar internamente
+- Excelente para: arquitectura, debugging difícil, matemática, lógica
+- ~1000-8000 tokens de pensamiento (invisibles)
+- Costo: ~3x más (pero valor 10x mayor en casos complejos)</code></pre>
+                    </div>
+
+                    <h2>Cuándo Activar Extended Thinking</h2>
+                    <table class="data-table">
+                        <thead><tr><th>Tarea</th><th>¿Usar?</th><th>Razón</th></tr></thead>
+                        <tbody>
+                            <tr><td>Escribir una carta</td><td>❌ No</td><td>Tareas simples, respuesta directa</td></tr>
+                            <tr><td>Diseñar arquitectura de sistema</td><td>✅ Sí</td><td>Múltiples trade-offs, decisiones complejas</td></tr>
+                            <tr><td>Resumen de artículo</td><td>❌ No</td><td>Procesamiento lineal, sin razonamiento</td></tr>
+                            <tr><td>Encontrar bug en código legacy</td><td>✅ Sí</td><td>Requiere exploración, análisis profundo</td></tr>
+                            <tr><td>Generar tweet</td><td>❌ No</td><td>Creatividad inmediata, no análisis</td></tr>
+                            <tr><td>Estrategia de optimización</td><td>✅ Sí</td><td>Múltiples variables, trade-offs</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- INTERMEDIO -->
+                <div class="level-content" data-level="intermedio">
+                    <div class="level-badge intermedio">Intermedio</div>
+
+                    <h2>Activar Extended Thinking en Claude Code</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — En sesión interactiva</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Método 1: Flag de CLI
+claude --think "Diseña una arquitectura de microservicios para startup"
+
+# Método 2: Comando dentro de sesión
+/think on
+> "Mi pregunta compleja aquí..."
+/think off
+
+# Método 3: Por respuesta (próxima release)
+> "Piensa profundamente: ¿cómo escalaría esto a 1M usuarios?"</code></pre>
+                    </div>
+
+                    <h2>Usar Extended Thinking con SDK</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Con Anthropic SDK</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">import anthropic
+
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-opus-4-7",
+    max_tokens=16000,  # Necesario para thinking + respuesta
+    thinking={
+        "type": "enabled",
+        "budget_tokens": 10000  # Tokens para razonar (no es parte del output)
+    },
+    messages=[
+        {
+            "role": "user",
+            "content": "Analiza este código y propón una refactorización completa"
+        }
+    ]
+)
+
+# Acceder al pensamiento y respuesta
+for block in response.content:
+    if block.type == "thinking":
+        print("🧠 Cadena de pensamiento:")
+        print(block.thinking)
+    elif block.type == "text":
+        print("📝 Respuesta final:")
+        print(block.text)
+
+# Métricas de tokens
+print(f"Tokens pensamiento: {response.usage.cache_creation_input_tokens or 0}")
+print(f"Tokens input: {response.usage.input_tokens}")
+print(f"Tokens output: {response.usage.output_tokens}")</code></pre>
+                    </div>
+
+                    <h2>Budget de Pensamiento</h2>
+                    <p>El parámetro <code>budget_tokens</code> limita cuánto tiempo Claude dedica a razonar:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Presupuestos recomendados</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>budget_tokens=1000   # Razonamiento ligero (10 segundos)
+                      # Para: debugging básico, revisiones cortas
+
+budget_tokens=5000   # Razonamiento moderado (50 segundos) ← RECOMENDADO
+                      # Para: arquitectura, análisis complejos, debugging
+
+budget_tokens=10000  # Razonamiento profundo (100+ segundos)
+                      # Para: problemas muy complejos, investigación a fondo
+
+budget_tokens=20000  # Máximo permitido (200+ segundos)
+                      # Usar solo cuando sea crítico (muy caro)</code></pre>
+                    </div>
+                </div>
+
+                <!-- AVANZADO -->
+                <div class="level-content" data-level="avanzado">
+                    <div class="level-badge avanzado">Avanzado</div>
+
+                    <h2>Estrategias de Costo-Beneficio</h2>
+                    <p>Extended Thinking cuesta ~3x más, pero para ciertos problemas vale 10x. Usa esta fórmula:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Análisis de ROI</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">def should_use_extended_thinking(task_complexity, num_iterations):
+    """
+    task_complexity: 1-5 (1=trivial, 5=muy complejo)
+    num_iterations: cuántas veces se ejecutará
+    """
+    # Sin thinking: 0.5 USD por 1M tokens
+    # Con thinking: 1.5 USD por 1M tokens (thinking) + 0.5 (respuesta)
+
+    cost_without = 0.5 * num_iterations  # Versión simple
+    cost_with = 1.5 * num_iterations     # Versión con thinking
+
+    # Pero si task_complexity es alto, probablemente necesites 3 iteraciones
+    # sin thinking vs 1 con thinking para llegar al mismo resultado
+
+    iterations_needed_without = 3 if task_complexity > 3 else 1
+    iterations_needed_with = 1
+
+    cost_without_realistic = 0.5 * iterations_needed_without
+    cost_with_realistic = 1.5 * iterations_needed_with
+
+    return cost_with_realistic < cost_without_realistic
+
+# Ejemplos:
+print("Debugging difícil:", should_use_extended_thinking(4, 1))  # True
+print("Escribir email:", should_use_extended_thinking(1, 1))     # False</code></pre>
+                    </div>
+
+                    <h2>Combinar con Prompt Caching</h2>
+                    <p>Extended Thinking + Prompt Caching = máximo valor con mínimo costo:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Thinking + Cache</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">response = client.messages.create(
+    model="claude-opus-4-7",
+    max_tokens=16000,
+    thinking={"type": "enabled", "budget_tokens": 5000},
+    system=[
+        {"type": "text", "text": "Eres arquitecto de sistemas sénior"},
+        {
+            "type": "text",
+            "text": LARGE_ARCHITECTURE_DOCS,  # 20KB de docs
+            "cache_control": {"type": "ephemeral"}
+        }
+    ],
+    messages=[{"role": "user", "content": "Pregunta compleja..."}]
+)
+
+# Resultado:
+# - Primera pregunta: gasta tokens en pensar + cachear docs
+# - Siguientes preguntas: usa thinking fresco pero docs cacheados (90% más barato)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SETTINGS.JSON -->
+            <section class="content-section" data-topic="settings">
+                <h1 class="section-title">Settings.json — Configuración Completa</h1>
+                <p class="section-subtitle">Controlar permisos, variables de entorno, hooks y comportamientos a nivel de proyecto</p>
+
+                <div class="callout info">
+                    <strong>📚 Referencia:</strong> <code>.claude/settings.json</code> en raíz de proyecto • <code>~/.claude/settings.json</code> global
+                </div>
+
+                <!-- FUNDAMENTOS -->
+                <div class="level-content active" data-level="fundamentos">
+                    <div class="level-badge fundamentos">Fundamentos</div>
+
+                    <h2>Estructura Básica</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — .claude/settings.json mínimo</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">{
+  "allowedTools": {
+    "Read": {"enabled": true},
+    "Write": {"enabled": false},
+    "Bash": {"enabled": true}
+  },
+  "env": {
+    "NODE_ENV": "development"
+  }
+}</code></pre>
+                    </div>
+
+                    <h2>Scopes de Settings</h2>
+                    <table class="data-table">
+                        <thead><tr><th>Ubicación</th><th>Nivel</th><th>Quién ve</th><th>Cuándo usar</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>~/.claude/settings.json</code></td><td>Global (usuario)</td><td>Solo tú en todos los proyectos</td><td>Prefs personales, tools que usas siempre</td></tr>
+                            <tr><td><code>.claude/settings.json</code></td><td>Proyecto</td><td>Todo el equipo (en git)</td><td>Restricciones de equipo, permisos, hooks</td></tr>
+                            <tr><td><code>.claude/settings.local.json</code></td><td>Local (máquina)</td><td>Solo tu máquina (.gitignore)</td><td>Secrets, tokens, config local</td></tr>
+                            <tr><td>Política org</td><td>Organización</td><td>Toda la org (Managed Agents)</td><td>Compliance, auditoría, seguridad</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h2>allowedTools — Control de Permisos</h2>
+                    <p>Define qué herramientas puede usar Claude y en qué archivos/directorios:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — allowedTools básico</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">{
+  "allowedTools": {
+    "Read": {
+      "enabled": true,
+      "paths": ["src/**", "docs/**"],
+      "exclude": ["src/secrets/*", ".env*"]
+    },
+    "Write": {
+      "enabled": false
+    },
+    "Edit": {
+      "enabled": true,
+      "paths": ["src/**"],
+      "exclude": ["src/index.ts"]
+    },
+    "Bash": {
+      "enabled": true,
+      "allowed": ["npm *", "git status", "python -m pytest"],
+      "denied": ["rm -rf", "sudo", "curl * | bash"]
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- INTERMEDIO -->
+                <div class="level-content" data-level="intermedio">
+                    <div class="level-badge intermedio">Intermedio</div>
+
+                    <h2>allowedTools Granular — Patrones Reales</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Configuración de equipo</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">{
+  "allowedTools": {
+    "Read": {
+      "enabled": true,
+      "paths": ["src/**", "tests/**", "docs/**", "package.json"],
+      "exclude": [".env*", "*.pem", "secrets/*", "*.key"]
+    },
+    "Write": {
+      "enabled": false
+    },
+    "Edit": {
+      "enabled": true,
+      "paths": ["src/**", "tests/**"],
+      "exclude": ["src/config.ts", "src/index.ts"]
+    },
+    "Bash": {
+      "enabled": true,
+      "allowed": [
+        "npm run test",
+        "npm run build",
+        "npm run lint",
+        "git status",
+        "git diff",
+        "python -m pytest",
+        "grep -r * --include=*.ts"
+      ],
+      "denied": [
+        "rm -rf",
+        "sudo",
+        "git push --force",
+        "git reset --hard",
+        "curl * | bash",
+        "rm -f"
+      ]
+    }
+  }
+}</code></pre>
+                    </div>
+
+                    <h2>Variables de Entorno (env)</h2>
+                    <p>Inyectar variables que Claude usa automáticamente:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — env vars en settings</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">{
+  "env": {
+    "NODE_ENV": "development",
+    "DEBUG": "true",
+    "API_BASE_URL": "http://localhost:3000",
+    "DATABASE": "sqlite://./dev.db"
+  }
+}</code></pre>
+                    </div>
+
+                    <h2>Permisiones Declarativas</h2>
+                    <p>Sistema de allow/deny para mayor control:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Permissions</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">{
+  "permissions": {
+    "allow": [
+      "Bash(npm run test)",
+      "Bash(git status)",
+      "Read(src/**)",
+      "Edit(src/**)",
+      "Grep(*)"
+    ],
+    "deny": [
+      "Bash(git push)",
+      "Bash(rm -rf)",
+      "Bash(sudo *)",
+      "Read(.env*)",
+      "Write(*)"
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- AVANZADO -->
+                <div class="level-content" data-level="avanzado">
+                    <div class="level-badge avanzado">Avanzado</div>
+
+                    <h2>Settings Completo de Producción</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — settings.json para equipo de producción</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">{
+  "$schema": "https://code.claude.com/schema/settings.json",
+  "allowedTools": {
+    "Read": {
+      "enabled": true,
+      "paths": ["src/**", "tests/**", "docs/**", "package.json", "tsconfig.json"],
+      "exclude": [".env*", "secrets/**", "*.pem", "*.key", ".git/**"]
+    },
+    "Write": {
+      "enabled": false
+    },
+    "Edit": {
+      "enabled": true,
+      "paths": ["src/**", "tests/**"],
+      "exclude": ["src/config.prod.ts", "src/db.ts"]
+    },
+    "Bash": {
+      "enabled": true,
+      "allowed": [
+        "npm run test",
+        "npm run test:watch",
+        "npm run build",
+        "npm run lint",
+        "npm run type-check",
+        "git status",
+        "git diff HEAD~1",
+        "git log --oneline -10",
+        "python -m pytest",
+        "find . -name '*.ts' -not -path './node_modules/*'"
+      ],
+      "denied": [
+        "rm -rf",
+        "rm -f",
+        "sudo",
+        "git push",
+        "git reset --hard",
+        "git rebase -i",
+        "npm publish",
+        "docker",
+        "curl * | bash",
+        "eval"
+      ]
+    },
+    "MCP": {
+      "enabled": true,
+      "denied": ["dangerous-custom-mcp"]
+    }
+  },
+  "env": {
+    "NODE_ENV": "development",
+    "DEBUG": "claude:*",
+    "LOG_LEVEL": "debug"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(git status|git diff|git log)",
+      "Bash(python -m pytest *)",
+      "Read(src/**)",
+      "Edit(src/**)",
+      "Grep(*)"
+    ],
+    "deny": [
+      "Bash(git push|git pull|sudo|rm)",
+      "Read(.env*|secrets/**|*.key)",
+      "Write(*)"
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <h2>Auditoría: Verificar Permisos Activos</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Ver qué permisos tiene Claude</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Verificar qué tools están habilitados
+/help
+
+# Ver qué archivos puede leer
+> "Qué archivos puedo leer según settings.json?"
+
+# Probar un comando permitido
+> "Ejecuta: npm run test"
+
+# Probar un comando denegado (debería fallar)
+> "Ejecuta: rm -rf node_modules"  # ← Será bloqueado por settings</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SISTEMA DE MEMORIA -->
+            <section class="content-section" data-topic="memoria">
+                <h1 class="section-title">Sistema de Memoria — Persistencia entre Sesiones</h1>
+                <p class="section-subtitle">Claude recuerda automáticamente contexto importante entre sesiones usando archivos Markdown</p>
+
+                <!-- FUNDAMENTOS -->
+                <div class="level-content active" data-level="fundamentos">
+                    <div class="level-badge fundamentos">Fundamentos</div>
+
+                    <h2>Los 3 Scopes de Memoria</h2>
+                    <table class="data-table">
+                        <thead><tr><th>Scope</th><th>Ubicación</th><th>Acceso</th><th>Cuándo usar</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>user</strong></td><td><code>~/.claude/memory/</code></td><td>Todos tus proyectos, solo tú</td><td>Preferencias globales, estilo personal</td></tr>
+                            <tr><td><strong>project</strong></td><td><code>.claude/memory/</code></td><td>Todo el equipo (en git)</td><td>Contexto compartido: stack, decisiones</td></tr>
+                            <tr><td><strong>local</strong></td><td><code>.claude/memory.local/</code></td><td>Solo tu máquina (gitignore)</td><td>Secretos, tokens, config local</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h2>Cómo Funciona</h2>
+                    <div class="callout info">
+                        <strong>🧠 Automático:</strong> Claude lee automáticamente <code>.claude/memory/*.md</code> al iniciar cada sesión. No necesitas hacer nada — simplemente agrega contenido a esos archivos.
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Estructura de archivos</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Estructura de directorios
+~/.claude/
+└── memory/
+    ├── preferences.md        # Mi estilo de código preferido
+    ├── tools-i-use.md        # Herramientas favoritas
+    └── learning-notes.md     # Cosas que aprendo
+
+.claude/
+└── memory/
+    ├── project-context.md    # Stack: Node + React + Postgres
+    ├── architecture.md       # Decisiones de arquitectura
+    ├── team-standards.md     # Convenciones del equipo
+    └── api-endpoints.md      # Documentación de endpoints
+
+.claude/
+└── memory.local/            # ← .gitignore estos
+    ├── secrets.md           # API keys (NUNCA en git!)
+    └── local-setup.md       # Tu máquina específica</code></pre>
+                    </div>
+
+                    <h2>Comandos de Memoria</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Manipular memoria</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Ver toda la memoria
+/memory show
+
+# Agregar un hecho
+/memory add "La base de datos es PostgreSQL 14 en AWS RDS"
+
+# Eliminar una entrada
+/memory delete "texto exacto de lo que grabaste"
+
+# Editar memoria (abre editor)
+/memory edit
+
+# Limpiar toda la memoria (cuidado!)
+/memory clear</code></pre>
+                    </div>
+                </div>
+
+                <!-- INTERMEDIO -->
+                <div class="level-content" data-level="intermedio">
+                    <div class="level-badge intermedio">Intermedio</div>
+
+                    <h2>Ejemplos de Archivo de Memoria</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">markdown</span> — .claude/memory/project-context.md</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Project Context
+
+## Stack
+- Frontend: React 18 + TypeScript + Vite
+- Backend: Node.js Express + Postgres 14
+- Deployment: Docker + AWS ECS
+- Testing: Jest + Cypress
+
+## Architecture Decisions
+- API-first approach (GraphQL for complex queries)
+- Monorepo: /packages/web /packages/api /packages/shared
+- Database migrations: Flyway
+- Auth: JWT with refresh tokens
+
+## Team Standards
+- Naming: camelCase for JS, PascalCase for components
+- Tests: unit tests for logic, integration tests for API
+- Git: feature branches, PR required for main
+- Code review: minimum 2 approvals
+
+## Conventions
+- Environment: NODE_ENV=development for local
+- Logging: use winston, log level DEBUG in dev
+- Errors: always include request ID in logs
+- Time zones: always UTC in database, convert on client</code></pre>
+                    </div>
+
+                    <h2>Qué Memorizar — Best Practices</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Guía de contenido</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>✅ BUENO — Memorizar:
+- Stack tecnológico (lenguajes, frameworks, versiones)
+- Decisiones arquitectónicas (WHY, no solo qué)
+- Convenciones del equipo (naming, patrones, estructura)
+- URLs de servicios críticos (API gateway, databases, admin panels)
+- Decisiones de negocio que afecten el código
+
+❌ MALO — NO memorizar:
+- Contraseñas, API keys, tokens (usar .gitignore)
+- Archivos que cambian frecuentemente (código fuente)
+- Información pública fácil de encontrar (docs oficiales)
+- Estado temporal (qué estamos haciendo hoy)</code></pre>
+                    </div>
+
+                    <h2>Actualizar Memoria Regularmente</h2>
+                    <p>La memoria se vuelve stale si no se actualiza. Estrategia:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Ritmo de actualización</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Cada sprint (2 semanas): revisar memoria
+/memory show
+# → Verificar que información sigue siendo actual
+# → Agregar nuevas decisiones arquitectónicas
+
+# Cuando cambias stack importante
+/memory add "Migramos de REST a GraphQL por [razón]"
+
+# Cuando nuevo dev se une
+# → Apunta a los archivos de memory para onboarding más rápido
+
+# Cada mes: limpiar
+/memory delete [entradas desactualizadas]</code></pre>
+                    </div>
+                </div>
+
+                <!-- AVANZADO -->
+                <div class="level-content" data-level="avanzado">
+                    <div class="level-badge avanzado">Avanzado</div>
+
+                    <h2>Memoria con Sub-Agentes</h2>
+                    <p>Cada sub-agente hereda la memoria del proyecto + puede tener su propia memoria:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Sub-agente con memoria</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">---
+name: code-reviewer
+description: Revisa código de PRs
+tools: Read, Grep
+memory:
+  - type: project      # Hereda memory/ del proyecto
+  - type: local        # Usa memory.local/ de su máquina
+---
+
+Lee la memoria del proyecto (arquitectura, standards)
+Usa esa información para revisar el PR
+
+Si encuentras patrones repetidos, sugiero actualizar:
+/memory add "En este proyecto, siempre usamos patrón X para ..."</code></pre>
+                    </div>
+
+                    <h2>Arquitectura de Memoria para Equipos Grandes</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Organización de .claude/memory/</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">.claude/memory/
+├── 1-project-basics.md
+│   ├─ Stack (versiones pinneadas)
+│   ├─ Deployment targets
+│   └─ Critical services
+├── 2-architecture.md
+│   ├─ ADRs (Architecture Decision Records)
+│   ├─ Data flow diagrams (ASCII)
+│   └─ Service boundaries
+├── 3-team-standards.md
+│   ├─ Code conventions
+│   ├─ Git workflow
+│   └─ Review guidelines
+├── 4-domain-knowledge.md
+│   ├─ Business logic (¿por qué hacemos esto?)
+│   ├─ Feature flags (qué está activo)
+│   └─ Known issues (bugs conocidos, workarounds)
+└── 5-onboarding.md
+    ├─ Setup local (qué instalar)
+    ├─ First PR checklist
+    └─ Links útiles
+
+TAMAÑO: total ~5-10KB
+LECTURA: Claude lee todo al iniciar (< 100ms)
+ACTUALIZACIÓN: cada sprint</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" data-topic="agentes">
+                <h1 class="section-title">Sub-Agentes y Creación de Agentes</h1>
+                <p class="section-subtitle">Agentes especializados con herramientas y contexto propios — documentación oficial de Claude Code</p>
+
+                <div class="callout info">
+                    <strong>📚 Fuente oficial:</strong> <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" style="color:var(--primary)">code.claude.com/docs/en/sub-agents</a>
+                    — Sub-Agents son agentes de IA especializados con su propio contexto, system prompt, y acceso a herramientas.
+                </div>
+
+                <!-- FUNDAMENTOS -->
+                <div class="level-content active" data-level="fundamentos">
+                    <div class="level-badge fundamentos">Fundamentos</div>
+
+                    <h2>¿Qué son los Sub-Agentes?</h2>
+                    <p>Los Sub-Agentes son agentes de IA especializados que pueden ser invocados desde Claude Code para realizar tareas específicas. Cada sub-agente tiene:</p>
+                    <ul>
+                        <li><strong>Su propio contexto</strong> — ventana de contexto aislada del agente padre</li>
+                        <li><strong>System prompt especializado</strong> — define su rol y comportamiento</li>
+                        <li><strong>Control de herramientas</strong> — qué puede y qué no puede hacer</li>
+                        <li><strong>Memoria persistente</strong> — puede recordar entre sesiones</li>
+                    </ul>
+
+                    <h2>Sub-Agentes Built-in</h2>
+                    <p>Claude Code incluye sub-agentes pre-construidos listos para usar:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Agentes built-in disponibles</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>Explore     → Exploración rápida de código. Especializado en encontrar
+              archivos por patrones, buscar keywords, responder preguntas
+              sobre la base de código. Herramientas: Glob, Grep, Read, WebFetch
+
+Plan        → Arquitecto de software. Diseña planes de implementación,
+              identifica archivos críticos, considera trade-offs.
+              Herramientas: Todas excepto Edit, Write, NotebookEdit
+
+General-purpose → Agente multipropósito. Ideal para tareas multi-step,
+                  búsqueda de código, investigación de preguntas complejas.
+                  Herramientas: Todas</code></pre>
+                    </div>
+
+                    <h2>Crear un Sub-Agente Personalizado</h2>
+                    <p>Los sub-agentes se definen en archivos YAML dentro de <code>.claude/agents/</code>:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Crear sub-agente</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code># Crear directorio para agentes
+mkdir -p .claude/agents
+
+# Crear agente code-reviewer
+cat > .claude/agents/code-reviewer.md << 'EOF'
+---
+name: code-reviewer
+description: Revisa código para bugs, problemas de seguridad y mejores prácticas
+tools: Read, Grep, Glob
+---
+
+Eres un revisor de código experto. Cuando se te pida revisar código:
+1. Identifica bugs potenciales
+2. Revisa vulnerabilidades de seguridad (XSS, SQLi, etc.)
+3. Evalúa rendimiento y optimizaciones
+4. Sugiere mejoras siguiendo principios SOLID
+5. Reporta en formato: Crítico / Advertencia / Sugerencia
+
+NUNCA modifiques archivos — solo analiza y reporta.
+EOF</code></pre>
+                    </div>
+
+                    <h2>Campos de Frontmatter</h2>
+                    <p>El YAML frontmatter configura el comportamiento del agente:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Todos los campos disponibles</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+name: mi-agente                    # Nombre del agente
+description: |                     # Cuándo invocarlo (ayuda al modelo a elegir)
+  Usa este agente para analizar datos CSV. Ideal cuando el usuario
+  pide análisis estadístico o visualizaciones de datos.
+tools: Read, Bash, Grep            # Herramientas permitidas
+disallowedTools: Write, Edit       # Herramientas explícitamente prohibidas
+permissionMode: auto               # Modo de permisos (ver abajo)
+model: claude-opus-4-7             # Modelo específico para este agente
+effort: high                       # Nivel de esfuerzo (low/medium/high)
+memory:                            # Memoria persistente
+  - type: user                     # user, project, o local
+    path: ~/.claude/memory/        # Dónde se almacena
+---</code></pre>
+                    </div>
+
+                    <h2>Modos de Permiso</h2>
+                    <table class="data-table">
+                        <thead><tr><th>Modo</th><th>Descripción</th><th>Uso recomendado</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>default</code></td><td>Comportamiento estándar de Claude Code</td><td>La mayoría de casos</td></tr>
+                            <tr><td><code>acceptEdits</code></td><td>Acepta ediciones de archivos sin confirmación</td><td>Agentes de refactoring automatizado</td></tr>
+                            <tr><td><code>auto</code></td><td>Completa tareas automáticamente cuando es posible</td><td>Pipelines CI/CD</td></tr>
+                            <tr><td><code>dontAsk</code></td><td>No pide confirmación para operaciones de bajo riesgo</td><td>Scripts de automatización</td></tr>
+                            <tr><td><code>bypassPermissions</code></td><td>Omite todos los checks de permisos</td><td>Solo entornos de prueba aislados</td></tr>
+                            <tr><td><code>plan</code></td><td>Solo planifica, nunca ejecuta herramientas</td><td>Revisión antes de ejecutar</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout warning">
+                        <strong>⚠️ Seguridad:</strong> <code>bypassPermissions</code> es peligroso en producción. Úsalo solo en entornos de prueba aislados donde un fallo no causa daños reales.
+                    </div>
+                </div>
+
+                <!-- INTERMEDIO -->
+                <div class="level-content" data-level="intermedio">
+                    <div class="level-badge intermedio">Intermedio</div>
+
+                    <h2>Agentes Especializados: Ejemplos Prácticos</h2>
+
+                    <h3>1. Code Reviewer</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — .claude/agents/code-reviewer.md</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+name: code-reviewer
+description: |
+  Revisa código para calidad, seguridad y mejores prácticas.
+  Úsalo cuando el usuario sube un PR o pide revisión de archivos.
+tools: Read, Grep, Glob
+permissionMode: default
+---
+
+Eres un revisor de código sénior especializado en calidad y seguridad.
+
+Al revisar código:
+1. **Bugs**: Identifica errores lógicos, condiciones de borde
+2. **Seguridad**: XSS, SQL injection, secrets expuestos, permisos
+3. **Performance**: N+1 queries, memory leaks, blocking operations
+4. **Calidad**: Naming, DRY, SOLID, tests ausentes
+
+Formato de reporte:
+- 🔴 CRÍTICO: [descripción] — línea X
+- 🟡 ADVERTENCIA: [descripción] — línea X
+- 🟢 SUGERENCIA: [descripción] — línea X
+
+NUNCA edites archivos. Solo analiza y reporta.</code></pre>
+                    </div>
+
+                    <h3>2. Data Scientist</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — .claude/agents/data-scientist.md</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+name: data-scientist
+description: |
+  Analiza datasets, ejecuta análisis estadístico y genera insights.
+  Actívalo cuando el usuario mencione CSV, datos, análisis o visualización.
+tools: Read, Bash, Grep
+permissionMode: auto
+---
+
+Eres un científico de datos experto. Tienes acceso a pandas, numpy, scipy, matplotlib.
+
+Al analizar datos:
+1. Lee el archivo con pandas: `pd.read_csv()`
+2. Examina estructura: `.info()`, `.describe()`, `.head()`
+3. Detecta valores nulos, outliers, tipos incorrectos
+4. Ejecuta análisis relevante según la pregunta
+5. Genera visualizaciones cuando aporten valor
+6. Resume insights en lenguaje claro
+
+Siempre incluye: sample size, estadísticos básicos, limitaciones del análisis.</code></pre>
+                    </div>
+
+                    <h3>3. Database Validator</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — .claude/agents/db-validator.md</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+name: db-validator
+description: |
+  Valida schemas de base de datos, migrations y queries SQL.
+  Actívalo para review de migraciones o análisis de queries lentas.
+tools: Read, Bash, Grep
+disallowedTools: Write, Edit
+permissionMode: default
+---
+
+Eres un DBA (Database Administrator) experto en PostgreSQL, MySQL y SQLite.
+
+Al validar:
+1. Revisa que las migraciones sean reversibles
+2. Detecta queries sin índices (full table scans)
+3. Identifica N+1 queries potenciales
+4. Valida integridad referencial (foreign keys)
+5. Sugiere índices faltantes
+6. Revisa tipos de datos (VARCHAR vs TEXT, INT vs BIGINT)
+
+Para cada query problemática: muestra la versión optimizada.</code></pre>
+                    </div>
+
+                    <h2>Pre-cargar Skills en un Sub-Agente</h2>
+                    <p>Un sub-agente puede tener skills pre-cargadas para ejecutar directamente:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Agente con skills pre-cargadas</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+name: release-manager
+description: Gestiona el proceso completo de release
+tools: Read, Bash, Edit, Write
+skills:
+  - /run-tests          # Carga skill de tests automáticamente
+  - /generate-changelog # Carga skill de changelog
+  - /bump-version       # Carga skill de versioning
+---
+
+Eres el release manager. Cuando te pidan hacer un release:
+1. Ejecuta /run-tests para verificar que todo pasa
+2. Usa /generate-changelog para generar el CHANGELOG
+3. Usa /bump-version para incrementar la versión
+4. Crea el tag de git y la release note</code></pre>
+                    </div>
+
+                    <h2>Memoria Persistente por Agente</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Agente con memoria</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+name: project-assistant
+description: Asistente principal del proyecto con memoria de decisiones
+tools: Read, Write, Bash
+memory:
+  - type: project        # Comparte con todos en el proyecto
+    path: .claude/memory/
+---
+
+Eres el asistente principal. Mantén un archivo de decisiones de arquitectura
+en .claude/memory/decisions.md. Antes de cada respuesta, lee ese archivo para
+contexto. Después de decisiones importantes, actualiza ese archivo.</code></pre>
+                    </div>
+                </div>
+
+                <!-- AVANZADO -->
+                <div class="level-content" data-level="avanzado">
+                    <div class="level-badge avanzado">Avanzado</div>
+
+                    <h2>Arquitectura Multi-Agente con Orquestación</h2>
+                    <p>Para proyectos complejos, diseña un sistema donde agentes especializados trabajan en paralelo coordinados por un agente maestro:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Arquitectura del sistema</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>┌──────────────────────────────────────────────┐
+│         Agente Maestro (Orquestador)          │
+│   model: claude-opus-4-7 | permissionMode: plan│
+└────────────┬─────────────────────────────────┘
+             │ spawna sub-agentes especializados
+    ┌────────┴────────┬────────────┬────────────┐
+    ▼                 ▼            ▼            ▼
+Backend           Frontend      DevOps        QA
+claude-sonnet-4-6 claude-haiku  claude-haiku  claude-sonnet
+tools: Bash,Edit  tools: Read   tools: Bash   tools: Bash,Read
+disallowed: Delete disallowed:  disallowed:   disallowed:
+             Write  Delete       Write,Delete
+    │                 │            │            │
+    └────────┬────────┴────────────┴────────────┘
+             │ resultados unificados
+    ┌────────▼────────────────────────────────────┐
+    │     Maestro integra y presenta resultado     │
+    └─────────────────────────────────────────────┘</code></pre>
+                    </div>
+
+                    <h2>Fork: Aislamiento de Contexto</h2>
+                    <p>El comando <code>/fork</code> crea una copia del contexto actual en un sub-agente aislado — los cambios no afectan la sesión padre:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Usar /fork para experimentos</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Caso de uso: probar diferentes enfoques sin contaminar el contexto
+
+# El usuario tiene un bug complejo
+> "Tengo un memory leak en el backend"
+
+# El agente principal usa /fork para explorar alternativas:
+/fork "Analiza si el leak está en el connection pool"
+# → Sub-agente 1: investiga connection pool, crea su propio contexto
+
+/fork "Analiza si el leak está en los event listeners"
+# → Sub-agente 2: investiga event listeners, contexto separado
+
+# Ambos corren EN PARALELO (background: true)
+# El maestro recibe los resultados y los integra
+# Si uno de los forks falla, no afecta al otro ni al principal</code></pre>
+                    </div>
+
+                    <h2>Resumir Sub-Agentes: SendMessage</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Ciclo de vida de un sub-agente</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>1. SPAWN (iniciar)
+   Agent({ description: "...", prompt: "...", subagent_type: "code-reviewer" })
+   → El agente comienza a trabajar en background
+
+2. WORK (trabajar)
+   El sub-agente ejecuta herramientas, lee archivos, genera resultados
+   El agente padre continúa con otras tareas
+
+3. COMPLETE (completar)
+   El sub-agente devuelve resultado al padre via retorno del tool
+   El resultado NO es visible al usuario automáticamente
+
+4. RESUME (continuar un agente previo)
+   SendMessage({ to: "agentId", content: "Continúa con X" })
+   → Retoma el sub-agente con FULL contexto previo
+   → CRUCIAL: No crear nuevo Agent() — eso borra el historial</code></pre>
+                    </div>
+
+                    <h2>Hooks para Sub-Agentes</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Hooks específicos para agentes en settings.json</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "hooks": {
+    "AgentStart": [
+      {
+        "matcher": "code-reviewer",
+        "hooks": [{
+          "type": "command",
+          "command": "echo 'Code reviewer iniciado' >> ~/.claude/agent-log.txt"
+        }]
+      }
+    ],
+    "AgentEnd": [
+      {
+        "matcher": ".*",
+        "hooks": [{
+          "type": "command",
+          "command": "echo 'Agente $AGENT_NAME completó en $ELAPSED_MS ms' >> ~/.claude/agent-log.txt"
+        }]
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+
+                    <h2>Cost Optimization: Elegir el Modelo Correcto</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Guía de selección de modelo por tarea</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>claude-opus-4-7 (más capaz, más caro)
+└─ Razonamiento complejo, arquitectura, debugging difícil
+└─ Orquestador principal en sistemas multi-agente
+└─ Tareas que requieren extended thinking
+
+claude-sonnet-4-6 (equilibrio costo/calidad — DEFAULT)
+└─ Generación de código, refactoring
+└─ Análisis de documentos medianos
+└─ Sub-agentes de nivel medio
+
+claude-haiku-4-5 (más rápido, más barato)
+└─ Tareas simples y repetitivas
+└─ Validación de schemas, formateo
+└─ Sub-agentes en background para exploración masiva</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SKILLS ESTRICTAS -->
+            <section class="content-section" data-topic="skills">
+                <h1 class="section-title">Skills — Comandos Personalizados</h1>
+                <p class="section-subtitle">Comandos reutilizables con SKILL.md — documentación oficial de Claude Code</p>
+
+                <div class="callout info">
+                    <strong>📚 Fuente oficial:</strong> <a href="https://code.claude.com/docs/en/skills" target="_blank" style="color:var(--primary)">code.claude.com/docs/en/skills</a>
+                    — Las Skills son comandos personalizados que puedes invocar con <code>/nombre-skill</code> desde cualquier sesión de Claude Code.
+                </div>
+
+                <!-- FUNDAMENTOS -->
+                <div class="level-content active" data-level="fundamentos">
+                    <div class="level-badge fundamentos">Fundamentos</div>
+
+                    <h2>Anatomía de una Skill</h2>
+                    <p>Una Skill es un comando personalizado que vive en <code>.claude/skills/nombre/SKILL.md</code>:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — .claude/skills/analizar-feedback/SKILL.md</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+description: "Analiza customer feedback CSV y extrae insights"
+allowed-tools:
+  - Read
+  - Bash
+---
+
+# Análisis de Feedback
+
+Analiza el archivo $ARGUMENTS y genera insights:
+
+1. Lee el archivo CSV con `python -c "import pandas as pd; df = pd.read_csv('$ARGUMENTS'); print(df.describe())"`
+2. Identifica los temas más frecuentes
+3. Clasifica sentimiento (positivo/negativo/neutro)
+4. Genera reporte estructurado
+
+Idioma de salida: español</code></pre>
+                    </div>
+
+                    <p><strong>Partes de una Skill:</strong></p>
+                    <ul>
+                        <li><strong>Frontmatter (YAML)</strong> entre <code>---</code> — Metadatos de configuración</li>
+                        <li><strong>Body (Markdown)</strong> — Las instrucciones que Claude ejecuta al invocar la skill</li>
+                        <li><strong><code>$ARGUMENTS</code></strong> — Captura el texto que el usuario pasa después del comando</li>
+                    </ul>
+
+                    <h2>Crear y Usar una Skill</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Crear skill desde cero</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code># Estructura de directorios
+mkdir -p .claude/skills/code-review
+
+# Crear SKILL.md
+cat > .claude/skills/code-review/SKILL.md << 'EOF'
+---
+description: "Revisa código en busca de bugs, vulnerabilidades y mejoras"
+allowed-tools:
+  - Read
+  - Grep
+---
+
+Revisa el siguiente archivo o directorio: $ARGUMENTS
+
+Para cada problema encontrado, reporta:
+- Severidad (CRÍTICO / ADVERTENCIA / SUGERENCIA)
+- Descripción del problema
+- Línea afectada
+- Cómo solucionarlo
+
+Enfócate en: seguridad, performance, mantenibilidad.
+EOF
+
+# Invocar la skill
+/code-review src/auth.py
+/code-review src/api/</code></pre>
+                    </div>
+
+                    <h2>Campos de Frontmatter Disponibles</h2>
+                    <table class="data-table">
+                        <thead><tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>description</code></td><td>string</td><td>Cuándo usar la skill — Claude lo usa para elegir automáticamente</td></tr>
+                            <tr><td><code>allowed-tools</code></td><td>list</td><td>Herramientas pre-aprobadas (no pide permiso al usuario)</td></tr>
+                            <tr><td><code>disable-model-invocation</code></td><td>bool</td><td>Si true, solo invocable por el usuario con /nombre</td></tr>
+                            <tr><td><code>user-invocable</code></td><td>bool</td><td>Si false, la skill no aparece en el menú de /</td></tr>
+                            <tr><td><code>context</code></td><td>string</td><td>"fork" ejecuta en sub-agente aislado</td></tr>
+                            <tr><td><code>model</code></td><td>string</td><td>Modelo a usar para esta skill (ej: claude-opus-4-7)</td></tr>
+                            <tr><td><code>effort</code></td><td>string</td><td>Nivel de esfuerzo: low, medium, high</td></tr>
+                            <tr><td><code>hooks</code></td><td>list</td><td>Hooks de ciclo de vida para esta skill específica</td></tr>
+                            <tr><td><code>memory</code></td><td>list</td><td>Memoria persistente para la skill</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h2>Organizar Skills</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Estructura de directorios</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>.claude/
+└── skills/
+    ├── code-review/
+    │   ├── SKILL.md          ← Skill principal
+    │   └── checklist.md      ← Archivo de apoyo
+    ├── generate-tests/
+    │   ├── SKILL.md
+    │   └── templates/
+    │       ├── jest.md       ← Template para Jest
+    │       └── pytest.md     ← Template para pytest
+    └── deploy/
+        ├── SKILL.md
+        └── environments.md   ← Config de entornos</code></pre>
+                    </div>
+                </div>
+
+                <!-- INTERMEDIO -->
+                <div class="level-content" data-level="intermedio">
+                    <div class="level-badge intermedio">Intermedio</div>
+
+                    <h2>Inyección de Contexto Dinámico</h2>
+                    <p>Usa <code>!`comando`</code> para inyectar output de comandos shell directamente en el cuerpo de la skill:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — SKILL.md con contexto dinámico</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+description: "Revisa PRs y genera reporte con contexto del repositorio"
+allowed-tools:
+  - Read
+  - Bash
+---
+
+# Context del Repositorio
+
+Branch actual: !`git branch --show-current`
+Últimos commits: !`git log --oneline -5`
+Archivos modificados: !`git diff --name-only HEAD~1`
+Tests: !`npm test 2>&1 | tail -5`
+
+# Tarea
+
+Analiza los cambios en $ARGUMENTS y genera un code review considerando:
+- El estado actual del repositorio (arriba)
+- Convenciones del proyecto
+- Posibles regresiones</code></pre>
+                    </div>
+
+                    <div class="callout info">
+                        <strong>💡 Cómo funciona:</strong> El texto entre backticks <code>!`...`</code> se ejecuta como comando shell ANTES de que Claude vea el prompt. El output reemplaza el comando en el texto.
+                    </div>
+
+                    <h2>Ejecutar en Sub-Agente Aislado (context: fork)</h2>
+                    <p>Usa <code>context: fork</code> para ejecutar la skill en un sub-agente con su propio contexto:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Skill con contexto fork</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+description: "Analiza seguridad sin afectar el contexto principal"
+context: fork           # Ejecuta en sub-agente aislado
+allowed-tools:
+  - Read
+  - Grep
+  - Bash
+model: claude-opus-4-7  # Usa el modelo más capaz para seguridad
+effort: high
+---
+
+Realiza un análisis completo de seguridad de: $ARGUMENTS
+
+Busca:
+1. Secretos hardcodeados (API keys, passwords, tokens)
+2. SQL injection vulnerabilities
+3. XSS vectors
+4. Permisos incorrectos en archivos
+5. Dependencias con CVEs conocidos
+
+Genera reporte detallado en formato Markdown.</code></pre>
+                    </div>
+
+                    <h2>Control de Invocación</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Skill solo invocable por usuario</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+description: "Hace deploy a producción — SOLO invocar manualmente"
+disable-model-invocation: true   # Claude NO puede invocar esto automáticamente
+allowed-tools:
+  - Bash
+---
+
+# Deploy a Producción
+
+⚠️  Deploy en curso. Verificar antes:
+- Tests: !`npm test 2>&1 | tail -3`
+- Build: !`npm run build 2>&1 | tail -3`
+
+Si todo está verde, ejecuta el deploy: $ARGUMENTS</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Skill oculta del menú</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+description: "Skill interna — no mostrar en menu"
+user-invocable: false    # No aparece en el listado de /
+                         # Solo invocable por otros agentes/skills
+allowed-tools:
+  - Read
+---
+
+Skill interna de soporte...</code></pre>
+                    </div>
+
+                    <h2>Skills con Hooks</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Skill con hooks de ciclo de vida</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+description: "Genera código con logging automático"
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+hooks:
+  - event: SkillStart
+    command: "echo 'Skill generate-code iniciada: $ARGUMENTS' >> ~/.claude/skill-log.txt"
+  - event: PostToolUse
+    matcher: "Write|Edit"
+    command: "echo 'Archivo modificado: $TOOL_OUTPUT' >> ~/.claude/skill-log.txt"
+  - event: SkillEnd
+    command: "echo 'Skill completada en $ELAPSED_MS ms' >> ~/.claude/skill-log.txt"
+---
+
+Genera código para: $ARGUMENTS
+
+Sigue las convenciones del proyecto. Incluye tests unitarios.</code></pre>
+                    </div>
+                </div>
+
+                <!-- AVANZADO -->
+                <div class="level-content" data-level="avanzado">
+                    <div class="level-badge avanzado">Avanzado</div>
+
+                    <h2>Generar Output Visual (HTML Interactivo)</h2>
+                    <p>Las Skills pueden generar HTML que se renderiza directamente en la interfaz:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Skill que genera dashboard HTML</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+description: "Genera dashboard visual de métricas del proyecto"
+allowed-tools:
+  - Read
+  - Bash
+context: fork
+---
+
+Analiza el proyecto en $ARGUMENTS y genera un dashboard HTML interactivo.
+
+El output DEBE ser HTML válido con:
+- Chart.js para gráficas
+- Tabla de métricas (lines of code, test coverage, bugs)
+- Color coding (verde = bueno, rojo = problema)
+- Summary ejecutivo al inicio
+
+Datos a recolectar:
+- Lines of code: !`find . -name "*.ts" -o -name "*.py" | xargs wc -l | tail -1`
+- Test files: !`find . -name "*.test.*" | wc -l`
+- TODO count: !`grep -r "TODO" --include="*.ts" | wc -l`</code></pre>
+                    </div>
+
+                    <h2>Skill con Memoria Persistente</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">yaml</span> — Skill que recuerda decisiones</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>---
+description: "Registra y consulta decisiones de arquitectura (ADR)"
+allowed-tools:
+  - Read
+  - Write
+memory:
+  - type: project        # Compartido con todo el equipo
+    path: .claude/memory/
+---
+
+# Architecture Decision Record
+
+Lee primero el historial: !`cat .claude/memory/decisions.md 2>/dev/null || echo "Sin decisiones previas"`
+
+Contexto del repositorio: !`git log --oneline -3`
+
+Solicitud: $ARGUMENTS
+
+Si es nueva decisión:
+1. Documenta el contexto y alternativas consideradas
+2. Explica la decisión final y sus trade-offs
+3. Actualiza .claude/memory/decisions.md con formato ADR
+
+Si es consulta: busca en el historial y explica la decisión relevante.</code></pre>
+                    </div>
+
+                    <h2>Skills Bundled vs Custom</h2>
+                    <p>Claude Code incluye skills pre-construidas (bundled) que no requieren crear archivos:</p>
+
+                    <table class="data-table">
+                        <thead><tr><th>Tipo</th><th>Ubicación</th><th>Ejemplo</th></tr></thead>
+                        <tbody>
+                            <tr><td>Bundled (built-in)</td><td>Integradas en Claude Code</td><td>Herramientas nativas como Explore, Plan</td></tr>
+                            <tr><td>User custom</td><td><code>~/.claude/skills/</code></td><td>Skills personales, disponibles en TODOS los proyectos</td></tr>
+                            <tr><td>Project custom</td><td><code>.claude/skills/</code></td><td>Skills específicas del proyecto (en git)</td></tr>
+                            <tr><td>Plugin-provided</td><td>Via MCP plugins</td><td>Skills instaladas via <code>claude mcp add</code></td></tr>
+                        </tbody>
+                    </table>
+
+                    <h2>Troubleshooting: Skill No Se Activa</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Causas comunes y soluciones</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>Problema: La skill no aparece al escribir /
+Causa 1: user-invocable: false → es intencional, el modelo la invoca
+Causa 2: SKILL.md no existe → revisar path .claude/skills/nombre/SKILL.md
+Causa 3: Frontmatter YAML inválido → validar con `yamllint SKILL.md`
+
+Problema: Claude no elige la skill automáticamente
+Causa: description es ambigua o muy genérica
+Solución: Describir casos de uso específicos en description:
+  ❌ description: "Ayuda con código"
+  ✅ description: "Revisa archivos Python en busca de errores de tipo. Úsala
+     cuando el usuario mencione mypy, type errors o type hints."
+
+Problema: !`comando` no se ejecuta
+Causa: El comando falla en el entorno de Claude
+Solución: Agregar fallback: !`comando 2>/dev/null || echo "N/A"`</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MCP -->
+            <section class="content-section" data-topic="mcp">
+                <h1 class="section-title">Model Context Protocol (MCP)</h1>
+                <p class="section-subtitle">Conectar Claude Code con servicios externos — documentación oficial</p>
+
+                <div class="callout info">
+                    <strong>📚 Fuente oficial:</strong> <a href="https://code.claude.com/docs/en/mcp" target="_blank" style="color:var(--primary)">code.claude.com/docs/en/mcp</a>
+                    — MCP permite conectar Claude Code con GitHub, Sentry, Notion, Airtable, bases de datos y cualquier API personalizada.
+                </div>
+
+                <!-- FUNDAMENTOS -->
+                <div class="level-content active" data-level="fundamentos">
+                    <div class="level-badge fundamentos">Fundamentos</div>
+
+                    <h2>¿Qué es MCP?</h2>
+                    <p><strong>MCP (Model Context Protocol)</strong> es un estándar abierto que permite exponer herramientas a Claude Code desde cualquier servicio — local o remoto.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">text</span> — Qué puedes hacer con MCP</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>Sin MCP (solo built-in tools):
+  Claude Code → Read, Write, Edit, Bash, Grep, Glob
+
+Con MCP (herramientas externas):
+  Claude Code → GitHub MCP    → crear PRs, issues, reviews
+             → Sentry MCP    → analizar errores en producción
+             → Notion MCP    → leer/escribir documentación
+             → Airtable MCP  → gestionar bases de datos
+             → Tu API custom → cualquier operación que necesites</code></pre>
+                    </div>
+
+                    <h2>Tres Transportes</h2>
+                    <table class="data-table">
+                        <thead><tr><th>Transport</th><th>Protocolo</th><th>Uso</th><th>Latencia</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>stdio</code></td><td>stdin/stdout</td><td>Proceso local</td><td>~10ms</td></tr>
+                            <tr><td><code>http</code></td><td>HTTP POST</td><td>Servidor remoto</td><td>~100-500ms</td></tr>
+                            <tr><td><code>sse</code></td><td>Server-Sent Events</td><td>Streaming remoto</td><td>~100ms</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h2>Instalar Servidores MCP Populares</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Comandos de instalación oficiales</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code># GitHub — acceso a repositorios, PRs, issues
+claude mcp add --transport stdio github -- npx -y @modelcontextprotocol/server-github
+
+# Filesystem — leer/escribir archivos locales con control
+claude mcp add --transport stdio filesystem -- npx -y @modelcontextprotocol/server-filesystem /path/to/dir
+
+# PostgreSQL — consultar y modificar base de datos
+claude mcp add --transport stdio postgres -- npx -y @modelcontextprotocol/server-postgres postgresql://user:pass@localhost/db
+
+# Sentry — analizar errores en producción
+claude mcp add --transport http sentry https://sentry.io/api/mcp/
+
+# Ver servidores instalados
+claude mcp list
+
+# Ver detalles de un servidor
+claude mcp get github
+
+# Eliminar un servidor
+claude mcp remove github</code></pre>
+                    </div>
+
+                    <h2>Usar MCP en Sesión</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Durante una sesión de Claude Code</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Ver servidores MCP activos
+/mcp
+
+# Claude usa herramientas MCP automáticamente:
+> "Crea un issue en GitHub con el bug que encontramos"
+→ Claude invoca github:create_issue automáticamente
+
+> "Dame los últimos 5 errores en Sentry de este proyecto"
+→ Claude invoca sentry:list_issues automáticamente
+
+> "Actualiza la doc en Notion con los cambios de esta semana"
+→ Claude invoca notion:update_page automáticamente
+
+# Mencionar recursos MCP con @
+@github:repo/mi-proyecto  → añade contexto del repositorio
+@sentry:issue-12345       → añade detalles del issue</code></pre>
+                    </div>
+                </div>
+
+                <!-- INTERMEDIO -->
+                <div class="level-content" data-level="intermedio">
+                    <div class="level-badge intermedio">Intermedio</div>
+
+                    <h2>Configurar con .mcp.json (Nivel Proyecto)</h2>
+                    <p>Para compartir configuración con el equipo, usa <code>.mcp.json</code> en la raíz del proyecto:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — .mcp.json completo</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code>{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres",
+               "${DATABASE_URL}"]
+    },
+    "sentry": {
+      "type": "http",
+      "url": "https://sentry.io/api/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${SENTRY_TOKEN}"
+      }
+    },
+    "my-internal-api": {
+      "command": "python",
+      "args": [".claude/mcp-servers/api-server.py"],
+      "env": {
+        "API_KEY": "${INTERNAL_API_KEY}",
+        "BASE_URL": "https://api.internal.company.com"
+      },
+      "disabled": false
+    }
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="callout warning">
+                        <strong>⚠️ Seguridad:</strong> Usa siempre <code>${ENV_VAR}</code> para credenciales. El archivo .mcp.json puede ir en git pero los tokens nunca.
+                    </div>
+
+                    <h2>Scopes de Instalación</h2>
+                    <table class="data-table">
+                        <thead><tr><th>Scope</th><th>Ubicación</th><th>Disponible en</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>local</code> (default)</td><td><code>~/.claude/mcp.json</code></td><td>Tu máquina, todos los proyectos</td></tr>
+                            <tr><td><code>project</code></td><td><code>.mcp.json</code> en proyecto</td><td>Todo el equipo en ese proyecto</td></tr>
+                            <tr><td><code>user</code></td><td><code>~/.claude/user-mcp.json</code></td><td>Tu usuario en todos los proyectos</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Especificar scope al instalar</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code># Scope local (default) — solo tu máquina
+claude mcp add --transport stdio github -- npx -y @modelcontextprotocol/server-github
+
+# Scope proyecto — compartido en .mcp.json (va en git)
+claude mcp add --scope project --transport stdio github -- npx -y @modelcontextprotocol/server-github
+
+# Scope usuario — disponible en todos tus proyectos
+claude mcp add --scope user --transport http sentry https://sentry.io/api/mcp/</code></pre>
+                    </div>
+
+                    <h2>Crear Servidor MCP Personalizado (stdio)</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Servidor MCP mínimo con SDK oficial</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">#!/usr/bin/env python3
+# .claude/mcp-servers/my-server.py
+# pip install mcp
+
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp import types
+import asyncio
+
+server = Server("my-company-api")
+
+@server.list_tools()
+async def list_tools() -> list[types.Tool]:
+    return [
+        types.Tool(
+            name="get_customer",
+            description="Obtiene datos de un cliente por ID",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "customer_id": {
+                        "type": "string",
+                        "description": "ID del cliente"
+                    }
+                },
+                "required": ["customer_id"]
+            }
+        ),
+        types.Tool(
+            name="list_orders",
+            description="Lista órdenes de un cliente",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "customer_id": {"type": "string"},
+                    "limit": {"type": "integer", "default": 10}
+                },
+                "required": ["customer_id"]
+            }
+        )
+    ]
+
+@server.call_tool()
+async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
+    if name == "get_customer":
+        # Tu lógica aquí
+        customer_id = arguments["customer_id"]
+        # data = await fetch_from_api(f"/customers/{customer_id}")
+        data = {"id": customer_id, "name": "John Doe", "email": "john@example.com"}
+        return [types.TextContent(type="text", text=str(data))]
+
+    elif name == "list_orders":
+        customer_id = arguments["customer_id"]
+        limit = arguments.get("limit", 10)
+        orders = [{"id": f"ORD-{i}", "amount": i * 100} for i in range(1, limit + 1)]
+        return [types.TextContent(type="text", text=str(orders))]
+
+    raise ValueError(f"Tool desconocida: {name}")
+
+async def main():
+    async with stdio_server() as (read_stream, write_stream):
+        await server.run(read_stream, write_stream, server.create_initialization_options())
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Registrar y usar el servidor</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Instalar dependencia
+pip install mcp
+
+# Registrar servidor
+claude mcp add --transport stdio my-company-api -- python .claude/mcp-servers/my-server.py
+
+# Verificar que funciona
+claude mcp get my-company-api
+
+# En sesión, Claude lo usa automáticamente:
+> "Dame los detalles del cliente C-12345"
+→ Claude invoca get_customer(customer_id="C-12345")</code></pre>
+                    </div>
+                </div>
+
+                <!-- AVANZADO -->
+                <div class="level-content" data-level="avanzado">
+                    <div class="level-badge avanzado">Avanzado</div>
+
+                    <h2>OAuth 2.0 con Servidores HTTP Remotos</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Autenticación OAuth</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Agregar servidor con OAuth
+claude mcp add --transport http github-enterprise https://github.company.com/api/mcp/
+
+# Claude detecta automáticamente si el servidor requiere OAuth
+# Abre flujo de autenticación en el navegador
+# Almacena el token de forma segura
+
+# Headers dinámicos (para auth custom)
+claude mcp add --transport http my-api https://api.example.com/mcp/ \
+  --header "Authorization: Bearer ${MY_TOKEN}" \
+  --header "X-API-Version: 2024-01"</code></pre>
+                    </div>
+
+                    <h2>Push Messages (Notificaciones del Servidor)</h2>
+                    <p>Los servidores MCP pueden enviar mensajes a Claude Code sin que Claude los pida (push), usando canales:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Servidor con push messages</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">from mcp.server import Server
+from mcp import types
+import asyncio
+
+server = Server("monitoring-server")
+
+# El servidor puede notificar a Claude cuando ocurre un evento
+async def monitor_errors():
+    while True:
+        errors = await fetch_new_errors()  # Tu lógica de monitoreo
+        if errors:
+            # Push message: notifica a Claude sin que Claude pregunte
+            await server.send_log_message(
+                level="error",
+                data=f"Nuevos errores detectados: {len(errors)} en producción"
+            )
+        await asyncio.sleep(60)  # Revisar cada minuto</code></pre>
+                    </div>
+
+                    <h2>Tool Search: Deferred vs Upfront Loading</h2>
+                    <p>Para servidores con muchas herramientas, usa carga diferida para evitar saturar el contexto:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">json</span> — Configurar tool search</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">{
+  "mcpServers": {
+    "large-api": {
+      "command": "npx",
+      "args": ["-y", "@company/large-mcp-server"],
+      "toolSearch": {
+        "mode": "deferred",
+        "maxUpfrontTools": 10
+      }
+    }
+  }
+}
+
+// Modo upfront (default): carga todas las herramientas al inicio
+// → Ideal para < 20 herramientas
+// → Contexto completo disponible desde el inicio
+
+// Modo deferred: carga herramientas cuando se necesitan
+// → Ideal para > 50 herramientas
+// → Menor consumo de tokens, Claude busca la herramienta cuando la necesita</code></pre>
+                    </div>
+
+                    <h2>MCP Prompts como Comandos</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Servidor con prompts predefinidos</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">from mcp.server import Server
+from mcp import types
+
+server = Server("my-server")
+
+@server.list_prompts()
+async def list_prompts() -> list[types.Prompt]:
+    return [
+        types.Prompt(
+            name="daily-standup",
+            description="Genera el reporte de standup daily",
+            arguments=[
+                types.PromptArgument(name="team", description="Nombre del equipo")
+            ]
+        )
+    ]
+
+@server.get_prompt()
+async def get_prompt(name: str, arguments: dict) -> types.GetPromptResult:
+    if name == "daily-standup":
+        team = arguments.get("team", "Engineering")
+        return types.GetPromptResult(
+            description=f"Standup para {team}",
+            messages=[
+                types.PromptMessage(
+                    role="user",
+                    content=types.TextContent(
+                        type="text",
+                        text=f"Genera el reporte de standup para el equipo {team}. "
+                             f"Incluye: qué hicimos ayer, qué hacemos hoy, bloqueadores."
+                    )
+                )
+            ]
+        )
+
+# Uso: /mcp:my-server:daily-standup team=Backend</code></pre>
+                    </div>
+
+                    <h2>MCP en Claude Code como Servidor</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">bash</span> — Exponer Claude Code como servidor MCP</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code"># Claude Code puede actuar como SERVIDOR MCP para otras aplicaciones
+# Esto permite que otras herramientas (IDEs, scripts) usen Claude Code como herramienta
+
+# Iniciar Claude Code como servidor MCP stdio
+claude --mcp-server
+
+# Iniciar como servidor HTTP en puerto 3000
+claude --mcp-server --port 3000
+
+# Otro proceso puede conectarse a Claude Code via MCP
+# y usar sus capacidades (Read, Write, Edit, Bash, etc.) como herramientas</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SDK Y PROMPT CACHING -->
+            <section class="content-section" data-topic="sdk">
+                <h1 class="section-title">SDK y Prompt Caching</h1>
+                <p class="section-subtitle">Estructurar mensajes para máxima eficiencia de tokens</p>
+
+                <!-- FUNDAMENTOS -->
+                <div class="level-content active" data-level="fundamentos">
+                    <div class="level-badge fundamentos">Fundamentos</div>
+
+                    <h2>¿Qué es Prompt Caching?</h2>
+                    <p><strong>Prompt Caching</strong> es una técnica donde Claude recuerda contexto (documentación, instrucciones, datos) entre múltiples mensajes sin contar tokens repetidamente.</p>
+
+                    <p><strong>Sin caching:</strong> Cada pregunta = leer toda la documentación nuevamente = X tokens cada vez.</p>
+                    <p><strong>Con caching:</strong> Lees documentación 1 vez, luego reutilizas = costo reducido ~90%.</p>
+
+                    <h2>Estructura de Mensajes</h2>
+                    <p>Un mensaje en Claude tiene 3 partes:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Estructura básica</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">from anthropic import Anthropic
+
+client = Anthropic()
+
+message = client.messages.create(
+    model="claude-opus-4-7",
+    max_tokens=1024,
+    system="Eres un asistente de Python.",  # System prompt
+    messages=[
+        {
+            "role": "user",
+            "content": "¿Cuál es la diferencia entre list y tuple?"
+        }
+    ]
+)
+
+print(message.content[0].text)
+</code></pre>
+                    </div>
+
+                    <p><strong>Partes:</strong></p>
+                    <ul>
+                        <li><code>system</code> — Instrucciones globales (rol, restricciones)</li>
+                        <li><code>messages</code> — Historial de conversación</li>
+                        <li><code>model</code> — Qué modelo usar (Opus, Sonnet, Haiku)</li>
+                    </ul>
+
+                    <h2>Uso de Tokens</h2>
+                    <p>Medir costo de una consulta:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Medir tokens</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">from anthropic import Anthropic
+
+client = Anthropic()
+
+response = client.messages.create(
+    model="claude-opus-4-7",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "¿Qué es Python?"}
+    ]
+)
+
+# Ver uso de tokens
+print(f"Input tokens: {response.usage.input_tokens}")
+print(f"Output tokens: {response.usage.output_tokens}")
+print(f"Total: {response.usage.input_tokens + response.usage.output_tokens}")
+
+# Precio (aproximado)
+input_cost = response.usage.input_tokens * 0.003 / 1000  # $0.003 per 1M input
+output_cost = response.usage.output_tokens * 0.015 / 1000  # $0.015 per 1M output
+print(f"Costo estimado: ${input_cost + output_cost:.6f}")
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- INTERMEDIO -->
+                <div class="level-content" data-level="intermedio">
+                    <div class="level-badge intermedio">Intermedio</div>
+
+                    <h2>Habilitar Prompt Caching</h2>
+                    <p>Usa <code>cache_control</code> para marcar contenido que quieres cachear:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Usar caching</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">from anthropic import Anthropic
+
+client = Anthropic()
+
+# Documentación que queremos cachear
+docs = """
+# Documentación de Python 3.10
+1. Variables: int, str, list, dict, tuple, set
+2. Funciones: def, lambda, map, filter
+3. Clases: class, __init__, herencia
+4. Módulos: import, from-import
+...
+[2000 líneas más]
+"""
+
+# Primera consulta: cachea la documentación
+response1 = client.messages.create(
+    model="claude-opus-4-7",
+    max_tokens=1024,
+    system=[
+        {
+            "type": "text",
+            "text": "Eres un expert en Python. Usa la documentación para responder."
+        },
+        {
+            "type": "text",
+            "text": docs,
+            "cache_control": {"type": "ephemeral"}  # Cachear este texto
+        }
+    ],
+    messages=[
+        {
+            "role": "user",
+            "content": "¿Cuál es la diferencia entre list y tuple?"
+        }
+    ]
+)
+
+print("Query 1 (primera vez, cachea):")
+print(f"  Input tokens: {response1.usage.input_tokens}")
+print(f"  Cache creation: {getattr(response1.usage, 'cache_creation_input_tokens', 0)}")
+
+# Segunda consulta: REUTILIZA el cache
+response2 = client.messages.create(
+    model="claude-opus-4-7",
+    max_tokens=1024,
+    system=[
+        {
+            "type": "text",
+            "text": "Eres un expert en Python. Usa la documentación para responder."
+        },
+        {
+            "type": "text",
+            "text": docs,
+            "cache_control": {"type": "ephemeral"}
+        }
+    ],
+    messages=[
+        {
+            "role": "user",
+            "content": "¿Cuál es la diferencia entre dict y set?"
+        }
+    ]
+)
+
+print("Query 2 (reutiliza cache):")
+print(f"  Input tokens: {response2.usage.input_tokens}")
+print(f"  Cache read: {getattr(response2.usage, 'cache_read_input_tokens', 0)}")  # Ojo, token gratis
+
+# AHORRO
+print(f"\nAhorro: Cache lee {getattr(response2.usage, 'cache_read_input_tokens', 0)} tokens GRATIS")
+</code></pre>
+                    </div>
+
+                    <h2>Sistema Q&A con Caching</h2>
+                    <p>Caso real: Sistema que responde preguntas sobre documentación:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Q&A system</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">from anthropic import Anthropic
+
+class DocumentationQA:
+    def __init__(self, doc_path: str):
+        self.client = Anthropic()
+        with open(doc_path) as f:
+            self.documentation = f.read()
+
+    def answer(self, question: str) -> str:
+        response = self.client.messages.create(
+            model="claude-opus-4-7",
+            max_tokens=1024,
+            system=[
+                {"type": "text", "text": "Eres un asistente. Responde basado en la documentación."},
+                {
+                    "type": "text",
+                    "text": f"DOCUMENTACIÓN:\n{self.documentation}",
+                    "cache_control": {"type": "ephemeral"}
+                }
+            ],
+            messages=[
+                {"role": "user", "content": question}
+            ]
+        )
+        return response.content[0].text
+
+    def print_stats(self, response):
+        print(f"Input: {response.usage.input_tokens} tokens")
+        print(f"Cache read: {getattr(response.usage, 'cache_read_input_tokens', 0)} tokens (GRATIS)")
+        print(f"Cache creation: {getattr(response.usage, 'cache_creation_input_tokens', 0)} tokens")
+
+# Uso
+qa = DocumentationQA("docs/api.md")
+
+print(qa.answer("¿Cómo autenticar?"))
+print(qa.answer("¿Cuáles son los rate limits?"))
+print(qa.answer("¿Qué webhooks están disponibles?"))
+
+# Primera: cachea docs. Segunda y tercera: reutilizan cache!
+</code></pre>
+                    </div>
+
+                    <h2>Cache Invalidation</h2>
+                    <p>El cache se limpia automáticamente después de 5 minutos de inactividad.</p>
+                    <p>Para invalidar manualmente, cambia el contenido:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Invalidar cache</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">import hashlib
+
+def get_cache_key(docs: str) -> str:
+    return hashlib.md5(docs.encode()).hexdigest()
+
+# Si los docs cambian, hash cambia → cache se invalida automáticamente
+old_docs = "Python 3.9"
+new_docs = "Python 3.10"
+
+print(f"Old hash: {get_cache_key(old_docs)}")
+print(f"New hash: {get_cache_key(new_docs)}")
+# Diferentes hashes → diferentes caches
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- AVANZADO -->
+                <div class="level-content" data-level="avanzado">
+                    <div class="level-badge avanzado">Avanzado</div>
+
+                    <h2>Cache Hierarchical: Múltiples Niveles</h2>
+                    <p>Para documentación compleja, usa cache multinivel:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Cache hierarchical</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">from anthropic import Anthropic
+
+client = Anthropic()
+
+# Nivel 1: Documentación base (cachea siempre)
+base_docs = "# Python Basics\n[muy largo, 10KB]"
+
+# Nivel 2: Docs específicas por tema (cachea por tema)
+topic_docs = {
+    "functions": "# Functions\n[5KB]",
+    "classes": "# Classes\n[5KB]",
+    "modules": "# Modules\n[5KB]"
+}
+
+def ask_about_topic(topic: str, question: str) -> str:
+    response = client.messages.create(
+        model="claude-opus-4-7",
+        max_tokens=1024,
+        system=[
+            {"type": "text", "text": "Expert en Python"},
+            {
+                "type": "text",
+                "text": base_docs,
+                "cache_control": {"type": "ephemeral"}  # Cache nivel 1
+            },
+            {
+                "type": "text",
+                "text": topic_docs[topic],
+                "cache_control": {"type": "ephemeral"}  # Cache nivel 2
+            }
+        ],
+        messages=[
+            {"role": "user", "content": question}
+        ]
+    )
+    return response.content[0].text
+
+# Preguntas sobre functions: cachea base + functions
+ask_about_topic("functions", "¿Qué es lambda?")
+ask_about_topic("functions", "¿Cómo uso map?")
+
+# Cambiar a classes: reutiliza base, cachea classes
+ask_about_topic("classes", "¿Qué es __init__?")
+ask_about_topic("classes", "¿Qué es herencia?")
+
+# Cache ahorro: base se cachea 4 veces!</code></pre>
+                    </div>
+
+                    <h2>Streaming con Caching</h2>
+                    <p>Combina streaming (respuesta en tiempo real) con caching:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Streaming + cache</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">from anthropic import Anthropic
+
+client = Anthropic()
+
+docs = "# Documentación larga...\n[10KB]"
+
+with client.messages.stream(
+    model="claude-opus-4-7",
+    max_tokens=1024,
+    system=[
+        {"type": "text", "text": "Expert"},
+        {
+            "type": "text",
+            "text": docs,
+            "cache_control": {"type": "ephemeral"}
+        }
+    ],
+    messages=[
+        {"role": "user", "content": "Explica todo sobre Python"}
+    ]
+) as stream:
+    print("Respuesta en vivo:")
+    for text in stream.text_stream:
+        print(text, end="", flush=True)
+
+    print(f"\n\nTokens cachés: {stream.get_final_message().usage.cache_read_input_tokens}")
+</code></pre>
+                    </div>
+
+                    <h2>Análisis de Costo: Cuándo Caching Compensa</h2>
+                    <p>Fórmula para decidir si usar caching:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="code-lang">python</span> — Cost analysis</span>
+                            <button class="code-copy-btn">📋 Copiar</button>
+                        </div>
+                        <pre><code">def should_use_caching(
+    doc_size_tokens: int,
+    num_queries: int,
+    avg_query_tokens: int
+) -> bool:
+    """
+    Determina si vale la pena usar caching.
+
+    Costo SIN caching: doc_size * num_queries
+    Costo CON caching: doc_size * 1.25 (creación) + avg_query * num_queries
+    """
+
+    cost_without = doc_size_tokens * num_queries * 0.003 / 1000000
+    cost_with = (doc_size_tokens * 1.25 * 0.003 / 1000000) + \
+                (avg_query_tokens * num_queries * 0.0015 / 1000000)
+
+    print(f"Sin caching: ${cost_without:.4f}")
+    print(f"Con caching: ${cost_with:.4f}")
+    print(f"Ahorro: ${cost_without - cost_with:.4f}")
+
+    return cost_with < cost_without
+
+# Ejemplo: documentación de 10K tokens, 10 queries
+should_use_caching(doc_size_tokens=10000, num_queries=10, avg_query_tokens=500)
+# Resultado: caching COMPENSA después de ~3 queries
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        console.log('✓ DOM Loaded, inicializando navegación...');
+
+        // ============= NAVEGACIÓN =============
+        const topics = ['intro', 'thinking', 'settings', 'memoria', 'comandos', 'agentes', 'skills', 'mcp', 'sdk'];
+        const levels = ['fundamentos', 'intermedio', 'avanzado'];
+        let currentTopic = 'intro';
+        let currentLevel = 'fundamentos';
+
+        // Event: Click en sidebar
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        console.log(`✓ Encontrados ${sidebarLinks.length} links en sidebar`);
+
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const topic = link.dataset.topic;
+                if (!topic) return;
+
+                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                // IMPORTANTE: usar .content-section para no confundir con links del sidebar
+                document.querySelectorAll('main .content-section').forEach(s => s.classList.remove('active'));
+                const section = document.querySelector(`main .content-section[data-topic="${topic}"]`);
+                if (section) section.classList.add('active');
+
+                currentTopic = topic;
+                updateLevelContent();
+            });
+        });
+
+        // Event: Click en level selector
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const level = btn.dataset.level;
+                console.log(`📊 Cambiando nivel a: ${level}`);
+                document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLevel = level;
+                updateLevelContent();
+            });
+        });
+
+        function updateLevelContent() {
+            const section = document.querySelector(`main .content-section[data-topic="${currentTopic}"]`);
+            if (!section) return;
+
+            const levelContents = section.querySelectorAll('.level-content');
+
+            // Si la sección tiene niveles, mostrar solo el activo
+            if (levelContents.length > 0) {
+                levelContents.forEach(lc => lc.classList.remove('active'));
+                const levelContent = section.querySelector(`.level-content[data-level="${currentLevel}"]`);
+                if (levelContent) levelContent.classList.add('active');
+            }
+            // Si no tiene niveles (como intro), mostrar todo el contenido directamente
+        }
+
+        // Inicializar mostrar intro
+        console.log('🚀 Inicializando con sección intro...');
+
+        // Forzar mostrar la sección intro
+        const introSection = document.querySelector('main .content-section[data-topic="intro"]');
+        if (introSection) {
+            introSection.classList.add('active');
+        }
+
+        updateLevelContent();
+
+        // ============= COPY BUTTONS =============
+        document.querySelectorAll('.code-copy-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const codeBlock = btn.closest('.code-block');
+                const code = codeBlock.querySelector('pre code').innerText;
+
+                try {
+                    await navigator.clipboard.writeText(code);
+                    btn.textContent = '✅ Copiado!';
+                    setTimeout(() => {
+                        btn.textContent = '📋 Copiar';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Error al copiar:', err);
+                }
+            });
+        });
+        }); // Cierre del DOMContentLoaded
+    </script>
+</body>
+</html>

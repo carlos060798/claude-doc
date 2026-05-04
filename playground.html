@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Playground — Recetas y Plantillas Interactivas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0e14;
+            --surface: #11161f;
+            --elevated: #161c27;
+            --border: #2a3444;
+            --text: #e6edf3;
+            --muted: #9aa7b8;
+            --accent: #ff7a59;
+            --primary: #5eb8ff;
+            --green: #3ddc97;
+            --purple: #c084fc;
+            --yellow: #fbbf24;
+            --red: #f87171;
+            --radius: 10px;
+        }
+        html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; z-index: 100;
+        }
+        .brand { font-size: 1.1em; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+        .brand-sub { font-size: 0.7em; color: var(--muted); font-weight: 400; }
+        .nav-links { display: flex; gap: 8px; }
+        .nav-link {
+            padding: 6px 14px; border-radius: 999px; font-size: 0.82em;
+            text-decoration: none; color: var(--muted); border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .nav-link:hover { color: var(--text); border-color: var(--accent); }
+        .nav-link.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        /* ── LAYOUT ── */
+        .layout { display: flex; padding-top: 60px; height: 100vh; }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 260px; background: var(--surface); border-right: 1px solid var(--border);
+            overflow-y: auto; flex-shrink: 0; padding: 20px 0;
+        }
+        .sidebar-section { margin-bottom: 8px; }
+        .sidebar-label {
+            font-size: 0.7em; font-weight: 700; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.08em;
+            padding: 8px 20px 4px;
+        }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 20px; cursor: pointer; font-size: 0.88em;
+            color: var(--muted); border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+        .sidebar-item:hover { color: var(--text); background: var(--elevated); }
+        .sidebar-item.active { color: var(--text); background: var(--elevated); border-left-color: var(--accent); }
+        .sidebar-icon { font-size: 1.1em; flex-shrink: 0; }
+        .badge { font-size: 0.7em; background: var(--elevated); border: 1px solid var(--border); padding: 1px 6px; border-radius: 999px; margin-left: auto; }
+
+        /* ── MAIN ── */
+        .main { flex: 1; overflow-y: auto; }
+        .page { display: none; padding: 32px 40px; max-width: 1000px; }
+        .page.active { display: block; }
+        .page-header { margin-bottom: 32px; }
+        .page-title { font-size: 1.8em; font-weight: 700; margin-bottom: 8px; }
+        .page-desc { color: var(--muted); font-size: 0.95em; line-height: 1.6; }
+
+        /* ── RECIPE GRID ── */
+        .recipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .recipe-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 20px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+        }
+        .recipe-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+        .recipe-card.cat-workflow::before { background: var(--green); }
+        .recipe-card.cat-analysis::before { background: var(--primary); }
+        .recipe-card.cat-automation::before { background: var(--purple); }
+        .recipe-card.cat-security::before { background: var(--red); }
+        .recipe-card.cat-devops::before { background: var(--yellow); }
+        .recipe-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .recipe-card.selected { border-color: var(--accent); background: var(--elevated); }
+        .recipe-emoji { font-size: 2em; margin-bottom: 12px; }
+        .recipe-title { font-size: 0.98em; font-weight: 600; margin-bottom: 6px; }
+        .recipe-desc { font-size: 0.82em; color: var(--muted); line-height: 1.5; }
+        .recipe-tags { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+        .tag { font-size: 0.7em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+
+        /* ── RECIPE DETAIL ── */
+        .recipe-detail { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 24px; }
+        .recipe-detail-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+        .recipe-detail-emoji { font-size: 2.4em; }
+        .recipe-detail-title { font-size: 1.3em; font-weight: 700; }
+        .recipe-detail-desc { color: var(--muted); font-size: 0.9em; margin-top: 4px; }
+        .steps { display: flex; flex-direction: column; gap: 16px; }
+        .step { display: flex; gap: 16px; }
+        .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: white; font-size: 0.8em; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .step-content { flex: 1; }
+        .step-title { font-size: 0.9em; font-weight: 600; margin-bottom: 6px; }
+        .step-text { font-size: 0.85em; color: var(--muted); line-height: 1.6; }
+
+        /* ── CODE BLOCKS ── */
+        .code-block { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 12px 0; }
+        .code-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.2); }
+        .code-lang { font-size: 0.72em; padding: 2px 8px; background: var(--accent); color: white; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
+        .copy-btn {
+            font-size: 0.78em; padding: 4px 10px; background: transparent; border: 1px solid var(--border);
+            color: var(--muted); border-radius: 6px; cursor: pointer; transition: all 0.2s;
+        }
+        .copy-btn:hover { border-color: var(--green); color: var(--green); }
+        .copy-btn.copied { background: var(--green); color: #000; border-color: var(--green); }
+        pre { padding: 16px; overflow-x: auto; font-family: 'Fira Code', 'Cascadia Code', monospace; font-size: 0.83em; line-height: 1.7; }
+        code { font-family: inherit; }
+        .inline-code { background: var(--elevated); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.87em; color: var(--primary); }
+
+        /* ── PROMPT BUILDER ── */
+        .builder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .builder-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+        .builder-title { font-size: 0.95em; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { font-size: 0.8em; color: var(--muted); margin-bottom: 6px; display: block; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%; background: var(--elevated); border: 1px solid var(--border);
+            color: var(--text); border-radius: 8px; padding: 10px 12px; font-size: 0.88em;
+            font-family: inherit; outline: none; transition: border-color 0.2s;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+        .form-textarea { min-height: 80px; resize: vertical; }
+        .form-select option { background: var(--elevated); }
+        .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip {
+            padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px;
+            font-size: 0.8em; cursor: pointer; transition: all 0.15s; color: var(--muted);
+        }
+        .chip:hover { border-color: var(--primary); color: var(--primary); }
+        .chip.selected { background: var(--primary); border-color: var(--primary); color: #000; font-weight: 600; }
+        .output-box {
+            background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 16px; font-family: monospace; font-size: 0.82em; line-height: 1.7;
+            white-space: pre-wrap; min-height: 200px; color: var(--green);
+        }
+        .btn {
+            padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
+            font-size: 0.88em; font-weight: 600; transition: all 0.2s;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: #e8694a; }
+        .btn-secondary { background: var(--elevated); border: 1px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+
+        /* ── TEMPLATES ── */
+        .template-filter { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; font-size: 0.82em; cursor: pointer; color: var(--muted); background: transparent; transition: all 0.2s; }
+        .filter-btn:hover { color: var(--text); border-color: var(--muted); }
+        .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .template-list { display: flex; flex-direction: column; gap: 12px; }
+        .template-item {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+            overflow: hidden; transition: border-color 0.2s;
+        }
+        .template-item:hover { border-color: var(--primary); }
+        .template-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; cursor: pointer; }
+        .template-meta { display: flex; align-items: center; gap: 12px; }
+        .template-icon { font-size: 1.3em; }
+        .template-name { font-size: 0.92em; font-weight: 600; }
+        .template-cat { font-size: 0.75em; color: var(--muted); }
+        .template-chevron { color: var(--muted); transition: transform 0.2s; }
+        .template-item.open .template-chevron { transform: rotate(180deg); }
+        .template-body { display: none; padding: 0 20px 20px; }
+        .template-item.open .template-body { display: block; }
+        .template-desc { font-size: 0.85em; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+
+        /* ── CHEATSHEET ── */
+        .cheat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+        .cheat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+        .cheat-card-title { font-size: 0.88em; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .cheat-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+        .cheat-cmd { font-family: monospace; font-size: 0.8em; color: var(--green); background: var(--elevated); padding: 2px 8px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
+        .cheat-desc { font-size: 0.8em; color: var(--muted); line-height: 1.4; }
+
+        /* ── CALLOUT ── */
+        .callout { border-radius: var(--radius); padding: 14px 18px; margin: 16px 0; font-size: 0.88em; line-height: 1.6; }
+        .callout.info { background: rgba(94,184,255,0.1); border-left: 3px solid var(--primary); }
+        .callout.success { background: rgba(61,220,151,0.1); border-left: 3px solid var(--green); }
+        .callout.warning { background: rgba(251,191,36,0.1); border-left: 3px solid var(--yellow); }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .builder-grid { grid-template-columns: 1fr; }
+            .page { padding: 20px; }
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--purple)); transition: width 0.3s; }
+
+        /* ── TOAST ── */
+        .toast { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: #000; padding: 10px 20px; border-radius: 8px; font-size: 0.85em; font-weight: 600; z-index: 9999; opacity: 0; transform: translateY(10px); transition: all 0.25s; pointer-events: none; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        /* ── TABLE ── */
+        table { width: 100%; border-collapse: collapse; font-size: 0.85em; margin: 12px 0; }
+        th { background: var(--elevated); padding: 10px 14px; text-align: left; font-size: 0.78em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+        td { padding: 10px 14px; border-bottom: 1px solid rgba(42,52,68,0.5); vertical-align: top; }
+        tr:hover td { background: var(--elevated); }
+
+        /* h2 / h3 */
+        h2 { font-size: 1.15em; font-weight: 700; margin: 28px 0 12px; color: var(--text); }
+        h3 { font-size: 0.98em; font-weight: 600; margin: 20px 0 10px; color: var(--muted); }
+        p { font-size: 0.88em; line-height: 1.7; color: var(--muted); margin-bottom: 12px; }
+        ul, ol { padding-left: 20px; font-size: 0.88em; color: var(--muted); line-height: 1.8; }
+    </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="brand">
+        🧪 Claude Code Playground
+        <span class="brand-sub">Recetas · Constructor · Plantillas · Cheatsheet</span>
+    </div>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">📚 Mastery Guide</a>
+        <a href="prompt-maestro.html" class="nav-link">⚡ Prompt Maestro</a>
+        <a href="playground.html" class="nav-link active">🧪 Playground</a>
+    </div>
+</div>
+
+<div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Explorar</div>
+            <div class="sidebar-item active" data-page="recipes">
+                <span class="sidebar-icon">🍳</span> Recetas
+                <span class="badge">15</span>
+            </div>
+            <div class="sidebar-item" data-page="builder">
+                <span class="sidebar-icon">🔨</span> Constructor de Prompts
+            </div>
+            <div class="sidebar-item" data-page="templates">
+                <span class="sidebar-icon">📋</span> Plantillas CLAUDE.md
+                <span class="badge">8</span>
+            </div>
+            <div class="sidebar-item" data-page="cheatsheet">
+                <span class="sidebar-icon">⚡</span> Cheatsheet Rápido
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-label">Categorías de Recetas</div>
+            <div class="sidebar-item" data-page="recipes" data-filter="workflow">
+                <span class="sidebar-icon">🔄</span> Flujos de Trabajo
+            </div>
+            <div class="sidebar-item" data-page="recipes" data-filter="analysis">
+                <span class="sidebar-icon">📊</span> Análisis de Datos
+            </div>
+            <div class="sidebar-item" data-page="recipes" data-filter="automation">
+                <span class="sidebar-icon">🤖</span> Automatización
+            </div>
+            <div class="sidebar-item" data-page="recipes" data-filter="security">
+                <span class="sidebar-icon">🔐</span> Seguridad
+            </div>
+            <div class="sidebar-item" data-page="recipes" data-filter="devops">
+                <span class="sidebar-icon">🚀</span> DevOps
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- PAGE: RECIPES -->
+        <div class="page active" id="page-recipes">
+            <div class="page-header">
+                <div class="page-title">🍳 Recetas</div>
+                <div class="page-desc">Flujos de trabajo listos para usar. Haz clic en una receta para ver el paso a paso completo con código copiable.</div>
+            </div>
+
+            <div class="recipe-grid" id="recipes-grid">
+                <!-- generado por JS -->
+            </div>
+
+            <div id="recipe-detail-container"></div>
+        </div>
+
+        <!-- PAGE: BUILDER -->
+        <div class="page" id="page-builder">
+            <div class="page-header">
+                <div class="page-title">🔨 Constructor de Prompts</div>
+                <div class="page-desc">Construye prompts precisos para Claude Code combinando rol, contexto, herramientas y restricciones.</div>
+            </div>
+
+            <div class="builder-grid">
+                <div class="builder-panel">
+                    <div class="builder-title">⚙️ Configuración</div>
+
+                    <div class="form-group">
+                        <label class="form-label">Rol del Agente</label>
+                        <input class="form-input" id="b-role" placeholder="Ej: Code Reviewer sénior especializado en Python" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Objetivo Principal</label>
+                        <textarea class="form-textarea" id="b-goal" placeholder="Ej: Revisar PRs en busca de bugs, vulnerabilidades y oportunidades de mejora"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Herramientas Permitidas</label>
+                        <div class="chip-group" id="tools-chips">
+                            <div class="chip selected" data-tool="Read">Read</div>
+                            <div class="chip selected" data-tool="Grep">Grep</div>
+                            <div class="chip selected" data-tool="Glob">Glob</div>
+                            <div class="chip" data-tool="Write">Write</div>
+                            <div class="chip" data-tool="Edit">Edit</div>
+                            <div class="chip" data-tool="Bash">Bash</div>
+                            <div class="chip" data-tool="WebFetch">WebFetch</div>
+                            <div class="chip" data-tool="MCP">MCP</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nivel de Autonomía</label>
+                        <select class="form-select" id="b-autonomy">
+                            <option value="ask">Siempre confirmar antes de actuar</option>
+                            <option value="auto">Actuar automáticamente cuando es seguro</option>
+                            <option value="full">Modo completamente autónomo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Estilo de Respuesta</label>
+                        <div class="chip-group">
+                            <div class="chip selected" id="style-bullet">Bullet points</div>
+                            <div class="chip" id="style-prose">Prosa</div>
+                            <div class="chip" id="style-table">Tablas</div>
+                            <div class="chip" id="style-code">Solo código</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Restricciones Adicionales</label>
+                        <textarea class="form-textarea" id="b-constraints" placeholder="Ej: Nunca hacer push a main. No borrar archivos. Siempre incluir tests."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Modelo Recomendado</label>
+                        <select class="form-select" id="b-model">
+                            <option value="sonnet">claude-sonnet-4-6 (equilibrio — recomendado)</option>
+                            <option value="opus">claude-opus-4-7 (máxima calidad)</option>
+                            <option value="haiku">claude-haiku-4-5 (rápido y económico)</option>
+                        </select>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn btn-primary" onclick="generatePrompt()">✨ Generar Prompt</button>
+                        <button class="btn btn-secondary" onclick="clearBuilder()">Limpiar</button>
+                    </div>
+                </div>
+
+                <div class="builder-panel">
+                    <div class="builder-title">📄 Output Generado</div>
+                    <div class="output-box" id="builder-output">Tu prompt aparecerá aquí...</div>
+                    <div class="btn-row">
+                        <button class="btn btn-secondary" onclick="copyOutput()">📋 Copiar Output</button>
+                        <button class="btn btn-secondary" onclick="downloadOutput()">⬇️ Descargar CLAUDE.md</button>
+                    </div>
+
+                    <div style="margin-top: 24px;">
+                        <div class="builder-title">🎯 Dónde Usar Este Prompt</div>
+                        <p>Guarda el output como <span class="inline-code">CLAUDE.md</span> en la raíz de tu proyecto para que Claude lo use como system prompt automáticamente en cada sesión.</p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span><span class="code-lang">bash</span></span>
+                                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                            </div>
+                            <pre><code># Guardar en tu proyecto
+cat > CLAUDE.md << 'EOF'
+[pega tu prompt generado aquí]
+EOF
+
+# Verificar que funciona
+cd tu-proyecto && claude
+# Claude leerá CLAUDE.md automáticamente</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: TEMPLATES -->
+        <div class="page" id="page-templates">
+            <div class="page-header">
+                <div class="page-title">📋 Plantillas CLAUDE.md</div>
+                <div class="page-desc">Plantillas profesionales listas para copiar. Elige la que mejor se adapte a tu proyecto y personalízala.</div>
+            </div>
+
+            <div class="template-filter">
+                <button class="filter-btn active" data-tfilter="all">Todos</button>
+                <button class="filter-btn" data-tfilter="backend">Backend</button>
+                <button class="filter-btn" data-tfilter="frontend">Frontend</button>
+                <button class="filter-btn" data-tfilter="data">Datos</button>
+                <button class="filter-btn" data-tfilter="devops">DevOps</button>
+                <button class="filter-btn" data-tfilter="personal">Personal</button>
+            </div>
+
+            <div class="template-list" id="templates-list">
+                <!-- generado por JS -->
+            </div>
+        </div>
+
+        <!-- PAGE: CHEATSHEET -->
+        <div class="page" id="page-cheatsheet">
+            <div class="page-header">
+                <div class="page-title">⚡ Cheatsheet Rápido</div>
+                <div class="page-desc">Referencia ultra-rápida de comandos, atajos y patrones de Claude Code.</div>
+            </div>
+
+            <div class="cheat-grid">
+                <div class="cheat-card">
+                    <div class="cheat-card-title">⌨️ Comandos Esenciales</div>
+                    <div class="cheat-item"><span class="cheat-cmd">/help</span><span class="cheat-desc">Ver todos los comandos disponibles</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">/model</span><span class="cheat-desc">Cambiar modelo (Opus/Sonnet/Haiku)</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">/clear</span><span class="cheat-desc">Limpiar contexto de sesión</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">/compact</span><span class="cheat-desc">Compactar contexto para ahorrar tokens</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">/memory</span><span class="cheat-desc">Ver y gestionar memoria persistente</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">/mcp</span><span class="cheat-desc">Ver servidores MCP conectados</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">/doctor</span><span class="cheat-desc">Diagnosticar problemas de configuración</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">/init</span><span class="cheat-desc">Generar CLAUDE.md para el proyecto</span></div>
+                </div>
+
+                <div class="cheat-card">
+                    <div class="cheat-card-title">📂 Referencias de Archivos</div>
+                    <div class="cheat-item"><span class="cheat-cmd">@archivo.py</span><span class="cheat-desc">Incluir archivo en el contexto</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">@src/</span><span class="cheat-desc">Incluir directorio completo</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">@*.ts</span><span class="cheat-desc">Incluir todos los .ts del proyecto</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">@CLAUDE.md</span><span class="cheat-desc">Referencia al system prompt activo</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">@git</span><span class="cheat-desc">Incluir estado actual de git</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">@mcp:recurso</span><span class="cheat-desc">Incluir recurso de servidor MCP</span></div>
+                </div>
+
+                <div class="cheat-card">
+                    <div class="cheat-card-title">🔧 Herramientas Built-in</div>
+                    <div class="cheat-item"><span class="cheat-cmd">Read</span><span class="cheat-desc">Leer archivos del sistema</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Write</span><span class="cheat-desc">Crear/sobreescribir archivos</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Edit</span><span class="cheat-desc">Edición quirúrgica (solo el diff)</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Bash</span><span class="cheat-desc">Ejecutar comandos de shell</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Grep</span><span class="cheat-desc">Buscar en contenido de archivos</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Glob</span><span class="cheat-desc">Buscar archivos por patrón</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">WebFetch</span><span class="cheat-desc">Obtener contenido de URLs</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Agent</span><span class="cheat-desc">Lanzar sub-agente especializado</span></div>
+                </div>
+
+                <div class="cheat-card">
+                    <div class="cheat-card-title">⌨️ Atajos de Teclado</div>
+                    <div class="cheat-item"><span class="cheat-cmd">Ctrl+K</span><span class="cheat-desc">Búsqueda de comandos rápida</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Esc</span><span class="cheat-desc">Interrumpir operación en curso</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">↑ / ↓</span><span class="cheat-desc">Navegar historial de prompts</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Tab</span><span class="cheat-desc">Autocompletar comandos/skills</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Ctrl+C</span><span class="cheat-desc">Cancelar respuesta actual</span></div>
+                </div>
+
+                <div class="cheat-card">
+                    <div class="cheat-card-title">🚀 Claude Code CLI</div>
+                    <div class="cheat-item"><span class="cheat-cmd">claude</span><span class="cheat-desc">Iniciar sesión interactiva</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">claude -p "..."</span><span class="cheat-desc">Ejecutar prompt no interactivo</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">claude --model</span><span class="cheat-desc">Especificar modelo desde CLI</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">claude mcp add</span><span class="cheat-desc">Añadir servidor MCP</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">claude mcp list</span><span class="cheat-desc">Ver servidores MCP</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">claude --version</span><span class="cheat-desc">Ver versión instalada</span></div>
+                </div>
+
+                <div class="cheat-card">
+                    <div class="cheat-card-title">📝 Hooks (settings.json)</div>
+                    <div class="cheat-item"><span class="cheat-cmd">PreToolUse</span><span class="cheat-desc">Antes de usar cualquier herramienta</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">PostToolUse</span><span class="cheat-desc">Después de usar una herramienta</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">UserPromptSubmit</span><span class="cheat-desc">Cuando el usuario envía un prompt</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">SessionStart</span><span class="cheat-desc">Al iniciar una sesión</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">SessionEnd</span><span class="cheat-desc">Al terminar una sesión</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">AgentStart</span><span class="cheat-desc">Cuando inicia un sub-agente</span></div>
+                </div>
+
+                <div class="cheat-card">
+                    <div class="cheat-card-title">🏗️ Estructura de Proyecto</div>
+                    <div class="cheat-item"><span class="cheat-cmd">CLAUDE.md</span><span class="cheat-desc">System prompt del proyecto (raíz)</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">.claude/settings.json</span><span class="cheat-desc">Configuración del proyecto</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">.claude/skills/</span><span class="cheat-desc">Skills personalizadas del proyecto</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">.claude/agents/</span><span class="cheat-desc">Sub-agentes del proyecto</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">.mcp.json</span><span class="cheat-desc">Servidores MCP del equipo</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">.claude/memory/</span><span class="cheat-desc">Memoria persistente del proyecto</span></div>
+                </div>
+
+                <div class="cheat-card">
+                    <div class="cheat-card-title">💰 Modelos y Precios (aprox.)</div>
+                    <div class="cheat-item"><span class="cheat-cmd">Opus 4.7</span><span class="cheat-desc">Máxima calidad. Razonamiento complejo.</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Sonnet 4.6</span><span class="cheat-desc">Equilibrio ideal. Recomendado por defecto.</span></div>
+                    <div class="cheat-item"><span class="cheat-cmd">Haiku 4.5</span><span class="cheat-desc">Rápido y económico. Tareas simples.</span></div>
+                    <div style="margin-top: 10px; font-size: 0.8em; color: var(--muted);">
+                        Regla: Usa Haiku para volumen, Sonnet para calidad, Opus para razonamiento profundo.
+                    </div>
+                </div>
+            </div>
+
+            <h2>🔥 Patrones de Prompt más Efectivos</h2>
+            <table>
+                <thead><tr><th>Patrón</th><th>Cuándo Usar</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Chain of Thought</strong></td>
+                        <td>Problemas complejos de lógica</td>
+                        <td>"Piensa paso a paso antes de responder..."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Role + Constraint</strong></td>
+                        <td>Definir comportamiento del agente</td>
+                        <td>"Eres un DBA. NUNCA ejecutes DROP sin confirmar..."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Format Directive</strong></td>
+                        <td>Outputs estructurados</td>
+                        <td>"Responde SOLO en JSON con campos: status, result, errors"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Few-Shot</strong></td>
+                        <td>Tareas con formato específico</td>
+                        <td>"Ejemplo entrada: X → salida: Y. Ahora procesa: Z"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Minimal Privilege</strong></td>
+                        <td>Agentes en producción</td>
+                        <td>"allowed-tools: [Read, Grep] — NO Write, Edit, Bash"</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div><!-- /main -->
+</div><!-- /layout -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ──────────────────────────────────────────────
+// DATA
+// ──────────────────────────────────────────────
+
+const RECIPES = [
+    {
+        id: 'pr-review',
+        emoji: '🔍',
+        title: 'Code Review Automático de PRs',
+        desc: 'Revisa un Pull Request completo en busca de bugs, seguridad y mejoras. Genera reporte Markdown.',
+        cat: 'workflow',
+        tags: ['GitHub', 'Python', 'CI/CD'],
+        steps: [
+            {
+                title: 'Configura el agente reviewer',
+                text: 'Crea un sub-agente especializado en code review en tu proyecto:',
+                code: {lang: 'bash', content: `mkdir -p .claude/agents
+cat > .claude/agents/code-reviewer.md << 'EOF'
+---
+name: code-reviewer
+description: Revisa código de PRs para bugs, seguridad y mejoras de calidad
+tools: Read, Grep, Glob
+permissionMode: default
+---
+
+Eres un code reviewer sénior. Para cada archivo revisado:
+
+🔴 CRÍTICO: bugs, vulnerabilidades, data loss
+🟡 ADVERTENCIA: código frágil, sin tests, mal naming
+🟢 SUGERENCIA: mejoras de performance, legibilidad
+
+Formato final: resumen ejecutivo + issues por archivo.
+EOF`}
+            },
+            {
+                title: 'Ejecuta el review',
+                text: 'En tu sesión de Claude Code, pide el review con los archivos del PR:',
+                code: {lang: 'bash', content: `# Opción 1: Review de archivos específicos
+> "Revisa @src/auth.py @src/api/users.py para el PR #42"
+
+# Opción 2: Review de todos los cambios del PR
+> "Haz un code review de los archivos en git diff: !git diff --name-only main"
+
+# Opción 3: Con contexto del PR de GitHub (si tienes MCP GitHub)
+> "Revisa los cambios del PR #42 en el repo owner/repo"`}
+            },
+            {
+                title: 'Genera el reporte final',
+                text: 'Pide que guarde el reporte como archivo:',
+                code: {lang: 'bash', content: `> "Guarda el reporte de code review en .claude/review-pr42.md con:
+  - Resumen ejecutivo (3 líneas)
+  - Lista de issues críticos
+  - Lista de advertencias
+  - Sugerencias de mejora
+  - Veredicto: APROBADO / CAMBIOS MENORES / CAMBIOS MAYORES"`}
+            }
+        ]
+    },
+    {
+        id: 'data-analysis',
+        emoji: '📊',
+        title: 'Análisis de CSV con Insights',
+        desc: 'Carga un CSV, ejecuta análisis estadístico automático y genera reporte con visualizaciones.',
+        cat: 'analysis',
+        tags: ['Python', 'pandas', 'matplotlib'],
+        steps: [
+            {
+                title: 'Prepara el agente data scientist',
+                text: 'Crea un agente especializado en análisis de datos:',
+                code: {lang: 'yaml', content: `# .claude/agents/data-scientist.md
+---
+name: data-scientist
+description: Analiza datasets CSV, ejecuta estadística y genera insights
+tools: Read, Bash
+permissionMode: auto
+---
+
+Eres un data scientist experto en pandas y scipy.
+
+Al recibir un archivo CSV:
+1. Carga con pandas y muestra .info() y .describe()
+2. Detecta valores nulos (% por columna)
+3. Identifica outliers (IQR method)
+4. Calcula correlaciones entre variables numéricas
+5. Genera 3-5 insights accionables
+6. Sugiere próximos análisis
+
+Siempre incluye: n muestra, período si hay fechas, limitaciones.`}
+            },
+            {
+                title: 'Ejecuta el análisis',
+                text: 'Invoca el análisis con tu archivo:',
+                code: {lang: 'bash', content: `# Análisis básico
+> "Analiza @data/ventas_2024.csv y dame los principales insights"
+
+# Análisis con pregunta específica
+> "En @data/clientes.csv, ¿qué segmento de clientes tiene mayor LTV?"
+
+# Análisis comparativo
+> "Compara @data/q3.csv y @data/q4.csv — ¿qué cambió?"`}
+            },
+            {
+                title: 'Genera visualizaciones',
+                text: 'Pide gráficas específicas:',
+                code: {lang: 'python', content: `# El agente puede ejecutar este código via Bash:
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('data/ventas_2024.csv')
+
+# Top 10 productos
+fig, ax = plt.subplots(figsize=(10, 6))
+df.groupby('producto')['revenue'].sum().nlargest(10).plot(kind='bar', ax=ax)
+ax.set_title('Top 10 Productos por Revenue')
+plt.tight_layout()
+plt.savefig('charts/top_productos.png', dpi=150)
+print("✅ Gráfica guardada en charts/top_productos.png")`}
+            }
+        ]
+    },
+    {
+        id: 'auto-tests',
+        emoji: '🧪',
+        title: 'Generar Tests Automáticamente',
+        desc: 'Analiza tu código fuente y genera tests unitarios y de integración completos con pytest o jest.',
+        cat: 'automation',
+        tags: ['pytest', 'jest', 'TDD'],
+        steps: [
+            {
+                title: 'Crea la skill de generación de tests',
+                text: '',
+                code: {lang: 'bash', content: `mkdir -p .claude/skills/generate-tests
+cat > .claude/skills/generate-tests/SKILL.md << 'EOF'
+---
+description: "Genera tests completos para el archivo o módulo especificado"
+allowed-tools:
+  - Read
+  - Write
+  - Bash
+  - Grep
+---
+
+Genera tests completos para: $ARGUMENTS
+
+Contexto del proyecto:
+- Framework de tests: !\\`cat package.json 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); print(list(d.get('devDependencies',{}).keys()))" 2>/dev/null || echo "pytest"\\`
+- Estructura: !\\`ls src/ 2>/dev/null || ls app/ 2>/dev/null\\`
+
+Para cada función/clase:
+1. Test del happy path
+2. Tests de edge cases
+3. Tests de error handling
+4. Mock de dependencias externas
+
+Cobertura objetivo: 80%+. Guarda en test/ con naming test_<archivo>.py
+EOF`}
+            },
+            {
+                title: 'Genera los tests',
+                text: 'Invoca la skill en tu sesión:',
+                code: {lang: 'bash', content: `# Para un archivo específico
+/generate-tests src/auth/login.py
+
+# Para un módulo completo
+/generate-tests src/payments/
+
+# Para una función específica
+/generate-tests "la función process_payment en src/payments/processor.py"`}
+            },
+            {
+                title: 'Ejecuta y verifica',
+                text: 'Verifica que los tests pasen:',
+                code: {lang: 'bash', content: `> "Ejecuta los tests generados y corrige los que fallen"
+
+# Claude ejecuta:
+# pytest tests/test_login.py -v
+# Si falla, lee el error y corrige el test automáticamente`}
+            }
+        ]
+    },
+    {
+        id: 'security-audit',
+        emoji: '🔐',
+        title: 'Auditoría de Seguridad',
+        desc: 'Escanea tu codebase en busca de vulnerabilidades OWASP: XSS, SQLi, secretos expuestos, permisos incorrectos.',
+        cat: 'security',
+        tags: ['OWASP', 'secrets', 'CVE'],
+        steps: [
+            {
+                title: 'Configura el agente security',
+                text: '',
+                code: {lang: 'yaml', content: `# .claude/agents/security-auditor.md
+---
+name: security-auditor
+description: Audita seguridad del código — vulnerabilidades OWASP y secretos
+tools: Read, Grep, Glob, Bash
+disallowedTools: Write, Edit
+context: fork
+model: claude-opus-4-7
+effort: high
+---
+
+Eres un security engineer experto en OWASP Top 10.
+
+Busca sistemáticamente:
+1. 🔑 Secretos hardcodeados (API keys, passwords, tokens, private keys)
+   Pattern: grep -r "password\s*=\s*['\"]" --include="*.py"
+2. 💉 SQL Injection: queries con f-strings/concatenación
+3. 🌐 XSS: outputs sin sanitizar en templates HTML
+4. 🔓 Permisos incorrectos: chmod 777, world-writable files
+5. 📦 Dependencias vulnerables: requirements.txt vs CVE database
+6. 🔐 Crypto débil: MD5, SHA1, DES, ECB mode
+
+Output: reporte SARIF-like con severity (CRITICAL/HIGH/MEDIUM/LOW)`}
+            },
+            {
+                title: 'Ejecuta la auditoría',
+                text: '',
+                code: {lang: 'bash', content: `# Auditoría completa del proyecto
+> "Ejecuta una auditoría de seguridad completa del proyecto"
+
+# Auditoría de un módulo específico
+> "Audita el módulo de autenticación en src/auth/"
+
+# Buscar solo secretos
+> "Escanea el proyecto en busca de API keys o passwords hardcodeados"`}
+            },
+            {
+                title: 'Genera reporte y corrige',
+                text: '',
+                code: {lang: 'bash', content: `> "Guarda el reporte de seguridad en security-report.md y:
+   1. Prioriza por severidad (CRITICAL primero)
+   2. Para cada issue: línea exacta, descripción, fix recomendado
+   3. Corrige automáticamente los issues de severidad LOW y MEDIUM
+   4. Marca los CRITICAL y HIGH para revisión manual"`}
+            }
+        ]
+    },
+    {
+        id: 'ci-pipeline',
+        emoji: '🚀',
+        title: 'Setup CI/CD Pipeline',
+        desc: 'Genera configuración completa de GitHub Actions o GitLab CI con tests, build y deploy automático.',
+        cat: 'devops',
+        tags: ['GitHub Actions', 'Docker', 'CD'],
+        steps: [
+            {
+                title: 'Analiza el proyecto',
+                text: 'Deja que Claude entienda tu stack:',
+                code: {lang: 'bash', content: `> "Analiza @package.json @requirements.txt @Dockerfile para entender el stack
+   y propón la arquitectura de CI/CD ideal"`}
+            },
+            {
+                title: 'Genera el pipeline',
+                text: '',
+                code: {lang: 'bash', content: `> "Genera .github/workflows/ci.yml con:
+   - Trigger en push a main y PRs
+   - Job: lint (eslint + prettier)
+   - Job: tests (jest --coverage, umbral 80%)
+   - Job: build (docker buildx)
+   - Job: deploy-staging (solo en main)
+   - Job: deploy-prod (solo en tags v*)
+   - Usa caché de dependencias entre jobs
+   - Secrets: DOCKER_TOKEN, AWS_ACCESS_KEY, AWS_SECRET"`}
+            },
+            {
+                title: 'Configura los secrets',
+                text: '',
+                code: {lang: 'bash', content: `# Claude te guía paso a paso:
+> "Explícame qué secrets necesito configurar en GitHub
+   y cómo configurarlos de forma segura"
+
+# Output esperado:
+# Settings → Secrets → Actions → New repository secret
+# DOCKER_TOKEN → tu Docker Hub token
+# AWS_ACCESS_KEY → IAM user con permisos mínimos
+# etc.`}
+            }
+        ]
+    },
+    {
+        id: 'refactor-legacy',
+        emoji: '🏗️',
+        title: 'Refactorizar Código Legacy',
+        desc: 'Moderniza código legacy paso a paso: añade tipos, mejora nombres, extrae funciones, sin romper funcionalidad.',
+        cat: 'workflow',
+        tags: ['TypeScript', 'Python', 'testing'],
+        steps: [
+            {
+                title: 'Estrategia de refactoring',
+                text: '',
+                code: {lang: 'bash', content: `> "Analiza @src/legacy/ y crea un plan de refactoring:
+   1. Identifica los 5 archivos más problemáticos (por complejidad)
+   2. Para cada uno: qué cambios harías y por qué
+   3. Estima el riesgo de cada cambio (bajo/medio/alto)
+   4. Propón el orden de refactoring (menos riesgo primero)"`}
+            },
+            {
+                title: 'Refactoring incremental',
+                text: 'Procede archivo por archivo con tests primero:',
+                code: {lang: 'bash', content: `# Paso 1: Genera tests para el código actual (antes de tocar nada)
+> "Genera tests que cubran el comportamiento actual de @src/legacy/utils.py
+   SIN cambiar el código. Estos serán nuestro safety net"
+
+# Paso 2: Refactoriza con los tests como protección
+> "Ahora refactoriza @src/legacy/utils.py:
+   - Añade type hints
+   - Extrae funciones de > 20 líneas
+   - Mejora nombres de variables (a, b, c → nombres descriptivos)
+   - Ejecuta los tests después de cada cambio para verificar que no se rompe nada"`}
+            },
+            {
+                title: 'Verifica el resultado',
+                text: '',
+                code: {lang: 'bash', content: `> "Compara la complejidad ciclomática antes y después del refactoring,
+   ejecuta la suite de tests completa, y genera un reporte de:
+   - Líneas de código reducidas
+   - Cobertura de tests (antes vs después)
+   - Complejidad reducida
+   - TODOs o mejoras pendientes"`}
+            }
+        ]
+    },
+    {
+        id: 'api-docs',
+        emoji: '📖',
+        title: 'Generar Documentación de API',
+        desc: 'Analiza endpoints y genera documentación OpenAPI 3.0 completa con ejemplos, schemas y errores.',
+        cat: 'automation',
+        tags: ['OpenAPI', 'Swagger', 'REST'],
+        steps: [
+            {
+                title: 'Analiza los endpoints',
+                text: '',
+                code: {lang: 'bash', content: `> "Analiza todos los archivos en @src/api/ y @src/routes/
+   Lista todos los endpoints HTTP con:
+   - Método (GET/POST/PUT/DELETE)
+   - Ruta completa
+   - Parámetros de path, query y body
+   - Autenticación requerida
+   - Respuestas posibles (200, 400, 401, 404, 500)"`}
+            },
+            {
+                title: 'Genera OpenAPI spec',
+                text: '',
+                code: {lang: 'bash', content: `> "Genera docs/openapi.yaml con especificación OpenAPI 3.0 completa:
+   - Info: título, versión, descripción
+   - Servers: local y producción
+   - Paths: todos los endpoints encontrados
+   - Components/schemas: todos los modelos de datos
+   - SecuritySchemes: Bearer JWT
+   - Ejemplos reales para cada endpoint
+   Valida que el YAML sea sintácticamente correcto"`}
+            },
+            {
+                title: 'Genera página de docs',
+                text: '',
+                code: {lang: 'bash', content: `> "Genera docs/index.html con Swagger UI que cargue openapi.yaml
+   Debe ser un archivo standalone sin dependencias externas (usa CDN)"`}
+            }
+        ]
+    },
+    {
+        id: 'onboarding',
+        emoji: '👋',
+        title: 'Onboarding Automático de Proyecto',
+        desc: 'Genera README completo, CONTRIBUTING.md, setup scripts y toda la documentación para nuevos devs.',
+        cat: 'workflow',
+        tags: ['README', 'docs', 'setup'],
+        steps: [
+            {
+                title: 'Analiza el proyecto',
+                text: '',
+                code: {lang: 'bash', content: `> "Analiza el proyecto completo y dame:
+   1. Stack tecnológico (lenguajes, frameworks, tools)
+   2. Estructura de directorios con explicación
+   3. Cómo se corre localmente
+   4. Variables de entorno necesarias
+   5. Dependencias externas (bases de datos, APIs, servicios)"`}
+            },
+            {
+                title: 'Genera README completo',
+                text: '',
+                code: {lang: 'bash', content: `> "Genera README.md profesional con:
+   - Badges (CI status, coverage, license)
+   - Descripción clara del proyecto (qué hace y por qué)
+   - Quick start (5 pasos para estar corriendo en < 5 minutos)
+   - Arquitectura con diagrama ASCII
+   - Variables de entorno con tabla (nombre, descripción, ejemplo, requerido)
+   - Comandos disponibles (npm run / make / python)
+   - Cómo contribuir (link a CONTRIBUTING.md)
+   - License"`}
+            },
+            {
+                title: 'Genera script de setup',
+                text: '',
+                code: {lang: 'bash', content: `> "Genera scripts/setup.sh que:
+   1. Verifique dependencias (node, python, docker)
+   2. Instale las correctas si faltan (con brew/apt/chocolatey)
+   3. Clone .env.example → .env
+   4. Instale dependencias del proyecto
+   5. Levante servicios locales (docker-compose up -d)
+   6. Ejecute migrations
+   7. Muestre un resumen de qué levantó y cómo acceder"`}
+            }
+        ]
+    },
+    {
+        id: 'monitoring',
+        emoji: '📡',
+        title: 'Setup de Monitoreo',
+        desc: 'Conecta Claude con Sentry via MCP para analizar errores en producción y generar fixes automáticos.',
+        cat: 'devops',
+        tags: ['Sentry', 'MCP', 'observability'],
+        steps: [
+            {
+                title: 'Conecta Sentry via MCP',
+                text: '',
+                code: {lang: 'bash', content: `# Instalar servidor MCP de Sentry
+claude mcp add --transport http sentry https://sentry.io/api/mcp/ \\
+  --header "Authorization: Bearer $SENTRY_TOKEN"
+
+# Verificar conexión
+claude mcp get sentry
+/mcp  # Ver que sentry aparece como conectado`}
+            },
+            {
+                title: 'Analiza errores en producción',
+                text: '',
+                code: {lang: 'bash', content: `# En sesión de Claude Code:
+> "Dame los 5 errores más frecuentes del último día en el proyecto my-app"
+
+> "Analiza el error SentryID-12345 y encuentra la causa raíz en el código"
+
+> "¿Qué errores nuevos aparecieron después del deploy de las 14:00?"`}
+            },
+            {
+                title: 'Genera fixes automáticos',
+                text: '',
+                code: {lang: 'bash', content: `> "Para el error 'TypeError: Cannot read property of undefined' en src/api/users.js:
+   1. Lee el archivo y encuentra el bug
+   2. Genera el fix con null checks apropiados
+   3. Agrega test que cubra este caso
+   4. Crea un PR con el fix"`}
+            }
+        ]
+    },
+    {
+        id: 'db-migrate',
+        emoji: '🗃️',
+        title: 'Gestión de Migraciones de BD',
+        desc: 'Genera, valida y aplica migraciones de base de datos de forma segura con rollback automático.',
+        cat: 'devops',
+        tags: ['PostgreSQL', 'Alembic', 'Django'],
+        steps: [
+            {
+                title: 'Analiza el schema actual',
+                text: '',
+                code: {lang: 'bash', content: `> "Analiza @models.py (o @schema.sql) y dame:
+   - Todas las tablas con sus columnas y tipos
+   - Foreign keys y relaciones
+   - Índices existentes
+   - Tablas sin índice en columnas frecuentemente filtradas"`}
+            },
+            {
+                title: 'Genera la migración',
+                text: '',
+                code: {lang: 'bash', content: `> "Necesito agregar una columna 'last_login_at' timestamp nullable
+   a la tabla users. Genera:
+   1. La migración en Alembic (upgrade + downgrade)
+   2. Verifica que la migración sea reversible
+   3. Agrega índice si tiene sentido
+   4. Estima el tiempo de migración para 10M de rows"`}
+            },
+            {
+                title: 'Valida y aplica',
+                text: '',
+                code: {lang: 'bash', content: `> "Antes de aplicar la migración:
+   1. Revisa que no haya locks problemáticos
+   2. Verifica que el rollback esté bien escrito
+   3. Genera comando para aplicar en staging primero
+   4. Genera checklist de verificación post-migración"`}
+            }
+        ]
+    },
+    {
+        id: 'prompt-cache',
+        emoji: '⚡',
+        title: 'Sistema Q&A con Prompt Caching',
+        desc: 'Construye un chatbot que responde preguntas sobre documentación usando caching para reducir costos 90%.',
+        cat: 'analysis',
+        tags: ['Python', 'Anthropic SDK', 'caching'],
+        steps: [
+            {
+                title: 'Instala el SDK',
+                text: '',
+                code: {lang: 'bash', content: `pip install anthropic
+
+# Configura tu API key
+export ANTHROPIC_API_KEY="sk-ant-..."`}
+            },
+            {
+                title: 'Implementa el Q&A con caching',
+                text: '',
+                code: {lang: 'python', content: `#!/usr/bin/env python3
+# qa_system.py — Sistema Q&A con Prompt Caching
+
+import anthropic
+
+client = anthropic.Anthropic()
+
+def create_qa_system(doc_path: str):
+    """Crea sistema Q&A con documentación cacheada."""
+    with open(doc_path) as f:
+        documentation = f.read()
+
+    def ask(question: str) -> tuple[str, dict]:
+        response = client.messages.create(
+            model="claude-opus-4-7",
+            max_tokens=1024,
+            system=[
+                {
+                    "type": "text",
+                    "text": "Eres un asistente experto. Responde basándote en la documentación."
+                },
+                {
+                    "type": "text",
+                    "text": f"DOCUMENTACIÓN:\\n{documentation}",
+                    "cache_control": {"type": "ephemeral"}  # ← Cachear aquí
+                }
+            ],
+            messages=[{"role": "user", "content": question}]
+        )
+
+        stats = {
+            "input_tokens": response.usage.input_tokens,
+            "output_tokens": response.usage.output_tokens,
+            "cache_creation": getattr(response.usage, 'cache_creation_input_tokens', 0),
+            "cache_read": getattr(response.usage, 'cache_read_input_tokens', 0),
+        }
+
+        return response.content[0].text, stats
+
+    return ask
+
+# Uso
+qa = create_qa_system("docs/api.md")
+
+print("=== Primera pregunta (crea cache) ===")
+answer, stats = qa("¿Cómo autenticar con la API?")
+print(f"Respuesta: {answer[:200]}...")
+print(f"Tokens: {stats}")
+
+print("\\n=== Segunda pregunta (usa cache) ===")
+answer, stats = qa("¿Cuáles son los rate limits?")
+print(f"Respuesta: {answer[:200]}...")
+print(f"Cache read: {stats['cache_read']} tokens GRATIS 🎉")`}
+            },
+            {
+                title: 'Ejecuta y mide el ahorro',
+                text: '',
+                code: {lang: 'bash', content: `python qa_system.py
+
+# Output esperado:
+# === Primera pregunta (crea cache) ===
+# cache_creation: 5000 tokens (costo normal)
+#
+# === Segunda pregunta (usa cache) ===
+# cache_read: 5000 tokens (90% más barato!)
+# input_tokens: 50 tokens (solo la pregunta)`}
+            }
+        ]
+    },
+    {
+        id: 'mcp-custom',
+        emoji: '🔌',
+        title: 'Servidor MCP Personalizado',
+        desc: 'Crea un servidor MCP que expone tu API interna o base de datos a Claude Code en menos de 50 líneas.',
+        cat: 'automation',
+        tags: ['Python', 'MCP', 'API'],
+        steps: [
+            {
+                title: 'Instala el SDK de MCP',
+                text: '',
+                code: {lang: 'bash', content: `pip install mcp`}
+            },
+            {
+                title: 'Crea el servidor',
+                text: '',
+                code: {lang: 'python', content: `#!/usr/bin/env python3
+# mcp_server.py — Servidor MCP para tu API interna
+
+import asyncio
+import httpx
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp import types
+
+API_BASE = "https://api.tuempresa.com/v1"
+API_KEY = "tu-api-key"
+
+server = Server("empresa-api")
+
+@server.list_tools()
+async def list_tools() -> list[types.Tool]:
+    return [
+        types.Tool(
+            name="get_customer",
+            description="Obtiene datos de un cliente por ID o email",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string", "description": "ID del cliente"},
+                    "email": {"type": "string", "description": "Email del cliente"}
+                }
+            }
+        ),
+        types.Tool(
+            name="list_orders",
+            description="Lista órdenes. Filtrar por status, fecha, cliente.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "customer_id": {"type": "string"},
+                    "status": {"type": "string", "enum": ["pending","paid","shipped","cancelled"]},
+                    "limit": {"type": "integer", "default": 20}
+                }
+            }
+        ),
+        types.Tool(
+            name="get_metrics",
+            description="Métricas de negocio: revenue, orders, customers por período",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "period": {"type": "string", "enum": ["today","week","month","quarter"]},
+                    "metric": {"type": "string", "enum": ["revenue","orders","customers","churn"]}
+                },
+                "required": ["period", "metric"]
+            }
+        )
+    ]
+
+@server.call_tool()
+async def call_tool(name: str, args: dict) -> list[types.TextContent]:
+    async with httpx.AsyncClient() as client:
+        headers = {"Authorization": f"Bearer {API_KEY}"}
+
+        if name == "get_customer":
+            param = f"id={args['id']}" if 'id' in args else f"email={args['email']}"
+            r = await client.get(f"{API_BASE}/customers?{param}", headers=headers)
+
+        elif name == "list_orders":
+            params = {k: v for k, v in args.items()}
+            r = await client.get(f"{API_BASE}/orders", params=params, headers=headers)
+
+        elif name == "get_metrics":
+            r = await client.get(f"{API_BASE}/metrics/{args['period']}/{args['metric']}", headers=headers)
+
+        r.raise_for_status()
+        return [types.TextContent(type="text", text=r.text)]
+
+async def main():
+    async with stdio_server() as (read, write):
+        await server.run(read, write, server.create_initialization_options())
+
+if __name__ == "__main__":
+    asyncio.run(main())`}
+            },
+            {
+                title: 'Registra y usa',
+                text: '',
+                code: {lang: 'bash', content: `# Registrar el servidor
+claude mcp add --transport stdio empresa-api -- python mcp_server.py
+
+# En sesión:
+> "Dame los datos del cliente con email juan@empresa.com"
+> "¿Cuánto revenue generamos esta semana?"
+> "Lista las órdenes pendientes del cliente C-12345"`}
+            }
+        ]
+    },
+    {
+        id: 'secure-multi-agent',
+        emoji: '🔐',
+        title: 'Sistema Multi-Agente Seguro',
+        desc: 'Construye un equipo de sub-agentes especializados con permisos granulares, hooks de auditoria y validación automática.',
+        cat: 'security',
+        tags: ['Sub-agents', 'hooks', 'permissions', 'security'],
+        steps: [
+            {
+                title: 'Diseña la arquitectura de agentes',
+                text: 'Crea sub-agentes especializados con roles y permisos mínimos:',
+                code: {lang: 'bash', content: `mkdir -p .claude/agents
+
+# 1. Code Reviewer (solo lectura)
+cat > .claude/agents/code-reviewer.md << 'EOF'
+---
+name: code-reviewer
+description: Revisa código para bugs, seguridad y mejoras
+tools: Read, Grep, Glob
+permissionMode: default
+---
+Eres un code reviewer especializado en seguridad.
+Analiza el código buscando:
+- Vulnerabilidades conocidas (SQLi, XSS, etc)
+- Uso incorrecto de APIs
+- Gestión de errores inadecuada
+EOF
+
+# 2. Test Writer (escribe pero valida)
+cat > .claude/agents/test-writer.md << 'EOF'
+---
+name: test-writer
+description: Escribe tests unitarios con cobertura alta
+tools: Read, Write, Edit, Bash
+permissionMode: default
+---
+Eres un testing expert. Escribe tests:
+- Coverage mínimo: 80%
+- Incluye edge cases y errores
+- Usa naming descriptivo
+EOF
+
+# 3. Deploy Manager (solo en prod con confirmación)
+cat > .claude/agents/deploy-manager.md << 'EOF'
+---
+name: deploy-manager
+description: Orquesta deploys seguros a producción
+tools: Bash, Read
+permissionMode: plan  # ← Requiere aprobación
+---
+Eres un DevOps engineer. Antes de cualquier acción:
+1. Verifica que tests pasen
+2. Crea backup
+3. Ejecuta dry-run
+4. Espera confirmación EXPLÍCITA del usuario
+EOF`}
+            },
+            {
+                title: 'Configura hooks de auditoria',
+                text: 'Crea .claude/settings.json con hooks que auditen todas las acciones:',
+                code: {lang: 'bash', content: `cat > .claude/settings.json << 'EOF'
+{
+  "allowedTools": {
+    "Bash": {
+      "allow": ["npm test", "git status", "docker ps"],
+      "deny": ["rm -rf", "sudo", "curl * | bash"]
+    },
+    "Write": {
+      "deny": [".env*", "*.key", "secrets/*"]
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/log-bash-command.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "¿Este archivo es seguro escribir? Responde safe/unsafe: $ARGUMENTS",
+            "model": "claude-haiku-4-5"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/validate-agent-permissions.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF`}
+            },
+            {
+                title: 'Orquesta con CLAUDE.md',
+                text: 'El proyecto CLAUDE.md coordina los agentes:',
+                code: {lang: 'bash', content: `cat > CLAUDE.md << 'EOF'
+# Proyecto Multi-Agente Seguro
+
+Eres el Project Manager. Tu rol es orquestar 3 sub-agentes:
+1. **code-reviewer** (Lee código)
+2. **test-writer** (Escribe tests)
+3. **deploy-manager** (Despliega con cuidado)
+
+## Flujo estándar de work
+1. Dev propone cambio de código
+2. Lanza @code-reviewer para validar
+3. Lanza @test-writer para coverage
+4. Lanza @deploy-manager en staging primero
+5. Si todo ok → deploy a producción
+
+## Restricciones globales
+- NUNCA ejecutar Bash destructivos sin confirmación
+- NUNCA escribir en .env o archivos de secrets
+- SIEMPRE usar allowedTools de settings.json
+- Logs de todas las acciones a .claude/audit.log
+EOF`}
+            },
+            {
+                title: 'Usa el sistema',
+                text: 'En sesión, coordina los agentes:',
+                code: {lang: 'bash', content: `# El proyecto coordina automáticamente
+> "Revisa @src/auth.py para problemas de seguridad"
+# → Lanza code-reviewer
+
+> "Escribe tests para todo en @src/utils.py"
+# → Lanza test-writer
+
+> "Estoy listo para desplegar a producción"
+# → Lanza deploy-manager (requiere aprobación manual)
+
+# Ver logs de auditoría
+> "@.claude/audit.log"  # Historial completo de acciones`}
+            }
+        ]
+    },
+    {
+        id: 'extended-thinking-arch',
+        emoji: '🧠',
+        title: 'Diseño de Arquitectura con Extended Thinking',
+        desc: 'Usa Extended Thinking para resolver problemas arquitectónicos complejos con razonamiento profundo.',
+        cat: 'workflow',
+        tags: ['Extended Thinking', 'architecture', 'design'],
+        steps: [
+            {
+                title: 'Prepara el proyecto',
+                text: 'Crea un agente especializado que use Extended Thinking:',
+                code: {lang: 'bash', content: `cat > .claude/agents/architect.md << 'EOF'
+---
+name: architect
+description: Diseña arquitecturas complejas usando razonamiento profundo
+tools: Read, Write, Glob
+---
+
+Eres un Senior Architect. Para problemas complejos:
+1. Dedica tiempo a razonar (piensa en pros/cons de cada opción)
+2. Considera escalabilidad, mantenibilidad, costo
+3. Documenta trade-offs explícitamente
+4. Propón diagrama ASCII de la solución
+
+Usa /think si el problema es complejo (> 30 min de diseño)
+EOF`}
+            },
+            {
+                title: 'Presenta el problema complejo',
+                text: 'Pídele que diseñe con Extended Thinking:',
+                code: {lang: 'bash', content: `# En sesión de Claude Code:
+> "/think"  # Habilita Extended Thinking para esta respuesta
+
+> "Necesito redesñar nuestro sistema de notificaciones.
+   Hoy tenemos:
+   - 10M usuarios
+   - Picos de 100K notificaciones/segundo
+   - Latencia requerida: < 500ms
+   - Múltiples canales: email, SMS, push, webhook
+
+   La solución actual (colas Redis + workers) alcanzó su límite.
+   ¿Qué arquitectura usarías? Considera:
+   - Streaming vs batch
+   - Tiered delivery (critical primero)
+   - Cost per notification
+   - Failover strategy"`}
+            },
+            {
+                title: 'Implementa la solución',
+                text: 'Claude razonará profundamente y te proponderá un plan:',
+                code: {lang: 'bash', content: `# Output esperado (con Extended Thinking):
+# [Claude razona internamente sobre las 5 opciones principales]
+# [Analiza trade-offs de cada una]
+# [Elige la mejor para tu escala]
+
+# Propuesta:
+# 1. Event-driven architecture con Kafka
+# 2. Fan-out to specialized workers por canal
+# 3. Circuit breaker + fallback strategy
+# 4. Diagram ASCII de la solución
+# 5. Paso a paso para migración sin downtime
+
+> "OK, ahora implementa el plan paso a paso"`}
+            },
+            {
+                title: 'Valida la solución',
+                text: '',
+                code: {lang: 'bash', content: `# Pedir análisis post-diseño
+> "¿Cuáles son los 3 puntos de falla en esta arquitectura?
+   ¿Cómo mitigamos cada uno?"`}
+            }
+        ]
+    },
+    {
+        id: 'custom-skill',
+        emoji: '⚙️',
+        title: 'Crear un Skill Personalizado',
+        desc: 'Construye un comando reutilizable con validaciones, argumentos dinámicos y hooks de auditoria.',
+        cat: 'automation',
+        tags: ['skills', 'commands', 'automation'],
+        steps: [
+            {
+                title: 'Diseña el skill',
+                text: 'Crea un skill que automatice una tarea repetitiva:',
+                code: {lang: 'bash', content: `# Ejemplo: skill para auditar dependencias de Python
+mkdir -p .claude/skills
+
+cat > .claude/skills/audit-deps.md << 'EOF'
+---
+name: audit-deps
+description: "Audita dependencias Python en busca de vulnerabilidades"
+usage: "/audit-deps [--fix] [--report PATH]"
+arguments:
+  - name: "fix"
+    type: boolean
+    description: "Auto-actualizar vulnerabilidades"
+  - name: "report"
+    type: string
+    description: "Guardar reporte en archivo (default: stdout)"
+context: default
+---
+
+## /audit-deps
+
+Audita todas las dependencias Python buscando:
+1. CVEs conocidas (usando safety)
+2. Versiones desactualizadas
+3. Conflictos de dependencias
+
+### Uso
+
+\`\`\`bash
+# Auditar sin cambios
+/audit-deps
+
+# Auditar y auto-fix vulnerabilidades
+/audit-deps --fix
+
+# Generar reporte
+/audit-deps --report audit-report.md
+\`\`\`
+
+### Implementación
+
+1. Lee requirements.txt / poetry.lock / pipenv.lock
+2. Ejecuta safety check
+3. Identifica versiones desactualizadas
+4. Si --fix: actualiza y ejecuta tests
+5. Si --report: genera markdown con findings
+EOF`}
+            },
+            {
+                title: 'Implementa el skill',
+                text: 'El skill en SKILL.md se ejecuta cuando lo llamas:',
+                code: {lang: 'bash', content: `# En sesión de Claude:
+> "/audit-deps"
+
+# Claude automáticamente:
+# 1. Lee tu requirements.txt / poetry.lock
+# 2. Ejecuta: python -m safety check
+# 3. Busca versiones desactualizadas: pip list --outdated
+# 4. Propone las actualizaciones
+# 5. Ejecuta tests para verificar compatibilidad
+
+# Con --fix:
+> "/audit-deps --fix"
+# Actualiza dependencias vulnerable y re-ejecuta tests`}
+            },
+            {
+                title: 'Agrega validaciones con hooks',
+                text: 'Protege el skill con hooks de auditoria:',
+                code: {lang: 'bash', content: `# En .claude/settings.json, agrega:
+{
+  "hooks": {
+    "UserPromptExpansion": [
+      {
+        "matcher": "/audit-deps",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/validate-audit.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "http",
+            "url": "http://localhost:8080/audit/log",
+            "allowedEnvVars": ["AUDIT_TOKEN"]
+          }
+        ]
+      }
+    ]
+  }
+}`}
+            },
+            {
+                title: 'Comparte el skill',
+                text: 'El skill está en git para que todo el equipo lo use:',
+                code: {lang: 'bash', content: `# El equipo tiene acceso automático
+git add .claude/skills/audit-deps.md
+git commit -m "Add audit-deps skill"
+git push
+
+# Cualquier dev en el proyecto puede usarlo:
+> "/audit-deps"      # Listar vulnerabilidades
+> "/audit-deps --fix" # Auto-arreglar
+> "/help audit-deps"  # Ver documentación completa`}
+            }
+        ]
+    }
+];
+
+const TEMPLATES = [
+    {
+        id: 'backend-api',
+        icon: '🖥️',
+        name: 'Backend API (Node.js / Python)',
+        cat: 'backend',
+        desc: 'Configuración completa para proyectos de API REST. Incluye restricciones de seguridad y patrón de desarrollo.',
+        content: `# CLAUDE.md — Backend API Project
+
+## Proyecto
+API REST en [Node.js/Python]. Base de datos: [PostgreSQL/MongoDB].
+Deployment: [AWS/GCP/Vercel].
+
+## Tu Rol
+Eres un backend engineer sénior. Tu objetivo es:
+1. Escribir código seguro, testeable y mantenible
+2. Seguir principios SOLID y DRY
+3. Documentar cambios significativos
+4. Siempre pensar en edge cases y error handling
+
+## Stack
+- Runtime: Node.js 20+ / Python 3.11+
+- Framework: Express / FastAPI
+- ORM: Prisma / SQLAlchemy
+- Tests: Jest / pytest
+- Linter: ESLint / ruff
+
+## Convenciones de Código
+- Async/await (nunca callbacks)
+- TypeScript strict mode (si JS)
+- Type hints completos (si Python)
+- Nombres descriptivos (nunca a, b, temp)
+- Funciones < 30 líneas
+- Un archivo por clase/módulo
+
+## Proceso de Trabajo
+1. Antes de hacer cambios: lee el archivo completo
+2. Escribe tests ANTES de implementar (TDD)
+3. Nunca hagas push a main directamente
+4. Siempre valida inputs del usuario
+5. Log errores con contexto suficiente
+
+## Restricciones
+- NUNCA hardcodear secrets o API keys
+- NUNCA ejecutar DROP sin confirmación explícita
+- NUNCA ignorar errores con try/except pass
+- SIEMPRE usar variables de entorno para configuración
+
+## Herramientas Preferidas
+- Edit > Write (cambios quirúrgicos)
+- Grep antes de Read (confirmar que existe)
+- Bash(pytest) para verificar tests`
+    },
+    {
+        id: 'frontend-react',
+        icon: '⚛️',
+        name: 'Frontend React / Next.js',
+        cat: 'frontend',
+        desc: 'Setup ideal para proyectos frontend con React, TypeScript y pruebas de componentes.',
+        content: `# CLAUDE.md — Frontend React/Next.js
+
+## Proyecto
+Aplicación frontend con React 18+ y Next.js 14+.
+TypeScript strict mode. Styling: Tailwind CSS.
+
+## Tu Rol
+Eres un frontend engineer sénior con expertise en:
+- React Server Components y Client Components
+- Performance (Core Web Vitals, Lighthouse)
+- Accesibilidad (WCAG 2.1 AA)
+- Testing (Vitest + Testing Library)
+
+## Convenciones
+- Componentes: PascalCase, un componente por archivo
+- Hooks: camelCase con prefijo "use"
+- Types/Interfaces: siempre explícitos, nunca "any"
+- CSS: solo clases de Tailwind (no inline styles)
+- Imágenes: next/image (siempre)
+- Links: next/link (siempre)
+
+## Arquitectura
+- /app — App Router pages y layouts
+- /components — Componentes reutilizables
+- /hooks — Custom hooks
+- /lib — Utilities y helpers
+- /types — Type definitions
+
+## Performance Rules
+- Lazy load componentes > 5KB con dynamic()
+- Imágenes con width, height y priority cuando above-fold
+- Evitar re-renders innecesarios (memo, useCallback)
+- No usar useEffect para fetching (usa Server Components)
+
+## Tests
+- Escribir tests para cada componente nuevo
+- Coverage mínimo: 70%
+- Test IDs: data-testid="component-action"`
+    },
+    {
+        id: 'data-science',
+        icon: '🔬',
+        name: 'Data Science / ML',
+        cat: 'data',
+        desc: 'Entorno para proyectos de análisis de datos, machine learning y notebooks Jupyter.',
+        content: `# CLAUDE.md — Data Science Project
+
+## Proyecto
+Proyecto de análisis de datos / machine learning.
+Stack: Python 3.11+, pandas, scikit-learn, [PyTorch/TensorFlow].
+
+## Tu Rol
+Eres un data scientist experto. Priorizas:
+1. Reproducibilidad (seeds fijos, versiones pinneadas)
+2. Claridad sobre optimización prematura
+3. Documentación de decisiones de modelado
+4. Validación rigurosa (no data leakage)
+
+## Estructura del Proyecto
+- /data/raw — Datos originales (NUNCA modificar)
+- /data/processed — Datos procesados
+- /notebooks — Exploración (numerados: 01_, 02_)
+- /src — Código de producción (no notebooks)
+- /models — Modelos guardados
+- /reports — Análisis y visualizaciones
+
+## Reglas de Datos
+- NUNCA modificar /data/raw
+- Documentar fuente y fecha de cada dataset
+- Siempre verificar distribución después de splits
+- Separar train/val/test ANTES de cualquier preprocesamiento
+
+## Código de Calidad
+- Type hints en todas las funciones
+- Docstrings con ejemplos de uso
+- Tests para transformaciones críticas
+- Random seeds: siempre RANDOM_STATE = 42
+
+## Notebooks
+- Un notebook por análisis/experimento
+- Reiniciar kernel y run all antes de commit
+- No dejar outputs de debugging (print statements)
+- Markdown antes de cada sección de código`
+    },
+    {
+        id: 'devops',
+        icon: '🔧',
+        name: 'DevOps / Infrastructure',
+        cat: 'devops',
+        desc: 'Configuración para gestión de infraestructura, CI/CD, Terraform y Kubernetes.',
+        content: `# CLAUDE.md — DevOps / Infrastructure
+
+## Proyecto
+Infraestructura cloud en [AWS/GCP/Azure].
+IaC: Terraform. Orquestación: Kubernetes. CI/CD: GitHub Actions.
+
+## Tu Rol
+Eres un DevOps engineer sénior. Tu enfoque:
+1. Infrastructure as Code (nada manual)
+2. Seguridad desde el diseño (least privilege)
+3. Observabilidad (metrics, logs, traces)
+4. Disaster recovery y runbooks
+
+## Reglas de Seguridad
+- NUNCA hardcodear credentials (usar Secrets Manager)
+- NUNCA aplicar cambios en prod sin staging primero
+- SIEMPRE usar IAM roles, nunca access keys en código
+- SIEMPRE cifrar datos en reposo y en tránsito
+
+## Terraform
+- Un state por environment (dev/staging/prod)
+- Modules para recursos reutilizables
+- Variables con descripciones y validaciones
+- plan antes de apply, SIEMPRE
+- Tagging: environment, project, owner, cost-center
+
+## Kubernetes
+- Namespace por aplicación
+- Resource limits en todos los pods
+- Probes: readiness y liveness siempre
+- PodDisruptionBudget para zero-downtime
+
+## Proceso de Cambios
+1. Branch → PR → Review → Staging → Prod
+2. Changelog en cada PR
+3. Runbook para rollback
+4. Alertas configuradas antes de deploy`
+    },
+    {
+        id: 'personal-assistant',
+        icon: '🤝',
+        name: 'Asistente Personal',
+        cat: 'personal',
+        desc: 'Claude como asistente personal para gestión de tareas, notas y productividad.',
+        content: `# CLAUDE.md — Asistente Personal
+
+## Mi Contexto
+Soy [tu nombre]. Trabajo en [tu rol/empresa].
+Zona horaria: [UTC+X]. Idioma preferido: Español.
+
+## Tu Rol
+Eres mi asistente personal inteligente. Conoces mi contexto
+y me ayudas a ser más productivo, organizado y efectivo.
+
+## Preferencias de Comunicación
+- Respuestas concisas y directas (no palabrería)
+- Bullet points para listas y pasos
+- Siempre terminar con próximos pasos claros
+- Si algo no está claro, pregunta ANTES de actuar
+
+## Gestión de Tareas
+- Tareas en ~/tasks/inbox.md (Markdown, checkboxes)
+- Proyectos en ~/tasks/projects/
+- Notas en ~/notes/ con fecha (2024-01-15-reunión.md)
+- Objetivos semanales en ~/goals/week-YYYY-WW.md
+
+## Mis Proyectos Actuales
+- [Proyecto 1]: [descripción breve]
+- [Proyecto 2]: [descripción breve]
+
+## Herramientas Que Uso
+- Editor: [VS Code / Cursor]
+- Browser: Chrome
+- Calendar: Google Calendar
+- Notas: Notion / Obsidian
+
+## Restricciones
+- No borrar archivos sin confirmación
+- No enviar emails automáticamente
+- Consultar antes de hacer cambios importantes`
+    },
+    {
+        id: 'open-source',
+        icon: '🌍',
+        name: 'Proyecto Open Source',
+        cat: 'backend',
+        desc: 'Configuración para mantener un proyecto open source con contributors, issues y releases.',
+        content: `# CLAUDE.md — Open Source Project
+
+## Proyecto
+[Nombre del proyecto] — [descripción en una línea].
+GitHub: [owner/repo]. License: MIT.
+Status: [alpha/beta/stable].
+
+## Tu Rol
+Eres el maintainer principal. Tu misión:
+1. Mantener el proyecto usable y bien documentado
+2. Revisar PRs con criterio claro y feedback constructivo
+3. Gestionar issues con prioridad y labels correctos
+4. Comunicar con la comunidad con respeto y claridad
+
+## Proceso de Contribución
+- PRs pequeños (< 400 líneas idealmente)
+- Tests requeridos para nuevas features
+- Changelog actualizado en cada PR
+- Semantic versioning (semver)
+
+## Revisión de PRs
+Aprobar si: tests pasan, docs actualizados, sigue convenciones
+Pedir cambios si: falta tests, lógica confusa, sin docs
+Rechazar si: scope creep, breaking changes sin discusión
+
+## Gestión de Issues
+- bug: reproducible, con pasos concretos
+- feature: discutir en issue ANTES de PR
+- good-first-issue: < 2h de trabajo estimado
+- help-wanted: necesita ayuda de comunidad
+
+## Releases
+- Patch (x.x.1): solo bugfixes
+- Minor (x.1.0): features backwards-compatible
+- Major (2.0.0): breaking changes (con migration guide)`
+    },
+    {
+        id: 'startup',
+        icon: '🚀',
+        name: 'Startup MVP',
+        cat: 'backend',
+        desc: 'Configuración optimizada para velocidad de desarrollo en etapa MVP con deuda técnica controlada.',
+        content: `# CLAUDE.md — Startup MVP
+
+## Contexto
+Estamos en etapa MVP. Velocidad > Perfección.
+Pero: no deuda técnica que bloquee el crecimiento.
+
+## Tu Rol
+Eres un full-stack engineer enfocado en el producto.
+Construyes features que deleitan usuarios, no arquitectura elegante.
+
+## Filosofía
+- YAGNI (You Aren't Gonna Need It)
+- Copiar y pegar > abstracción prematura
+- Shipping > perfecto
+- Feedback de usuarios > suposiciones técnicas
+
+## Sin Embargo, Nunca Escatimar En
+- Seguridad básica (auth, HTTPS, sanitización)
+- Backups de base de datos
+- Error handling visible (sin errores silenciosos)
+- Tests para flujos críticos (login, pago, onboarding)
+
+## Stack Actual
+- Frontend: [React/Next.js]
+- Backend: [Node/FastAPI]
+- DB: [Postgres/Supabase]
+- Auth: [Clerk/Auth0/NextAuth]
+- Payments: [Stripe]
+- Deploy: [Vercel/Railway]
+
+## Ritmo de Trabajo
+- Sprints de 1 semana
+- Deploy a producción diario si es posible
+- Retrospectiva cada viernes
+- Métricas clave: DAU, conversion, churn`
+    },
+    {
+        id: 'code-reviewer-agent',
+        icon: '🔍',
+        name: 'Agente: Code Reviewer',
+        cat: 'personal',
+        desc: 'CLAUDE.md específico para un agente dedicado exclusivamente a revisar código.',
+        content: `# CLAUDE.md — Code Reviewer Agent
+
+## Identidad
+Soy un code reviewer especializado. SOLO reviso código.
+No escribo features, no deploys, no administro infra.
+
+## Misión
+Encontrar problemas antes de que lleguen a producción:
+- Bugs que tests no capturan
+- Vulnerabilidades de seguridad
+- Performance issues
+- Code smells y deuda técnica
+
+## Formato de Reporte
+Para cada archivo revisado:
+
+### [nombre_archivo.py]
+**Resumen**: [1 línea]
+
+🔴 **CRÍTICO** [N issues]
+- Línea X: [descripción] — Fix: [solución]
+
+🟡 **ADVERTENCIA** [N issues]
+- Línea X: [descripción] — Sugerencia: [mejora]
+
+🟢 **SUGERENCIA** [N issues]
+- Línea X: [mejora de calidad]
+
+**Veredicto**: ✅ APROBAR / ⚠️ CAMBIOS MENORES / ❌ CAMBIOS MAYORES
+
+## Herramientas Permitidas
+- Read: leer código
+- Grep: buscar patrones
+- Glob: encontrar archivos
+
+## Herramientas PROHIBIDAS
+- Write, Edit: NO modifico código
+- Bash: NO ejecuto comandos
+- MCP: NO accedo a servicios externos`
+    }
+];
+
+// ──────────────────────────────────────────────
+// RENDER RECIPES
+// ──────────────────────────────────────────────
+
+function renderRecipes(filter = null) {
+    const grid = document.getElementById('recipes-grid');
+    let filtered = filter ? RECIPES.filter(r => r.cat === filter) : RECIPES;
+
+    grid.innerHTML = filtered.map(recipe => `
+        <div class="recipe-card cat-${recipe.cat}" onclick="openRecipe('${recipe.id}')">
+            <div class="recipe-emoji">${recipe.emoji}</div>
+            <div class="recipe-title">${recipe.title}</div>
+            <div class="recipe-desc">${recipe.desc}</div>
+            <div class="recipe-tags">
+                ${recipe.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+function openRecipe(id) {
+    const recipe = RECIPES.find(r => r.id === id);
+    if (!recipe) return;
+
+    document.querySelectorAll('.recipe-card').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`[onclick="openRecipe('${id}')"]`)?.classList.add('selected');
+
+    const container = document.getElementById('recipe-detail-container');
+    container.innerHTML = `
+        <div class="recipe-detail">
+            <div class="recipe-detail-header">
+                <span class="recipe-detail-emoji">${recipe.emoji}</span>
+                <div>
+                    <div class="recipe-detail-title">${recipe.title}</div>
+                    <div class="recipe-detail-desc">${recipe.desc}</div>
+                </div>
+            </div>
+            <div class="steps">
+                ${recipe.steps.map((step, i) => `
+                    <div class="step">
+                        <div class="step-num">${i + 1}</div>
+                        <div class="step-content">
+                            <div class="step-title">${step.title}</div>
+                            ${step.text ? `<div class="step-text">${step.text}</div>` : ''}
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span><span class="code-lang">${step.code.lang}</span></span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                                </div>
+                                <pre><code>${escapeHtml(step.code.content)}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ──────────────────────────────────────────────
+// RENDER TEMPLATES
+// ──────────────────────────────────────────────
+
+function renderTemplates(filter = 'all') {
+    const list = document.getElementById('templates-list');
+    let filtered = filter === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.cat === filter);
+
+    list.innerHTML = filtered.map(tpl => `
+        <div class="template-item" id="tpl-${tpl.id}">
+            <div class="template-header" onclick="toggleTemplate('${tpl.id}')">
+                <div class="template-meta">
+                    <span class="template-icon">${tpl.icon}</span>
+                    <div>
+                        <div class="template-name">${tpl.name}</div>
+                        <div class="template-cat">${tpl.cat}</div>
+                    </div>
+                </div>
+                <span class="template-chevron">▼</span>
+            </div>
+            <div class="template-body">
+                <div class="template-desc">${tpl.desc}</div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span><span class="code-lang">markdown</span> — CLAUDE.md</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    </div>
+                    <pre><code>${escapeHtml(tpl.content)}</code></pre>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function toggleTemplate(id) {
+    const item = document.getElementById(`tpl-${id}`);
+    item.classList.toggle('open');
+}
+
+// ──────────────────────────────────────────────
+// PROMPT BUILDER
+// ──────────────────────────────────────────────
+
+function generatePrompt() {
+    const role = document.getElementById('b-role').value || 'Asistente de código';
+    const goal = document.getElementById('b-goal').value || 'Ayudar con tareas de desarrollo';
+    const constraints = document.getElementById('b-constraints').value;
+    const autonomy = document.getElementById('b-autonomy').value;
+    const model = document.getElementById('b-model').value;
+
+    const selectedTools = Array.from(document.querySelectorAll('#tools-chips .chip.selected'))
+        .map(c => c.dataset.tool);
+
+    const selectedStyle = document.querySelector('.chip.selected[id^="style-"]')?.id.replace('style-','') || 'bullet';
+
+    const styleMap = {
+        'bullet': 'Usa bullet points para listas y pasos',
+        'prose': 'Responde en prosa clara y directa',
+        'table': 'Estructura información en tablas cuando sea posible',
+        'code': 'Prioriza ejemplos de código sobre explicaciones'
+    };
+
+    const autonomyMap = {
+        'ask': 'SIEMPRE pide confirmación antes de hacer cambios en archivos o ejecutar comandos.',
+        'auto': 'Actúa automáticamente en operaciones de bajo riesgo. Confirma solo cambios destructivos.',
+        'full': 'Opera con máxima autonomía. Solo interrumpe para errores críticos o ambigüedades.'
+    };
+
+    const modelMap = {
+        'sonnet': 'claude-sonnet-4-6',
+        'opus': 'claude-opus-4-7',
+        'haiku': 'claude-haiku-4-5'
+    };
+
+    const prompt = `# CLAUDE.md — Generado por Playground
+
+## Identidad y Rol
+${role}
+
+## Objetivo Principal
+${goal}
+
+## Herramientas Permitidas
+${selectedTools.map(t => `- ${t}`).join('\n')}
+
+## Autonomía
+${autonomyMap[autonomy]}
+
+## Estilo de Respuesta
+${styleMap[selectedStyle]}
+
+## Modelo Recomendado
+Usa ${modelMap[model]} para esta tarea.
+${model === 'opus' ? '\n> Justificación: Máxima calidad para tareas complejas que requieren razonamiento profundo.' : ''}
+${model === 'haiku' ? '\n> Justificación: Velocidad y costo mínimo para tareas simples y repetitivas.' : ''}
+${model === 'sonnet' ? '\n> Justificación: Equilibrio óptimo calidad/costo para la mayoría de tareas.' : ''}
+
+${constraints ? `## Restricciones Adicionales\n${constraints.split('\n').map(l => `- ${l}`).join('\n')}` : ''}
+
+## Notas
+- Generado automáticamente. Personaliza según las necesidades del proyecto.
+- Guarda este archivo como CLAUDE.md en la raíz del proyecto.
+- Claude lo leerá automáticamente al iniciar cada sesión.`;
+
+    document.getElementById('builder-output').textContent = prompt;
+    showToast('✨ Prompt generado');
+}
+
+function clearBuilder() {
+    document.getElementById('b-role').value = '';
+    document.getElementById('b-goal').value = '';
+    document.getElementById('b-constraints').value = '';
+    document.getElementById('builder-output').textContent = 'Tu prompt aparecerá aquí...';
+}
+
+function copyOutput() {
+    const text = document.getElementById('builder-output').textContent;
+    navigator.clipboard.writeText(text).then(() => showToast('📋 Copiado al portapapeles'));
+}
+
+function downloadOutput() {
+    const text = document.getElementById('builder-output').textContent;
+    const blob = new Blob([text], {type: 'text/markdown'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'CLAUDE.md';
+    a.click();
+    showToast('⬇️ Descargando CLAUDE.md');
+}
+
+// ──────────────────────────────────────────────
+// NAVIGATION
+// ──────────────────────────────────────────────
+
+document.querySelectorAll('.sidebar-item[data-page]').forEach(item => {
+    item.addEventListener('click', () => {
+        const page = item.dataset.page;
+        const filter = item.dataset.filter;
+
+        document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+        item.classList.add('active');
+
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(`page-${page}`)?.classList.add('active');
+
+        if (page === 'recipes' && filter) {
+            renderRecipes(filter);
+        } else if (page === 'recipes') {
+            renderRecipes();
+        }
+    });
+});
+
+// Template filters
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderTemplates(btn.dataset.tfilter);
+    });
+});
+
+// Tool chips
+document.querySelectorAll('#tools-chips .chip').forEach(chip => {
+    chip.addEventListener('click', () => chip.classList.toggle('selected'));
+});
+
+// Style chips
+['style-bullet','style-prose','style-table','style-code'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', () => {
+        document.querySelectorAll('[id^="style-"]').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+    });
+});
+
+// ──────────────────────────────────────────────
+// UTILS
+// ──────────────────────────────────────────────
+
+function copyCode(btn) {
+    const code = btn.closest('.code-block').querySelector('pre code');
+    navigator.clipboard.writeText(code.textContent).then(() => {
+        btn.textContent = '✅ Copiado';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = 'Copiar';
+            btn.classList.remove('copied');
+        }, 2000);
+        showToast('📋 Código copiado');
+    });
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+// ──────────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────────
+
+renderRecipes();
+renderTemplates('all');
+</script>
+</body>
+</html>

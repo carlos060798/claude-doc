@@ -39,14 +39,24 @@
                         <span class="nav-icon">▣</span> Dashboard</a></li>
                 </ul>
 
-                <p class="nav-group-title">Niveles de Aprendizaje</p>
+                <p class="nav-group-title">Niveles de Aprendizaje (Técnico)</p>
                 <ul class="nav-list">
-                    <li><a href="#nivel-1" class="nav-link" data-section="nivel-1">
+                    <li><a href="#nivel-1" class="nav-link" data-section="nivel-1" data-mode="technical">
                         <span class="nav-badge nivel-1">1</span> Fundamentos</a></li>
-                    <li><a href="#nivel-2" class="nav-link" data-section="nivel-2">
+                    <li><a href="#nivel-2" class="nav-link" data-section="nivel-2" data-mode="technical">
                         <span class="nav-badge nivel-2">2</span> Avanzado (MCP)</a></li>
-                    <li><a href="#nivel-3" class="nav-link" data-section="nivel-3">
+                    <li><a href="#nivel-3" class="nav-link" data-section="nivel-3" data-mode="technical">
                         <span class="nav-badge nivel-3">3</span> Experto (Skills)</a></li>
+                </ul>
+
+                <p class="nav-group-title">Para No-Programadores</p>
+                <ul class="nav-list">
+                    <li><a href="#intro-acc" class="nav-link hidden" data-section="intro-acc" data-mode="accessible">
+                        <span class="nav-icon">📘</span> ¿Qué es Claude Code?</a></li>
+                    <li><a href="#casos-rol" class="nav-link hidden" data-section="casos-rol" data-mode="accessible">
+                        <span class="nav-icon">👥</span> Casos por Rol</a></li>
+                    <li><a href="#glosario" class="nav-link hidden" data-section="glosario" data-mode="accessible">
+                        <span class="nav-icon">📚</span> Glosario</a></li>
                 </ul>
 
                 <p class="nav-group-title">Producción</p>
@@ -92,9 +102,15 @@
                     <kbd class="search-shortcut">Ctrl + K</kbd>
                 </div>
                 <div class="topbar-actions">
-                    <span class="user-pill" title="Modo activo">
-                        <span class="status-dot online"></span> Modo Senior
-                    </span>
+                    <div style="display:flex;gap:8px;margin-right:12px;">
+                        <a href="prompt-maestro.html" style="padding:5px 12px;border:1px solid var(--border-default,#2a3444);border-radius:999px;font-size:0.78em;color:var(--text-secondary,#9aa7b8);text-decoration:none;">⚡ Prompt Maestro</a>
+                        <a href="playground.html" style="padding:5px 12px;border:1px solid var(--border-default,#2a3444);border-radius:999px;font-size:0.78em;color:var(--text-secondary,#9aa7b8);text-decoration:none;">🧪 Playground</a>
+                    </div>
+                    <label class="mode-toggle-label" title="Cambiar entre Modo Técnico y Accesible">
+                        <input type="checkbox" id="mode-toggle" class="mode-toggle-checkbox">
+                        <span class="mode-toggle-switch"></span>
+                        <span id="mode-label" class="mode-label">🔧 Técnico</span>
+                    </label>
                 </div>
             </header>
 
@@ -102,7 +118,7 @@
             <div id="search-results" class="search-results" hidden></div>
 
             <!-- ====== SECCIÓN: DASHBOARD ====== -->
-            <section class="content-section active" data-section="dashboard">
+            <section class="content-section active" data-section="dashboard" data-mode="both">
                 <div class="section-header">
                     <span class="breadcrumb">Inicio / Dashboard</span>
                     <h2>Bienvenido a la Guía de Claude Code</h2>
@@ -165,7 +181,7 @@
             </section>
 
             <!-- ====== SECCIÓN: NIVEL 1 ====== -->
-            <section class="content-section" data-section="nivel-1">
+            <section class="content-section" data-section="nivel-1" data-mode="technical">
                 <div class="section-header">
                     <span class="breadcrumb">Niveles / Nivel 1</span>
                     <h2><span class="level-tag level-tag--1">Nivel 1</span> Fundamentos</h2>
@@ -261,7 +277,7 @@ claude -p "Hola, ¿funcionas?"</code></pre>
             </section>
 
             <!-- ====== SECCIÓN: NIVEL 2 ====== -->
-            <section class="content-section" data-section="nivel-2">
+            <section class="content-section" data-section="nivel-2" data-mode="technical">
                 <div class="section-header">
                     <span class="breadcrumb">Niveles / Nivel 2</span>
                     <h2><span class="level-tag level-tag--2">Nivel 2</span> Avanzado: MCP & Tokens</h2>
@@ -405,7 +421,7 @@ Claude: Según tu memoria, usas PostgreSQL en AWS RDS con Redis de cache.
             </section>
 
             <!-- ====== SECCIÓN: NIVEL 3 ====== -->
-            <section class="content-section" data-section="nivel-3">
+            <section class="content-section" data-section="nivel-3" data-mode="technical">
                 <div class="section-header">
                     <span class="breadcrumb">Niveles / Nivel 3</span>
                     <h2><span class="level-tag level-tag--3">Nivel 3</span> Experto: Skills & Automatización</h2>
@@ -575,7 +591,7 @@ Luego revisa cambios y haz commit.
             </section>
 
             <!-- ====== SECCIÓN: MEMORIA ====== -->
-            <section class="content-section" data-section="memoria">
+            <section class="content-section" data-section="memoria" data-mode="technical">
                 <div class="section-header">
                     <span class="breadcrumb">Producción / Tu Progreso</span>
                     <h2>💾 Sistema de Memoria Persistente</h2>
@@ -624,7 +640,7 @@ Luego pregunta si continúas desde ahí o cambias de tema.</code></pre>
             </section>
 
             <!-- ====== SECCIÓN: SEGURIDAD ====== -->
-            <section class="content-section" data-section="seguridad">
+            <section class="content-section" data-section="seguridad" data-mode="technical">
                 <div class="section-header">
                     <span class="breadcrumb">Producción / Seguridad</span>
                     <h2>Seguridad & Hardening</h2>
@@ -734,7 +750,7 @@ claude mcp add github -e GITHUB_TOKEN -- npx -y @modelcontextprotocol/server-git
             </section>
 
             <!-- ====== SECCIÓN: CASOS DE USO ====== -->
-            <section class="content-section" data-section="casos-uso">
+            <section class="content-section" data-section="casos-uso" data-mode="technical">
                 <div class="section-header">
                     <span class="breadcrumb">Producción / Casos de Uso</span>
                     <h2>Casos de Uso Prácticos</h2>
@@ -866,7 +882,7 @@ Devuelve feedback agrupado por prioridad (🔴 bloqueante,
             </section>
 
             <!-- ====== SECCIÓN: SIMULADOR DE TERMINAL ====== -->
-            <section class="content-section" data-section="terminal">
+            <section class="content-section" data-section="terminal" data-mode="technical">
                 <div class="section-header">
                     <span class="breadcrumb">Producción / Simulador</span>
                     <h2>Simulador de Terminal</h2>
@@ -907,7 +923,7 @@ Devuelve feedback agrupado por prioridad (🔴 bloqueante,
             </section>
 
             <!-- ====== SECCIÓN: RECURSOS ====== -->
-            <section class="content-section" data-section="recursos">
+            <section class="content-section" data-section="recursos" data-mode="technical">
                 <div class="section-header">
                     <span class="breadcrumb">Producción / Recursos</span>
                     <h2>Lecturas Obligatorias</h2>
@@ -975,6 +991,267 @@ Devuelve feedback agrupado por prioridad (🔴 bloqueante,
                         <span class="resource-host">github.com</span>
                     </a>
 
+                </div>
+            </section>
+
+            <!-- ============== SECCIONES ACCESIBLES PARA NO-PROGRAMADORES ============== -->
+
+            <!-- Sección: Intro Accesible -->
+            <section class="content-section hidden" data-section="intro-acc" data-mode="accessible">
+                <h2>¿Qué es Claude Code?</h2>
+                <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 2em;">
+                    Claude Code es una forma completamente diferente de trabajar. En lugar de escribir todo manualmente,
+                    <strong>le cuentas qué quieres</strong> y Claude lo entiende de inmediato, considerando todo tu proyecto.
+                </p>
+
+                <div style="background: rgba(255, 122, 89, 0.1); border-left: 4px solid #ff7a59; padding: 1.5em; margin: 2em 0; border-radius: 4px;">
+                    <h3 style="margin-top: 0;">3 Razones clave:</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 1em;">💨 <strong>Más rápido:</strong> No escribes código repetitivo, Claude lo genera por ti.</li>
+                        <li style="margin-bottom: 1em;">🎯 <strong>Entiende tu contexto:</strong> Conoce tu proyecto completo, no solo una función.</li>
+                        <li>🔄 <strong>Aprende tu estilo:</strong> Recuerda tus decisiones y preferencias entre sesiones.</li>
+                    </ul>
+                </div>
+
+                <h3>Conceptos clave ilustrados</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5em; margin: 2em 0;">
+                    <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border: 1px solid #2a2a4e;">
+                        <h4 style="margin-top: 0;">⌨️ Qué es un comando</h4>
+                        <p>Instrucciones especiales que empiezan con `/` para hacer cosas en Claude Code.</p>
+                        <p style="font-size: 0.9em; color: #9aa7b8;"><strong>Ejemplo:</strong> `/help` = pedir ayuda, `/model` = cambiar modelo</p>
+                    </div>
+                    <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border: 1px solid #2a2a4e;">
+                        <h4 style="margin-top: 0;">📚 Qué es contexto</h4>
+                        <p>Información que Claude recuerda durante tu sesión: archivos, instrucciones, historial.</p>
+                        <p style="font-size: 0.9em; color: #9aa7b8;"><strong>Analogía:</strong> Cuanto más le dices, mejor te entiende.</p>
+                    </div>
+                    <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border: 1px solid #2a2a4e;">
+                        <h4 style="margin-top: 0;">🔌 Qué es MCP</h4>
+                        <p>Conexiones a otras herramientas especializadas (GitHub, Slack, Jira, etc.).</p>
+                        <p style="font-size: 0.9em; color: #9aa7b8;"><strong>Analogía:</strong> Como enchufes especiales que amplían poderes.</p>
+                    </div>
+                </div>
+
+                <h3>3 comandos esenciales para empezar</h3>
+                <table style="width: 100%; margin: 2em 0; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #2a2a4e;">
+                            <th style="text-align: left; padding: 0.75em; font-weight: 600;">Comando</th>
+                            <th style="text-align: left; padding: 0.75em; font-weight: 600;">Qué hace</th>
+                            <th style="text-align: left; padding: 0.75em; font-weight: 600;">Cuándo usarlo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #2a2a4e;">
+                            <td style="padding: 0.75em;"><code>/help</code></td>
+                            <td style="padding: 0.75em;">Muestra todos los comandos disponibles</td>
+                            <td style="padding: 0.75em;">Cuando no sabes qué hacer</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #2a2a4e;">
+                            <td style="padding: 0.75em;"><code>/model</code></td>
+                            <td style="padding: 0.75em;">Cambia el tipo de Claude (más rápido o más potente)</td>
+                            <td style="padding: 0.75em;">Para tareas simples (ahorra dinero)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75em;"><code>@archivo</code></td>
+                            <td style="padding: 0.75em;">Comparte un archivo o carpeta con Claude</td>
+                            <td style="padding: 0.75em;">Para darle contexto específico</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Primer caso: análisis de datos (PM)</h3>
+                <div style="background: #1a1a2e; padding: 1.5em; margin: 2em 0; border-radius: 8px; border-left: 4px solid #ff7a59;">
+                    <h4 style="margin-top: 0;">📊 Escenario: Analizar feedback de clientes</h4>
+                    <p><strong>El problema:</strong> Tienes 100 comentarios de clientes en un CSV y necesitas identificar temas comunes.</p>
+                    <p><strong>La solución con Claude Code:</strong></p>
+                    <ol>
+                        <li>Subes el CSV: <code>@feedback.csv</code></li>
+                        <li>Pides: "Analiza estos comentarios y dame los 5 temas más comunes con ejemplos"</li>
+                        <li>Claude devuelve: Lista estructurada de temas con frecuencia y citas reales</li>
+                        <li>Tiempo total: 5 minutos (vs 1 hora manual)</li>
+                    </ol>
+                </div>
+
+                <div style="text-align: center; margin-top: 3em; padding: 2em; background: rgba(255, 122, 89, 0.1); border-radius: 8px;">
+                    <h3 style="margin-top: 0;">¿Listo para empezar?</h3>
+                    <p style="margin-bottom: 1.5em;">Continúa explorando casos de uso específicos para tu rol.</p>
+                    <button class="nav-link" data-section="casos-rol" style="padding: 0.75em 1.5em; background: #ff7a59; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em;">
+                        Ver casos por rol →
+                    </button>
+                </div>
+            </section>
+
+            <!-- Sección: Casos por Rol -->
+            <section class="content-section hidden" data-section="casos-rol" data-mode="accessible">
+                <h2>Casos de uso por tu rol</h2>
+                <p style="font-size: 1.1em; color: #9aa7b8; margin-bottom: 2em;">
+                    Elige tu rol para ver cómo Claude Code acelera tu trabajo diario.
+                </p>
+
+                <!-- Tabs para roles -->
+                <div style="display: flex; gap: 1em; margin: 2em 0; border-bottom: 2px solid #2a2a4e; overflow-x: auto;">
+                    <button class="role-tab active" data-role="pm" style="padding: 1em; border: none; background: none; color: #ff7a59; font-weight: 600; cursor: pointer; border-bottom: 3px solid #ff7a59; white-space: nowrap;">📊 Product Manager</button>
+                    <button class="role-tab" data-role="writer" style="padding: 1em; border: none; background: none; color: #9aa7b8; font-weight: 600; cursor: pointer; white-space: nowrap;">✏️ Content Creator</button>
+                    <button class="role-tab" data-role="business" style="padding: 1em; border: none; background: none; color: #9aa7b8; font-weight: 600; cursor: pointer; white-space: nowrap;">🏢 Business/Ops</button>
+                </div>
+
+                <!-- PM Content -->
+                <div class="role-content" data-role="pm" style="display: block;">
+                    <h3>Product Manager: Analizar datos, escribir specs, entender el mercado</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5em; margin: 2em 0;">
+                        <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border: 1px solid #2a2a4e;">
+                            <h4>📊 De CSV a insights en 5 minutos</h4>
+                            <p><strong>Problema:</strong> Datos de 100 filas, quieres insights clave.</p>
+                            <p><strong>Solución:</strong></p>
+                            <ol style="font-size: 0.9em;">
+                                <li>Subes CSV: <code>@datos.csv</code></li>
+                                <li>Pides: "Analiza y dame top 5 insights"</li>
+                                <li>Obtienes: Resumen ejecutivo automático</li>
+                            </ol>
+                            <p><strong>Herramientas clave:</strong> <code>@archivo</code>, <code>/memory</code></p>
+                        </div>
+                        <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border: 1px solid #2a2a4e;">
+                            <h4>📋 Escribir PRD basado en datos</h4>
+                            <p><strong>Problema:</strong> Necesitas PRD de feature nueva.</p>
+                            <p><strong>Solución:</strong></p>
+                            <ol style="font-size: 0.9em;">
+                                <li>Describes contexto + subes datos</li>
+                                <li>Pides: "Escribe PRD estructurado"</li>
+                                <li>Claude formula todo: objetivos, reqs, success metrics</li>
+                            </ol>
+                            <p><strong>Herramientas clave:</strong> <code>/model</code>, <code>/memory</code></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Writer Content -->
+                <div class="role-content" data-role="writer" style="display: none;">
+                    <h3>Content Creator: Generar ideas, escalar producción, mantener tono</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5em; margin: 2em 0;">
+                        <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border: 1px solid #2a2a4e;">
+                            <h4>✏️ De 1 idea a 20 formatos</h4>
+                            <p><strong>Problema:</strong> 1 idea de blog, necesitas tweets, emails, resúmenes.</p>
+                            <p><strong>Solución:</strong></p>
+                            <ol style="font-size: 0.9em;">
+                                <li>Das idea: "Cambios en React 19"</li>
+                                <li>Claude genera 20 formatos automáticamente</li>
+                                <li>Todos mantienen tu tono y estilo</li>
+                            </ol>
+                            <p><strong>Herramientas clave:</strong> <code>/memory</code>, <code>/model</code></p>
+                        </div>
+                        <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border: 1px solid #2a2a4e;">
+                            <h4>📧 Resumen ejecutivo en 2 páginas</h4>
+                            <p><strong>Problema:</strong> Documento de 50 páginas, necesitas resumen para junta.</p>
+                            <p><strong>Solución:</strong></p>
+                            <ol style="font-size: 0.9em;">
+                                <li>Subes documento: <code>@reporte-anual.pdf</code></li>
+                                <li>Pides: "Resumen ejecutivo en 2 páginas"</li>
+                                <li>Obtienes: Puntos clave formateados</li>
+                            </ol>
+                            <p><strong>Herramientas clave:</strong> <code>@archivo</code>, <code>/model</code></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business Content -->
+                <div class="role-content" data-role="business" style="display: none;">
+                    <h3>Business/Operations: Automatizar procesos, generar reportes, ahorrar tiempo</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5em; margin: 2em 0;">
+                        <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border: 1px solid #2a2a4e;">
+                            <h4>🔄 Procesar 1000 registros automáticamente</h4>
+                            <p><strong>Problema:</strong> 1000 órdenes que necesitan normalización.</p>
+                            <p><strong>Solución:</strong></p>
+                            <ol style="font-size: 0.9em;">
+                                <li>Subes dataset: <code>@ordenes.csv</code></li>
+                                <li>Claude procesa todo en una pasada</li>
+                                <li>Devuelve datos limpios + formateados</li>
+                            </ol>
+                            <p><strong>Herramientas clave:</strong> <code>@archivo</code>, <code>/config</code></p>
+                        </div>
+                        <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border: 1px solid #2a2a4e;">
+                            <h4>📈 Reporte semanal automático</h4>
+                            <p><strong>Problema:</strong> Cada semana recopilas datos manualmente.</p>
+                            <p><strong>Solución:</strong></p>
+                            <ol style="font-size: 0.9em;">
+                                <li>Configuras Claude para ejecutarse automáticamente</li>
+                                <li>Recoge datos + genera reporte</li>
+                                <li>Envía automáticamente cada lunes</li>
+                            </ol>
+                            <p><strong>Herramientas clave:</strong> <code>/config</code>, <code>/memory</code></p>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    // Simple tab switching
+                    document.querySelectorAll('.role-tab').forEach(tab => {
+                        tab.addEventListener('click', () => {
+                            const role = tab.dataset.role;
+                            // Update active tab
+                            document.querySelectorAll('.role-tab').forEach(t => {
+                                t.style.color = '#9aa7b8';
+                                t.style.borderBottom = 'none';
+                            });
+                            tab.style.color = '#ff7a59';
+                            tab.style.borderBottom = '3px solid #ff7a59';
+                            // Update content
+                            document.querySelectorAll('.role-content').forEach(c => c.style.display = 'none');
+                            document.querySelector(`[data-role="${role}"]`).style.display = 'block';
+                        });
+                    });
+                </script>
+            </section>
+
+            <!-- Sección: Glosario -->
+            <section class="content-section hidden" data-section="glosario" data-mode="accessible">
+                <h2>Glosario: Términos que necesitas conocer</h2>
+                <p style="font-size: 1.1em; color: #9aa7b8; margin-bottom: 2em;">
+                    Explicaciones simples de términos técnicos, con analogías y ejemplos reales.
+                </p>
+
+                <div style="display: grid; gap: 1.5em;">
+                    <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border-left: 4px solid #ff7a59;">
+                        <h3 style="margin-top: 0; color: #ff7a59;">Contexto</h3>
+                        <p><strong>Definición simple:</strong> Información que Claude Code recuerda durante tu sesión.</p>
+                        <p><strong>Analogía:</strong> Es como tu conversación con un amigo — mientras más le dices, mejor te entiende.</p>
+                        <p><strong>Ejemplo:</strong> Si subes un archivo de datos, Claude lo recuerda para los siguientes comandos. Si mencionas que eres un PM, recordará eso.</p>
+                    </div>
+
+                    <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border-left: 4px solid #ff7a59;">
+                        <h3 style="margin-top: 0; color: #ff7a59;">Token</h3>
+                        <p><strong>Definición simple:</strong> Una pequeña unidad de texto, aproximadamente una palabra.</p>
+                        <p><strong>Analogía:</strong> Son como monedas del lenguaje. Cada pregunta y respuesta gasta cierta cantidad de tokens.</p>
+                        <p><strong>Ejemplo:</strong> Una pregunta simple = ~50 tokens. Un documento de 5 páginas = ~2000 tokens.</p>
+                    </div>
+
+                    <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border-left: 4px solid #ff7a59;">
+                        <h3 style="margin-top: 0; color: #ff7a59;">MCP (Model Context Protocol)</h3>
+                        <p><strong>Definición simple:</strong> Conexiones a herramientas especiales que Claude Code puede usar.</p>
+                        <p><strong>Analogía:</strong> Como enchufes especializados. Puedes conectar GitHub, Slack, Jira, etc., y Claude accede a ellos automáticamente.</p>
+                        <p><strong>Ejemplo:</strong> Con MCP de GitHub, Claude puede leer tus commits sin que le copies manualmente el código.</p>
+                    </div>
+
+                    <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border-left: 4px solid #ff7a59;">
+                        <h3 style="margin-top: 0; color: #ff7a59;">Skill</h3>
+                        <p><strong>Definición simple:</strong> Un comando personalizado que creas para tareas repetitivas.</p>
+                        <p><strong>Analogía:</strong> Como una receta: defines los pasos una vez y luego la reutilizas infinitas veces.</p>
+                        <p><strong>Ejemplo:</strong> Crear `/analizar-feedback` — tu Skill personalizado que procesa customer feedback automáticamente.</p>
+                    </div>
+
+                    <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border-left: 4px solid #ff7a59;">
+                        <h3 style="margin-top: 0; color: #ff7a59;">Memoria</h3>
+                        <p><strong>Definición simple:</strong> Información que Claude Code guarda entre sesiones.</p>
+                        <p><strong>Analogía:</strong> Tu cuaderno personal: no olvida decisiones, preferencias y contexto del proyecto.</p>
+                        <p><strong>Ejemplo:</strong> Guardar "usa siempre TypeScript en este proyecto" y Claude lo recordará mañana, la próxima semana, siempre.</p>
+                    </div>
+
+                    <div style="background: #1a1a2e; padding: 1.5em; border-radius: 8px; border-left: 4px solid #ff7a59;">
+                        <h3 style="margin-top: 0; color: #ff7a59;">Comando</h3>
+                        <p><strong>Definición simple:</strong> Una instrucción que empiezas con `/` o que ejecutas en la terminal.</p>
+                        <p><strong>Analogía:</strong> Como accesos rápidos o atajos: `/help` = pedir ayuda, `/clear` = empezar de cero.</p>
+                        <p><strong>Ejemplo:</strong> Escribes `/model claude-opus-4-7` para cambiar al modelo más potente.</p>
+                    </div>
                 </div>
             </section>
 

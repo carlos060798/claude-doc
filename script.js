@@ -353,6 +353,186 @@
     };
 
     /* ============================================================
+       1.6 DATOS — Glosario interactivo para audiencia accesible
+       Términos con explicación simple, analogía y ejemplo.
+       ============================================================ */
+    const GLOSSARY = {
+        contexto: {
+            term: 'Contexto',
+            simple: 'Información que Claude Code recuerda durante tu sesión.',
+            analogy: 'Tu conversación con un amigo — mientras más le dices, mejor te entiende.',
+            example: 'Si subes un archivo de datos, Claude lo recuerda para los siguientes comandos.'
+        },
+        token: {
+            term: 'Token',
+            simple: 'Una pequeña unidad de texto (aproximadamente una palabra).',
+            analogy: 'Son como monedas del lenguaje: cada pregunta y respuesta gasta cierta cantidad.',
+            example: 'Una pregunta simple = ~50 tokens. Un documento de 5 páginas = ~2000 tokens.'
+        },
+        mcp: {
+            term: 'MCP (Model Context Protocol)',
+            simple: 'Conexiones a herramientas especiales que Claude Code puede usar.',
+            analogy: 'Como enchufes especializados: puedes conectar GitHub, Slack, Jira, etc.',
+            example: 'Con MCP de GitHub, Claude puede leer tus commits sin que le copies manualmente el código.'
+        },
+        skill: {
+            term: 'Skill',
+            simple: 'Un comando personalizado que creas para tareas repetitivas.',
+            analogy: 'Como una receta: defines los pasos una vez y luego la reutilizas.',
+            example: '/analizar-feedback — tu Skill personalizado para procesar customer feedback.'
+        },
+        memoria: {
+            term: 'Memoria',
+            simple: 'Información que Claude Code guarda entre sesiones.',
+            analogy: 'Tu cuaderno personal: no olvida decisiones, preferencias y contexto.',
+            example: 'Guardar "usa siempre TypeScript en este proyecto" y Claude lo recordará mañana.'
+        },
+        comando: {
+            term: 'Comando',
+            simple: 'Una instrucción que empiezas con `/` o que ejecutas en la terminal.',
+            analogy: 'Como un acceso rápido: `/help` = pedir ayuda, `/clear` = empezar de cero.',
+            example: '`/model claude-opus-4-7` — cambiar al modelo más potente.'
+        }
+    };
+
+    /* ============================================================
+       1.7 DATOS — Diagramas ASCII para explicar conceptos
+       Ilustraciones simples para audiencia visual.
+       ============================================================ */
+    const DIAGRAMS = {
+        basicFlow: `
+  Tu pregunta
+      |
+      v
+  Claude Code
+      |
+      +-- Lee archivos locales (@archivo)
+      +-- Conecta a GitHub (via MCP)
+      +-- Ejecuta comandos (/help, /model)
+      |
+      v
+  Respuesta inteligente`,
+
+        mcp: `
+  Tu Claude Code
+       |
+       +-- Lectura de archivos (local)
+       |
+       +-- GitHub (via MCP) → leer commits, PRs
+       |
+       +-- Slack (via MCP) → leer mensajes
+       |
+       +-- Jira (via MCP) → leer tickets
+       |
+       +-- Más...`,
+
+        memory: `
+  Sesión 1          Sesión 2          Sesión 3
+  --------          --------          --------
+  Context A    →    Recuerda A   →    Recuerda A
+  Context B    →    Recuerda B   →    Recuerda B
+                    Context C    →    Recuerda C
+                                      Context D`,
+
+        process: `
+  CSV           Análisis           Insight
+  Data    →     (Claude Code)  →    Documento
+  Files         Transformación      PRD/Reporte`
+    };
+
+    /* ============================================================
+       1.8 DATOS — Niveles accesibles para no-programadores (A-C)
+       ============================================================ */
+    const LEVELS_ACCESSIBLE = {
+        A: {
+            title: 'Nivel A: ¿Qué es Claude Code?',
+            description: 'Para principiantes: conceptos básicos sin asumir experiencia en terminal.',
+            sections: [
+                {
+                    id: 'intro-video',
+                    name: '¿Por qué existe Claude Code?',
+                    content: 'Claude Code es una forma diferente de trabajar: en lugar de escribir todo manualmente, cuentas qué quieres y Claude lo entiende de inmediato.'
+                },
+                {
+                    id: 'conceptos-clave',
+                    name: 'Conceptos clave ilustrados',
+                    subsections: [
+                        { name: 'Qué es un comando', icon: '⌨️', desc: 'Instrucciones que empiezan con `/` para hacerle cosas a Claude Code.' },
+                        { name: 'Qué es contexto', icon: '📚', desc: 'Información que Claude recuerda: archivos, instrucciones, historial.' },
+                        { name: 'Qué es MCP', icon: '🔌', desc: 'Conexiones a otras herramientas como GitHub, Slack, etc.' }
+                    ]
+                }
+            ]
+        },
+        B: {
+            title: 'Nivel B: Casos de uso por tu rol',
+            description: 'Para usuarios específicos: cómo Claude Code te ayuda según tu trabajo.',
+            roles: [
+                {
+                    id: 'pm',
+                    name: 'Product Manager',
+                    icon: '📊',
+                    description: 'Analizar datos, escribir specs, entender el mercado.',
+                    useCases: [
+                        {
+                            title: 'De CSV a insights en 5 minutos',
+                            problem: 'Tienes una hoja de datos de 100 filas y quieres insights clave.',
+                            solution: 'Subes el CSV con @archivo y pides análisis. Claude devuelve resumen, trends, recomendaciones.',
+                            tools: ['@archivo', '/memory', '/model']
+                        },
+                        {
+                            title: 'Escribir PRD basado en datos',
+                            problem: 'Necesitas un documento PRD completo para una feature.',
+                            solution: 'Describes el contexto + subes datos + pides PRD. Claude estructura todo automáticamente.',
+                            tools: ['/memory', '@archivo', '/model']
+                        }
+                    ]
+                },
+                {
+                    id: 'writer',
+                    name: 'Content Creator',
+                    icon: '✏️',
+                    description: 'Generar ideas, escalar producción, mantener tono.',
+                    useCases: [
+                        {
+                            title: 'De 1 idea a 20 formatos diferentes',
+                            problem: 'Tienes una idea de blog pero necesitas tweets, emails, resumen, etc.',
+                            solution: 'Le das la idea a Claude. Él genera automáticamente todos los formatos manteniendo tu tono.',
+                            tools: ['/memory', '/model']
+                        },
+                        {
+                            title: 'Generar resumen ejecutivo para junta',
+                            problem: 'Necesitas un resumen en 2 páginas de un documento de 50 páginas.',
+                            solution: 'Subes el documento (@archivo) y pides resumen ejecutivo. Obtienes puntos clave formateados.',
+                            tools: ['@archivo', '/model']
+                        }
+                    ]
+                },
+                {
+                    id: 'business',
+                    name: 'Business/Operations',
+                    icon: '🏢',
+                    description: 'Automatizar procesos, generar reportes, ahorrar tiempo.',
+                    useCases: [
+                        {
+                            title: 'Procesar 1000 registros automáticamente',
+                            problem: 'Tienes 1000 registros de órdenes que necesitan normalización y formateo.',
+                            solution: 'Subes el dataset y Claude procesa todo de una vez, devolviendo datos limpios.',
+                            tools: ['@archivo', '/config', '/memory']
+                        },
+                        {
+                            title: 'Generar reporte semanal automático',
+                            problem: 'Cada semana necesitas recopilar datos y hacer un reporte.',
+                            solution: 'Configuras Claude Code para ejecutarse automáticamente y enviar el reporte.',
+                            tools: ['/config', '/memory', 'Headless']
+                        }
+                    ]
+                }
+            ]
+        }
+    };
+
+    /* ============================================================
        2. ESCENARIOS — Simulador de terminal
        Cada escenario es una secuencia de líneas. type:
          'prompt'  → línea con $ (shell)
@@ -627,11 +807,64 @@
     /* ============================================================
        5. NAVEGACIÓN ENTRE SECCIONES
        ============================================================ */
+    /* ============================================================
+       3.5. MODO TÉCNICO vs ACCESIBLE — Toggle y manejo
+       ============================================================ */
+    function setupModeToggle() {
+        const toggle = document.getElementById('mode-toggle');
+        if (!toggle) return;
+
+        // Cargar modo guardado o defaultear a 'technical'
+        let currentMode = localStorage.getItem('docMode') || 'technical';
+        applyMode(currentMode);
+
+        // Listener en el toggle
+        toggle.addEventListener('change', (e) => {
+            const newMode = e.target.checked ? 'accessible' : 'technical';
+            localStorage.setItem('docMode', newMode);
+            applyMode(newMode);
+        });
+    }
+
+    function applyMode(mode) {
+        const toggle = document.getElementById('mode-toggle');
+        if (toggle) toggle.checked = mode === 'accessible';
+
+        // Mostrar/ocultar secciones según modo
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach((section) => {
+            const sectionMode = section.dataset.mode || 'technical';
+            if (sectionMode === mode || sectionMode === 'both') {
+                section.classList.remove('hidden');
+            } else {
+                section.classList.add('hidden');
+            }
+        });
+
+        // Actualizar sidebar según modo
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach((link) => {
+            const linkMode = link.dataset.mode || 'technical';
+            if (linkMode === mode || linkMode === 'both') {
+                link.classList.remove('hidden');
+            } else {
+                link.classList.add('hidden');
+            }
+        });
+
+        // Actualizar indicador visual
+        const modeLabel = document.getElementById('mode-label');
+        if (modeLabel) {
+            modeLabel.textContent = mode === 'accessible' ? '📘 Accesible' : '🔧 Técnico';
+        }
+    }
+
     function setupNavigation() {
         const links = document.querySelectorAll('.nav-link, [data-jump]');
-        const sections = document.querySelectorAll('.content-section');
 
         function goTo(sectionId) {
+            // Re-buscar secciones cada vez (dinámicamente, por si el modo cambió)
+            const sections = document.querySelectorAll('.content-section:not(.hidden)');
             sections.forEach((s) => s.classList.toggle('active', s.dataset.section === sectionId));
             document.querySelectorAll('.nav-link').forEach((l) =>
                 l.classList.toggle('active', l.dataset.section === sectionId)
@@ -1109,6 +1342,9 @@
        10. BOOTSTRAP
        ============================================================ */
     document.addEventListener('DOMContentLoaded', () => {
+        // 0.5) Modo técnico vs accesible
+        setupModeToggle();
+
         // 1) Datos
         renderCommandsTable('commands-table-nivel-1', 1);
         renderCommandsTable('commands-table-nivel-2', 2);
