@@ -49,6 +49,18 @@
                         <span class="nav-badge nivel-3">3</span> Experto (Skills)</a></li>
                 </ul>
 
+                <p class="nav-group-title">Profundización</p>
+                <ul class="nav-list">
+                    <li><a href="#agente-sdk" class="nav-link" data-section="agente-sdk" data-mode="technical">
+                        <span class="nav-icon">🤖</span> Agent SDK</a></li>
+                    <li><a href="#api-anthropic" class="nav-link" data-section="api-anthropic" data-mode="technical">
+                        <span class="nav-icon">⚡</span> Anthropic API</a></li>
+                    <li><a href="#skills-avanzados" class="nav-link" data-section="skills-avanzados" data-mode="technical">
+                        <span class="nav-icon">🧩</span> Skills Avanzados</a></li>
+                    <li><a href="#ci-cd" class="nav-link" data-section="ci-cd" data-mode="technical">
+                        <span class="nav-icon">🔁</span> CI/CD & Headless</a></li>
+                </ul>
+
                 <p class="nav-group-title">Para No-Programadores</p>
                 <ul class="nav-list">
                     <li><a href="#intro-acc" class="nav-link hidden" data-section="intro-acc" data-mode="accessible">
@@ -67,6 +79,8 @@
                         <span class="nav-icon">⛨</span> Seguridad & Hardening</a></li>
                     <li><a href="#casos-uso" class="nav-link" data-section="casos-uso">
                         <span class="nav-icon">⚙</span> Casos de Uso</a></li>
+                    <li><a href="#mejores-practicas" class="nav-link" data-section="mejores-practicas">
+                        <span class="nav-icon">✦</span> Mejores Prácticas</a></li>
                     <li><a href="#terminal" class="nav-link" data-section="terminal">
                         <span class="nav-icon">▶</span> Simulador Terminal</a></li>
                     <li><a href="#recursos" class="nav-link" data-section="recursos">
@@ -142,13 +156,23 @@
                     </div>
                     <div class="stat-card">
                         <span class="stat-label">Casos prácticos</span>
-                        <span class="stat-value">6+</span>
-                        <span class="stat-trend">Refactor, Review, MCP</span>
+                        <span class="stat-value" id="stat-cases">10+</span>
+                        <span class="stat-trend">Refactor, Review, API, CI/CD</span>
                     </div>
                     <div class="stat-card">
                         <span class="stat-label">MCP Transports</span>
                         <span class="stat-value">3</span>
                         <span class="stat-trend">stdio · SSE · HTTP</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">API Endpoints</span>
+                        <span class="stat-value">8+</span>
+                        <span class="stat-trend">Messages, Batch, Files, Models</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Skills templates</span>
+                        <span class="stat-value" id="stat-skills">12+</span>
+                        <span class="stat-trend">Listos para usar en tu equipo</span>
                     </div>
                 </div>
 
@@ -169,6 +193,24 @@
                         <span class="path-level">Nivel 3</span>
                         <h3>Experto: Skills</h3>
                         <p>Crea Skills personalizadas, automatiza flujos y orquesta sub-agentes.</p>
+                        <span class="path-arrow">→</span>
+                    </a>
+                    <a href="#agente-sdk" class="path-card path-card--sdk" data-jump="agente-sdk">
+                        <span class="path-level">SDK</span>
+                        <h3>Agent SDK</h3>
+                        <p>Construye agentes autónomos con el SDK oficial de Anthropic en TypeScript o Python.</p>
+                        <span class="path-arrow">→</span>
+                    </a>
+                    <a href="#api-anthropic" class="path-card path-card--api" data-jump="api-anthropic">
+                        <span class="path-level">API</span>
+                        <h3>Anthropic API</h3>
+                        <p>Messages, streaming, tool use, prompt caching y Batch API con ejemplos reales.</p>
+                        <span class="path-arrow">→</span>
+                    </a>
+                    <a href="#ci-cd" class="path-card path-card--ci" data-jump="ci-cd">
+                        <span class="path-level">CI/CD</span>
+                        <h3>Automatización</h3>
+                        <p>Modo headless, GitHub Actions, pipelines de revisión y despliegue asistido.</p>
                         <span class="path-arrow">→</span>
                     </a>
                 </div>
@@ -881,6 +923,1646 @@ Devuelve feedback agrupado por prioridad (🔴 bloqueante,
                 </div>
             </section>
 
+            <!-- ====== SECCIÓN: AGENT SDK ====== -->
+            <section class="content-section" data-section="agente-sdk" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Profundización / Agent SDK</span>
+                    <h2>🤖 Claude Agent SDK <span style="font-size:0.6em;font-weight:400;color:var(--text-muted);vertical-align:middle;">@anthropic-ai/claude-agent-sdk</span></h2>
+                    <p class="section-lead">
+                        El Agent SDK te permite construir agentes autónomos programáticamente,
+                        integrando Claude en tus propias aplicaciones con control total sobre
+                        el ciclo de herramientas, la memoria y la orquestación multi-agente.
+                    </p>
+                </div>
+
+                <h3 class="block-title">¿Por qué usar el SDK vs Claude Code directamente?</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>Claude Code CLI</h4>
+                        <ul class="bullet-list">
+                            <li>Sesiones interactivas en terminal</li>
+                            <li>Ideal para desarrollo diario del equipo</li>
+                            <li>Skills y hooks sin código</li>
+                            <li>El agente controla el flujo</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card comparison-card--accent">
+                        <h4>Agent SDK (programático)</h4>
+                        <ul class="bullet-list">
+                            <li>Integración en apps y servicios</li>
+                            <li>Control total del flujo y herramientas</li>
+                            <li>Multi-agente coordinado en código</li>
+                            <li>Ideal para productos y automatizaciones</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="block-title">SDK-1 — Instalación</h3>
+                <div class="code-block" data-lang="bash" data-title="Instalación del SDK oficial">
+                    <pre><code># TypeScript / Node.js
+npm install @anthropic-ai/sdk
+
+# Python
+pip install anthropic
+
+# Con soporte para agentes (incluye herramientas extra)
+npm install @anthropic-ai/sdk @anthropic-ai/claude-code</code></pre>
+                </div>
+
+                <h3 class="block-title">SDK-2 — Agente básico con herramientas</h3>
+                <p>Un agente que puede leer archivos y ejecutar comandos bash:</p>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — agente con tool_use" data-note="typescript">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+import { execSync } from 'child_process';
+import { readFileSync } from 'fs';
+
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+const tools: Anthropic.Tool[] = [
+  {
+    name: 'read_file',
+    description: 'Lee el contenido de un archivo del sistema',
+    input_schema: {
+      type: 'object',
+      properties: {
+        path: { type: 'string', description: 'Ruta al archivo' }
+      },
+      required: ['path']
+    }
+  },
+  {
+    name: 'run_bash',
+    description: 'Ejecuta un comando bash y devuelve stdout',
+    input_schema: {
+      type: 'object',
+      properties: {
+        command: { type: 'string', description: 'Comando a ejecutar' }
+      },
+      required: ['command']
+    }
+  }
+];
+
+async function runAgent(userMessage: string) {
+  const messages: Anthropic.MessageParam[] = [
+    { role: 'user', content: userMessage }
+  ];
+
+  while (true) {
+    const response = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4096,
+      tools,
+      messages
+    });
+
+    // Añadir respuesta al historial
+    messages.push({ role: 'assistant', content: response.content });
+
+    if (response.stop_reason === 'end_turn') break;
+
+    if (response.stop_reason === 'tool_use') {
+      const toolResults: Anthropic.ToolResultBlockParam[] = [];
+
+      for (const block of response.content) {
+        if (block.type !== 'tool_use') continue;
+
+        let result = '';
+        if (block.name === 'read_file') {
+          result = readFileSync((block.input as any).path, 'utf8');
+        } else if (block.name === 'run_bash') {
+          result = execSync((block.input as any).command, { encoding: 'utf8' });
+        }
+
+        toolResults.push({
+          type: 'tool_result',
+          tool_use_id: block.id,
+          content: result
+        });
+      }
+
+      messages.push({ role: 'user', content: toolResults });
+    }
+  }
+
+  // Extraer texto final
+  const lastMsg = messages[messages.length - 1];
+  const content = Array.isArray(lastMsg.content) ? lastMsg.content : [];
+  return content.find(b => b.type === 'text')?.text ?? '';
+}
+
+// Uso
+const result = await runAgent(
+  'Lee @src/index.ts y dame un resumen de la arquitectura'
+);
+console.log(result);</code></pre>
+                </div>
+
+                <h3 class="block-title">SDK-3 — Streaming de respuestas</h3>
+                <p>Para interfaces en tiempo real o CLIs interactivas, usa el modo streaming:</p>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — streaming con SDK">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic();
+
+async function streamResponse(prompt: string) {
+  const stream = client.messages.stream({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 2048,
+    messages: [{ role: 'user', content: prompt }]
+  });
+
+  // Procesar tokens en tiempo real
+  stream.on('text', (text) => {
+    process.stdout.write(text);
+  });
+
+  // Esperar el mensaje completo con metadata
+  const message = await stream.finalMessage();
+  console.log('\n\n--- Stats ---');
+  console.log(`Input tokens:  ${message.usage.input_tokens}`);
+  console.log(`Output tokens: ${message.usage.output_tokens}`);
+  return message;
+}
+
+await streamResponse('Explica cómo funciona el garbage collector de V8');</code></pre>
+                </div>
+
+                <h3 class="block-title">SDK-4 — Orquestación multi-agente</h3>
+                <p>
+                    El patrón más potente: un agente orquestador delega tareas a sub-agentes
+                    especializados. Cada sub-agente tiene sus propias herramientas y contexto limitado.
+                </p>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — orquestación paralela">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic();
+
+// Sub-agente especializado en análisis de seguridad
+async function securityAgent(code: string) {
+  const { content } = await client.messages.create({
+    model: 'claude-opus-4-7',   // modelo más potente para análisis crítico
+    max_tokens: 2048,
+    system: 'Eres un experto en seguridad OWASP. Solo reportas vulnerabilidades concretas con línea y severidad.',
+    messages: [{ role: 'user', content: `Analiza este código:\n\n${code}` }]
+  });
+  return content[0].type === 'text' ? content[0].text : '';
+}
+
+// Sub-agente especializado en performance
+async function performanceAgent(code: string) {
+  const { content } = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 2048,
+    system: 'Eres un experto en performance web. Busca N+1, loops innecesarios y oportunidades de memoización.',
+    messages: [{ role: 'user', content: `Analiza este código:\n\n${code}` }]
+  });
+  return content[0].type === 'text' ? content[0].text : '';
+}
+
+// Orquestador: ejecuta ambos en paralelo
+async function fullReview(code: string) {
+  console.log('Lanzando análisis en paralelo...');
+
+  const [securityReport, perfReport] = await Promise.all([
+    securityAgent(code),
+    performanceAgent(code)
+  ]);
+
+  // Agente final consolida los hallazgos
+  const { content } = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 1024,
+    messages: [{
+      role: 'user',
+      content: `Consolida estos dos reportes en un resumen ejecutivo:\n\nSEGURIDAD:\n${securityReport}\n\nPERFORMANCE:\n${perfReport}`
+    }]
+  });
+
+  return content[0].type === 'text' ? content[0].text : '';
+}
+
+const code = readFileSync('./src/api/users.ts', 'utf8');
+const summary = await fullReview(code);
+console.log(summary);</code></pre>
+                </div>
+
+                <h3 class="block-title">SDK-5 — Prompt caching (reducción de costos)</h3>
+                <p>
+                    El prompt caching reduce costos hasta un <strong>90%</strong> y latencia hasta un
+                    <strong>85%</strong> cuando reutilizas contexto largo (documentos, instrucciones de sistema).
+                </p>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — prompt caching">
+                    <pre><code">import Anthropic from '@anthropic-ai/sdk';
+import { readFileSync } from 'fs';
+
+const client = new Anthropic();
+
+// Cargar documento grande una vez
+const largeDoc = readFileSync('./docs/api-spec.md', 'utf8');
+
+async function queryWithCache(question: string) {
+  const response = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 1024,
+    system: [
+      {
+        type: 'text',
+        text: 'Eres un asistente experto en esta documentación.',
+        // ↓ Marcar para cachear — Anthropic almacena hasta 5 min
+        cache_control: { type: 'ephemeral' }
+      },
+      {
+        type: 'text',
+        text: largeDoc,
+        cache_control: { type: 'ephemeral' }  // cachea el doc completo
+      }
+    ],
+    messages: [{ role: 'user', content: question }]
+  });
+
+  const usage = response.usage as any;
+  console.log(`Cache hit: ${usage.cache_read_input_tokens ?? 0} tokens`);
+  console.log(`Cache write: ${usage.cache_creation_input_tokens ?? 0} tokens`);
+
+  return response.content[0].type === 'text' ? response.content[0].text : '';
+}
+
+// Primera llamada: escribe el cache (costo normal)
+await queryWithCache('¿Cuáles son los endpoints de autenticación?');
+
+// Segunda llamada: lee del cache (~10% del costo)
+await queryWithCache('¿Qué errores devuelve POST /auth/login?');</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--tip">
+                    <strong>💡 Cuándo usar prompt caching:</strong> Siempre que reutilices más de ~1024 tokens
+                    de contexto (documentos, especificaciones, codebase). El ahorro es inmediato desde la segunda llamada.
+                </div>
+
+                <h3 class="block-title">SDK-6 — Computer Use (control de interfaz)</h3>
+                <p>
+                    Computer Use permite a Claude controlar un ordenador visualmente — navegar interfaces,
+                    rellenar formularios, hacer screenshots y tomar decisiones basadas en lo que "ve".
+                </p>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — Computer Use básico">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic();
+
+const response = await client.messages.create({
+  model: 'claude-opus-4-7',   // Computer Use solo en Opus
+  max_tokens: 4096,
+  tools: [
+    {
+      type: 'computer_20250124',
+      name: 'computer',
+      display_width_px: 1280,
+      display_height_px: 800,
+    }
+  ],
+  messages: [{
+    role: 'user',
+    content: 'Abre el navegador, ve a localhost:3000 y haz screenshot del dashboard'
+  }]
+});</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--warn">
+                    <strong>⚠ Computer Use en producción:</strong> Usa siempre en un sandbox aislado
+                    (VM, contenedor). Nunca apuntes a sistemas con datos reales sin supervisión humana.
+                </div>
+
+                <h3 class="block-title">SDK-7 — Python SDK (uso básico)</h3>
+                <div class="code-block" data-lang="bash" data-title="Python — Agent SDK básico">
+                    <pre><code>import asyncio
+from claude_agent_sdk import query, ClaudeAgentOptions
+
+async def run_agent():
+    # Agente con herramientas específicas (mínimo privilegio)
+    options = ClaudeAgentOptions(
+        allowed_tools=["Read", "Edit", "Bash", "Glob"],
+        permission_mode="acceptEdits"   # auto-acepta ediciones de archivos
+    )
+
+    async for message in query(
+        prompt="Analiza @src/auth/login.py y propón mejoras de seguridad",
+        options=options
+    ):
+        # Tipos de mensajes: AssistantMessage, SystemMessage, ToolUseMessage
+        if hasattr(message, 'content'):
+            for block in message.content:
+                if hasattr(block, 'text'):
+                    print(block.text)
+
+asyncio.run(run_agent())</code></pre>
+                </div>
+
+                <div class="code-block" data-lang="bash" data-title="Python — sub-agentes especializados">
+                    <pre><code">import asyncio
+from claude_agent_sdk import query, ClaudeAgentOptions, AgentDefinition
+
+async def parallel_code_review(pr_diff: str):
+    """Review PR desde dos perspectivas en paralelo."""
+
+    options = ClaudeAgentOptions(
+        allowed_tools=["Read", "Glob", "Grep", "Agent"],
+        agents={
+            # Sub-agente especializado en seguridad
+            "security-reviewer": AgentDefinition(
+                description="Experto en seguridad OWASP que analiza vulnerabilidades.",
+                prompt="Busca SQLi, XSS, secretos expuestos, CORS inseguro. Sé conciso.",
+                tools=["Read", "Glob", "Grep"],
+            ),
+            # Sub-agente especializado en calidad de código
+            "code-quality": AgentDefinition(
+                description="Experto en clean code y patrones SOLID.",
+                prompt="Analiza legibilidad, complejidad ciclomática y duplicación.",
+                tools=["Read", "Glob"],
+            ),
+        }
+    )
+
+    results = []
+    async for message in query(
+        prompt=f"""Revisa este diff usando sub-agentes en paralelo:
+        - Usa Agent 'security-reviewer' para análisis de seguridad
+        - Usa Agent 'code-quality' para calidad de código
+        Consolida los hallazgos en un reporte final.
+
+        DIFF:
+        {pr_diff}""",
+        options=options
+    ):
+        if hasattr(message, 'content'):
+            for block in message.content:
+                if hasattr(block, 'text') and block.text:
+                    results.append(block.text)
+
+    return '\n'.join(results)
+
+# Ejemplo de uso en CI
+import subprocess
+diff = subprocess.check_output(['git', 'diff', 'origin/main...HEAD'], text=True)
+report = asyncio.run(parallel_code_review(diff))
+print(report)</code></pre>
+                </div>
+
+                <h3 class="block-title">SDK-8 — Hooks y auditoría</h3>
+                <div class="code-block" data-lang="bash" data-title="Python — hooks para auditoría de cambios">
+                    <pre><code>from datetime import datetime
+from claude_agent_sdk import query, ClaudeAgentOptions, HookMatcher
+
+# Hook que registra cada modificación de archivo
+async def audit_file_change(input_data, tool_use_id, context):
+    tool_input = input_data.get("tool_input", {})
+    file_path = tool_input.get("file_path", "unknown")
+
+    with open("./audit.log", "a") as f:
+        f.write(f"{datetime.now().isoformat()} | EDIT | {file_path}\n")
+
+    return {}   # Sin retorno = el tool usa continúa normalmente
+
+# Hook que previene cambios en archivos de producción
+async def block_production_files(input_data, tool_use_id, context):
+    tool_input = input_data.get("tool_input", {})
+    file_path = tool_input.get("file_path", "")
+
+    if "production" in file_path or ".env" in file_path:
+        return {
+            "decision": "block",
+            "reason": f"Protegido: no se puede modificar {file_path} en este modo"
+        }
+    return {}
+
+options = ClaudeAgentOptions(
+    permission_mode="acceptEdits",
+    hooks={
+        "PostToolUse": [HookMatcher(
+            matcher="Edit|Write",
+            hooks=[audit_file_change]
+        )],
+        "PreToolUse": [HookMatcher(
+            matcher="Edit|Write",
+            hooks=[block_production_files]
+        )]
+    }
+)
+
+async for message in query(
+    prompt="Refactoriza los módulos de autenticación",
+    options=options
+):
+    pass   # Los hooks se ejecutan automáticamente</code></pre>
+                </div>
+
+                <h3 class="block-title">SDK-9 — Resumen de Permission Modes</h3>
+                <div class="commands-table-wrapper">
+                    <table class="commands-table">
+                        <thead><tr><th>Modo</th><th>Comportamiento</th><th>Caso de uso</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>acceptEdits</code></td><td>Auto-acepta ediciones de archivos; pregunta para otras acciones</td><td>Desarrollo de confianza con revisión parcial</td></tr>
+                            <tr><td><code>dontAsk</code></td><td>Deniega lo que no esté en allowedTools</td><td>Agentes headless muy restrictivos</td></tr>
+                            <tr><td><code>auto</code></td><td>Clasificador IA aprueba/deniega cada llamada (solo TypeScript)</td><td>Agentes autónomos con guardarraíles</td></tr>
+                            <tr><td><code>bypassPermissions</code></td><td>Ejecuta todas las herramientas sin confirmación</td><td>CI en sandbox completamente aislado</td></tr>
+                            <tr><td><code>default</code></td><td>Requiere callback <code>canUseTool</code> personalizado</td><td>Flujos de aprobación a medida</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: ANTHROPIC API ====== -->
+            <section class="content-section" data-section="api-anthropic" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Profundización / Anthropic API</span>
+                    <h2>⚡ Anthropic API — Guía Completa</h2>
+                    <p class="section-lead">
+                        La API de Anthropic expone toda la capacidad de Claude como servicio REST.
+                        Ideal para integrar Claude en tus productos, pipelines de datos y sistemas existentes.
+                        Base URL: <code>https://api.anthropic.com/v1</code>
+                    </p>
+                </div>
+
+                <h3 class="block-title">API-1 — Selección de modelos</h3>
+                <div class="models-grid">
+                    <div class="model-card model-card--opus">
+                        <div class="model-name">claude-opus-4-7</div>
+                        <div class="model-tier">Máxima capacidad</div>
+                        <ul class="model-features">
+                            <li>Razonamiento complejo y análisis</li>
+                            <li>Computer Use habilitado</li>
+                            <li>Modo "Fast" disponible</li>
+                            <li>200K tokens de contexto</li>
+                        </ul>
+                        <div class="model-use">Mejor para: auditorías críticas, diseño arquitectónico</div>
+                    </div>
+                    <div class="model-card model-card--sonnet">
+                        <div class="model-name">claude-sonnet-4-6</div>
+                        <div class="model-tier">Balance ideal</div>
+                        <ul class="model-features">
+                            <li>Alto rendimiento a menor costo</li>
+                            <li>Ideal para producción general</li>
+                            <li>Tool use optimizado</li>
+                            <li>200K tokens de contexto</li>
+                        </ul>
+                        <div class="model-use">Mejor para: APIs, chatbots, generación de código</div>
+                    </div>
+                    <div class="model-card model-card--haiku">
+                        <div class="model-name">claude-haiku-4-5-20251001</div>
+                        <div class="model-tier">Ultrarrápido</div>
+                        <ul class="model-features">
+                            <li>Menor latencia disponible</li>
+                            <li>Costo mínimo por token</li>
+                            <li>Ideal para volumen alto</li>
+                            <li>200K tokens de contexto</li>
+                        </ul>
+                        <div class="model-use">Mejor para: clasificación, extracción, RAG</div>
+                    </div>
+                </div>
+
+                <h3 class="block-title">API-2 — Messages API (endpoint principal)</h3>
+                <div class="code-block" data-lang="bash" data-title="cURL — llamada básica a messages">
+                    <pre><code>curl https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 1024,
+    "messages": [
+      {"role": "user", "content": "¿Cómo implemento un rate limiter en Node.js?"}
+    ]
+  }'</code></pre>
+                </div>
+
+                <div class="code-block" data-lang="bash" data-title="TypeScript — Messages API completa">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+const message = await client.messages.create({
+  model: 'claude-sonnet-4-6',
+  max_tokens: 2048,
+
+  // System prompt: establece rol y restricciones
+  system: 'Eres un senior engineer. Responde siempre en español con código TypeScript.',
+
+  // Historial de conversación (multi-turn)
+  messages: [
+    { role: 'user',      content: 'Explica el patrón Repository' },
+    { role: 'assistant', content: 'El patrón Repository abstrae...' },
+    { role: 'user',      content: '¿Cómo lo implemento con Prisma?' }
+  ]
+});
+
+// Extraer texto de la respuesta
+const text = message.content
+  .filter(b => b.type === 'text')
+  .map(b => b.text)
+  .join('');
+
+console.log(text);
+console.log('Input tokens:', message.usage.input_tokens);
+console.log('Output tokens:', message.usage.output_tokens);</code></pre>
+                </div>
+
+                <h3 class="block-title">API-3 — Tool Use (function calling)</h3>
+                <p>
+                    Tool Use permite que Claude decida cuándo llamar a funciones externas.
+                    Claude devuelve <code>tool_use</code> blocks que tú ejecutas y devuelves como
+                    <code>tool_result</code>.
+                </p>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — Tool Use completo">
+                    <pre><code">import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic();
+
+// Definir herramientas disponibles para Claude
+const tools: Anthropic.Tool[] = [
+  {
+    name: 'get_weather',
+    description: 'Obtiene el clima actual para una ciudad',
+    input_schema: {
+      type: 'object',
+      properties: {
+        city: { type: 'string', description: 'Nombre de la ciudad' },
+        unit: {
+          type: 'string',
+          enum: ['celsius', 'fahrenheit'],
+          description: 'Unidad de temperatura'
+        }
+      },
+      required: ['city']
+    }
+  },
+  {
+    name: 'search_database',
+    description: 'Busca registros en la base de datos',
+    input_schema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string' },
+        limit: { type: 'number', default: 10 }
+      },
+      required: ['query']
+    }
+  }
+];
+
+// Simulación de funciones reales
+function get_weather(city: string, unit = 'celsius') {
+  return { city, temp: 22, unit, condition: 'soleado' };
+}
+
+function search_database(query: string, limit = 10) {
+  return { results: [`Resultado para: ${query}`], total: 1 };
+}
+
+async function chat(userMessage: string) {
+  const messages: Anthropic.MessageParam[] = [
+    { role: 'user', content: userMessage }
+  ];
+
+  let response = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 1024,
+    tools,
+    messages
+  });
+
+  // Bucle de tool use
+  while (response.stop_reason === 'tool_use') {
+    messages.push({ role: 'assistant', content: response.content });
+
+    const results: Anthropic.ToolResultBlockParam[] = response.content
+      .filter(b => b.type === 'tool_use')
+      .map(block => {
+        const b = block as Anthropic.ToolUseBlock;
+        const input = b.input as Record<string, any>;
+
+        const result = b.name === 'get_weather'
+          ? get_weather(input.city, input.unit)
+          : search_database(input.query, input.limit);
+
+        return {
+          type: 'tool_result' as const,
+          tool_use_id: b.id,
+          content: JSON.stringify(result)
+        };
+      });
+
+    messages.push({ role: 'user', content: results });
+
+    response = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1024,
+      tools,
+      messages
+    });
+  }
+
+  const textBlock = response.content.find(b => b.type === 'text');
+  return textBlock?.type === 'text' ? textBlock.text : '';
+}
+
+console.log(await chat('¿Qué clima hace en Madrid? Usa Celsius.'));</code></pre>
+                </div>
+
+                <h3 class="block-title">API-4 — Vision (imágenes y documentos)</h3>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — análisis de imagen">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+import { readFileSync } from 'fs';
+
+const client = new Anthropic();
+
+// Opción 1: imagen en base64
+const imageData = readFileSync('./screenshot.png');
+const base64 = imageData.toString('base64');
+
+const response = await client.messages.create({
+  model: 'claude-sonnet-4-6',
+  max_tokens: 1024,
+  messages: [{
+    role: 'user',
+    content: [
+      {
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: 'image/png',
+          data: base64
+        }
+      },
+      {
+        type: 'text',
+        text: 'Describe los errores que ves en este screenshot de la app'
+      }
+    ]
+  }]
+});
+
+// Opción 2: imagen por URL pública
+const responseUrl = await client.messages.create({
+  model: 'claude-sonnet-4-6',
+  max_tokens: 512,
+  messages: [{
+    role: 'user',
+    content: [
+      { type: 'image', source: { type: 'url', url: 'https://example.com/chart.png' } },
+      { type: 'text', text: '¿Qué tendencia muestra este gráfico?' }
+    ]
+  }]
+});</code></pre>
+                </div>
+
+                <h3 class="block-title">API-5 — Batch API (procesamiento masivo)</h3>
+                <p>
+                    La Batch API procesa hasta <strong>10.000 solicitudes</strong> con <strong>50% de descuento</strong>
+                    en precio. Ideal para procesar datasets grandes fuera del flujo en tiempo real.
+                </p>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — Batch API">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic();
+
+// 1) Crear batch con múltiples solicitudes
+const batch = await client.messages.batches.create({
+  requests: [
+    {
+      custom_id: 'analysis-001',
+      params: {
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 256,
+        messages: [{ role: 'user', content: 'Clasifica este ticket: "App crashes on login"' }]
+      }
+    },
+    {
+      custom_id: 'analysis-002',
+      params: {
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 256,
+        messages: [{ role: 'user', content: 'Clasifica este ticket: "Need dark mode"' }]
+      }
+    }
+    // ... hasta 10.000 solicitudes
+  ]
+});
+
+console.log('Batch ID:', batch.id);
+console.log('Estado:', batch.processing_status);
+
+// 2) Polling hasta que termine (o usa webhook)
+let result = batch;
+while (result.processing_status !== 'ended') {
+  await new Promise(r => setTimeout(r, 5000));
+  result = await client.messages.batches.retrieve(batch.id);
+  console.log(`Procesadas: ${result.request_counts.processing} / ${result.request_counts.processing + result.request_counts.succeeded}`);
+}
+
+// 3) Descargar resultados
+for await (const item of client.messages.batches.results(batch.id)) {
+  if (item.result.type === 'succeeded') {
+    const text = item.result.message.content[0];
+    console.log(`${item.custom_id}: ${text.type === 'text' ? text.text : ''}`);
+  }
+}</code></pre>
+                </div>
+
+                <h3 class="block-title">API-6 — Files API (documentos persistentes)</h3>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — Files API">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+import { createReadStream } from 'fs';
+
+const client = new Anthropic();
+
+// Subir un PDF una vez — reutilizarlo en múltiples llamadas
+const file = await client.beta.files.upload({
+  file: createReadStream('./documentacion-tecnica.pdf'),
+});
+
+console.log('File ID:', file.id);  // file_abc123
+
+// Usar el archivo en múltiples mensajes sin re-subir
+async function queryDocument(question: string) {
+  const response = await client.beta.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 1024,
+    messages: [{
+      role: 'user',
+      content: [
+        {
+          type: 'document',
+          source: { type: 'file', file_id: file.id }  // referencia por ID
+        },
+        { type: 'text', text: question }
+      ]
+    }],
+    betas: ['files-api-2025-04-14']
+  });
+
+  return response.content[0].type === 'text' ? response.content[0].text : '';
+}
+
+// Múltiples preguntas sobre el mismo documento — sin re-subir el PDF
+await queryDocument('¿Cuáles son los endpoints de autenticación?');
+await queryDocument('¿Qué errores puede devolver el API?');
+
+// Limpiar cuando ya no se necesite
+await client.beta.files.delete(file.id);</code></pre>
+                </div>
+
+                <h3 class="block-title">API-7 — Extended Thinking (razonamiento profundo)</h3>
+                <p>
+                    Extended Thinking da a Claude espacio para razonar antes de responder —
+                    especialmente valioso para problemas matemáticos, análisis complejo y debugging difícil.
+                </p>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — Extended Thinking">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic();
+
+const response = await client.messages.create({
+  model: 'claude-opus-4-7',   // Extended Thinking disponible en Opus
+  max_tokens: 16000,
+  thinking: {
+    type: 'enabled',
+    budget_tokens: 10000      // Tokens reservados para razonamiento interno
+  },
+  messages: [{
+    role: 'user',
+    content: `Tenemos un bug de race condition en nuestra API de checkout.
+              Múltiples requests concurrentes deducen stock aunque no hay suficiente.
+              Tenemos PostgreSQL 16 con Prisma. ¿Cómo lo resolvemos correctamente?`
+  }]
+});
+
+for (const block of response.content) {
+  if (block.type === 'thinking') {
+    console.log('=== Razonamiento interno ===');
+    console.log(block.thinking);
+  } else if (block.type === 'text') {
+    console.log('=== Respuesta ===');
+    console.log(block.text);
+  }
+}</code></pre>
+                </div>
+
+                <h3 class="block-title">API-8 — Manejo de errores y retry</h3>
+                <div class="code-block" data-lang="bash" data-title="TypeScript — errores y retry robusto">
+                    <pre><code>import Anthropic from '@anthropic-ai/sdk';
+
+// El SDK tiene retry automático por defecto (2 reintentos)
+const client = new Anthropic({
+  maxRetries: 3,         // Reintentos para 429/529
+  timeout: 30_000,       // Timeout por request (ms)
+});
+
+async function safeRequest(prompt: string) {
+  try {
+    const response = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: prompt }]
+    });
+    return { ok: true, data: response };
+
+  } catch (err) {
+    if (err instanceof Anthropic.APIError) {
+      switch (err.status) {
+        case 400: return { ok: false, error: `Bad Request: ${err.message}` };
+        case 401: return { ok: false, error: 'API Key inválida o expirada' };
+        case 403: return { ok: false, error: 'Sin permisos para este recurso' };
+        case 429: return { ok: false, error: 'Rate limit — reduce la frecuencia' };
+        case 529: return { ok: false, error: 'API sobrecargada — reintenta más tarde' };
+        default:  return { ok: false, error: `Error ${err.status}: ${err.message}` };
+      }
+    }
+    throw err;   // Re-lanzar errores inesperados
+  }
+}</code></pre>
+                </div>
+
+                <div class="info-banner">
+                    <strong>📊 Recomendación de costos:</strong> Para producción, usa <strong>Haiku</strong> para tareas simples
+                    (clasificación, extracción), <strong>Sonnet</strong> para el 80% del trabajo general, y
+                    <strong>Opus</strong> solo cuando la complejidad lo justifica.
+                    El prompt caching reduce costos hasta 90% en contextos repetidos.
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: SKILLS AVANZADOS ====== -->
+            <section class="content-section" data-section="skills-avanzados" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Profundización / Skills Avanzados</span>
+                    <h2>🧩 Skills Avanzados — Templates de Producción</h2>
+                    <p class="section-lead">
+                        Biblioteca de Skills listas para usar en tu equipo. Cópialas en
+                        <code>.claude/skills/</code> de tu proyecto o en <code>~/.claude/skills/</code>
+                        para disponibilidad global.
+                    </p>
+                </div>
+
+                <h3 class="block-title">SA-1 — Template: /release-notes</h3>
+                <div class="code-block" data-lang="markdown" data-title=".claude/skills/release-notes/SKILL.md">
+                    <pre><code>---
+name: release-notes
+description: Genera notas de release profesionales a partir del historial de commits.
+  Úsalo cuando el usuario mencione release, changelog, notas de versión o quiera
+  documentar cambios para un deploy.
+argument-hint: [version] [desde-tag]
+allowed-tools: Bash(git log:*), Bash(git tag:*), Bash(git diff:*), Read
+model: claude-sonnet-4-6
+---
+
+# Generación de Release Notes
+
+## Información de release
+- Versión objetivo: $1 (o "próxima release" si no se especifica)
+- Desde el tag: $2 (o el último tag si no se especifica)
+
+## Historial de commits
+!`git log $(git describe --tags --abbrev=0 2>/dev/null || echo "HEAD~20")..HEAD --pretty=format:'%h %s (%an)' --no-merges`
+
+## Tags existentes
+!`git tag --sort=-version:refname | head -5`
+
+## Genera las notas siguiendo esta estructura:
+1. **Highlights** — los 2-3 cambios más importantes
+2. **Breaking Changes** — si aplica, con instrucciones de migración
+3. **Features** — nuevas funcionalidades
+4. **Bug Fixes** — correcciones
+5. **Improvements** — mejoras internas, performance, refactors
+6. **Dependencies** — actualizaciones de dependencias relevantes
+
+Usa emojis de convención (✨ feature, 🐛 fix, ⚡ performance, 🔧 chore, 💥 breaking)
+Enlaza a los commits con el hash cuando sea relevante.</code></pre>
+                </div>
+
+                <h3 class="block-title">SA-2 — Template: /write-tests</h3>
+                <div class="code-block" data-lang="markdown" data-title=".claude/skills/write-tests/SKILL.md">
+                    <pre><code>---
+name: write-tests
+description: Genera tests completos para archivos o funciones. Úsalo cuando el
+  usuario pida tests, cobertura, specs o quiera validar código con pruebas.
+argument-hint: [archivo-o-función] [framework]
+allowed-tools: Read, Glob, Bash(npm test:*), Bash(npx vitest:*), Write
+---
+
+# Generación de Tests
+
+## Objetivo
+Archivo o función: $1
+Framework: $2 (detectar automáticamente si no se especifica: buscar vitest/jest/pytest en package.json)
+
+## Proceso
+1. Lee el archivo objetivo con Read
+2. Identifica funciones públicas y sus tipos de entrada/salida
+3. Para cada función genera:
+   - Test de caso feliz (happy path)
+   - Tests de edge cases (null, undefined, límites)
+   - Tests de error esperados (throws, rechazos)
+   - Tests de integración si hay dependencias externas
+
+## Reglas
+- Mockea SOLO dependencias externas (DB, HTTP, FS) — no lógica interna
+- Usa `describe` / `it` anidados para organización
+- Nombres descriptivos: "should return X when Y"
+- Target: >85% de cobertura de líneas
+- Tests independientes: cada test puede correr solo sin estado compartido</code></pre>
+                </div>
+
+                <h3 class="block-title">SA-3 — Template: /document-api</h3>
+                <div class="code-block" data-lang="markdown" data-title=".claude/skills/document-api/SKILL.md">
+                    <pre><code>---
+name: document-api
+description: Genera documentación OpenAPI/Swagger para endpoints REST o GraphQL.
+  Úsalo cuando el usuario mencione documentar la API, swagger, openapi o generar docs.
+argument-hint: [ruta-o-archivo]
+allowed-tools: Read, Glob, Write, Bash(grep:*)
+---
+
+# Generación de Documentación de API
+
+## Objetivo
+Documentar: $1 (o todos los endpoints si no se especifica)
+
+## Proceso
+1. Glob para encontrar archivos de rutas: `routes/**/*.ts`, `controllers/**/*.ts`
+2. Para cada endpoint extrae:
+   - Método HTTP y ruta
+   - Parámetros (path, query, body)
+   - Tipos de Request/Response (TypeScript interfaces)
+   - Posibles errores (status codes)
+   - Descripción del negocio
+
+## Output
+Genera un archivo `openapi.yaml` o `openapi.json` con:
+- Formato OpenAPI 3.1
+- Schemas completos con ejemplos
+- Errores documentados (400, 401, 403, 404, 500)
+- Tags agrupando endpoints por dominio
+
+Si ya existe un archivo openapi, actualízalo preservando la documentación manual.</code></pre>
+                </div>
+
+                <h3 class="block-title">SA-4 — Template: /deploy-check</h3>
+                <div class="code-block" data-lang="markdown" data-title=".claude/skills/deploy-check/SKILL.md">
+                    <pre><code>---
+name: deploy-check
+description: Verifica que el proyecto está listo para deploy a producción.
+  Úsalo antes de mergear a main o hacer release. Mencionar deploy, producción,
+  merge a main o "¿está listo para release?" activa este skill automáticamente.
+allowed-tools: Read, Bash(npm:*), Bash(git:*), Bash(grep:*), Glob
+---
+
+# Checklist Pre-Deploy
+
+## 1. Tests
+!`npm test -- --run 2>&1 | tail -20`
+
+## 2. Linting
+!`npm run lint 2>&1 | tail -20`
+
+## 3. TypeCheck
+!`npm run typecheck 2>&1 | tail -20`
+
+## 4. Secretos expuestos
+!`grep -r "sk-ant\|api_key\|password.*=.*['\"]" src/ --include="*.ts" --include="*.js" -l 2>&1`
+
+## 5. Dependencias vulnerables
+!`npm audit --audit-level high 2>&1 | tail -10`
+
+## 6. Variables de entorno
+!`grep -r "process.env\." src/ --include="*.ts" -h | sort -u 2>&1`
+
+## 7. Estado git
+!`git status --short`
+!`git log origin/main..HEAD --oneline`
+
+## Evalúa todos los resultados y genera un reporte de semáforo:
+- 🟢 LISTO para deploy
+- 🟡 PRECAUCIÓN — revisa estas advertencias antes de continuar
+- 🔴 BLOQUEADO — estos problemas DEBEN resolverse antes del deploy
+
+Prioriza los bloqueantes e incluye instrucciones concretas para resolverlos.</code></pre>
+                </div>
+
+                <h3 class="block-title">SA-5 — Template: /translate-stack</h3>
+                <div class="code-block" data-lang="markdown" data-title=".claude/skills/translate-stack/SKILL.md">
+                    <pre><code>---
+name: translate-stack
+description: Traduce código entre tecnologías o frameworks manteniendo la lógica
+  de negocio. Úsalo para migrar de Express a Fastify, Python a TypeScript,
+  React class components a hooks, etc.
+argument-hint: [archivo-origen] [stack-destino]
+allowed-tools: Read, Write, Bash(npm install:*), Glob
+---
+
+# Traducción de Stack
+
+## Origen: $1
+## Destino: $2
+
+## Proceso de traducción
+1. Lee el archivo origen y comprende su lógica de negocio (no solo sintaxis)
+2. Identifica los patrones del stack origen y sus equivalentes en el destino
+3. Traduce manteniendo:
+   - Misma lógica de negocio sin cambios de comportamiento
+   - Convenciones idiomáticas del stack destino
+   - Tests existentes adaptados al nuevo stack
+   - Manejo de errores equivalente
+
+## Restricciones
+- NO alteres la interfaz pública (nombres de funciones, contratos)
+- PRESERVA los comentarios de negocio importantes
+- INDICA claramente qué partes no tienen equivalente directo
+- PROPORCIONA las dependencias npm/pip necesarias</code></pre>
+                </div>
+
+                <h3 class="block-title">SA-6 — Template: /onboarding-guide</h3>
+                <div class="code-block" data-lang="markdown" data-title=".claude/skills/onboarding-guide/SKILL.md">
+                    <pre><code>---
+name: onboarding-guide
+description: Genera una guía de onboarding para nuevos miembros del equipo
+  a partir del CLAUDE.md, estructura del proyecto y convenciones detectadas.
+  Úsalo cuando alguien nuevo se una al equipo o pida cómo empezar con el proyecto.
+allowed-tools: Read, Glob, Bash(git log:*), Bash(npm:*)
+---
+
+# Generación de Guía de Onboarding
+
+## Datos del proyecto
+!`cat CLAUDE.md 2>/dev/null || echo "No hay CLAUDE.md"`
+!`cat README.md 2>/dev/null | head -100`
+!`cat package.json | jq '{name, description, scripts}' 2>/dev/null`
+
+## Estructura principal
+!`find . -maxdepth 3 -type d -not -path '*/node_modules/*' -not -path '*/.git/*'`
+
+## Últimas contribuciones
+!`git log --oneline -20 --pretty=format:'%h %s (%an)' 2>/dev/null`
+
+## Genera una guía de onboarding que incluya:
+1. **Qué hace este proyecto** — contexto de negocio en 2-3 párrafos
+2. **Setup en 15 minutos** — pasos exactos de instalación desde cero
+3. **Arquitectura en 5 minutos** — diagrama ASCII + explicación de carpetas clave
+4. **Flujo de trabajo del equipo** — branches, PRs, deploy pipeline
+5. **Primeras tareas recomendadas** — 3-5 tareas "good first issue" para familiarizarse
+6. **Recursos clave** — docs, Slack channels, personas a preguntar
+7. **Errores comunes** — los 5 errores más frecuentes en el primer mes + solución</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--tip">
+                    <strong>💡 Organización recomendada de Skills en equipo:</strong>
+                    Crea <code>.claude/skills/</code> en tu repo y versionalo en git.
+                    Todo el equipo hereda las mismas Skills al hacer pull. Para Skills personales
+                    (estilo de código, preferencias), usa <code>~/.claude/skills/</code>.
+                </div>
+
+                <h3 class="block-title">SA-7 — Frontmatter de referencia completo</h3>
+                <div class="code-block" data-lang="markdown" data-title="Frontmatter completo con todas las opciones">
+                    <pre><code>---
+# Obligatorio
+name: mi-skill                          # Nombre del comando /mi-skill
+
+# Muy recomendado — activa auto-trigger
+description: |
+  Descripción detallada de cuándo usar este skill.
+  Claude analiza el intent del usuario y si coincide
+  con esta descripción, lo invoca automáticamente.
+
+# Opcional — restricción de herramientas (principio de mínimo privilegio)
+allowed-tools:
+  - Read                                # Leer archivos
+  - Write                               # Escribir archivos
+  - Edit                                # Editar archivos
+  - Bash(git log:*)                     # Solo 'git log', no otros git
+  - Bash(npm test:*)                    # Solo 'npm test'
+  - Bash(grep:*)                        # Solo grep
+
+# Opcional — modelo específico para este skill
+model: claude-opus-4-7                  # Opus para tareas críticas
+# model: claude-sonnet-4-6             # Sonnet por defecto (recomendado)
+# model: claude-haiku-4-5-20251001     # Haiku para tareas simples
+
+# Opcional — hint de argumentos para /help
+argument-hint: [issue-number] [priority]
+
+# Opcional — archivos adicionales que lee automáticamente
+context-files:
+  - .claude/standards/security.md
+  - .claude/templates/pr-template.md
+---
+
+# Cuerpo del skill (instrucciones para Claude)
+Aquí van las instrucciones en Markdown.
+
+Usa $1, $2, $ARGUMENTS para parámetros dinámicos.
+Usa !`comando bash` para inyectar output de comandos.</code></pre>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: CI/CD & HEADLESS ====== -->
+            <section class="content-section" data-section="ci-cd" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Profundización / CI/CD & Headless</span>
+                    <h2>🔁 CI/CD & Modo Headless</h2>
+                    <p class="section-lead">
+                        Claude Code puede ejecutarse sin interactividad en pipelines de CI/CD,
+                        GitHub Actions, scripts y cron jobs. Automatiza revisiones de código,
+                        auditorías de seguridad y generación de documentación en cada push.
+                    </p>
+                </div>
+
+                <h3 class="block-title">CI-1 — Modo headless básico</h3>
+                <p>El flag <code>-p</code> (prompt) activa el modo no-interactivo. Acepta stdin y soporta múltiples formatos de salida:</p>
+                <div class="code-block" data-lang="bash" data-title="Modo headless — flags esenciales">
+                    <pre><code># Prompt directo
+claude -p "Revisa si este código tiene vulnerabilidades" < src/api.ts
+
+# Formato JSON estructurado (para scripts)
+claude -p "Analiza la calidad del código" < src/utils.ts --output-format json
+
+# Formato stream-json (para streaming en tiempo real)
+claude -p "Genera tests para este módulo" < src/auth.ts --output-format stream-json
+
+# Desactivar permisos interactivos (para CI no supervisado)
+claude -p "..." --dangerously-skip-permissions
+
+# Con variables de entorno y sistema de archivos
+ANTHROPIC_API_KEY=$SECRET claude -p "Audita el PR" --output-format json
+
+# Pasar datos vía stdin
+echo "Refactoriza este SQL: SELECT * FROM u WHERE id = $id" | claude -p</code></pre>
+                </div>
+
+                <h3 class="block-title">CI-2 — GitHub Actions: revisión automática de PRs</h3>
+                <div class="code-block" data-lang="bash" data-title=".github/workflows/claude-review.yml">
+                    <pre><code>name: Claude Code Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # histórico completo para git diff
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run Code Review
+        id: review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Obtener diff del PR
+          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD)
+
+          # Revisión con Claude en formato JSON
+          REVIEW=$(echo "$DIFF" | claude -p \
+            "Revisa este diff de PR. Evalúa: calidad, seguridad, performance y tests.
+             Devuelve JSON con campos: summary (string), blockers (array), suggestions (array), approved (bool)" \
+            --output-format json \
+            --dangerously-skip-permissions)
+
+          echo "review=$REVIEW" >> $GITHUB_OUTPUT
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const review = JSON.parse('${{ steps.review.outputs.review }}');
+            const body = `## 🤖 Claude Code Review\n\n` +
+              `**Resumen:** ${review.summary}\n\n` +
+              (review.blockers.length ? `### 🔴 Bloqueantes\n${review.blockers.map(b => `- ${b}`).join('\n')}\n\n` : '') +
+              (review.suggestions.length ? `### 💡 Sugerencias\n${review.suggestions.map(s => `- ${s}`).join('\n')}` : '');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });</code></pre>
+                </div>
+
+                <h3 class="block-title">CI-3 — GitHub Actions: seguridad en cada push</h3>
+                <div class="code-block" data-lang="bash" data-title=".github/workflows/security-scan.yml">
+                    <pre><code>name: Security Scan
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: npm install -g @anthropic-ai/claude-code
+
+      - name: Security Audit
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Archivos modificados en el PR/push
+          FILES=$(git diff --name-only HEAD~1 -- '*.ts' '*.js' '*.py' 2>/dev/null || \
+                  git diff --name-only origin/main...HEAD -- '*.ts' '*.js' '*.py')
+
+          if [ -z "$FILES" ]; then
+            echo "No hay archivos de código modificados"
+            exit 0
+          fi
+
+          FOUND_ISSUES=false
+
+          for FILE in $FILES; do
+            if [ ! -f "$FILE" ]; then continue; fi
+
+            RESULT=$(claude -p \
+              "Analiza SOLO este archivo buscando:
+               1. SQL injection (queries por concatenación)
+               2. XSS (output sin escapar)
+               3. Secretos hardcodeados (keys, passwords, tokens)
+               4. CORS inseguro
+               5. Ejecución de comandos sin sanitizar
+               Si encuentras algo crítico devuelve JSON: {\"critical\": true, \"issues\": [...]}
+               Si está limpio devuelve: {\"critical\": false}" \
+              < "$FILE" --output-format json --dangerously-skip-permissions)
+
+            CRITICAL=$(echo $RESULT | jq -r '.critical // false')
+            if [ "$CRITICAL" = "true" ]; then
+              echo "❌ CRÍTICO en $FILE:"
+              echo $RESULT | jq -r '.issues[]'
+              FOUND_ISSUES=true
+            else
+              echo "✅ Limpio: $FILE"
+            fi
+          done
+
+          if [ "$FOUND_ISSUES" = "true" ]; then
+            exit 1
+          fi</code></pre>
+                </div>
+
+                <h3 class="block-title">CI-4 — Generación automática de changelog</h3>
+                <div class="code-block" data-lang="bash" data-title=".github/workflows/generate-changelog.yml">
+                    <pre><code>name: Generate Changelog
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      releases: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - run: npm install -g @anthropic-ai/claude-code
+
+      - name: Generate Release Notes
+        id: notes
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          VERSION=${{ github.ref_name }}
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+
+          if [ -n "$PREV_TAG" ]; then
+            COMMITS=$(git log ${PREV_TAG}..HEAD --pretty=format:'%h %s (%an)' --no-merges)
+          else
+            COMMITS=$(git log --pretty=format:'%h %s (%an)' --no-merges -30)
+          fi
+
+          NOTES=$(echo "$COMMITS" | claude -p \
+            "Genera release notes profesionales en Markdown para la versión $VERSION.
+             Clasifica en: ✨ Features, 🐛 Bug Fixes, ⚡ Performance, 🔧 Chores, 💥 Breaking Changes.
+             Solo incluye categorías con cambios. Usa un tono técnico pero accesible.
+             El output debe ser solo Markdown, sin texto adicional." \
+            --dangerously-skip-permissions)
+
+          # Guardar para el siguiente paso
+          echo "$NOTES" > release-notes.md
+          echo "notes_file=release-notes.md" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: ${{ steps.notes.outputs.notes_file }}
+          generate_release_notes: false</code></pre>
+                </div>
+
+                <h3 class="block-title">CI-5 — Script de migración asistida</h3>
+                <div class="code-block" data-lang="bash" data-title="scripts/migrate-with-claude.sh">
+                    <pre><code">#!/bin/bash
+# Migración asistida de JS → TS con Claude Code
+# Uso: ./scripts/migrate-with-claude.sh src/utils/
+
+set -e
+TARGET_DIR=${1:-src/}
+CLAUDE_OPTS="--dangerously-skip-permissions"
+
+echo "🔄 Iniciando migración JS→TS en $TARGET_DIR"
+
+# Encontrar todos los .js (excluyendo node_modules y config)
+JS_FILES=$(find "$TARGET_DIR" -name "*.js" \
+  -not -path "*/node_modules/*" \
+  -not -name "*.config.js" \
+  -not -name "*.test.js")
+
+TOTAL=$(echo "$JS_FILES" | wc -l)
+COUNT=0
+
+for FILE in $JS_FILES; do
+  COUNT=$((COUNT + 1))
+  echo "[$COUNT/$TOTAL] Migrando $FILE..."
+
+  TS_FILE="${FILE%.js}.ts"
+
+  # Claude migra el archivo con tipos estrictos
+  claude -p \
+    "Migra este archivo JavaScript a TypeScript estricto.
+     - Infiere tipos desde el uso (no uses 'any')
+     - Añade interfaces para objetos complejos
+     - Preserva toda la lógica de negocio sin cambios
+     - Actualiza imports para usar extensión .ts
+     - NO cambies el comportamiento observable
+     Devuelve SOLO el código TypeScript, sin explicaciones ni backticks." \
+    < "$FILE" $CLAUDE_OPTS > "$TS_FILE"
+
+  # Verificar que compila
+  if npx tsc --noEmit "$TS_FILE" 2>/dev/null; then
+    echo "  ✅ $TS_FILE compila correctamente"
+    rm "$FILE"  # Eliminar original JS
+  else
+    echo "  ⚠️  $TS_FILE tiene errores de tipo — revisar manualmente"
+    rm "$TS_FILE"  # Mantener original JS si hay errores
+  fi
+
+  # Rate limiting: no sobresaturar la API
+  sleep 0.5
+done
+
+echo "✅ Migración completada: $COUNT archivos procesados"
+echo "💡 Ejecuta 'npm run typecheck' para verificar el proyecto completo"</code></pre>
+                </div>
+
+                <h3 class="block-title">CI-6 — Variables de entorno en CI</h3>
+                <div class="code-block" data-lang="bash" data-title="Configuración de secrets en GitHub / CI">
+                    <pre><code># GitHub Actions — agregar secrets al repositorio
+# Settings → Secrets and variables → Actions → New repository secret
+# Nombre: ANTHROPIC_API_KEY
+# Valor:  sk-ant-api03-***
+
+# Uso en workflow:
+env:
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+# GitLab CI/CD
+# Settings → CI/CD → Variables → Add variable
+# Key: ANTHROPIC_API_KEY
+
+# .gitlab-ci.yml:
+variables:
+  ANTHROPIC_API_KEY: $ANTHROPIC_API_KEY
+
+# Verificar que Claude tiene acceso antes de ejecutar
+- name: Verify Claude access
+  env:
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  run: |
+    claude -p "responde solo 'ok'" --dangerously-skip-permissions
+    echo "✅ Claude Code autenticado correctamente"</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--warn">
+                    <strong>⚠ Costo en CI:</strong> Cada ejecución de Claude en CI consume tokens.
+                    Usa <code>claude-haiku-4-5-20251001</code> para checks rápidos y Sonnet solo para
+                    análisis complejos. Considera ejecutar solo en PRs a <code>main</code>, no en
+                    todos los feature branches.
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: MEJORES PRÁCTICAS ====== -->
+            <section class="content-section" data-section="mejores-practicas" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Producción / Mejores Prácticas</span>
+                    <h2>✦ Mejores Prácticas — Guía Senior</h2>
+                    <p class="section-lead">
+                        Las prácticas que separan un uso amateur de un uso profesional de Claude Code.
+                        Organización, eficiencia de tokens, seguridad de equipo y patrones de escalado.
+                    </p>
+                </div>
+
+                <h3 class="block-title">BP-1 — CLAUDE.md: la piedra angular</h3>
+                <p>Un CLAUDE.md bien escrito hace que cada sesión inicie ya con el contexto completo del proyecto.
+                   Aquí el template que usamos en equipos de producción:</p>
+                <div class="code-block" data-lang="markdown" data-title="CLAUDE.md — template completo de equipo">
+                    <pre><code"># Proyecto: [Nombre]
+# Última actualización: 2026-05-04
+
+## Stack Técnico
+- **Frontend**: Next.js 14 + TypeScript + Tailwind + Zustand
+- **Backend**: Node.js 22 + Fastify + Prisma ORM
+- **DB**: PostgreSQL 16 (AWS RDS) + Redis 7 (ElastiCache)
+- **Tests**: Vitest (unit/integration), Playwright (E2E)
+- **CI/CD**: GitHub Actions → Vercel (preview) → AWS ECS (prod)
+
+## Arquitectura de Carpetas
+```
+src/
+├── app/              → Rutas Next.js 14 (App Router)
+├── components/       → UI reutilizable (sin lógica de negocio)
+├── features/         → Módulos de dominio (auth, cart, checkout)
+│   └── [feature]/
+│       ├── api.ts    → Endpoints Fastify
+│       ├── service.ts → Lógica de negocio
+│       ├── repo.ts   → Acceso a DB (Prisma)
+│       └── types.ts  → Interfaces TypeScript
+├── lib/              → Utilidades transversales
+└── server/           → Entry point Fastify
+```
+
+## Convenciones de Código (OBLIGATORIAS)
+- TypeScript estricto: **NUNCA usar `any`**. Si no sabes el tipo, usa `unknown` + type guard.
+- Componentes React: solo funcionales con hooks. **Sin clases.**
+- Imports absolutos desde `@/` (configurado en tsconfig.json)
+- Tests al lado del código: `foo.ts` → `foo.test.ts`
+- Commits: Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`)
+
+## Reglas de Seguridad (NO NEGOCIABLES)
+1. TODA query SQL pasa por Prisma (NUNCA SQL crudo con interpolación)
+2. TODO endpoint valida con Zod antes de tocar la DB
+3. NUNCA loguear PII (emails, nombres, IPs) en ningún nivel de log
+4. NUNCA commitear secrets (usa variables de entorno)
+5. CORS configurado solo para dominios de la lista allowlist
+
+## Comandos del día a día
+```bash
+npm run dev          # dev server en :3000
+npm run test         # vitest (unit + integration)
+npm run test:e2e     # playwright
+npm run lint         # eslint + prettier --check
+npm run typecheck    # tsc --noEmit
+npm run db:migrate   # prisma migrate dev
+npm run db:seed      # seed de datos de desarrollo
+```
+
+## Context para Claude
+- Los PR reviews usan el Skill `/code-review`
+- Los deploys usan el Skill `/deploy-check`
+- Para modificar el schema DB, siempre crear una migración Prisma
+- El branch `main` está protegido — usa feature branches + PR</code></pre>
+                </div>
+
+                <h3 class="block-title">BP-2 — Gestión eficiente de tokens</h3>
+                <div class="tip-grid">
+                    <div class="tip-card">
+                        <div class="tip-number">01</div>
+                        <h4>Usa @ selectivamente</h4>
+                        <p>No menciones archivos completos cuando basta con una función.
+                           <code>@src/utils.ts:42-80</code> (líneas específicas) consume mucho menos que el archivo entero.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-number">02</div>
+                        <h4>Compacta antes del 75%</h4>
+                        <p>Con instrucciones explícitas: <code>/compact preserva X, descarta Y</code>.
+                           Compactar a ciegas puede perder contexto crítico.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-number">03</div>
+                        <h4>Separa tareas por sesión</h4>
+                        <p>Una sesión = un objetivo. Mezclar refactor + review + debug
+                           en la misma sesión infla el contexto innecesariamente.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-number">04</div>
+                        <h4>CLAUDE.md conciso</h4>
+                        <p>Cada byte del CLAUDE.md se carga en cada sesión. Mantén la información
+                           densa y elimina lo que ya no aplica al proyecto actual.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-number">05</div>
+                        <h4>Modelo correcto para la tarea</h4>
+                        <p>Haiku para clasificación/extracción rápida. Sonnet para el 80% del trabajo.
+                           Opus solo para análisis críticos que justifican el costo.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-number">06</div>
+                        <h4>Limita MCP servers</h4>
+                        <p>Cada servidor MCP conectado añade tokens al contexto. Solo conecta los
+                           servidores que usas activamente en la sesión actual.</p>
+                    </div>
+                </div>
+
+                <h3 class="block-title">BP-3 — Prompts de alto rendimiento</h3>
+                <div class="code-block" data-lang="text" data-title="Anatomía de un prompt efectivo">
+                    <pre><code>> [CONTEXTO] Estamos migrando nuestra API de autenticación de JWT a sessions.
+                    # ↑ Siempre establece el contexto del problema primero
+
+  [RESTRICCIONES] El código usa Fastify + Prisma + Redis. NO uses Express.
+                   Mantén la interfaz pública (endpoints y response shapes) sin cambios.
+  # ↑ Las restricciones previenen soluciones incorrectas antes de empezar
+
+  [ARCHIVOS] Lee @src/auth/jwt.ts y @src/auth/middleware.ts primero.
+  # ↑ Menciona los archivos exactos — evita que Claude asuma o busque por su cuenta
+
+  [TAREA] Propón la arquitectura de la migración en pasos. NO implementes nada todavía.
+  # ↑ Separa diseño de implementación — más fácil iterar sobre el plan
+
+  [OUTPUT] Devuelve: 1) Diagrama ASCII del flujo nuevo, 2) Lista de archivos a modificar,
+           3) Pasos ordenados de implementación, 4) Riesgos identificados.
+  # ↑ Output estructurado = respuestas más precisas y reutilizables</code></pre>
+                </div>
+
+                <h3 class="block-title">BP-4 — Flujo de trabajo en equipo</h3>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="workflow-icon">📋</div>
+                        <div class="workflow-content">
+                            <h4>Setup inicial (una vez)</h4>
+                            <p>CLAUDE.md completo · Skills del equipo en .claude/skills/ · .claudeignore configurado · settings.json con permisos mínimos</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-icon">🌿</div>
+                        <div class="workflow-content">
+                            <h4>Feature branch</h4>
+                            <p><code>git checkout -b feat/mi-feature</code> → sesión Claude con objetivo claro → commits pequeños y frecuentes</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-icon">🔍</div>
+                        <div class="workflow-content">
+                            <h4>Pre-PR</h4>
+                            <p><code>/deploy-check</code> → <code>/security-audit</code> → <code>/code-review</code> → corregir hallazgos antes de abrir el PR</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-icon">🚀</div>
+                        <div class="workflow-content">
+                            <h4>CI automático</h4>
+                            <p>GitHub Actions: Claude revisa el diff automáticamente · Comenta bloqueantes en el PR · Falla CI si hay issues críticos</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-icon">📦</div>
+                        <div class="workflow-content">
+                            <h4>Release</h4>
+                            <p><code>/release-notes v1.2.0</code> → genera changelog → crea GitHub release con notas automáticas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="block-title">BP-5 — Anti-patrones a evitar</h3>
+                <div class="antipatterns-grid">
+                    <div class="antipattern-card">
+                        <div class="antipattern-bad">❌ Sesión de 4 horas sin checkpoint</div>
+                        <div class="antipattern-good">✅ Checkpoint con <code>/compact</code> y <code>/memory</code> cada hora</div>
+                    </div>
+                    <div class="antipattern-card">
+                        <div class="antipattern-bad">❌ <code>allowed-tools: Bash(*)</code> en Skills</div>
+                        <div class="antipattern-good">✅ Listar comandos específicos: <code>Bash(git diff:*)</code></div>
+                    </div>
+                    <div class="antipattern-card">
+                        <div class="antipattern-bad">❌ MCP tokens literales en .mcp.json</div>
+                        <div class="antipattern-good">✅ Variables de entorno: <code>${GITHUB_TOKEN}</code></div>
+                    </div>
+                    <div class="antipattern-card">
+                        <div class="antipattern-bad">❌ "Arregla todos los bugs del proyecto"</div>
+                        <div class="antipattern-good">✅ Objetivo específico con contexto y archivos concretos</div>
+                    </div>
+                    <div class="antipattern-card">
+                        <div class="antipattern-bad">❌ Ignorar los hallazgos de /security-audit</div>
+                        <div class="antipattern-good">✅ Resolver críticos antes de cada merge a main</div>
+                    </div>
+                    <div class="antipattern-card">
+                        <div class="antipattern-bad">❌ CLAUDE.md desactualizado de hace 6 meses</div>
+                        <div class="antipattern-good">✅ Actualizar en cada cambio arquitectónico importante</div>
+                    </div>
+                </div>
+            </section>
+
             <!-- ====== SECCIÓN: SIMULADOR DE TERMINAL ====== -->
             <section class="content-section" data-section="terminal" data-mode="technical">
                 <div class="section-header">
@@ -902,6 +2584,9 @@ Devuelve feedback agrupado por prioridad (🔴 bloqueante,
                         <option value="skill">5. Crear y usar una Skill (Nivel 3)</option>
                         <option value="security">6. Configuración de seguridad</option>
                         <option value="headless">7. Modo headless para CI/CD</option>
+                        <option value="agentSdk">8. Agent SDK — agente autónomo</option>
+                        <option value="apiUsage">9. Anthropic API con streaming</option>
+                        <option value="worktree">10. Sesiones paralelas con worktrees</option>
                     </select>
                     <button id="run-scenario" class="btn-primary">▶ Ejecutar</button>
                     <button id="clear-terminal" class="btn-ghost">Limpiar</button>
