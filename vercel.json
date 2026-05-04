@@ -1,7 +1,6 @@
 {
-  "buildCommand": "echo 'Static site - no build needed'",
-  "installCommand": "echo 'No install needed'",
-  "name": "claude-code-mastery",
-  "public": true,
-  "framework": "static"
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "nodeVersion": "18.x"
 }
