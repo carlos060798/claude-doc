@@ -1,6 +1,6 @@
 import { getBodyHTML } from '@/lib/getHtml'
 
-export default function Home() {
+export default async function Home() {
   const bodyHTML = getBodyHTML()
   
   return (
