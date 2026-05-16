@@ -1483,6 +1483,79 @@ kbd {
     border-left: 3px solid var(--success);
 }
 
+/* ============ 4.93 QUIZ BLOCKS ============ */
+.quiz-block {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: var(--sp-5);
+    margin-bottom: var(--sp-6);
+}
+.quiz-q {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-4);
+    line-height: 1.5;
+}
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-4);
+}
+.quiz-option {
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    border-left: 3px solid transparent;
+}
+.quiz-option--correct {
+    background: rgba(61, 220, 151, 0.1);
+    border-color: var(--success);
+    color: #a8f0d0;
+}
+.quiz-option--wrong {
+    background: var(--bg-tertiary);
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+.quiz-answer {
+    background: var(--bg-overlay);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-4);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    border-left: 3px solid var(--accent);
+}
+.quiz-answer strong { color: var(--accent); }
+
+/* ============ 4.94 CALLOUTS ============ */
+.callout {
+    padding: var(--sp-4) var(--sp-5);
+    border-radius: var(--radius);
+    margin: var(--sp-5) 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    border-left: 4px solid;
+}
+.callout--warning {
+    background: rgba(255, 190, 80, 0.08);
+    border-color: #ffbe50;
+    color: #ffe0a0;
+}
+.callout--info {
+    background: rgba(99, 179, 237, 0.08);
+    border-color: var(--accent);
+    color: var(--text-secondary);
+}
+.callout strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+}
+
 /* ============ 4.95 CURSO INTERACTIVO ============ */
 
 /* Hero del curso */
@@ -2236,3 +2309,4 @@ kbd {
     .commands-table th:nth-child(3),
     .commands-table td:nth-child(3) { display: none; }
 }
+
