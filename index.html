@@ -129,7 +129,7 @@
 
                 <p class="nav-group-title">Producción</p>
                 <ul class="nav-list">
-                    <li><a href="#memoria" class="nav-link" data-section="memoria">
+                    <li><a href="#memory" class="nav-link" data-section="memory">
                         <span class="nav-icon">💾</span> Tu Progreso</a></li>
                     <li><a href="#seguridad" class="nav-link" data-section="seguridad">
                         <span class="nav-icon">⛨</span> Seguridad & Hardening</a></li>
@@ -141,6 +141,22 @@
                         <span class="nav-icon">▶</span> Simulador Terminal</a></li>
                     <li><a href="#recursos" class="nav-link" data-section="recursos">
                         <span class="nav-icon">↗</span> Recursos Externos</a></li>
+                </ul>
+
+                <p class="nav-group-title">Profundización</p>
+                <ul class="nav-list">
+                    <li><a href="#capstone" class="nav-link" data-section="capstone">
+                        <span class="nav-icon">🏆</span> Proyecto Capstone</a></li>
+                    <li><a href="#cheatsheet" class="nav-link" data-section="cheatsheet">
+                        <span class="nav-icon">📄</span> Cheatsheet</a></li>
+                    <li><a href="#git-workflows-detail" class="nav-link" data-section="git-workflows-detail">
+                        <span class="nav-icon">🌿</span> Git Workflows (Detallado)</a></li>
+                    <li><a href="#hooks-detail" class="nav-link" data-section="hooks-detail">
+                        <span class="nav-icon">🎣</span> Hooks (Detallado)</a></li>
+                    <li><a href="#mcp-setup" class="nav-link" data-section="mcp-setup">
+                        <span class="nav-icon">🔧</span> MCP Setup</a></li>
+                    <li><a href="#nivel2-casos" class="nav-link" data-section="nivel2-casos">
+                        <span class="nav-icon">📚</span> Casos Nivel 2</a></li>
                 </ul>
             </nav>
 
@@ -1941,53 +1957,6 @@ Luego revisa cambios y haz commit.
             </section>
 
             <!-- ====== SECCIÓN: MEMORIA ====== -->
-            <section class="content-section" data-section="memoria" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Producción / Tu Progreso</span>
-                    <h2>💾 Sistema de Memoria Persistente</h2>
-                    <p class="section-lead">
-                        Cuando el contexto se agota o termina la sesión, guarda tu avance
-                        en el sistema de memoria persistente. Retoma exactamente dónde te quedaste.
-                    </p>
-                </div>
-
-                <h3 class="block-title">¿Por qué existe?</h3>
-                <p>
-                    La ventana de contexto de Claude Code es valiosa. Si trabajas en un curso,
-                    investigación o proyecto largo, el historial conversacional eventualmente
-                    consume espacio. El sistema de memoria te permite:
-                </p>
-                <ul class="bullet-list">
-                    <li><strong>Guardar checkpoints</strong> — nivel actual, capítulo, misión, notas.</li>
-                    <li><strong>Retomar automáticamente</strong> — Claude lee tu snapshot y continúa.</li>
-                    <li><strong>Preservar decisiones</strong> — arquitectura, patrones, aprrendizajes.</li>
-                </ul>
-
-                <h3 class="block-title">Los dos comandos custom</h3>
-                <p>Están en <code>~/.claude/commands/</code> y están listos para usar:</p>
-
-                <div class="code-block" data-lang="bash" data-title="/curso-checkpoint — guardar avance">
-                    <pre><code>/curso-checkpoint
-
-Ejecuta este comando antes de que se acabe el contexto.
-Lee la conversación actual, deduce tu nivel, capítulo y pendientes,
-y los escribe en ~/.claude/curso-claude-code/progreso.md.</code></pre>
-                </div>
-
-                <div class="code-block" data-lang="bash" data-title="/curso-retomar — continuar desde checkpoint">
-                    <pre><code>/curso-retomar
-
-Lee ~/.claude/curso-claude-code/progreso.md y resume dónde te quedaste.
-Luego pregunta si continúas desde ahí o cambias de tema.</code></pre>
-                </div>
-
-                <h3 class="block-title">Flujo recomendado</h3>
-                <div class="info-banner">
-                    <strong>Sesión 1:</strong> Trabajas en el curso. Antes de irte: <code>/curso-checkpoint</code>
-                    <br><strong>Sesión 2:</strong> Dices "sigamos con el curso". Claude ejecuta <code>/curso-retomar</code>.
-                    <br><strong>Resultado:</strong> Contexto limpio, sabes dónde estabas, continúas sin perder el hilo.
-                </div>
-            </section>
 
             <!-- ====== SECCIÓN: SEGURIDAD ====== -->
             <section class="content-section" data-section="seguridad" data-mode="technical">
@@ -4917,7 +4886,7 @@ claude --worktree feature-x
             </section>
 
             <!-- Sección: Memory Management -->
-            <section class="content-section hidden" data-section="memory" data-mode="technical">
+            <section class="content-section" data-section="memory" data-mode="technical">
                 <h2>💾 Memory Management — Persistencia Entre Sesiones</h2>
                 <p class="section-lead">Sistema que mantiene información sin usar historial de conversación.</p>
 
@@ -5746,476 +5715,12 @@ claude
 
         
             <!-- CLAUDE.MD SECTION -->
-            <section class="content-section" data-section="claude-md" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Fundamentos / CLAUDE.md</span>
-                    <h2>📝 CLAUDE.md: Tu System Prompt Persistente</h2>
-                    <p class="section-lead">Estructura, convenciones y reglas de tu proyecto en un archivo que Claude Code lee automáticamente cada sesión.</p>
-                </div>
-
-                <article class="card">
-                    <h3>¿Qué es CLAUDE.md?</h3>
-                    <p>Un archivo de configuración que vive en la raíz de tu proyecto. Claude Code lo carga automáticamente cada sesión para entender:</p>
-                    <ul>
-                        <li><strong>Stack</strong>: Tech stack (frameworks, bases de datos, herramientas)</li>
-                        <li><strong>Convenciones</strong>: Patrones de código, naming (camelCase vs snake_case), estructura de carpetas</li>
-                        <li><strong>Scripts útiles</strong>: Comandos npm/yarn para dev, testing, build, deploy</li>
-                        <li><strong>Reglas de código</strong>: Lo que Claude DEBE hacer y lo que NO DEBE hacer</li>
-                        <li><strong>Contexto arquitectónico</strong>: Decisiones de diseño, gotchas, bugs históricos</li>
-                        <li><strong>Equipo</strong>: Quién es quién, deadlines, estado actual del proyecto</li>
-                    </ul>
-                </article>
-
-                <article class="card">
-                    <h3>Estructura de CLAUDE.md (Ejemplo Real)</h3>
-                    <pre><code class="language-markdown"># Mi Proyecto
-
-## Stack
-- **Frontend**: React 19 + TypeScript + Tailwind CSS
-- **Backend**: Node.js + Express
-- **Database**: PostgreSQL + Prisma ORM
-- **Testing**: Jest + React Testing Library
-- **CI/CD**: GitHub Actions
-
-## Convenciones
-- Naming: camelCase para variables, PascalCase para componentes/clases
-- Imports: usar rutas relativas o alias @/
-- Commits: Conventional Commits (feat:, fix:, docs:, refactor:)
-- Pull Requests: requieren 2 aprobaciones antes de mergear
-- Code coverage: mínimo 80% en tests
-
-## Key Commands
-```bash
-npm run dev        # Dev server (port 3000)
-npm run build      # Production build
-npm test           # Run all tests
-npm run lint       # Linter check
-npm run migrate    # Prisma migrations
-```
-
-## Reglas Importantes
-- ✅ Siempre crear tests para features nuevas
-- ✅ Usar TypeScript (no any, tipos explícitos)
-- ✅ Validar input en API endpoints
-- ❌ No commitear .env o secretos
-- ❌ No modificar schema de DB sin migration
-- ❌ No hacer deploy a prod sin PR aprobado
-
-## Bugs Históricos Conocidos
-- [2024-03] Race condition en auth si no hay mutex. SOLUCIÓN: agregar lock en userCache
-- [2024-02] N+1 query en list_users. SOLUCIÓN: usar aggregation en Prisma
-
-## Próximos Objetivos
-- Refactorizar auth (en progress, PR #247)
-- Performance: optimizar queries de BD
-- Release 2.5.0: 2024-06-15
-                    </code></pre>
-                </article>
-
-                <article class="card">
-                    <h3>Crear CLAUDE.md Automáticamente</h3>
-                    <p>No necesitas escribir CLAUDE.md manualmente. Claude Code puede generarlo por ti:</p>
-                    <pre><code class="language-bash">$ cd mi-proyecto
-$ claude
-✓ Sesión iniciada
-
-$ /init
-✓ Analizando proyecto...
-✓ Detectado: TypeScript, Jest, Prisma, PostgreSQL
-✓ CLAUDE.md creado automáticamente en la raíz</code></pre>
-                    <p><strong>Tip:</strong> Después edítalo manualmente para agregar tu contexto específico (bugs conocidos, reglas del equipo, etc).</p>
-                </article>
-
-                <article class="card">
-                    <h3>Ventajas de Tener CLAUDE.md</h3>
-                    <ul>
-                        <li>✅ <strong>Reutilización de contexto:</strong> No repites "es un proyecto Next.js" cada sesión</li>
-                        <li>✅ <strong>Onboarding rápido:</strong> Nuevo dev entiende el proyecto en 15 minutos</li>
-                        <li>✅ <strong>Consistencia:</strong> Todos usan las mismas convenciones</li>
-                        <li>✅ <strong>Documentación viva:</strong> Siempre actualizada (no se queda desactualizada como otros docs)</li>
-                        <li>✅ <strong>Menos tokens:</strong> Claude entiende el contexto sin que lo repitas</li>
-                    </ul>
-                </article>
-            </section>
 
             <!-- INSTALACIÓN SECTION -->
-            <section class="content-section" data-section="instalacion" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Fundamentos / Instalación</span>
-                    <h2>⚙️ Instalación de Claude Code</h2>
-                    <p class="section-lead">Configura Claude Code en tu máquina en menos de 5 minutos.</p>
-                </div>
-
-                <article class="card">
-                    <h3>Requisitos Previos</h3>
-                    <ul>
-                        <li><strong>Node.js 18+</strong> (incluye npm automáticamente). Verifica con: <code>node --version</code></li>
-                        <li><strong>Sistema operativo:</strong> macOS, Linux, o Windows (WSL2 recomendado en Windows)</li>
-                        <li><strong>Cuenta de Anthropic:</strong> Necesitas acceso a Claude API (es gratis con tier gratuito)</li>
-                        <li><strong>Git</strong> (opcional pero recomendado para version control)</li>
-                    </ul>
-                </article>
-
-                <article class="card">
-                    <h3>Instalación vía npm (Recomendado)</h3>
-                    <pre><code class="language-bash"># 1. Instalar globalmente
-npm install -g @anthropic-ai/claude-code
-
-# 2. Verificar instalación
-claude --version
-# Salida esperada: "Claude Code v2.x.x" o similar
-
-# 3. Primer login (abre navegador automáticamente para OAuth)
-claude auth login
-# Sigue las instrucciones en el navegador
-
-# ✅ ¡Listo! Ahora puedes usar claude en cualquier proyecto</code></pre>
-                </article>
-
-                <article class="card">
-                    <h3>Instalación en Windows (WSL2)</h3>
-                    <p>WSL2 es recomendado en Windows para mejor compatibilidad:</p>
-                    <pre><code class="language-bash"># Dentro de WSL2 (Ubuntu/Debian)
-sudo apt update && sudo apt install -y nodejs npm
-
-# Luego procede con instalación normal
-npm install -g @anthropic-ai/claude-code
-claude auth login</code></pre>
-                </article>
-
-                <article class="card">
-                    <h3>Verificar que Funciona</h3>
-                    <pre><code class="language-bash"># 1. Navega a cualquier proyecto
-cd ~/mis-proyectos/mi-app
-
-# 2. Inicia Claude Code
-claude
-
-# 3. Deberías ver algo como:
-# ✓ Sesión iniciada en /home/user/mis-proyectos/mi-app
-# ✓ CLAUDE.md detectado
-# > (prompt esperando comandos)</code></pre>
-                </article>
-
-                <article class="card">
-                    <h3>Troubleshooting</h3>
-                    <ul>
-                        <li><strong>"command not found: claude"</strong> → Reinstala: <code>npm install -g @anthropic-ai/claude-code</code></li>
-                        <li><strong>"Permission denied"</strong> en macOS/Linux → Usa <code>sudo npm install -g</code></li>
-                        <li><strong>"Node not found"</strong> → Instala Node.js desde nodejs.org</li>
-                        <li><strong>OAuth falla</strong> → Verifica que tu navegador tiene conexión a internet</li>
-                    </ul>
-                </article>
-            </section>
 
             <!-- PRIMEROS PASOS SECTION -->
-            <section class="content-section" data-section="primeros-pasos" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Fundamentos / Primeros Pasos</span>
-                    <h2>🚀 Primeros Pasos con Claude Code</h2>
-                    <p class="section-lead">Tu flujo de primeros 15 minutos después de instalar.</p>
-                </div>
-
-                <article class="card">
-                    <h3>1️⃣ Abre un Proyecto</h3>
-                    <pre><code class="language-bash">cd ~/tu-proyecto
-claude</code></pre>
-                    <p>Claude Code analiza automáticamente:</p>
-                    <ul>
-                        <li>Stack detectado (Next.js, React, Node, etc.)</li>
-                        <li>Archivos clave (package.json, tsconfig, etc.)</li>
-                        <li>Git history y ramas disponibles</li>
-                        <li>Variables de entorno (.env detectado)</li>
-                    </ul>
-                </article>
-
-                <article class="card">
-                    <h3>2️⃣ Genera CLAUDE.md (Automático)</h3>
-                    <pre><code class="language-bash">$ /init
-✓ Analizando proyecto...
-✓ CLAUDE.md creado con:
-  - Stack: TypeScript + React + Express + PostgreSQL
-  - 15 scripts npm detectados
-  - Estructura: /src/app, /src/components, /prisma</code></pre>
-                    <p><strong>Tip:</strong> Abre el archivo creado y mejóralo manualmente con contexto específico de tu proyecto.</p>
-                </article>
-
-                <article class="card">
-                    <h3>3️⃣ Pide Ayuda</h3>
-                    <pre><code class="language-bash">$ /help</code></pre>
-                    <p>Lista todos los comandos disponibles en tu sesión:</p>
-                    <ul>
-                        <li><code>/clear</code> — Limpiar historial</li>
-                        <li><code>/model</code> — Cambiar modelo (Opus/Sonnet/Haiku)</li>
-                        <li><code>/context</code> — Ver uso de tokens</li>
-                        <li><code>/compact</code> — Comprimir contexto</li>
-                        <li><code>/mcp</code> — Conectar MCPs (GitHub, Slack, DB)</li>
-                    </ul>
-                </article>
-
-                <article class="card">
-                    <h3>4️⃣ Menciona Archivos con @</h3>
-                    <pre><code class="language-bash">Refactoriza @src/auth/login.ts para usar async/await en lugar de .then()</code></pre>
-                    <p><strong>Ventajas de usar @:</strong></p>
-                    <ul>
-                        <li>Claude carga el archivo automáticamente</li>
-                        <li>No tienes que copiar-pegar código manualmente</li>
-                        <li>Más tokens disponibles para otras cosas</li>
-                        <li>Funciona con carpetas: <code>@src/components/</code></li>
-                    </ul>
-                </article>
-
-                <article class="card">
-                    <h3>5️⃣ Usa Comandos Slash Útiles</h3>
-                    <pre><code class="language-bash"># Ver consumo de tokens
-/context
-
-# Cambiar a modelo más potente (para análisis complejos)
-/model claude-opus-4-7
-
-# Comprimir contexto cuando se llene
-/compact mantén el plan, descarta logs verbosos
-
-# Conectar GitHub para automation
-/mcp
-# Luego: claude mcp add github -e GITHUB_TOKEN=...</code></pre>
-                </article>
-
-                <article class="card">
-                    <h3>Ejemplo Real: Setup Rápido de Proyecto</h3>
-                    <pre><code class="language-bash">$ cd mi-proyecto && claude
-✓ Sesión iniciada
-
-$ /init
-✓ CLAUDE.md creado
-
-$ @package.json @src/app.tsx @prisma/schema.prisma
-¿Cuál es la arquitectura de este proyecto? Explícame en 5 puntos.
-
-# Claude responde con analysis detallado...
-
-$ /model claude-sonnet-4-6
-# Cambias a modelo más rápido
-
-$ @src/auth/login.ts
-Revisa este código de autenticación. ¿Hay bugs de seguridad?
-
-# Claude analiza y propone mejoras...</code></pre>
-                </article>
-            </section>
 
             <!-- PROYECTOS SECTION -->
-            <section class="content-section" data-section="proyectos" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Casos Prácticos / Proyectos de Ejemplo</span>
-                    <h2>🚀 Proyectos Reales: Flujos de Trabajo Nivel 1</h2>
-                    <p class="section-lead">Tres casos prácticos que enfrentan todos los developers. Paso a paso con comandos copy-paste.</p>
-                </div>
-
-                <article class="card">
-                    <h3>📋 Caso 1: Configurar Primer Proyecto con Claude Code</h3>
-                    <p><strong>Situación:</strong> Acabas de clonar un repositorio que no conoces. Quieres entender su estructura rápidamente y dejar configurado para sesiones futuras.</p>
-                    <p><strong>Tiempo:</strong> 15-20 minutos | <strong>Nivel:</strong> Fundamentos</p>
-
-                    <div class="steps">
-                        <div class="step">
-                            <h4>Paso 1: Verifica la Instalación</h4>
-                            <pre><code class="language-bash">cd mi-proyecto && claude --version
-# Salida: Claude Code v2.x.x</code></pre>
-                            <p>Confirma que Claude está instalado y listo.</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 2: Inicia la Sesión</h4>
-                            <pre><code class="language-bash">cd mi-proyecto && claude
-# Se abre sesión interactiva, ves el prompt esperando comandos</code></pre>
-                            <p>Primera vez te pide OAuth en el navegador. Después está registrado globalmente.</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 3: Genera CLAUDE.md</h4>
-                            <pre><code class="language-bash">/init
-# Claude analiza: package.json, estructura, .git, README
-# ✓ Genera CLAUDE.md con Stack, Scripts, Archivos Clave</code></pre>
-                            <p>Claude detecta automáticamente si es Next.js, Express, PostgreSQL, etc.</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 4: Entiende la Arquitectura</h4>
-                            <pre><code class="language-bash">@package.json @src/app.tsx @prisma/schema.prisma
-¿Cuál es la arquitectura de este proyecto?
-¿Dónde empezaría si me pidieras agregar autenticación?</code></pre>
-                            <p>Claude te explica stack, estructura, patrones, dónde ir para features específicas.</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 5: Mejora CLAUDE.md Manualmente</h4>
-                            <pre><code class="language-bash"># Abre el archivo generado y agrega:
-# - Bugs históricos conocidos
-# - Reglas específicas del equipo
-# - Decidiones arquitectónicas importantes
-# - Status actual del proyecto</code></pre>
-                            <p>Este archivo es tu "memory" del proyecto. Actualízalo cuando aprendas algo importante.</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 6: Verifica Configuración</h4>
-                            <pre><code class="language-bash">/doctor
-# Diagnóstico que verifica:
-# - ¿CLAUDE.md en la raíz? ✓
-# - ¿Node.js instalado? ✓
-# - ¿Variables de entorno? ✓
-# - ¿.git sano? ✓</code></pre>
-                            <p>Si hay warnings, léelos. Usualmente sobre .env o variables que necesitas.</p>
-                        </div>
-                    </div>
-
-                    <p><strong>Resultado esperado:</strong> Proyecto listo. Próxima sesión cargará contexto automáticamente. ✅</p>
-                </article>
-
-                <article class="card">
-                    <h3>👀 Caso 2: First Solo Code Review con Claude</h3>
-                    <p><strong>Situación:</strong> Te piden que revises un PR antes de mergear. 200 líneas de código nuevo en auth. El autor espera feedback constructivo.</p>
-                    <p><strong>Tiempo:</strong> 10-15 minutos | <strong>Nivel:</strong> Fundamentos</p>
-
-                    <div class="steps">
-                        <div class="step">
-                            <h4>Paso 1: Obtén el Diff del PR</h4>
-                            <pre><code class="language-bash">git log --oneline | head -5
-# Copia el hash del último commit
-git show HASH > /tmp/pr-diff.txt</code></pre>
-                            <p>O si está en GitHub, descarga el .patch directo.</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 2: Carga Archivos Relevantes</h4>
-                            <pre><code class="language-bash">@auth/login.ts @tests/auth.spec.ts
-Acabo de hacer un PR con cambios en auth. Dame un code review:
-1. ¿Hay bugs o vulnerabilidades?
-2. ¿Sigue las convenciones? (revisa @CLAUDE.md)
-3. ¿Los tests cubren casos edge?
-4. ¿Puedo simplificar algo?
-
-Formato: feedback por sección + score (1-10)</code></pre>
-                            <p>Claude revisa línea por línea, compara vs convenciones, verifica seguridad.</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 3: Documenta el Feedback en el PR</h4>
-                            <pre><code class="language-bash"># Copia los puntos principales como comentarios en GitHub
-
-💬 SECURITY: validateInput() no valida espacios. Riesgo de bypass.
-💬 CODE STYLE: inconsistencia en error handling (catch vs try-catch)
-💬 TESTS: falta caso "empty password"
-💬 MINOR: renombra "usr" a "user"
-
-Overall: 7/10 — Sólido, fixes menores recomendados.</code></pre>
-                            <p>Comentarios profesionales en el PR. El autor sabe qué mejorar.</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 4: Sigue con los Cambios</h4>
-                            <pre><code class="language-bash"># Cuando el autor pushea cambios:
-@auth/login.ts
-El autor hizo cambios. ¿Se resolvieron tus comentarios originales?</code></pre>
-                            <p>Confirmación de que los fixes se aplicaron correctamente.</p>
-                        </div>
-                    </div>
-
-                    <p><strong>Resultado esperado:</strong> Code review profesional en 15 minutos. 5 min vs 30 min manual. ✅</p>
-                </article>
-
-                <article class="card">
-                    <h3>🚨 Caso 3: Debugging Rápido de Prod (Error Fatal)</h3>
-                    <p><strong>Situación:</strong> Error en producción. Log dice "TypeError: undefined is not a function" en línea 42. Clientes afectados. Necesitas arreglarlo en 10 minutos.</p>
-                    <p><strong>Tiempo:</strong> 5-10 minutos | <strong>Nivel:</strong> Fundamentos</p>
-
-                    <div class="steps">
-                        <div class="step">
-                            <h4>Paso 1: Obtén el Error Exacto</h4>
-                            <pre><code class="language-bash"># Desde Vercel/Railway/tu host:
-tail -100 /var/log/app.log | grep -A 5 "TypeError"
-# Copia el stack trace completo</code></pre>
-                            <p>Si usas Vercel/Railway/Render, descarga logs desde su dashboard.</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 2: Carga el Contexto</h4>
-                            <pre><code class="language-bash">@src/services/userService.ts @src/api/users.ts
-Stack trace:
-
-TypeError: undefined is not a function
-  at userService.ts:42
-  at /api/users/:id GET
-
-¿Qué está roto? Propón el fix mínimo.</code></pre>
-                            <p>Claude identifica la función undefined y propone fix (1-5 líneas).</p>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 3: Aplica el Fix</h4>
-                            <pre><code class="language-bash"># Edita el archivo según sugerencia de Claude
-# Verifica que importaste lo necesario</code></pre>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 4: Testea Localmente</h4>
-                            <pre><code class="language-bash">npm run dev
-# Abre http://localhost:3000/api/users/123
-# ✓ Devuelve 200, no 500</code></pre>
-                        </div>
-
-                        <div class="step">
-                            <h4>Paso 5: Commit y Deploy</h4>
-                            <pre><code class="language-bash">git add -A && git commit -m "fix: undefined function in userService line 42"
-git push
-# Deploy se dispara automáticamente (si tienes CI/CD)</code></pre>
-                        </div>
-                    </div>
-
-                    <p><strong>Resultado esperado:</strong> API arreglada en <2 minutos. Clientes recuperados. ✅</p>
-                </article>
-
-                <article class="card">
-                    <h3>💡 Resumen: Cuándo Usar Claude Code</h3>
-                    <table class="comparison-table">
-                        <thead>
-                            <tr>
-                                <th>Tarea</th>
-                                <th>Usa Claude</th>
-                                <th>Manual</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Entender proyecto nuevo</td>
-                                <td>✓ /init analiza automáticamente</td>
-                                <td>— Leer docs (lento)</td>
-                            </tr>
-                            <tr>
-                                <td>Code review</td>
-                                <td>✓ Análisis línea-por-línea + seguridad</td>
-                                <td>Manual: 30 min (tedioso)</td>
-                            </tr>
-                            <tr>
-                                <td>Bug en prod</td>
-                                <td>✓ Diagnstico rápido de stack trace</td>
-                                <td>Manual: adivinanzas (lento)</td>
-                            </tr>
-                            <tr>
-                                <td>Refactor grande</td>
-                                <td>✓ Guía paso a paso con tests</td>
-                                <td>Manual: propenso a errores</td>
-                            </tr>
-                            <tr>
-                                <td>Setup proyecto nuevo</td>
-                                <td>✓ CLAUDE.md automático</td>
-                                <td>Manual: escribir todo</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </article>
-            </section>
 
         
             <!-- GIT WORKFLOWS REALES SECTION -->
@@ -6538,91 +6043,6 @@ cd tu-proyecto && claude
             </section>
 
             <!-- MULTI-MCP ORCHESTRATION SECTION -->
-            <section class="content-section" data-section="multi-mcp-orchestration" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Producción / Orquestación Multi-MCP</span>
-                    <h2>🎼 Orquestar Múltiples MCPs en Paralelo</h2>
-                    <p class="section-lead">Patrones de coordinación: Fork-Join para paralelismo, Cascading Validation para secuencias.</p>
-                </div>
-
-                <article class="card">
-                    <h3>Patrón 1: Fork-Join (Paralelismo con MCPs)</h3>
-                    <p>Ejecuta múltiples MCPs en paralelo y agrega resultados. Ideal para análisis multi-fuente.</p>
-                    <pre><code>Análisis PR #247 en paralelo:
-
-┌─────────────────────┐
-│ Main Claude Session │
-└──────────┬──────────┘
-           │
-     ┌─────┴────────┐
-     ▼              ▼
-  FORK 1        FORK 2
-  GitHub MCP    PostgreSQL MCP
-  ├─ Get PR     ├─ Query tables
-  └─ Code diff  └─ Data impact
-
-  Resultados agregados
-  ✅ REPORTE FINAL</code></pre>
-                    <p><strong>Caso:</strong> Revisar PR que modifica DB. Simultáneamente: diff del código + análisis de datos afectados.</p>
-                </article>
-
-                <article class="card">
-                    <h3>Patrón 2: Cascading Validation</h3>
-                    <p>Validaciones secuenciales: cada paso ejecuta solo si anterior pasó (fail-fast).</p>
-                    <pre><code>Nuevo commit
-
-[1] Code Quality (Lint → Format → Typecheck)
-    ↓ (OK o FAIL)
-[2] Security (SAST → Dependencies → Secrets)
-    ↓ (OK o FAIL)
-[3] Tests (Unit → Integration → E2E)
-    ↓ (OK o FAIL)
-[4] Build (Bundle → Size check)
-    ↓ (OK)
-✅ READY FOR MERGE</code></pre>
-                    <p><strong>Beneficio:</strong> Si Code Quality falla, no gastas tokens en Security. Fail-fast.</p>
-                </article>
-
-                <article class="card">
-                    <h3>Recomendaciones por Tamaño de Equipo</h3>
-                    <table class="comparison-table">
-                        <thead>
-                            <tr>
-                                <th>Tamaño</th>
-                                <th>Workflow</th>
-                                <th>MCPs Clave</th>
-                                <th>Paralelismo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Solo tú</td>
-                                <td>Trunk-based</td>
-                                <td>GitHub</td>
-                                <td>Worktrees</td>
-                            </tr>
-                            <tr>
-                                <td>2-5</td>
-                                <td>Trunk-based</td>
-                                <td>GitHub + Slack</td>
-                                <td>Forks</td>
-                            </tr>
-                            <tr>
-                                <td>5-15</td>
-                                <td>Gitflow</td>
-                                <td>GitHub + PostgreSQL + Slack</td>
-                                <td>Cascading + Forks</td>
-                            </tr>
-                            <tr>
-                                <td>15+</td>
-                                <td>Multi-repo</td>
-                                <td>↑ + Custom MCPs</td>
-                                <td>Orchestration avanzado</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </article>
-            </section>
 
             <!-- NIVEL 2 CASOS PRÁCTICOS -->
             <section class="content-section" data-section="nivel2-casos" data-mode="technical">
@@ -6714,381 +6134,40 @@ Voy a empezar. Explícame la arquitectura y primeros pasos.
 
         
             <!-- BRANCHING STRATEGY SECTION -->
-            <section class="content-section" data-section="branching" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Arquitectura / Git Branching</span>
-                    <h2>🌿 Branching Strategy</h2>
-                    <p class="section-lead">Elige tu flujo de trabajo: Trunk-based, Gitflow o Worktrees.</p>
-                </div>
-                <article class="card">
-                    <p>Ver <a href="#git-workflows-detail" data-jump="git-workflows-detail">Git Workflows Detallado</a> para implementación completa.</p>
-                </article>
-            </section>
 
             <!-- RULES & CONFIG SECTION -->
-            <section class="content-section" data-section="rules" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Arquitectura / Configuración</span>
-                    <h2>📋 .rules & Config</h2>
-                    <p class="section-lead">Convenciones y reglas del proyecto en CLAUDE.md</p>
-                </div>
-                <article class="card">
-                    <h3>¿Qué son las .rules?</h3>
-                    <p>Reglas de código que Claude DEBE y NO DEBE hacer. Se especifican en CLAUDE.md:</p>
-                    <pre><code class="language-markdown">## Rules
-- ✅ Siempre usar TypeScript (no any)
-- ✅ Tests para cada feature
-- ❌ No commitear .env
-- ❌ No usar eval()
-- ❌ No modificar schema sin migration</code></pre>
-                </article>
-                <article class="card">
-                    <h3>/doctor: Verificar Configuración</h3>
-                    <pre><code class="language-bash">claude
-/doctor
-# Verifica:
-# - CLAUDE.md presente
-# - Variables de entorno OK
-# - .git sano
-# - Node.js compatible</code></pre>
-                </article>
-            </section>
 
             <!-- MEMORY MANAGEMENT SECTION -->
-            <section class="content-section" data-section="memory" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Arquitectura / Memory</span>
-                    <h2>💾 Memory Management</h2>
-                    <p class="section-lead">Gestiona la memoria de contexto eficientemente.</p>
-                </div>
-                <article class="card">
-                    <h3>Comandos de Memory</h3>
-                    <pre><code class="language-bash"># Ver uso actual
-/context
-
-# Comprimir contexto (mantén lo esencial, descarta logs)
-/compact
-
-# Ver tokens y costo estimado
-/usage
-
-# Guardar información en memory (persistente)
-/memory add "Equipo: Juan, María, Carlos"</code></pre>
-                </article>
-                <article class="card">
-                    <h3>Cuándo Comprimir</h3>
-                    <ul>
-                        <li>Cuando /context muestra >80% de uso</li>
-                        <li>Si tienes logs muy largos que no necesitas</li>
-                        <li>Antes de tareas complejas que requieren más contexto</li>
-                    </ul>
-                </article>
-            </section>
 
             <!-- PATRONES DE COMANDOS SECTION -->
-            <section class="content-section" data-section="patrones" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Arquitectura / Patrones</span>
-                    <h2>🔄 Patrones de Comandos</h2>
-                    <p class="section-lead">Patrones frecuentes de cómo usar Claude Code.</p>
-                </div>
-                <article class="card">
-                    <h3>Patrón 1: Mención de Archivos</h3>
-                    <pre><code class="language-bash">@src/auth/login.ts @src/api/users.ts
-Revisa estos archivos y propón mejoras de seguridad.</code></pre>
-                </article>
-                <article class="card">
-                    <h3>Patrón 2: Contexto de Proyecto</h3>
-                    <pre><code class="language-bash">@CLAUDE.md
-Según las convenciones, ¿cómo debería refactorizar este código?</code></pre>
-                </article>
-                <article class="card">
-                    <h3>Patrón 3: Fork para Paralelismo</h3>
-                    <pre><code class="language-bash">/fork "Analizar rendimiento en paralelo"
-# Abre sesión paralela con contexto compartido</code></pre>
-                </article>
-            </section>
 
             <!-- DESAFÍOS SECTION -->
-            <section class="content-section" data-section="desafios" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Casos Prácticos / Desafíos</span>
-                    <h2>🧠 Desafíos de Aprendizaje</h2>
-                    <p class="section-lead">Pruebas tu conocimiento con desafíos prácticos.</p>
-                </div>
-                <article class="card">
-                    <h3>Desafío Nivel 1: Setup Rápido</h3>
-                    <p><strong>Objetivo:</strong> Clonar un repo, inicializar con /init y explicar la arquitectura en 10 min.</p>
-                    <p><strong>Evaluación:</strong> CLAUDE.md generado + explicación clara</p>
-                </article>
-                <article class="card">
-                    <h3>Desafío Nivel 2: Code Review</h3>
-                    <p><strong>Objetivo:</strong> Revisar un PR de 200 líneas y postear feedback en GitHub.</p>
-                    <p><strong>Evaluación:</strong> Identificación de 3+ issues reales + seguridad</p>
-                </article>
-                <article class="card">
-                    <h3>Desafío Nivel 3: Automatización</h3>
-                    <p><strong>Objetivo:</strong> Crear una Skill que automatice un flujo de tu equipo.</p>
-                    <p><strong>Evaluación:</strong> Skill funcional, documentado, reutilizable</p>
-                </article>
-            </section>
 
             <!-- SKILLS AVANZADOS SECTION -->
-            <section class="content-section" data-section="skills-avanzados" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Profundización / Skills Avanzados</span>
-                    <h2>🧩 Skills Avanzados</h2>
-                    <p class="section-lead">Crea Skills complejas que orquestas MCPs y automatizan equipos.</p>
-                </div>
-                <article class="card">
-                    <h3>Estructura de una Skill Avanzada</h3>
-                    <pre><code class="language-bash">~/.claude/skills/mi-skill/
-├── SKILL.md          # Metadata + prompt
-├── data.json         # Datos auxiliares
-└── handlers.js       # (opcional) lógica custom</code></pre>
-                </article>
-                <article class="card">
-                    <h3>Skill Multi-MCP: Code Review + Slack Alert</h3>
-                    <p>Revisar PR en GitHub, analizar con PostgreSQL MCP, alertar en Slack si risky.</p>
-                    <pre><code># Pseudocódigo
-/fork "GitHub review"
-  → GitHub MCP: get PR diff
-  → PostgreSQL MCP: affected tables
-  → Análisis
-  → Slack MCP: post alert si risky</code></pre>
-                </article>
-            </section>
 
             <!-- CI/CD & HEADLESS SECTION -->
-            <section class="content-section" data-section="ci-cd" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Profundización / CI/CD</span>
-                    <h2>🔁 CI/CD & Headless Automation</h2>
-                    <p class="section-lead">Claude Code sin GUI: GitHub Actions, cron jobs, headless.</p>
-                </div>
-                <article class="card">
-                    <h3>GitHub Actions + Claude Code</h3>
-                    <pre><code class="language-yaml">name: Auto Review
-on: [pull_request]
-jobs:
-  review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-          npm install -g @anthropic-ai/claude-code
-          claude -p "/code-review-skill"</code></pre>
-                </article>
-                <article class="card">
-                    <h3>Cron Job: Análisis Nightly</h3>
-                    <pre><code class="language-bash"># ~/.claude/cron/nightly.md
-Cada noche, ejecuta:
-- npm test
-- npm run lint
-- Análisis de deuda técnica
-- Alerta si hay breaking changes</code></pre>
-                </article>
-            </section>
 
             <!-- INTRO ACCESIBLE SECTION -->
-            <section class="content-section" data-section="intro-acc" data-mode="accessible">
-                <div class="section-header">
-                    <span class="breadcrumb">No-Programadores / Introducción</span>
-                    <h2>📘 ¿Qué es Claude Code?</h2>
-                    <p class="section-lead">Para personas sin experiencia en programación.</p>
-                </div>
-                <article class="card">
-                    <h3>Claude Code es como un Colega Programador IA</h3>
-                    <p>Imagina que tienes un compañero que sabe programar muy bien y está disponible 24/7.</p>
-                    <p>Puedes pedirle que:</p>
-                    <ul>
-                        <li>Revise código (como un jefe de equipo)</li>
-                        <li>Refactorice (reescriba mejorando)</li>
-                        <li>Explique cómo funciona algo</li>
-                        <li>Encuentre bugs</li>
-                        <li>Escriba tests</li>
-                    </ul>
-                </article>
-            </section>
 
             <!-- CASOS POR ROL SECTION -->
-            <section class="content-section" data-section="casos-rol" data-mode="accessible">
-                <div class="section-header">
-                    <span class="breadcrumb">No-Programadores / Roles</span>
-                    <h2>👥 Claude Code por Rol</h2>
-                    <p class="section-lead">Cómo usar Claude Code según tu rol en el equipo.</p>
-                </div>
-                <article class="card">
-                    <h3>Product Manager</h3>
-                    <p>Pide a Claude que explique cambios técnicos en términos de producto.</p>
-                </article>
-                <article class="card">
-                    <h3>QA / Tester</h3>
-                    <p>Claude puede escribir tests, generar casos de prueba, validar bugs.</p>
-                </article>
-                <article class="card">
-                    <h3>DevOps</h3>
-                    <p>Automatización de CI/CD, deploymets, monitoreo.</p>
-                </article>
-            </section>
 
             <!-- GLOSARIO SECTION -->
-            <section class="content-section" data-section="glosario" data-mode="accessible">
-                <div class="section-header">
-                    <span class="breadcrumb">No-Programadores / Glosario</span>
-                    <h2>📚 Glosario de Términos</h2>
-                    <p class="section-lead">Explicaciones simples de términos técnicos.</p>
-                </div>
-                <article class="card">
-                    <h3>PR (Pull Request)</h3>
-                    <p>Propuesta de cambios al código. Se revisa antes de aplicar.</p>
-                </article>
-                <article class="card">
-                    <h3>Branch (Rama)</h3>
-                    <p>Versión aislada del código. Como trabajar en un borrador sin afectar el original.</p>
-                </article>
-                <article class="card">
-                    <h3>API (Application Programming Interface)</h3>
-                    <p>Forma de comunicarse entre programas. Como un menú de opciones disponibles.</p>
-                </article>
-                <article class="card">
-                    <h3>Token</h3>
-                    <p>Pequeñas unidades de texto que Claude lee. Como palabras que se cuentan.</p>
-                </article>
-            </section>
 
             <!-- QUIZZES SECTION -->
-            <section class="content-section" data-section="quizzes" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Evaluación / Quizzes</span>
-                    <h2>❓ Quizzes Interactivos</h2>
-                    <p class="section-lead">Prueba tu conocimiento con quizzes por nivel.</p>
-                </div>
-                <article class="card">
-                    <h3>Quiz Nivel 1: Fundamentos</h3>
-                    <p>10 preguntas sobre: instalación, /init, CLAUDE.md, mencionar archivos.</p>
-                    <p><button class="btn btn-primary" onclick="startQuiz('nivel1')">Iniciar Quiz</button></p>
-                </article>
-                <article class="card">
-                    <h3>Quiz Nivel 2: Avanzado</h3>
-                    <p>12 preguntas sobre: MCPs, /fork, /compact, Hooks.</p>
-                    <p><button class="btn btn-primary" onclick="startQuiz('nivel2')">Iniciar Quiz</button></p>
-                </article>
-            </section>
 
             <!-- PROGRESO SECTION -->
-            <section class="content-section" data-section="progreso" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Evaluación / Progreso</span>
-                    <h2>📈 Mi Progreso</h2>
-                    <p class="section-lead">Visualiza tu avance en el curso.</p>
-                </div>
-                <article class="card">
-                    <h3>Progreso Guardado Localmente</h3>
-                    <p>Tu progreso se guarda en localStorage de tu navegador.</p>
-                    <pre><code>Completado:
-✓ Nivel 1 Fundamentos (85%)
-✓ Nivel 2 Avanzado (45%)
-○ Nivel 3 Experto (0%)
-○ Nivel 4 Maestría (0%)</code></pre>
-                </article>
-            </section>
 
             <!-- MEJORES PRÁCTICAS SECTION -->
-            <section class="content-section" data-section="mejores-practicas" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Producción / Mejores Prácticas</span>
-                    <h2>✦ Mejores Prácticas</h2>
-                    <p class="section-lead">Patrones y antipatrones en la práctica.</p>
-                </div>
-                <article class="card">
-                    <h3>✅ Buena Práctica: Menciona Archivos Específicos</h3>
-                    <pre><code class="language-bash">@src/auth/login.ts
-Revisa seguridad en este archivo.</code></pre>
-                </article>
-                <article class="card">
-                    <h3>❌ Antipatrón: Pedir sin Contexto</h3>
-                    <pre><code class="language-bash">Refactoriza el código.
-# ¿Cuál código? ¿Qué archivos?</code></pre>
-                </article>
-                <article class="card">
-                    <h3>✅ Buena Práctica: Usar /compact Regularmente</h3>
-                    <p>Cuando el contexto crece, comprímelo para economizar tokens.</p>
-                </article>
-            </section>
 
             <!-- SIMULADOR TERMINAL SECTION -->
-            <section class="content-section" data-section="terminal" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Producción / Terminal</span>
-                    <h2>▶ Simulador Terminal</h2>
-                    <p class="section-lead">Simula comandos Claude Code en tu navegador.</p>
-                </div>
-                <article class="card">
-                    <div id="terminal-simulator" class="terminal">
-                        <div class="terminal-header">
-                            <span class="terminal-title">Claude Code Terminal Simulator</span>
-                        </div>
-                        <div class="terminal-content">
-                            <p>$ claude</p>
-                            <p>✓ Sesión iniciada en /home/user/proyecto</p>
-                            <p>></p>
-                        </div>
-                    </div>
-                </article>
-            </section>
 
             <!-- RECURSOS EXTERNOS SECTION -->
-            <section class="content-section" data-section="recursos" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Producción / Recursos</span>
-                    <h2>↗ Recursos Externos</h2>
-                    <p class="section-lead">Links útiles a documentación oficial y comunidad.</p>
-                </div>
-                <article class="card">
-                    <h3>Documentación Oficial</h3>
-                    <ul>
-                        <li><a href="https://claude.ai/code" target="_blank">Claude Code Official →</a></li>
-                        <li><a href="https://docs.anthropic.com" target="_blank">Anthropic Docs →</a></li>
-                        <li><a href="https://github.com/modelcontextprotocol" target="_blank">MCP GitHub →</a></li>
-                    </ul>
-                </article>
-                <article class="card">
-                    <h3>Comunidad</h3>
-                    <ul>
-                        <li>Discord: Anthropic Community (oficial)</li>
-                        <li>GitHub Discussions: Feedback y preguntas</li>
-                        <li>Twitter: @AnthropicAI para updates</li>
-                    </ul>
-                </article>
-            </section>
 
             <!-- GIT WORKFLOWS (maps to git-workflows link) -->
-            <section class="content-section" data-section="git-workflows" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Producción / Git</span>
-                    <h2>🌿 Git Workflows</h2>
-                    <p class="section-lead">Ver <a href="#git-workflows-detail" data-jump="git-workflows-detail">Git Workflows Detallado</a> para 3 flujos copy-paste.</p>
-                </div>
-            </section>
 
             <!-- MCP USE CASES (maps to mcp-use-cases link) -->
-            <section class="content-section" data-section="mcp-use-cases" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Producción / MCPs</span>
-                    <h2>🔗 MCPs por Caso de Uso</h2>
-                    <p class="section-lead">Ver <a href="#mcp-setup" data-jump="mcp-setup">MCP Setup Guides</a> para GitHub, PostgreSQL, Slack.</p>
-                </div>
-            </section>
 
             <!-- HOOKS PRODUCTION (maps to hooks-production link) -->
-            <section class="content-section" data-section="hooks-production" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Producción / Hooks</span>
-                    <h2>🎣 Hooks en Producción</h2>
-                    <p class="section-lead">Ver <a href="#hooks-detail" data-jump="hooks-detail">Hooks Detallado</a> para 5 hooks de seguridad y automación.</p>
-                </div>
-            </section>
 
         </main>
     </div>
