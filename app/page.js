@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { COMMANDS_DATA, LESSONS_DATA, SCENARIOS } from '@/lib/data'
-import './globals.css'
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('')
