@@ -4804,6 +4804,232 @@ npm run db:seed      # seed de datos de desarrollo
                 </div>
             </section>
 
+            <!-- Sección: Branching Strategy -->
+            <section class="content-section hidden" data-section="branching" data-mode="technical">
+                <h2>🌿 Branching Strategy — Ramas con Claude Code</h2>
+                <p class="section-lead">Estructura de ramas + Claude worktrees para desarrollo sin conflictos.</p>
+
+                <div class="info-box" style="background: linear-gradient(135deg, rgba(62, 220, 151, 0.1) 0%, rgba(62, 220, 151, 0.05) 100%); border-left: 4px solid #3ddc97; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: #3ddc97;">⚡ Quick Start</h3>
+                    <pre><code style="color: #e6edf3;">git checkout -b feature/x
+claude --worktree feature-x
+/memory add "Feature X: description"
+/checkpoint "Milestone 1 done"
+# → Continúa sin conflictos de contexto</code></pre>
+                </div>
+
+                <h3>Patrones principales:</h3>
+                <div style="display: grid; gap: 1.5em;">
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
+                        <h4 style="color: #5eb8ff;">Feature Branches + Worktrees</h4>
+                        <p>Cada feature en rama + worktree aislado. Claude mantiene contexto separado, sin conflictos de historial.</p>
+                        <code style="color: #3ddc97;">claude --worktree feature-auth</code>
+                    </div>
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px;">
+                        <h4 style="color: #c084fc;">Long-Lived Branches + Memory Sync</h4>
+                        <p>Para refactors largos: guardaautomáticamente progreso con Memory + auto-commit.</p>
+                        <code style="color: #3ddc97;">/memory add "Refactor: API v1 → v2"</code>
+                    </div>
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ffb454; border-radius: 8px;">
+                        <h4 style="color: #ffb454;">Hotfix + Production Safety</h4>
+                        <p>Para emergencias: worktree + permission-mode auto. Merge rápido a main + develop.</p>
+                        <code style="color: #3ddc97;">git checkout -b hotfix/csrf</code>
+                    </div>
+                </div>
+
+                <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
+                    <strong>📖 Lectura completa:</strong> Ver <code>BRANCHING_STRATEGY.md</code> en el proyecto para 10 patrones detallados.
+                </p>
+            </section>
+
+            <!-- Sección: Rules & Config -->
+            <section class="content-section hidden" data-section="rules" data-mode="technical">
+                <h2>📋 .rules & CLAUDE.md — Reglas Determinísticas</h2>
+                <p class="section-lead">Instrucciones que se aplican automáticamente en cada sesión.</p>
+
+                <div class="info-box" style="background: linear-gradient(135deg, rgba(94, 184, 255, 0.1) 0%, rgba(94, 184, 255, 0.05) 100%); border-left: 4px solid #5eb8ff; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: #5eb8ff;">¿Qué son las rules?</h3>
+                    <p><strong>Rules</strong> = instrucciones que <strong>SIEMPRE</strong> se ejecutan automáticamente.</p>
+                    <p><strong>Skills</strong> = sugerencias que Claude considera aplicar.</p>
+                </div>
+
+                <h3>Dónde viven las rules:</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; font-family: var(--font-mono);">
+                    <code style="color: #e6edf3;">
+.claude/<br/>
+├── CLAUDE.md          # Guía del proyecto (versionado)<br/>
+├── rules.md           # Reglas específicas<br/>
+├── rules.local.md     # Reglas sensibles (gitignore)<br/>
+└── settings.json      # Config + hooks
+                    </code>
+                </div>
+
+                <h3>Ejemplo de rules en CLAUDE.md:</h3>
+                <div class="code-block" data-lang="markdown">
+                    <pre><code># PROJECT RULES
+
+## Code Style
+- Use 2-space indentation
+- Prefer const over let
+- Always use 'strict' mode
+
+## Database
+- All queries use transactions
+- Never raw SQL (use ORM)
+- Schema changes = migration
+
+## Testing
+- Every function needs tests
+- Min coverage: 80%
+- Use Jest + React Testing Library</code></pre>
+                </div>
+
+                <h3>Cómo aplicar rules:</h3>
+                <ol style="padding-left: 2em; color: var(--text-secondary);">
+                    <li><strong>Manual:</strong> Escribe rules en CLAUDE.md, Claude las lee automáticamente</li>
+                    <li><strong>Hooks:</strong> Valida reglas antes de cada commit vía pre-commit hooks</li>
+                    <li><strong>CI/CD:</strong> ESLint, TypeScript, Tests — verificación automática</li>
+                </ol>
+
+                <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
+                    <strong>📖 Lectura completa:</strong> Ver <code>RULES_CONFIG.md</code> para casos reales por lenguaje (Python, Go, Node.js, etc).
+                </p>
+            </section>
+
+            <!-- Sección: Memory Management -->
+            <section class="content-section hidden" data-section="memory" data-mode="technical">
+                <h2>💾 Memory Management — Persistencia Entre Sesiones</h2>
+                <p class="section-lead">Sistema que mantiene información sin usar historial de conversación.</p>
+
+                <div class="info-box" style="background: linear-gradient(135deg, rgba(192, 132, 252, 0.1) 0%, rgba(192, 132, 252, 0.05) 100%); border-left: 4px solid #c084fc; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: #c084fc;">3 Niveles de Memory</h3>
+                    <ul style="margin: 1em 0; padding-left: 1.5em; color: var(--text-secondary);">
+                        <li><strong>Session:</strong> Esta sesión (se pierde al cerrar)</li>
+                        <li><strong>Project:</strong> Todos los devs del proyecto (versionado en git)</li>
+                        <li><strong>Global:</strong> Todos tus proyectos (permanente)</li>
+                    </ul>
+                </div>
+
+                <h3>Comandos principales:</h3>
+                <div style="display: grid; gap: 1em;">
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97;">
+                        <code>/memory add "Database: PostgreSQL + Prisma ORM"</code>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Agregar entrada a memoria del proyecto</p>
+                    </div>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97;">
+                        <code>/memory search "database"</code>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Buscar en memoria existente</p>
+                    </div>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97;">
+                        <code>/memory list</code>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Ver toda la memoria del proyecto</p>
+                    </div>
+                </div>
+
+                <h3>Estructura recomendada en project memory:</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <code style="color: #e6edf3; line-height: 1.8;">
+memory/<br/>
+├── architecture.md        # Stack, decisiones principales<br/>
+├── api-spec.md           # Endpoints, schemas<br/>
+├── database.md           # Schema, migrations<br/>
+├── deployment.md         # Envs, CI/CD<br/>
+├── learned-lessons.md    # Bugs, soluciones, antipatterns<br/>
+└── performance.md        # Benchmarks, bottlenecks
+                    </code>
+                </div>
+
+                <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
+                    <strong>📖 Lectura completa:</strong> Ver <code>MEMORY_MANAGEMENT.md</code> para flujos de trabajo prácticos.
+                </p>
+            </section>
+
+            <!-- Sección: Command Patterns -->
+            <section class="content-section hidden" data-section="patrones" data-mode="technical">
+                <h2>🔄 Patrones de Comandos — Workflows Reutilizables</h2>
+                <p class="section-lead">10+ secuencias de comandos que resuelven problemas comunes.</p>
+
+                <div class="info-box" style="background: linear-gradient(135deg, rgba(255, 180, 84, 0.1) 0%, rgba(255, 180, 84, 0.05) 100%); border-left: 4px solid #ffb454; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: #ffb454;">Patrones incluidos:</h3>
+                    <ul style="margin: 1em 0; padding-left: 1.5em; color: var(--text-secondary);">
+                        <li>✅ Code Review en nueva sesión</li>
+                        <li>✅ Refactor largo + Memory + Checkpoints</li>
+                        <li>✅ Bug Hunt: Hypothesis-driven investigation</li>
+                        <li>✅ Performance optimization sprint</li>
+                        <li>✅ Security audit + fix</li>
+                        <li>✅ Dependency upgrade safe</li>
+                        <li>✅ Onboarding nuevo developer</li>
+                        <li>✅ Incident response (production)</li>
+                        <li>✅ Documentation sprint</li>
+                        <li>✅ Performance regression detection</li>
+                    </ul>
+                </div>
+
+                <h3>Patrón #1: Code Review de PR</h3>
+                <div class="code-block" data-lang="bash">
+                    <pre><code># Retomar contexto sin contaminar rama actual
+claude --from-pr 247
+
+# Dentro de Claude:
+/permissions  # Verificar permisos
+@src/auth    # Cargar archivos del PR
+"¿Qué problemas ves en este código?"
+
+/doctor      # Diagnosticar estado
+/usage       # Tokens consumidos
+
+exit
+# Sesión anterior recupera su contexto</code></pre>
+                </div>
+
+                <h3>Patrón #2: Refactor Largo (3+ días)</h3>
+                <div class="code-block" data-lang="bash">
+                    <pre><code># Día 1: Setup
+git checkout -b refactor/api-v2
+claude --worktree refactor-api-v2
+/memory add "Refactor: API v1 → v2..."
+/checkpoint "Milestone 1: /users endpoint done"
+
+# Día 2: Retomar
+claude -c    # Resume última sesión
+/memory search "refactor"
+/rewind      # Ver checkpoints
+# Continúa desde donde dejaste
+
+# Día 3: Finalizar
+/compact "Mantén refactor, descarta logs"
+claude commit
+# Merge a develop</code></pre>
+                </div>
+
+                <h3>Patrón #3: Bug Hunt Sistemático</h3>
+                <div class="code-block" data-lang="bash">
+                    <pre><code>/memory add "BUG #247: Delayed notifications (5-10min late)"
+
+# Hypothesis 1: Queue backlog?
+@src/queue/config.js
+"¿Hay backlog?"
+/memory add "Hypothesis 1: REJECTED (queue is fine)"
+
+# Hypothesis 2: External API timeout?
+@src/services/email-service.js
+"¿SendGrid timeout?"
+/memory add "Hypothesis 2: REJECTED"
+
+# Hypothesis 3: ✅ Database lock?
+@src/models/notification.js
+"Missing index?"
+/memory add "Hypothesis 3: ✅ CONFIRMED — add index"
+
+# Fix + Verify
+# Create migration → Test → Deploy</code></pre>
+                </div>
+
+                <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
+                    <strong>📖 Lectura completa:</strong> Ver <code>COMMAND_PATTERNS.md</code> para todos los 10 patrones con ejemplos reales.
+                </p>
+            </section>
+
         </main>
     </div>
 
