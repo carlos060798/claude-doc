@@ -42,9 +42,15 @@ export default function CodeBlock({ lang = 'bash', code, title, copyable = true 
   }
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    try {
+      await navigator.clipboard.writeText(code)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy code to clipboard:', err)
+      // Fallback: show error to user
+      alert('No se pudo copiar al portapapeles')
+    }
   }
 
   return (

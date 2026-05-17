@@ -438,9 +438,12 @@ const ContentTypeMap = {
     }} />
   ),
 
-  'custom-html': ({ html }) => (
-    <div dangerouslySetInnerHTML={{ __html: html }} />
-  ),
+  'custom-html': () => {
+    // SECURITY: custom-html handler removed to prevent XSS vulnerabilities
+    // Use structured content types instead (heading, paragraph, code-block, etc)
+    console.warn('custom-html content type is disabled. Use structured content types instead.')
+    return null
+  },
 
   'spacer': ({ height = 24 }) => <div style={{ height: `${height}px` }} />,
 }

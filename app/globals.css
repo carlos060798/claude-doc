@@ -110,6 +110,38 @@ code {
   border: 1px solid var(--border-subtle);
 }
 
+/* Syntax Highlighting Token Classes */
+.tok-keyword {
+  color: #4a9eff;
+  font-weight: 600;
+}
+
+.tok-comment {
+  color: #707080;
+  font-style: italic;
+}
+
+.tok-string {
+  color: #4ade80;
+}
+
+.tok-operator {
+  color: #fbbf24;
+}
+
+.tok-key {
+  color: #4a9eff;
+  font-weight: 600;
+}
+
+.tok-number {
+  color: #ff6e40;
+}
+
+.tok-template {
+  color: #4ade80;
+}
+
 /* ============ APP LAYOUT ============ */
 .app-shell {
   display: grid;
@@ -425,6 +457,56 @@ code {
   color: var(--text-secondary);
 }
 
+/* ============ CODE BLOCK ============ */
+.code-block {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--sp-lg);
+}
+
+.code-block pre {
+  padding: var(--sp-lg);
+  overflow-x: auto;
+  margin: 0;
+  background: var(--bg-primary);
+}
+
+.code-block code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-primary);
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.code-block-title {
+  padding: var(--sp-md) var(--sp-lg);
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-default);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ============ ANIMATIONS ============ */
+@keyframes blink {
+  0%, 49%, 100% {
+    opacity: 1;
+  }
+  50%, 99% {
+    opacity: 0;
+  }
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
+
 /* ============ QUICK START ============ */
 .quick-start {
   margin-top: var(--sp-3xl);
@@ -472,8 +554,54 @@ code {
   border: 1px solid var(--border-subtle);
 }
 
+/* ============ FOCUS VISIBLE (Keyboard Navigation) ============ */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--accent-secondary);
+  outline-offset: -2px;
+}
+
 /* ============ RESPONSIVE ============ */
-@media (max-width: 768px) {
+/* Extra small devices: 480px and below */
+@media (max-width: 480px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    width: 260px;
+    height: 100vh;
+    z-index: 100;
+    transition: left var(--transition-base);
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+
+  .main-content {
+    padding: var(--sp-md);
+  }
+
+  .dashboard-header h1 {
+    font-size: 20px;
+  }
+
+  .quick-start-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small devices: 481px to 1023px */
+@media (max-width: 1023px) {
   .app-shell {
     grid-template-columns: 1fr;
   }
@@ -509,6 +637,30 @@ code {
 
   .filter-btn {
     width: 100%;
+  }
+}
+
+/* Large devices: 1920px and above */
+@media (min-width: 1920px) {
+  .main-content {
+    max-width: 1400px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 36px;
+  }
+
+  .quick-start-cards {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .commands-table {
+    font-size: 15px;
+  }
+
+  .commands-table th,
+  .commands-table td {
+    padding: var(--sp-xl);
   }
 }
 

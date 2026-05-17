@@ -54,9 +54,9 @@ export default function SearchCommand({ onSelectCommand }) {
           maxHeight: '300px',
           overflowY: 'auto'
         }}>
-          {filtered.map((cmd, idx) => (
+          {filtered.map((cmd) => (
             <div
-              key={idx}
+              key={cmd.id || cmd.cmd}
               onClick={() => {
                 onSelectCommand(cmd)
                 setQuery('')

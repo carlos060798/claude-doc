@@ -21,8 +21,8 @@ export default function CommandsTable({ commands }) {
           </tr>
         </thead>
         <tbody>
-          {commands.map((cmd, idx) => (
-            <tr key={idx}>
+          {commands.map((cmd) => (
+            <tr key={cmd.id || cmd.cmd}>
               <td className="cmd-name"><code>{cmd.cmd}</code></td>
               <td>{cmd.desc}</td>
               <td className="cmd-example"><code>{cmd.example}</code></td>
