@@ -119,14 +119,6 @@
                         <span class="nav-icon">📚</span> Glosario</a></li>
                 </ul>
 
-                <p class="nav-group-title">📊 Evaluación & Progreso</p>
-                <ul class="nav-list">
-                    <li><a href="#quizzes" class="nav-link" data-section="quizzes">
-                        <span class="nav-icon">❓</span> Quizzes</a></li>
-                    <li><a href="#progreso" class="nav-link" data-section="progreso">
-                        <span class="nav-icon">📈</span> Mi Progreso</a></li>
-                </ul>
-
                 <p class="nav-group-title">Producción</p>
                 <ul class="nav-list">
                     <li><a href="#memoria" class="nav-link" data-section="memoria">
@@ -5436,176 +5428,12 @@ claude mcp add --scope user github \
                 </article>
             </section>
 
-            <!-- ====== SECCIÓN: QUIZZES ====== -->
-            <section class="content-section" data-section="quizzes" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Evaluación / Quizzes</span>
-                    <h2>📝 Evaluación por Nivel</h2>
-                    <p class="section-lead">
-                        Pon a prueba tus conocimientos con quizzes interactivos que cubren
-                        cada nivel del curso. Tus respuestas se guardan automáticamente.
-                    </p>
-                </div>
-
-                <div class="quizzes-container">
-                    <div class="quiz-levels-grid">
-                        <div class="quiz-level-card" data-level="1">
-                            <div class="level-badge">Nivel 1</div>
-                            <h3>Fundamentos</h3>
-                            <p>Instalación, comandos básicos, navegación y menciones de archivos.</p>
-                            <button class="btn btn-primary" onclick="quizEngine.renderQuiz(1, 'quiz-container-1')">
-                                Iniciar Quiz
-                            </button>
-                        </div>
-                        <div class="quiz-level-card" data-level="2">
-                            <div class="level-badge">Nivel 2</div>
-                            <h3>Avanzado</h3>
-                            <p>MCP, memoria persistente, configuración y comandos avanzados.</p>
-                            <button class="btn btn-primary" onclick="quizEngine.renderQuiz(2, 'quiz-container-2')">
-                                Iniciar Quiz
-                            </button>
-                        </div>
-                        <div class="quiz-level-card" data-level="3">
-                            <div class="level-badge">Nivel 3</div>
-                            <h3>Experto</h3>
-                            <p>Skills, fork, Agent SDK y sub-agentes especializados.</p>
-                            <button class="btn btn-primary" onclick="quizEngine.renderQuiz(3, 'quiz-container-3')">
-                                Iniciar Quiz
-                            </button>
-                        </div>
-                        <div class="quiz-level-card" data-level="4">
-                            <div class="level-badge">Nivel 4</div>
-                            <h3>Maestría</h3>
-                            <p>MCP avanzado, hooks, empaquetamiento y orquestación multi-agente.</p>
-                            <button class="btn btn-primary" onclick="quizEngine.renderQuiz(4, 'quiz-container-4')">
-                                Iniciar Quiz
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="quiz-container-wrapper">
-                        <div id="quiz-container-1" class="quiz-container"></div>
-                        <div id="quiz-container-2" class="quiz-container"></div>
-                        <div id="quiz-container-3" class="quiz-container"></div>
-                        <div id="quiz-container-4" class="quiz-container"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ====== SECCIÓN: MI PROGRESO ====== -->
-            <section class="content-section" data-section="progreso" data-mode="technical">
-                <div class="section-header">
-                    <span class="breadcrumb">Evaluación / Mi Progreso</span>
-                    <h2>📈 Tu Progreso en el Curso</h2>
-                    <p class="section-lead">
-                        Visualiza tu avance, descarga reportes de tu desempeño y
-                        gestiona tu historial de aprendizaje.
-                    </p>
-                </div>
-
-                <div class="progress-dashboard">
-                    <div class="stats-cards" id="progress-stats">
-                        <!-- Cargado dinámicamente por quizEngine.getStats() -->
-                    </div>
-
-                    <div class="progress-details">
-                        <h3>Detalles por Nivel</h3>
-                        <div id="progress-levels" class="progress-levels-grid">
-                            <!-- Cargado dinámicamente -->
-                        </div>
-                    </div>
-
-                    <div class="export-section">
-                        <h3>Descargar tu Progreso</h3>
-                        <p>Exporta tu historial de aprendizaje en múltiples formatos:</p>
-                        <div id="export-buttons-container" class="export-buttons">
-                            <!-- Botones cargados por exportManager.renderExportButtons() -->
-                        </div>
-                    </div>
-
-                    <div class="progress-actions">
-                        <button class="btn btn-outline" onclick="quizEngine.reset()">
-                            🔄 Resetear Progreso
-                        </button>
-                    </div>
-                </div>
-            </section>
-
         </main>
     </div>
 
     <!-- Toast para notificaciones (copiado, etc.) -->
     <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
 
-    <!-- Script de inicialización: carga JSON ANTES de script.js -->
-    <script src="init.js"></script>
-
-    <!-- Módulos de características: Quiz + Export -->
-    <script src="modules/quiz-engine.js"></script>
-    <script src="modules/export-manager.js"></script>
-
-    <!-- Script principal (refactorizado para usar datos JSON) -->
     <script src="script.js"></script>
-
-    <!-- Inicialización de UI de progreso -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Renderizar botones de exportación
-            exportManager.renderExportButtons('export-buttons-container');
-
-            // Cargar y mostrar estadísticas de progreso
-            const stats = quizEngine.getStats();
-            const progress = quizEngine.getProgress();
-
-            const statsContainer = document.getElementById('progress-stats');
-            if (statsContainer) {
-                statsContainer.innerHTML = `
-                    <div class="stat-card">
-                        <span class="stat-label">Niveles Completados</span>
-                        <span class="stat-value">${stats.completedLevels}/${stats.totalLevels}</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Puntuación Promedio</span>
-                        <span class="stat-value">${stats.avgQuizScore}%</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Quizzes Completados</span>
-                        <span class="stat-value">${Object.keys(progress.quizResults).length}</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Fecha de Inicio</span>
-                        <span class="stat-value">${new Date(progress.startDate).toLocaleDateString('es-ES')}</span>
-                    </div>
-                `;
-            }
-
-            // Mostrar detalles por nivel
-            const levelsContainer = document.getElementById('progress-levels');
-            if (levelsContainer) {
-                let html = '';
-                Object.entries(stats.levels).forEach(([level, data]) => {
-                    html += `
-                        <div class="level-progress-card">
-                            <h4>Nivel ${level}: ${['Fundamentos', 'Avanzado', 'Experto', 'Maestría'][level-1]}</h4>
-                            <div class="progress-details-row">
-                                <span>Puntuación Quiz:</span>
-                                <span class="bold">${data.quizScore}%</span>
-                            </div>
-                            <div class="progress-details-row">
-                                <span>Estado Misión:</span>
-                                <span class="badge ${data.missionStatus === 'completed' ? 'badge-success' : 'badge-pending'}">
-                                    ${data.missionStatus === 'completed' ? '✅ Completada' : '⏳ Pendiente'}
-                                </span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${data.quizScore}%"></div>
-                            </div>
-                        </div>
-                    `;
-                });
-                levelsContainer.innerHTML = html;
-            }
-        });
-    </script>
 </body>
 </html>
