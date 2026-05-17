@@ -701,8 +701,8 @@ allowed-tools:
 Genera tests completos para: $ARGUMENTS
 
 Contexto del proyecto:
-- Framework de tests: !\\`cat package.json 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); print(list(d.get('devDependencies',{}).keys()))" 2>/dev/null || echo "pytest"\\`
-- Estructura: !\\`ls src/ 2>/dev/null || ls app/ 2>/dev/null\\`
+- Framework de tests: !\\\`cat package.json 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); print(list(d.get('devDependencies',{}).keys()))" 2>/dev/null || echo "pytest"\\\`
+- Estructura: !\\\`ls src/ 2>/dev/null || ls app/ 2>/dev/null\\\`
 
 Para cada función/clase:
 1. Test del happy path
@@ -1961,7 +1961,7 @@ function renderRecipes(filter = null) {
             <div class="recipe-title">${recipe.title}</div>
             <div class="recipe-desc">${recipe.desc}</div>
             <div class="recipe-tags">
-                ${recipe.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                ${recipe.tags.map(t => `<span class="tag">\${t}</span>`).join('')}
             </div>
         </div>
     `).join('');
@@ -1972,7 +1972,7 @@ function openRecipe(id) {
     if (!recipe) return;
 
     document.querySelectorAll('.recipe-card').forEach(c => c.classList.remove('selected'));
-    document.querySelector(`[onclick="openRecipe('${id}')"]`)?.classList.add('selected');
+    event.currentTarget?.classList.add('selected');
 
     const container = document.getElementById('recipe-detail-container');
     container.innerHTML = `
@@ -1990,7 +1990,7 @@ function openRecipe(id) {
                         <div class="step-num">${i + 1}</div>
                         <div class="step-content">
                             <div class="step-title">${step.title}</div>
-                            ${step.text ? `<div class="step-text">${step.text}</div>` : ''}
+                            ${step.text ? `<div class="step-text">\${step.text}</div>` : ''}
                             <div class="code-block">
                                 <div class="code-header">
                                     <span><span class="code-lang">${step.code.lang}</span></span>
@@ -2091,7 +2091,7 @@ ${role}
 ${goal}
 
 ## Herramientas Permitidas
-${selectedTools.map(t => `- ${t}`).join('\n')}
+${selectedTools.map(t => `- \${t}`).join('\n')}
 
 ## Autonomía
 ${autonomyMap[autonomy]}
@@ -2105,7 +2105,7 @@ ${model === 'opus' ? '\n> Justificación: Máxima calidad para tareas complejas 
 ${model === 'haiku' ? '\n> Justificación: Velocidad y costo mínimo para tareas simples y repetitivas.' : ''}
 ${model === 'sonnet' ? '\n> Justificación: Equilibrio óptimo calidad/costo para la mayoría de tareas.' : ''}
 
-${constraints ? `## Restricciones Adicionales\n${constraints.split('\n').map(l => `- ${l}`).join('\n')}` : ''}
+${constraints ? `## Restricciones Adicionales\n${constraints.split('\n').map(l => `- \${l}`).join('\n')}` : ''}
 
 ## Notas
 - Generado automáticamente. Personaliza según las necesidades del proyecto.
@@ -2220,8 +2220,52 @@ function escapeHtml(text) {
 // INIT
 // ──────────────────────────────────────────────
 
-renderRecipes();
-renderTemplates('all');
+// Esperar a que el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    // Debug: verificar elementos
+    const gridEl = document.getElementById('recipes-grid');
+    const templateEl = document.getElementById('templates-list');
+
+    console.log('recipes-grid:', gridEl);
+    console.log('templates-list:', templateEl);
+    console.log('RECIPES count:', RECIPES?.length || 0);
+    console.log('TEMPLATES count:', TEMPLATES?.length || 0);
+
+    // Ejecutar renderización
+    if (!gridEl) {
+        console.error('❌ NO ENCONTRADO: elemento recipes-grid');
+        document.body.innerHTML += '<p style="color:red;padding:20px;">ERROR: recipes-grid element not found</p>';
+    } else {
+        try {
+            renderRecipes();
+            console.log('✓ Recetas renderizadas');
+        } catch(e) {
+            console.error('✗ Error renderRecipes:', e);
+            gridEl.innerHTML = `<p style="color:red;padding:20px;">ERROR: ${e.message}</p>`;
+        }
+    }
+
+    if (!templateEl) {
+        console.error('❌ NO ENCONTRADO: elemento templates-list');
+    } else {
+        try {
+            renderTemplates('all');
+            console.log('✓ Templates renderizadas');
+        } catch(e) {
+            console.error('✗ Error renderTemplates:', e);
+            templateEl.innerHTML = `<p style="color:red;padding:20px;">ERROR: ${e.message}</p>`;
+        }
+    }
+});
+
+// También ejecutar inmediatamente como fallback
+setTimeout(() => {
+    const gridEl = document.getElementById('recipes-grid');
+    if (gridEl && gridEl.innerHTML.trim() === '') {
+        console.log('Rendering recipes on timeout...');
+        renderRecipes();
+    }
+}, 100);
 </script>
 </body>
 </html>
