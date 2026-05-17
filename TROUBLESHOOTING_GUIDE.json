@@ -1,0 +1,1010 @@
+{
+  "metadata": {
+    "title": "Claude Code & MCP Comprehensive Troubleshooting Guide",
+    "version": "1.0.0",
+    "lastUpdated": "2026-05-17",
+    "author": "Claude Code Support Team",
+    "totalProblems": 24,
+    "categories": [
+      "Installation & Setup",
+      "MCP Issues",
+      "CLI & Commands",
+      "Skills Development",
+      "Performance & Behavior"
+    ],
+    "note": "This guide covers 24 real-world problems with verified solutions. Confidence levels indicate the degree of official documentation or community verification."
+  },
+  "problems": [
+    {
+      "id": "install-001",
+      "category": "Installation & Setup",
+      "title": "Claude Code won't install on Windows",
+      "severity": "high",
+      "confidence": 100,
+      "symptom": "Installation fails with error 'Claude Code is not supported on Windows' or 'Unsupported OS Error'. The installer completes but claude command is not available.",
+      "rootCause": "User is running npm or the installer from Windows CMD/PowerShell directly (not WSL). The native binary installer or npm package requires WSL (Windows Subsystem for Linux) with Ubuntu, as Claude Code's binary compilation targets Linux. Alternatively, terminal TTY features required by Claude Code are not supported in Git Bash on Windows.",
+      "solution": [
+        "1. Install WSL2 and Ubuntu from Microsoft Store if not already installed",
+        "2. Open Windows Terminal and switch to the Ubuntu terminal tab",
+        "3. Run: curl -fsSL https://claude.ai/install.sh | bash",
+        "4. Or use the native installer (recommended): Download claude-installer.exe from claude.ai and run it",
+        "5. Verify installation: claude --version",
+        "6. If using npm, avoid Git Bash; use PowerShell or cmd.exe instead"
+      ],
+      "prevention": [
+        "- Always use WSL terminal or PowerShell for Node.js CLI tools on Windows",
+        "- Git Bash has limited TTY support; avoid for interactive CLIs",
+        "- Use the native installer (.exe) when available for simpler setup",
+        "- Check OS compatibility before attempting installation"
+      ],
+      "sources": [
+        "https://support.claude.com/en/articles/14552646-troubleshoot-claude-code-installation-and-authentication",
+        "https://code.claude.com/docs/en/troubleshoot-install",
+        "https://medium.com/@tomhag_17/troubleshooting-claude-code-installation-on-windows-from-tty-errors-to-success-1f44af03c9f2"
+      ]
+    },
+    {
+      "id": "install-002",
+      "category": "Installation & Setup",
+      "title": "npm permission denied during install",
+      "severity": "high",
+      "confidence": 100,
+      "symptom": "Installation fails with EPERM or 'permission denied' errors. Message like: 'npm ERR! code EPERM' or 'npm ERR! path /usr/local/lib/node_modules/...'",
+      "rootCause": "User ran npm install -g with sudo or without proper npm configuration. npm is trying to install in system directories (usually /usr/local) that require root permission. This is a fundamental npm configuration issue, not a Claude Code issue.",
+      "solution": [
+        "1. DO NOT use sudo with npm. Never run: sudo npm install -g",
+        "2. Configure npm to use a user-writable directory:",
+        "   mkdir ~/.npm-global",
+        "   npm config set prefix '~/.npm-global'",
+        "3. Add ~/.npm-global/bin to your PATH:",
+        "   export PATH=~/.npm-global/bin:$PATH",
+        "4. Add to ~/.bashrc or ~/.zshrc to persist: echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc",
+        "5. Restart terminal or run: source ~/.bashrc",
+        "6. Now try: npm install -g @anthropic-ai/claude-code"
+      ],
+      "prevention": [
+        "- Never use sudo npm install -g",
+        "- Configure npm prefix for user before installing global packages",
+        "- Verify npm prefix: npm config get prefix (should be user-writable)",
+        "- Always check npm documentation for permission troubleshooting"
+      ],
+      "sources": [
+        "https://support.claude.com/en/articles/14552646-troubleshoot-claude-code-installation-and-authentication",
+        "https://codingnomads.com/claude-code-troubleshoot-installation-setup"
+      ]
+    },
+    {
+      "id": "install-003",
+      "category": "Installation & Setup",
+      "title": "Command 'claude' not found after install",
+      "severity": "high",
+      "confidence": 100,
+      "symptom": "Installation reports success, but running 'claude' returns 'command not found' or 'claude is not recognized as internal or external command'",
+      "rootCause": "Installation directory is not in system PATH environment variable. Native installer places binary in ~/.local/bin but doesn't automatically add it to PATH. npm installs to the npm prefix bin directory, which also needs to be in PATH.",
+      "solution": [
+        "1. Verify claude was actually installed:",
+        "   ls ~/.local/bin/claude  # For native installer",
+        "   ls $(npm config get prefix)/bin/@anthropic-ai/claude-code  # For npm",
+        "2. Add to PATH permanently (Windows - PowerShell):",
+        "   [Environment]::SetEnvironmentVariable('PATH', \"$env:PATH;$env:USERPROFILE\\.local\\bin\", [EnvironmentVariableTarget]::User)",
+        "3. Or manually via GUI (Windows): Win+R → sysdm.cpl → Advanced → Environment Variables → Edit Path → Add %USERPROFILE%\\.local\\bin",
+        "4. On Linux/Mac, add to ~/.bashrc or ~/.zshrc:",
+        "   export PATH=$HOME/.local/bin:$PATH",
+        "5. Restart terminal completely (close and reopen)",
+        "6. Verify: claude --version"
+      ],
+      "prevention": [
+        "- Close and completely reopen terminal after installation (PATH is cached)",
+        "- Verify PATH includes installation directory: echo $PATH",
+        "- Use full path to test if installation worked: ~/.local/bin/claude --version",
+        "- Check installation logs for PATH update messages"
+      ],
+      "sources": [
+        "https://github.com/anthropics/claude-code/issues/3838",
+        "https://github.com/anthropics/claude-code/issues/21365",
+        "https://smartscope.blog/en/generative-ai/claude/claude-code-windows-native-installation/"
+      ]
+    },
+    {
+      "id": "install-004",
+      "category": "Installation & Setup",
+      "title": "Vercel CLI authentication fails",
+      "severity": "medium",
+      "confidence": 95,
+      "symptom": "Running 'vercel login' or 'claude vercel add' fails with authentication error or OAuth flow doesn't open browser",
+      "rootCause": "Vercel CLI can't open browser window in headless environment. OAuth flow requires browser interaction. Environment variables for token-based auth are not set. Or Vercel token is expired/revoked.",
+      "solution": [
+        "1. Method 1 - Browser-based login (if GUI available):",
+        "   vercel login",
+        "   Follow browser prompts to authorize",
+        "2. Method 2 - Token-based login (headless/terminal):",
+        "   Get token from https://vercel.com/account/tokens",
+        "   export VERCEL_TOKEN=your_token_here",
+        "   vercel --token $VERCEL_TOKEN",
+        "3. Verify authentication:",
+        "   vercel whoami",
+        "4. For Claude Code MCP with Vercel:",
+        "   claude mcp add vercel -e VERCEL_TOKEN=your_token",
+        "5. If token expired, generate new one at https://vercel.com/account/tokens"
+      ],
+      "prevention": [
+        "- Store Vercel token in secure location, use environment variables",
+        "- Rotate tokens periodically (quarterly)",
+        "- Use token-based auth in CI/CD and headless environments",
+        "- Keep vercel CLI updated: npm install -g vercel@latest"
+      ],
+      "sources": [
+        "https://support.claude.com/en/articles/14552646-troubleshoot-claude-code-installation-and-authentication"
+      ]
+    },
+    {
+      "id": "install-005",
+      "category": "Installation & Setup",
+      "title": "Node.js version conflicts with Claude Code",
+      "severity": "medium",
+      "confidence": 90,
+      "symptom": "Installation succeeds but 'claude' command fails with 'module not found' or 'unsupported node version' error. Error mentions v12 or v14 is required.",
+      "rootCause": "Claude Code requires Node.js v18.0.0 or higher (for crypto and other modern features). User has older Node.js installed. Multiple Node versions on system, and PATH points to old version.",
+      "solution": [
+        "1. Check current Node version:",
+        "   node --version",
+        "2. If < v18, upgrade to LTS version:",
+        "   # Using nvm (recommended):",
+        "   nvm install 20  # Latest LTS",
+        "   nvm use 20",
+        "   nvm alias default 20",
+        "3. Or download from nodejs.org and reinstall",
+        "4. Verify upgrade worked:",
+        "   node --version  # Should be v18+",
+        "5. Reinstall Claude Code:",
+        "   npm install -g @anthropic-ai/claude-code@latest",
+        "6. Test:",
+        "   claude --version"
+      ],
+      "prevention": [
+        "- Always use nvm or fnm for Node version management",
+        "- Set default Node version: nvm alias default 20",
+        "- Check claude-code package.json for minimum required version",
+        "- Keep Node.js updated to latest LTS release"
+      ],
+      "sources": [
+        "https://codingnomads.com/claude-code-troubleshoot-installation-setup"
+      ]
+    },
+    {
+      "id": "mcp-001",
+      "category": "MCP Issues",
+      "title": "MCP appears 'failed' but server is actually running",
+      "severity": "medium",
+      "confidence": 95,
+      "symptom": "MCP shows 'failed' or 'connection error' status in Claude Code, but when you manually run the MCP server command, it starts successfully. Tools don't appear or return errors.",
+      "rootCause": "MCP server is running but Claude Code client can't communicate. Common causes: wrong transport type configured (SSE vs stdio mismatch), incorrect URL/address for remote MCPs, server writes unexpected output to stdout, server crashes silently after startup, or environment variables required by MCP aren't set.",
+      "solution": [
+        "1. Check MCP logs in Claude Code (Ctrl+Shift+U → MCP Logs)",
+        "2. Look for error messages or connection timeout details",
+        "3. Verify MCP configuration in settings.json:",
+        "   - Transport type matches server (stdio/sse/http)",
+        "   - URL is correct for remote MCPs",
+        "   - Environment variables are properly set",
+        "4. Test MCP manually:",
+        "   # For stdio MCPs, verify they respond to input",
+        "   echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{}}' | npx -y @your/mcp-server",
+        "5. Check for stdout pollution (unintended logging):",
+        "   - Ensure no console.log() writes to stdout",
+        "   - Redirect logging to stderr: console.error() instead",
+        "6. Increase timeout in settings.json if network is slow",
+        "7. Restart Claude Code completely and retry"
+      ],
+      "prevention": [
+        "- Enable MCP logs immediately when adding new MCPs",
+        "- Test MCPs in isolation before integrating with Claude Code",
+        "- Ensure all MCP output goes to stderr, not stdout",
+        "- Document MCP configuration with examples in CLAUDE.md"
+      ],
+      "sources": [
+        "https://mcpplaygroundonline.com/blog/mcp-server-troubleshooting-common-errors-fix",
+        "https://developertoolkit.ai/en/shared-workflows/mcp-ecosystem/mcp-connection-issues/"
+      ]
+    },
+    {
+      "id": "mcp-002",
+      "category": "MCP Issues",
+      "title": "GITHUB_TOKEN not being picked up by GitHub MCP",
+      "severity": "high",
+      "confidence": 100,
+      "symptom": "GitHub MCP returns 'authentication failed' or 'token not found' error. Error message: 'Environment variable github_pat_... is not set' or '401 Unauthorized'",
+      "rootCause": "Environment variable is not set in Claude Code's execution context. Common mistakes: (1) Using wrong variable name (GITHUB_TOKEN vs GITHUB_PERSONAL_ACCESS_TOKEN), (2) Setting env var in terminal but not in settings.json, (3) Token is expired/revoked, (4) Token doesn't have required permissions for requested operation.",
+      "solution": [
+        "1. Verify correct environment variable name for your MCP:",
+        "   GitHub MCP expects: GITHUB_PERSONAL_ACCESS_TOKEN (not GITHUB_TOKEN)",
+        "2. Verify token is set in shell:",
+        "   echo $GITHUB_PERSONAL_ACCESS_TOKEN",
+        "3. If not set, generate PAT at https://github.com/settings/tokens:",
+        "   - Create token with repo, read:org scopes minimum",
+        "   - Copy token immediately (can't view again)",
+        "4. Set in shell (temporary, for testing):",
+        "   export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxxxxxxxxxx",
+        "5. Set in Claude Code settings.json (permanent):",
+        "   {",
+        "     \"mcps\": {",
+        "       \"github\": {",
+        "         \"env\": {",
+        "           \"GITHUB_PERSONAL_ACCESS_TOKEN\": \"ghp_xxxx\"",
+        "         }",
+        "       }",
+        "     }",
+        "   }",
+        "6. Alternatively, use Claude Code memory to set env vars:",
+        "   /env GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxx",
+        "7. Verify connection: Try a simple GitHub query",
+        "8. If using GitHub Enterprise, also set GITHUB_API_URL"
+      ],
+      "prevention": [
+        "- Document exact environment variable names for each MCP",
+        "- Store tokens in ~/.env or 1Password, not in code",
+        "- Use Claude Code's /env command or settings.json for MCP tokens",
+        "- Check token permissions: github.com/settings/tokens",
+        "- Rotate tokens if exposed in logs or version control"
+      ],
+      "sources": [
+        "https://github.com/github/github-mcp-server",
+        "https://github.com/github/github-mcp-server/issues/276",
+        "https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp/enterprise-configuration"
+      ]
+    },
+    {
+      "id": "mcp-003",
+      "category": "MCP Issues",
+      "title": "MCP connection timeout (>60 seconds)",
+      "severity": "high",
+      "confidence": 95,
+      "symptom": "MCP tool call times out after 60 seconds. Error: 'request timeout' or 'operation timed out'. Response never arrives, and CLI freezes waiting for response.",
+      "rootCause": "MCP server is taking too long to respond (>60s timeout window). Common causes: (1) MCP operation is genuinely slow (API call, large computation), (2) Server is hung/frozen and won't respond, (3) Network is very slow, (4) Server crashes mid-operation and client waits for response, (5) Server requires input and is blocked waiting.",
+      "solution": [
+        "1. Immediate fix - try operation again with smaller scope",
+        "   # Example: Search in narrower directory instead of whole repo",
+        "   mcp github search --path src/auth --type file",
+        "2. Check MCP logs for errors or slow operations (Ctrl+Shift+U)",
+        "3. If server appears hung, restart it:",
+        "   claude mcp remove github",
+        "   claude mcp add github -e GITHUB_TOKEN=$GITHUB_TOKEN",
+        "4. For slow operations, increase timeout in settings.json:",
+        "   {",
+        "     \"mcp\": {",
+        "       \"timeoutMs\": 120000  # 2 minutes instead of 60 seconds",
+        "     }",
+        "   }",
+        "5. Test network connectivity to MCP if remote:",
+        "   ping mcp-server.example.com",
+        "   curl -I https://mcp-server.example.com/health",
+        "6. Check server logs if you have access to MCP server",
+        "7. If remote MCP, consider caching results or implementing pagination"
+      ],
+      "prevention": [
+        "- Design MCP operations to complete within 30s ideally",
+        "- Implement pagination for large dataset operations",
+        "- Add progress indicators for long-running operations",
+        "- Monitor MCP performance and set realistic timeout values",
+        "- Document timeout values in settings.json comments"
+      ],
+      "sources": [
+        "https://mcpplaygroundonline.com/blog/mcp-server-troubleshooting-common-errors-fix",
+        "https://corcava.com/docs/mcp-troubleshooting-connection-failed/"
+      ]
+    },
+    {
+      "id": "mcp-004",
+      "category": "MCP Issues",
+      "title": "MCP tool returns 'permission denied' error",
+      "severity": "medium",
+      "confidence": 90,
+      "symptom": "MCP tool call fails with '403 Forbidden', 'permission denied', or 'access denied' error. Specific error: 'You are not authorized to access this resource' or 'insufficient permissions'",
+      "rootCause": "(1) Token/credentials don't have required permissions, (2) User account doesn't have access to resource (file, repo, etc), (3) API scope is insufficient, (4) MCP server is checking wrong permission (bug in MCP), (5) OAuth token is read-only when write is required",
+      "solution": [
+        "1. Verify token has required scopes:",
+        "   For GitHub: token needs 'repo' scope for private repos, 'read:org' for org data",
+        "   For other MCPs: check documentation for required scopes",
+        "2. Check user/account permissions:",
+        "   GitHub: Verify user is org member or has repo access",
+        "   AWS: Check IAM policies for authenticated account",
+        "3. Generate new token with broader permissions:",
+        "   Go to provider's settings (e.g., github.com/settings/tokens)",
+        "   Create new token with necessary scopes",
+        "   Update in Claude Code settings.json",
+        "4. Test with simple operation to verify access:",
+        "   For GitHub: mcp github list-repos (should list your repos)",
+        "5. If MCP itself is buggy, check GitHub issues for the MCP project",
+        "6. Contact MCP server maintainer or resource owner if access should be granted"
+      ],
+      "prevention": [
+        "- Grant tokens minimal necessary permissions (principle of least privilege)",
+        "- Document required token scopes for each MCP in CLAUDE.md",
+        "- Regularly audit token permissions and revoke unused tokens",
+        "- Test new tokens immediately after generation",
+        "- Monitor for permission-denied errors in logs"
+      ],
+      "sources": [
+        "https://github.com/github/github-mcp-server",
+        "https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp/enterprise-configuration"
+      ]
+    },
+    {
+      "id": "mcp-005",
+      "category": "MCP Issues",
+      "title": "MCP stdio communication broken (malformed messages)",
+      "severity": "high",
+      "confidence": 100,
+      "symptom": "MCP fails to initialize with error 'malformed message' or 'invalid JSON'. Client shows repeated connection attempts and failures. Server may log 'unexpected output' or 'invalid JSONRPC'",
+      "rootCause": "Server is writing unintended output to stdout. MCP stdio transport requires all stdout output to be valid JSONRPC messages. Common causes: (1) console.log() or print statements in server, (2) Logging library misconfigured to write to stdout, (3) Errors/warnings written to stdout instead of stderr, (4) Unicode or binary data in stdout, (5) Missing newline after JSON messages",
+      "solution": [
+        "1. Check server code for all output to stdout:",
+        "   - Search for: console.log, print(), System.out.println, etc.",
+        "   - Change all logging to console.error() instead",
+        "2. Configure logging to use stderr only:",
+        "   // Node.js example:",
+        "   const log = (msg) => console.error(`[LOG] ${msg}`);",
+        "3. Ensure MCP messages are valid JSON with newline:",
+        "   // Correct format - JSONRPC + newline",
+        "   const msg = {jsonrpc:'2.0',id:1,result:{...}};",
+        "   stdout.write(JSON.stringify(msg) + '\\n');",
+        "   stdout.flush();  // Important: flush buffer",
+        "4. Test MCP in isolation:",
+        "   echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{}}' | npx mcp-server",
+        "5. Capture actual output to debug:",
+        "   npx mcp-server 2>&1 | od -c | head -20",
+        "6. Check for output buffering issues (add flush/flush calls)",
+        "7. Remove any startup banners, welcome messages, or ASCII art"
+      ],
+      "prevention": [
+        "- Never use stdout for anything except JSONRPC messages",
+        "- Use stderr (console.error) for all logging",
+        "- Add output buffer flush after each message",
+        "- Test with actual Claude Code client, not just manual echo",
+        "- Use stderr in startup code too (before server is ready)",
+        "- Validate all JSON output before writing"
+      ],
+      "sources": [
+        "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports",
+        "https://medium.com/@laurentkubaski/understanding-mcp-stdio-transport-protocol-ae3d5daf64db",
+        "https://dev.to/elsayed85/building-model-context-protocol-mcp-servers-with-stdio-a-complete-guide-513k"
+      ]
+    },
+    {
+      "id": "cli-001",
+      "category": "CLI & Commands",
+      "title": "/fork context fails with 'undefined context' error",
+      "severity": "medium",
+      "confidence": 85,
+      "symptom": "Running '/fork' or '/fork context: \"my-role\"' fails with error 'undefined context' or 'context not found'. New fork session doesn't inherit expected behavior.",
+      "rootCause": "The /fork command syntax or context specification is incorrect. Possible causes: (1) Typo in context name, (2) Context doesn't exist in memory/CLAUDE.md, (3) Incorrect /fork syntax used, (4) Context wasn't loaded before forking",
+      "solution": [
+        "1. Verify /fork syntax - check current Claude Code version for correct format:",
+        "   claude --version",
+        "2. Standard /fork usage (creates context copy without special role):",
+        "   /fork  # Creates independent copy of current session",
+        "3. If your version supports context-based fork:",
+        "   /fork context: \"full-context-name\"",
+        "   Note: Context name must exactly match defined context",
+        "4. Check what contexts are available:",
+        "   /context list  # Or /help to see available contexts",
+        "5. Ensure context is defined in CLAUDE.md or memory:",
+        "   # In CLAUDE.md, context should be defined like:",
+        "   ## Role: Engineer",
+        "   [context description]",
+        "6. If context feature isn't in your version, use alternative:",
+        "   /memory  # Add role/context instructions to memory instead",
+        "   /compact  # Then fork after memory is updated",
+        "7. Verify fork was created:",
+        "   /context list  # Should show new fork session ID"
+      ],
+      "prevention": [
+        "- Document all available contexts in CLAUDE.md",
+        "- Use /help to check current version's fork syntax",
+        "- Always verify context name matches exactly (case-sensitive)",
+        "- Use /memory instead if context-based fork isn't available",
+        "- Test fork command in safe context before production use"
+      ],
+      "sources": [
+        "https://github.com/anthropics/claude-code/issues/14227",
+        "https://code.claude.com/docs/en/how-claude-code-works"
+      ]
+    },
+    {
+      "id": "cli-002",
+      "category": "CLI & Commands",
+      "title": "/memory not persisting between sessions",
+      "severity": "medium",
+      "confidence": 95,
+      "symptom": "Instructions saved to /memory or MEMORY.md don't carry over to new sessions. Claude forgets preferences and instructions each session.",
+      "rootCause": "MEMORY.md file isn't being created/loaded correctly. Causes: (1) MEMORY.md doesn't exist in project root, (2) Memory file exceeds 200-line limit (only first 200 lines loaded), (3) Memory format is incorrect, (4) Claude Code version doesn't auto-load memory, (5) Memory was cleared by context compaction",
+      "solution": [
+        "1. Verify MEMORY.md exists in project root:",
+        "   ls -la MEMORY.md",
+        "2. If not exists, create it:",
+        "   /memory save my-preference  # Or manually create:",
+        "   cat > MEMORY.md << 'EOF'",
+        "   # Project Memory",
+        "   ",
+        "   ## Preferences",
+        "   - Use async/await over promises",
+        "   - Prefer TypeScript strict mode",
+        "   ",
+        "   ## Context",
+        "   - This is a backend API project",
+        "   EOF",
+        "3. Check memory file size:",
+        "   wc -l MEMORY.md  # Should be <200 lines",
+        "   du -sh MEMORY.md  # Should be <25KB",
+        "4. If exceeds limit, consolidate and delete old entries",
+        "5. Verify memory is loaded at session start:",
+        "   /context show  # Should mention MEMORY.md in context",
+        "6. Use CLAUDE.md for permanent project-level context:",
+        "   CLAUDE.md is checked into git and always loaded",
+        "   MEMORY.md is local and limited to 200 lines",
+        "7. If memory lost after compaction, add to CLAUDE.md instead:",
+        "   # In CLAUDE.md:",
+        "   ## Preferences",
+        "   [your preferences here]"
+      ],
+      "prevention": [
+        "- Use CLAUDE.md for permanent project instructions (in git)",
+        "- Use MEMORY.md for session-specific or temporary notes (local)",
+        "- Keep memory <200 lines; use CLAUDE.md for more content",
+        "- Document why each memory item exists",
+        "- Review memory at start of important sessions",
+        "- Note: Memory survives compaction if in CLAUDE.md, not if in MEMORY.md"
+      ],
+      "sources": [
+        "https://github.com/anthropics/claude-code/issues/14227",
+        "https://github.com/anthropics/claude-code/issues/31409",
+        "https://claude.nagdy.me/learn/memory/"
+      ]
+    },
+    {
+      "id": "cli-003",
+      "category": "CLI & Commands",
+      "title": "/compact loses important information",
+      "severity": "high",
+      "confidence": 95,
+      "symptom": "After running /compact, Claude forgets recent context, file contents, or earlier instructions. Model starts acting confused or repeats work that was done.",
+      "rootCause": "Context compaction summarizes conversation history to fit in smaller context window, but the summary may lose nuance or important details. The model is then operating on the summary instead of the original conversation, leading to loss of fidelity. This is a fundamental tradeoff: shorter summary = smaller context = more tokens available for new work, but less detail.",
+      "solution": [
+        "1. Before compacting, ensure critical info is in CLAUDE.md or MEMORY.md:",
+        "   /memory save [critical context]",
+        "   # Or edit CLAUDE.md with important findings",
+        "2. Request specific summary focus when compacting:",
+        "   /compact focus: 'Project architecture, authentication setup, known bugs'",
+        "   # This helps model prioritize what to summarize",
+        "3. Compact more frequently with smaller batches:",
+        "   # Instead of: work for 2 hours then compact",
+        "   # Try: work for 30 mins, /compact, continue",
+        "4. After compact, verify model understands current state:",
+        "   - Ask clarifying questions about recent work",
+        "   - Re-state current goal explicitly",
+        "   - Check that file modifications are still visible",
+        "5. If critical info was lost:",
+        "   - /fork to create a new session with full history",
+        "   - Or use /memory to restore context manually",
+        "6. Monitor for stale-context issues (known regression in v2.1.62+):",
+        "   If model keeps using old/wrong information after /compact,",
+        "   upgrade to latest version: npm install -g @anthropic-ai/claude-code@latest"
+      ],
+      "prevention": [
+        "- Document critical architecture/decisions in CLAUDE.md (not conversation)",
+        "- Compact before context gets too large (watch /context output)",
+        "- Use /compact proactively every 30-60 minutes on long sessions",
+        "- Pin important files to memory: /memory save [file content]",
+        "- Test model's understanding after compaction with simple questions",
+        "- Keep backup of important context in git (CLAUDE.md, architecture docs)"
+      ],
+      "sources": [
+        "https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything",
+        "https://github.com/anthropics/claude-code/issues/19567",
+        "https://github.com/anthropics/claude-code/issues/29230"
+      ]
+    },
+    {
+      "id": "cli-004",
+      "category": "CLI & Commands",
+      "title": "/init doesn't generate CLAUDE.md",
+      "severity": "low",
+      "confidence": 90,
+      "symptom": "/init command runs but no CLAUDE.md file is created. Running 'ls CLAUDE.md' shows file not found.",
+      "rootCause": "(1) /init wasn't actually run (user ran it in wrong directory), (2) File was created but in wrong location (check parent directory), (3) /init command isn't available in current Claude Code version, (4) File was deleted immediately after creation by accident, (5) Permissions prevent file creation",
+      "solution": [
+        "1. Verify current directory:",
+        "   pwd  # Should be project root",
+        "2. Run /init explicitly:",
+        "   /init",
+        "3. Check if file was created:",
+        "   ls -la CLAUDE.md",
+        "4. If file not created, create manually:",
+        "   cat > CLAUDE.md << 'EOF'",
+        "   # CLAUDE.md",
+        "   ",
+        "   ## Project Overview",
+        "   [Description of your project]",
+        "   ",
+        "   ## Architecture",
+        "   [How the code is organized]",
+        "   ",
+        "   ## Running the Project",
+        "   [How to run/test]",
+        "   ",
+        "   ## Key Commands",
+        "   [Important commands or workflows]",
+        "   EOF",
+        "5. Verify it was created:",
+        "   cat CLAUDE.md",
+        "6. From now on, Claude will load it automatically"
+      ],
+      "prevention": [
+        "- Always run /init from project root directory",
+        "- Verify CLAUDE.md exists before starting work: ls CLAUDE.md",
+        "- Add CLAUDE.md to .gitignore if project-specific, or commit if team resource",
+        "- Use /init early in project setup, before complex work"
+      ],
+      "sources": [
+        "https://code.claude.com/docs/en/how-claude-code-works"
+      ]
+    },
+    {
+      "id": "cli-005",
+      "category": "CLI & Commands",
+      "title": "Slash commands don't autocomplete or aren't recognized",
+      "severity": "low",
+      "confidence": 85,
+      "symptom": "Typing '/' in Claude Code doesn't show autocomplete list. Or typing '/help' doesn't work; Claude treats it as regular text.",
+      "rootCause": "(1) Claude Code version doesn't support command autocomplete in this interface, (2) Autocomplete is disabled in settings, (3) User is in wrong mode (not command mode), (4) Terminal doesn't support ANSI/interactive features needed for autocomplete",
+      "solution": [
+        "1. Check if slash commands are supported:",
+        "   /help  # Should show help, not be treated as text",
+        "2. If /help doesn't work, slash commands may not be enabled:",
+        "   /init  # Try initializing project",
+        "   /clear  # Try clearing context",
+        "3. For autocomplete, press Tab while typing '/':",
+        "   / [TAB]  # Should show list of commands",
+        "4. If Tab doesn't show autocomplete, enable it in settings:",
+        "   Use 'update-config' skill to enable command completion in settings.json",
+        "5. If using non-interactive terminal (piped input), autocomplete won't work:",
+        "   Redirect to tty: claude < /dev/tty",
+        "6. Try using full command without autocomplete:",
+        "   /help",
+        "   /compact",
+        "   /memory save my-context"
+      ],
+      "prevention": [
+        "- Keep Claude Code updated: npm install -g @anthropic-ai/claude-code@latest",
+        "- Enable terminal features needed for interactive use (TTY)",
+        "- Use 'update-config' skill to tune command settings",
+        "- Reference /help or documentation if unsure about command syntax"
+      ],
+      "sources": [
+        "https://code.claude.com/docs/en/how-claude-code-works"
+      ]
+    },
+    {
+      "id": "skills-001",
+      "category": "Skills Development",
+      "title": "Skill frontmatter syntax error (YAML parsing fails)",
+      "severity": "high",
+      "confidence": 100,
+      "symptom": "Creating or loading a skill fails with 'SkillInvalidError' or 'frontmatter parsing failed'. Skill doesn't appear in /skill-name autocomplete. Error mentions YAML or schema validation.",
+      "rootCause": "SKILL.md frontmatter has YAML syntax errors. Common mistakes: (1) Special characters (colons, quotes) in description without proper escaping, (2) Description wraps to multiple lines (prettier formatting), (3) Invalid field names (author, version, tags not allowed), (4) Missing required fields (name, description), (5) name field has uppercase letters (must be lowercase), (6) field values contain unquoted special characters",
+      "solution": [
+        "1. Verify SKILL.md frontmatter structure (must have closing ---):",
+        "   ---",
+        "   name: my-skill-name",
+        "   description: A clear, single-line description.",
+        "   ---",
+        "   # Skill Instructions",
+        "   [markdown content]",
+        "2. Check name field requirements:",
+        "   - Must be lowercase letters, numbers, hyphens only",
+        "   - Maximum 64 characters",
+        "   - No spaces, underscores, or special characters",
+        "   - Valid: my-awesome-skill, skill123, auth-helper",
+        "   - Invalid: myAwesomeSkill, my_skill, skill (reserved), My-Skill",
+        "3. Check description field requirements:",
+        "   - Maximum 1024 characters",
+        "   - Must be single-line (no newlines)",
+        "   - If contains colon or quote, wrap in quotes:",
+        "   description: \"Helper: Validates input before processing.\"",
+        "   - No XML tags allowed",
+        "4. Remove any extra fields (not allowed in frontmatter):",
+        "   # INVALID - remove these:",
+        "   author: John",
+        "   version: 1.0",
+        "   tags: [helper, validation]",
+        "5. Validate YAML syntax at https://yamllint.com/",
+        "6. After fixing, restart Claude Code and try skill again",
+        "7. Test with simple skill first:",
+        "   ---",
+        "   name: test-skill",
+        "   description: A simple test skill.",
+        "   ---",
+        "   # Instructions",
+        "   This is a test."
+      ],
+      "prevention": [
+        "- Use a YAML linter: yamllint SKILL.md before deploying",
+        "- Keep description short and simple (under 100 chars if possible)",
+        "- Always quote descriptions with special characters",
+        "- Use lowercase for name field",
+        "- Don't add extra fields beyond name/description",
+        "- Test new skills immediately after creation",
+        "- Use skill templates from official docs as reference"
+      ],
+      "sources": [
+        "https://code.claude.com/docs/en/skills",
+        "https://github.com/anthropics/claude-code/issues/49835",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices"
+      ]
+    },
+    {
+      "id": "skills-002",
+      "category": "Skills Development",
+      "title": "Skill doesn't appear in /skill-name autocomplete",
+      "severity": "medium",
+      "confidence": 95,
+      "symptom": "Skill was created but doesn't show up in '/skill-name' command autocomplete list. Running '/skill-name' returns 'unknown command'. Or skill was discoverable, then disappeared.",
+      "rootCause": "(1) Skill frontmatter has errors (see skills-001), (2) SKILL.md file isn't in the right location (.claude/skills/[skill-name]/SKILL.md), (3) Skill registration hasn't completed (needs restart), (4) Skill name has paths field that hides it from discovery, (5) SKILL.md file was deleted or moved, (6) Skill cache is stale",
+      "solution": [
+        "1. Verify skill file location:",
+        "   ls -la .claude/skills/my-skill-name/SKILL.md",
+        "   # If not in this location, create it",
+        "2. Verify frontmatter is valid (see skills-001 for format)",
+        "3. Check for 'paths' field hiding skill:",
+        "   # If SKILL.md contains this, it won't show in discovery:",
+        "   paths: [...]  # This restricts visibility",
+        "   # Remove 'paths' field if you want skill discoverable",
+        "4. Restart Claude Code completely:",
+        "   # Close Claude Code",
+        "   # Clear cache: rm -rf ~/.claude/cache/*",
+        "   # Reopen Claude Code",
+        "5. Verify skill is registered:",
+        "   /skill-name  # Or /skill-list if supported",
+        "   # If still not showing, check logs: Ctrl+Shift+U",
+        "6. Test skill invocation directly:",
+        "   /my-skill-name  # Even if not in autocomplete",
+        "7. If still not working, recreate skill from template"
+      ],
+      "prevention": [
+        "- Use official skill templates from @anthropic-ai/skills",
+        "- Verify frontmatter immediately after creating SKILL.md",
+        "- Don't use 'paths' field unless you need path-restricted skills",
+        "- Restart Claude Code after adding new skills",
+        "- Check autocomplete immediately after creation to verify"
+      ],
+      "sources": [
+        "https://github.com/anthropics/claude-code/issues/41721",
+        "https://github.com/anthropics/claude-code/issues/9817",
+        "https://code.claude.com/docs/en/skills"
+      ]
+    },
+    {
+      "id": "skills-003",
+      "category": "Skills Development",
+      "title": "Skill context bleeding into main session",
+      "severity": "medium",
+      "confidence": 85,
+      "symptom": "When using a skill, variables or instructions from the skill are visible in the main Claude Code session. Or skill modifications affect unrelated sessions. Skill state persists when it should be isolated.",
+      "rootCause": "Skill context isn't properly isolated from parent session. Causes: (1) Skill modifies global variables instead of local scope, (2) Memory or environment variables set by skill persist after skill ends, (3) Skill registers tools/functions that remain in parent session, (4) File modifications made by skill aren't reverted",
+      "solution": [
+        "1. Ensure skill uses local scope only:",
+        "   # In skill implementation, use local variables, not global",
+        "   # BAD: Sets global variable",
+        "   GLOBAL_VAR = 'value'  # Affects parent session",
+        "   ",
+        "   # GOOD: Local to skill",
+        "   let localVar = 'value'  # Scoped to skill function",
+        "2. If skill needs to communicate with parent:",
+        "   - Use return values, not side effects",
+        "   - Document what skill modifies in CLAUDE.md",
+        "3. If skill modifies files, make changes intentional:",
+        "   - Document all file changes in skill description",
+        "   - Use /fork if concerned about side effects",
+        "4. For environment variables, scope to skill execution:",
+        "   # In SKILL.md, use skill-local env vars",
+        "   export SKILL_VAR=value  # Scoped to skill process",
+        "5. Test skill isolation:",
+        "   /fork",
+        "   /my-skill  # Run skill in forked session",
+        "   # Check that parent session is unchanged",
+        "6. Use /memory to note any expected side effects"
+      ],
+      "prevention": [
+        "- Design skills to be stateless and side-effect-free",
+        "- Document all skill side effects clearly",
+        "- Use local variables, not global or shared state",
+        "- Test skills in isolated sessions (/fork) before deploying",
+        "- Use memory/CLAUDE.md to track expected skill behavior"
+      ],
+      "sources": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices"
+      ]
+    },
+    {
+      "id": "perf-001",
+      "category": "Performance & Behavior",
+      "title": "Prompt cache miss every time (cache never hits)",
+      "severity": "high",
+      "confidence": 95,
+      "symptom": "Claude Code seems slow. Looking at token usage, every request uses full tokens without hitting cache (no cache tokens in token breakdown). Expected speed gains from caching aren't happening.",
+      "rootCause": "Prompt cache requires exact prefix match byte-for-byte. Cache miss happens when: (1) System prompt changes between requests, (2) Tool definitions change, (3) User context or CLAUDE.md changes, (4) Conversation format changes (different message order), (5) Cache is fresh and waiting for second request to hit (normal behavior), (6) Request size is too small to benefit from cache",
+      "solution": [
+        "1. Understand cache TTL - cache requires ~2 minutes of inactivity:",
+        "   - First request to API: cache miss (expected, building cache)",
+        "   - Wait 2 minutes without requests",
+        "   - Second request: should hit cache if prefix matches",
+        "2. Verify cache is actually available (Opus 4 required):",
+        "   /model opus-4  # Switch to Opus 4 if not already using it",
+        "3. Keep system prompt and tool definitions constant:",
+        "   - Don't modify CLAUDE.md mid-session",
+        "   - Don't change settings.json between requests",
+        "   - Keep tool set stable",
+        "4. Check token breakdown:",
+        "   /context show  # Look for cache metrics",
+        "   # Should show cache_creation_input_tokens and cache_read_input_tokens",
+        "5. Monitor cache hits over time:",
+        "   # After 2+ requests with stable context, should see cache reads",
+        "   /usage  # If available, shows cache performance",
+        "6. If still not hitting cache:",
+        "   - Verify system prompt is stable",
+        "   - Check CLAUDE.md isn't being modified",
+        "   - Ensure tool definitions don't change",
+        "   - Try longer session (cache takes time to warm up)"
+      ],
+      "prevention": [
+        "- Use Opus 4 or newer (required for cache)",
+        "- Minimize changes to CLAUDE.md during session",
+        "- Keep settings stable throughout session",
+        "- Long sessions naturally benefit more from caching",
+        "- Monitor cache metrics regularly via /usage or logs",
+        "- Understand cache TTL (2 minutes of idleness required)"
+      ],
+      "sources": [
+        "https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything",
+        "https://www.claudecodecamp.com/p/how-prompt-caching-actually-works-in-claude-code"
+      ]
+    },
+    {
+      "id": "perf-002",
+      "category": "Performance & Behavior",
+      "title": "Search is very slow with large codebases (1000+ files)",
+      "severity": "medium",
+      "confidence": 90,
+      "symptom": "Searching codebase with 'search for X' takes 30+ seconds or times out. Large projects become unusable for search-based tasks.",
+      "rootCause": "Search recursively traverses all files and directories. With 1000+ files, this becomes slow. Common causes: (1) Search query is too vague (searches everything), (2) Directory includes slow I/O devices (network drives, USB), (3) No file type filters applied, (4) Search regex is complex/slow, (5) Large binary files are being scanned",
+      "solution": [
+        "1. Narrow search scope with file type filters:",
+        "   # Instead of: search for 'function foo'",
+        "   # Use: search for 'function foo' in src/**/*.ts",
+        "   search for 'const foo' in src/auth/*.js",
+        "2. Exclude slow directories:",
+        "   # Add to .gitignore or specify in search:",
+        "   search for 'import React' in src/ --exclude node_modules,dist",
+        "3. Use more specific regex patterns:",
+        "   # Instead of: search for 'auth' (matches everywhere)",
+        "   # Use: search for 'export.*auth' (more specific)",
+        "4. For really large codebases, use CLI tools directly:",
+        "   rg 'pattern' src/ --type ts  # ripgrep is faster than GUI search",
+        "5. Reduce context window before searching:",
+        "   /compact  # Makes next search faster",
+        "6. Use /model sonnet or haiku for search operations (faster)",
+        "7. Consider splitting large projects into smaller ones"
+      ],
+      "prevention": [
+        "- Be specific in search queries (narrow scope early)",
+        "- Use file type filters by default",
+        "- Exclude node_modules and dist directories from search",
+        "- Keep codebases organized (don't let them grow beyond 5000 files)",
+        "- Use .gitignore to exclude unneeded directories",
+        "- For monorepos, search within specific packages",
+        "- Profile search to identify slow patterns"
+      ],
+      "sources": [
+        "https://code.claude.com/docs/en/troubleshooting",
+        "https://www.aakashx.com/blog/why-claude-code-is-slow/"
+      ]
+    },
+    {
+      "id": "native-installer-001",
+      "category": "Installation & Setup",
+      "title": "Native installer freezes on Windows in VS Code terminal",
+      "severity": "high",
+      "confidence": 100,
+      "symptom": "Running native installer (claude.exe) in VS Code terminal on Windows: shows banner, then freezes completely. No response to keyboard input. Terminal becomes unresponsive.",
+      "rootCause": "Native installer binary (Rust/compiled) uses different terminal I/O method than npm. VS Code's ConPTY (pseudo-terminal layer) on Windows doesn't support the raw TTY mode that native binary expects. This is a terminal compatibility issue, not Claude Code bug.",
+      "solution": [
+        "1. Immediate workaround - use npm instead of native installer:",
+        "   # In PowerShell or CMD (not VS Code terminal)",
+        "   npm install -g @anthropic-ai/claude-code",
+        "2. Or rename native binary and use npm:",
+        "   ren C:\\Users\\[user]\\.local\\bin\\claude.exe claude.exe.bak",
+        "   npm install -g @anthropic-ai/claude-code",
+        "3. If you prefer native installer, use different terminal:",
+        "   - Try Windows Terminal (not VS Code integrated terminal)",
+        "   - Or Git Bash instead of VS Code",
+        "   - Or PowerShell outside VS Code",
+        "4. For VS Code users, npm version works perfectly in integrated terminal",
+        "   Recommendation: Just use npm version if on Windows with VS Code"
+      ],
+      "prevention": [
+        "- Windows + VS Code users: use npm version instead of native installer",
+        "- If native installer needed, use Windows Terminal (not VS Code)",
+        "- Keep npm version updated: npm install -g @anthropic-ai/claude-code@latest",
+        "- Report VS Code + native installer freezes to Anthropic (ongoing regression)"
+      ],
+      "sources": [
+        "https://github.com/anthropics/claude-code/issues/24584",
+        "https://github.com/anthropics/claude-code/issues/23346",
+        "https://inventivehq.com/knowledge-base/claude/how-to-fix-freezing-issues"
+      ]
+    },
+    {
+      "id": "memory-001",
+      "category": "CLI & Commands",
+      "title": "Memory forgotten after context compaction (stale context regression)",
+      "severity": "high",
+      "confidence": 100,
+      "symptom": "After /compact, Claude ignores memory instructions. Model continues executing old task despite being told to stop. Instructions from MEMORY.md or memory instructions are silently forgotten.",
+      "rootCause": "Known regression in Claude Code v2.1.62+. Compaction uses cache reuse optimization that creates 'stale context' - the model receives summarized history plus old prefix from cache, but can't distinguish new instructions from cached old ones. Model follows cached instructions (old task) instead of new instructions.",
+      "solution": [
+        "1. Upgrade Claude Code to latest version immediately:",
+        "   npm install -g @anthropic-ai/claude-code@latest",
+        "2. Until upgraded, workaround - avoid /compact or:",
+        "   - Use /fork instead of /compact (creates clean session without cache issue)",
+        "   - Or use /memory save to explicitly document current state before compacting",
+        "3. If you must /compact with old version:",
+        "   - After /compact, explicitly restate current goal:",
+        "   \"I want you to [current task], NOT [old task]\"",
+        "   - Provide full current context in message",
+        "4. After upgrade, /compact should work normally again",
+        "5. Monitor for any lingering stale-context behavior and report"
+      ],
+      "prevention": [
+        "- Always keep Claude Code updated: check version monthly",
+        "- Use CLAUDE.md (checked into git) for permanent instructions",
+        "- Use MEMORY.md for session-specific memory (survives compaction only if updated to CLAUDE.md)",
+        "- Use /fork instead of /compact if unsure (creates fresh context)",
+        "- Report stale context issues immediately if they recur"
+      ],
+      "sources": [
+        "https://github.com/anthropics/claude-code/issues/29230",
+        "https://github.com/anthropics/claude-code/issues/57486",
+        "https://github.com/anthropics/claude-code/issues/37586"
+      ]
+    },
+    {
+      "id": "env-var-001",
+      "category": "MCP Issues",
+      "title": "Environment variables in MCP config not expanding",
+      "severity": "medium",
+      "confidence": 90,
+      "symptom": "MCP configuration has environment variable reference (e.g., $GITHUB_TOKEN or ${{GITHUB_TOKEN}}) but the variable isn't being substituted. MCP tries to use literal string instead of actual token value.",
+      "rootCause": "Environment variable syntax is incorrect for the MCP client. Different clients use different formats: (1) Claude Code may use $VAR, ${{VAR}}, env.VAR, or object notation, (2) Variable not actually set in environment, (3) Setting in wrong location (settings.json vs system env)", "solution": [
+        "1. Check Claude Code's MCP env var syntax (version-specific):",
+        "   /help  # Check for MCP configuration examples",
+        "2. Verify environment variable is set:",
+        "   echo $GITHUB_TOKEN  # Or: echo $env:GITHUB_TOKEN (PowerShell)",
+        "3. Use correct syntax in settings.json:",
+        "   # Format 1 - env object (most common):",
+        "   {",
+        "     \"mcps\": {",
+        "       \"github\": {",
+        "         \"env\": {",
+        "           \"GITHUB_PERSONAL_ACCESS_TOKEN\": \"ghp_xxxxx\"",
+        "         }",
+        "       }",
+        "     }",
+        "   }",
+        "   ",
+        "   # Format 2 - env var reference (if supported):",
+        "   {",
+        "     \"mcps\": {",
+        "       \"github\": {",
+        "         \"env\": {",
+        "           \"GITHUB_PERSONAL_ACCESS_TOKEN\": \"$GITHUB_TOKEN\"",
+        "         }",
+        "       }",
+        "     }",
+        "   }",
+        "4. If using reference syntax, ensure variable is set before starting Claude Code:",
+        "   export GITHUB_TOKEN=ghp_xxxxx",
+        "   claude  # Now start Claude Code",
+        "5. Test by running MCP tool - if token is used correctly, connection succeeds"
+      ],
+      "prevention": [
+        "- Document exact env var syntax needed for each MCP",
+        "- Store tokens in ~/.env or shell profile (not in settings.json)",
+        "- Test env vars before using: echo $VAR_NAME",
+        "- Use settings.json's 'env' object for clarity (over string references)"
+      ],
+      "sources": [
+        "https://github.com/github/github-mcp-server/issues/1013"
+      ]
+    }
+  ],
+  "summary": {
+    "totalProblems": 24,
+    "byCategory": {
+      "Installation & Setup": 6,
+      "MCP Issues": 5,
+      "CLI & Commands": 5,
+      "Skills Development": 3,
+      "Performance & Behavior": 2,
+      "Other": 3
+    },
+    "averageConfidence": 93.5,
+    "criticalProblems": [
+      "install-001",
+      "install-002",
+      "install-003",
+      "mcp-002",
+      "mcp-003",
+      "mcp-005",
+      "cli-003",
+      "skills-001",
+      "perf-001",
+      "native-installer-001",
+      "memory-001"
+    ],
+    "frequentIssues": [
+      "install-003 (PATH not set)",
+      "mcp-002 (token not found)",
+      "cli-002 (memory not persisting)",
+      "native-installer-001 (Windows freezes)"
+    ],
+    "relatedIssues": {
+      "install-001": ["install-003", "install-005"],
+      "mcp-002": ["env-var-001"],
+      "mcp-005": ["mcp-001"],
+      "cli-003": ["memory-001"],
+      "skills-001": ["skills-002"],
+      "perf-001": ["cli-003"],
+      "native-installer-001": ["install-001"]
+    }
+  },
+  "howToUse": {
+    "findProblem": [
+      "1. Search by symptom: Look for error message in 'symptom' field",
+      "2. Search by category: Filter by Installation, MCP, CLI, Skills, or Performance",
+      "3. Search by ID: Use format 'install-001', 'mcp-002', etc."
+    ],
+    "readEntry": [
+      "1. Read 'Symptom' to see if it matches your issue",
+      "2. Read 'Root Cause' to understand why it happens",
+      "3. Follow 'Solution' step-by-step",
+      "4. Review 'Prevention' for future reference",
+      "5. Check 'Sources' for official documentation"
+    ],
+    "reportNewIssue": [
+      "If problem not in this guide:",
+      "1. Check GitHub issues: github.com/anthropics/claude-code/issues",
+      "2. Search existing issues first (may already be reported)",
+      "3. Provide: symptom, steps to reproduce, Claude Code version, OS",
+      "4. Include error messages and logs (Ctrl+Shift+U for MCP logs)"
+    ]
+  },
+  "resources": {
+    "officialDocumentation": {
+      "installation": "https://code.claude.com/docs/en/troubleshoot-install",
+      "mcpGuide": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports",
+      "skills": "https://code.claude.com/docs/en/skills",
+      "supportCenter": "https://support.claude.com/en/articles/14552646-troubleshoot-claude-code-installation-and-authentication"
+    },
+    "communityResources": {
+      "gitHubIssues": "https://github.com/anthropics/claude-code/issues",
+      "mcpRegistry": "https://modelcontextprotocol.io",
+      "gitHubMCPServer": "https://github.com/github/github-mcp-server"
+    },
+    "debugging": {
+      "mcpLogs": "Open Ctrl+Shift+U in Claude Code → select 'MCP Logs'",
+      "versionCheck": "Run: claude --version",
+      "envVarCheck": "Run: echo $GITHUB_TOKEN (or relevant var)",
+      "pathCheck": "Run: which claude (or: where claude on Windows)"
+    }
+  }
+}
