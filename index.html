@@ -85,6 +85,18 @@
                         <span class="nav-badge nivel-4">4</span> Maestría Práctica</a></li>
                 </ul>
 
+                <p class="nav-group-title">🔧 Producción Avanzada</p>
+                <ul class="nav-list">
+                    <li><a href="#git-workflows" class="nav-link" data-section="git-workflows" data-mode="technical">
+                        <span class="nav-icon">🌿</span> Git Workflows Reales</a></li>
+                    <li><a href="#mcp-use-cases" class="nav-link" data-section="mcp-use-cases" data-mode="technical">
+                        <span class="nav-icon">🔗</span> MCPs por Caso de Uso</a></li>
+                    <li><a href="#hooks-production" class="nav-link" data-section="hooks-production" data-mode="technical">
+                        <span class="nav-icon">🎣</span> Hooks en Producción</a></li>
+                    <li><a href="#multi-mcp-orchestration" class="nav-link" data-section="multi-mcp-orchestration" data-mode="technical">
+                        <span class="nav-icon">🎼</span> Multi-MCP Orchestration</a></li>
+                </ul>
+
                 <p class="nav-group-title">Profundización</p>
                 <ul class="nav-list">
                     <li><a href="#agente-sdk" class="nav-link" data-section="agente-sdk" data-mode="technical">
@@ -5028,6 +5040,392 @@ claude commit
                 <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
                     <strong>📖 Lectura completa:</strong> Ver <code>COMMAND_PATTERNS.md</code> para todos los 10 patrones con ejemplos reales.
                 </p>
+            </section>
+
+            <!-- ==================== GIT WORKFLOWS REALES ==================== -->
+            <section class="content-section" data-section="git-workflows">
+                <h2>🌿 Git Workflows Reales en Producción</h2>
+                <p class="section-intro">Tres flujos probados: Trunk-based, Gitflow, Worktrees. Con commits reales del repo y comandos copy-paste.</p>
+
+                <article class="card workflow-card">
+                    <h3>Flujo A: Trunk-Based Development</h3>
+                    <p class="badge-small">✅ Recomendado para: Equipos 2-8, ciclos cortos</p>
+                    <div class="info-block">
+                        <strong>¿Cuándo usar?</strong>
+                        <ul>
+                            <li>Equipos pequeños (2-8 personas)</li>
+                            <li>Ciclos de release cortos (diarios/semanales)</li>
+                            <li>CI/CD sólido y tests confiables</li>
+                        </ul>
+                    </div>
+                    <div class="code-example">
+                        <strong>Workflow típico:</strong>
+                        <pre><code data-lang="bash">
+# 1. Sincroniza master
+git checkout master && git pull origin master
+
+# 2. Feature branch corta (max 1 día)
+git checkout -b fix/auth-token-refresh
+
+# 3. Commits atómicos
+git commit -m "fix: refresh token antes de expiración
+- Valida expiration en middleware
+- Usa /refresh endpoint
+- Tests en auth.spec.ts"
+
+# 4. Push + PR
+git push -u origin fix/auth-token-refresh
+# → Crear PR, code review
+# → Merge vía GitHub cuando CI pasa
+
+# 5. Cleanup
+git checkout master
+git pull origin master
+git branch -d fix/auth-token-refresh
+                        </code></pre>
+                    </div>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <strong>✓ Ventajas:</strong>
+                            <ul>
+                                <li>Integración continua = menos conflictos</li>
+                                <li>Deploy más seguro (cambios pequeños)</li>
+                                <li>Feedback rápido en code review</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <strong>✗ Desventajas:</strong>
+                            <ul>
+                                <li>Requiere CI/CD sólido</li>
+                                <li>Tests deben ser confiables</li>
+                                <li>Presión para merge rápido</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card workflow-card">
+                    <h3>Flujo B: Feature Branches + Gitflow</h3>
+                    <p class="badge-small">📊 Recomendado para: Equipos 8-20, releases planeadas</p>
+                    <div class="info-block">
+                        <strong>Estructura de branches:</strong>
+                        <pre><code data-lang="text">
+master              # Producción (tagged: v1.0.0)
+staging             # Pre-producción
+develop             # Integración (siempre releasable)
+├── feature/*       # Nuevas features
+├── hotfix/*        # Fixes urgentes
+└── release/*       # Preparar release
+                        </code></pre>
+                    </div>
+                    <div class="code-example">
+                        <strong>Workflow completo (feature → release → production):</strong>
+                        <pre><code data-lang="bash">
+# STEP 1: Feature branch desde develop
+git checkout -b feature/otp-auth develop
+
+# ... trabajo normal ...
+git commit -m "feat: agregar TOTP authentication"
+git push origin feature/otp-auth
+# → PR develop ← feature/otp-auth
+
+# STEP 2: Code freeze para release
+git checkout -b release/2.5.0 develop
+# Edita package.json, CHANGELOG.md
+git commit -m "chore: bump to v2.5.0"
+
+# STEP 3: Tests finales + tag
+npm test && npm run build
+git tag -a v2.5.0 -m "Release 2.5.0"
+
+# STEP 4: Merge a master + back a develop
+git checkout master && git pull origin master
+git merge --no-ff release/2.5.0
+git push origin master v2.5.0
+
+git checkout develop
+git merge --no-ff master
+git push origin develop
+
+# CLEANUP
+git branch -d release/2.5.0
+                        </code></pre>
+                    </div>
+                </article>
+
+                <article class="card workflow-card">
+                    <h3>Flujo C: Git Worktrees (Paralelismo)</h3>
+                    <p class="badge-small">⚡ Recomendado para: Trabajar en múltiples branches en paralelo</p>
+                    <div class="info-block">
+                        <strong>Ventaja clave:</strong>
+                        <p>Cada worktree = directorio separado, trabaja en 2-3 cosas en paralelo sin "git checkout".</p>
+                    </div>
+                    <div class="code-example">
+                        <strong>Setup y uso:</strong>
+                        <pre><code data-lang="bash">
+# Opción 1: Manual git worktree
+git worktree add ~/work/auth-refactor -b feature/auth-refactor
+cd ~/work/auth-refactor
+# ... edita, commit, push ...
+
+# Opción 2: Automático con Claude Code
+claude --worktree feature/auth-refactor
+> Refactoriza @src/auth/ (en ese worktree aislado)
+
+# Listing
+git worktree list
+# /home/user/work/auth-refactor  abc1234 [feature/auth-refactor]
+
+# Cleanup
+git worktree remove ~/work/auth-refactor
+                        </code></pre>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3>Tabla Comparativa: ¿Cuál elegir?</h3>
+                    <div class="responsive-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Aspecto</th>
+                                    <th>Trunk-Based</th>
+                                    <th>Gitflow</th>
+                                    <th>Worktrees</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Complejidad</strong></td>
+                                    <td>Baja</td>
+                                    <td>Media</td>
+                                    <td>Media (intuitiva)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Release cycle</strong></td>
+                                    <td>Diario/semanal</td>
+                                    <td>Cada 2-4 sem</td>
+                                    <td>Variable</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Equipo ideal</strong></td>
+                                    <td>2-8</td>
+                                    <td>8-20+</td>
+                                    <td>Cualquiera</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CI/CD req</strong></td>
+                                    <td>Sólido</td>
+                                    <td>Moderado</td>
+                                    <td>Sólido</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Merge conflicts</strong></td>
+                                    <td>Frecuentes (pequeños)</td>
+                                    <td>Menos frecuentes</td>
+                                    <td>Cero (isolated)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ==================== MCP SERVERS BY USE CASE ==================== -->
+            <section class="content-section" data-section="mcp-use-cases">
+                <h2>🔗 MCP Servers by Use Case</h2>
+                <p class="section-intro">GitHub, PostgreSQL, Slack y otros MCPs configurados para casos reales. Setup copy-paste listo.</p>
+
+                <article class="card mcp-card">
+                    <h3>GitHub MCP: PR Reviews & Issue Creation</h3>
+                    <p class="badge-small">Perfect for: Code review automation, issue tracking</p>
+                    <div class="info-block">
+                        <strong>¿Por qué?</strong>
+                        <ul>
+                            <li>Automaticar code review línea-por-línea</li>
+                            <li>Crear issues desde sesión Claude</li>
+                            <li>Query PR diffs sin salir del CLI</li>
+                            <li>Integrar feedback en tiempo real</li>
+                        </ul>
+                    </div>
+                    <div class="code-example">
+                        <strong>Setup (copy-paste):</strong>
+                        <pre><code data-lang="bash">
+# Opción 1: User scope (global)
+claude mcp add --scope user github \
+  -e GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxxx \
+  -- npx -y @modelcontextprotocol/server-github
+                        </code></pre>
+                    </div>
+                </article>
+
+                <article class="card mcp-card">
+                    <h3>PostgreSQL MCP: Data Exploration</h3>
+                    <p class="badge-small">Perfect for: Database debugging, schema analysis</p>
+                    <div class="info-block">
+                        <strong>¿Por qué?</strong>
+                        <ul>
+                            <li>Ejecutar queries sin psql CLI</li>
+                            <li>Explorar schema de la DB en tiempo real</li>
+                            <li>Debugging de datos en producción</li>
+                            <li>Backups y exports automáticos</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="card mcp-card">
+                    <h3>Slack MCP: Notifications & Audit Trail</h3>
+                    <p class="badge-small">Perfect for: Team notifications, audit logging</p>
+                    <div class="info-block">
+                        <strong>¿Por qué?</strong>
+                        <ul>
+                            <li>Notificar al equipo desde Claude automáticamente</li>
+                            <li>Crear audit trail en Slack para decisiones</li>
+                            <li>Alertas de CI/CD failures</li>
+                            <li>Integración con workflows</li>
+                        </ul>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ==================== HOOKS IN PRODUCTION ==================== -->
+            <section class="content-section" data-section="hooks-production">
+                <h2>🎣 Hooks in Production</h2>
+                <p class="section-intro">5 hooks reales que automatizan seguridad, tests, y monitoreo. Configuración lista para copiar.</p>
+
+                <article class="card hook-card">
+                    <h3>Hook 1: Security Audit (PreToolUse)</h3>
+                    <p class="description">Valida cada acción antes de ejecutarla — bloquea comandos peligrosos.</p>
+                    <div class="code-example">
+                        <strong>Configuración en .claude/settings.json:</strong>
+                        <pre><code data-lang="json">
+{
+  "hooks": {
+    "PreToolUse": {
+      "enabled": true,
+      "rules": [
+        {
+          "name": "Block dangerous commands",
+          "pattern": "(rm -rf|eval|curl.*\\||sh -c|sudo)",
+          "action": "block",
+          "message": "Comando potencialmente peligroso. Requiere aprobación."
+        },
+        {
+          "name": "Block PII exposure",
+          "pattern": "(password|token|secret|API_KEY)\\s*=",
+          "action": "block",
+          "message": "Detectado intento de escribir credenciales. No permitido."
+        }
+      ]
+    }
+  }
+}
+                        </code></pre>
+                    </div>
+                </article>
+
+                <article class="card hook-card">
+                    <h3>Hook 2: Auto-Format + Tests (PostToolUse)</h3>
+                    <p class="description">Después de escribir código, formatea automáticamente y corre tests.</p>
+                    <div class="code-example">
+                        <strong>Configuración:</strong>
+                        <pre><code data-lang="json">
+{
+  "hooks": {
+    "PostToolUse": {
+      "enabled": true,
+      "sequence": [
+        { "name": "Format code", "command": "npm run format", "onError": "warn" },
+        { "name": "Lint check", "command": "npm run lint", "onError": "warn" },
+        { "name": "Run tests", "command": "npm test -- --watch=false", "onError": "abort" }
+      ]
+    }
+  }
+}
+                        </code></pre>
+                    </div>
+                </article>
+
+                <article class="card hook-card">
+                    <h3>Hook 3: Context Injection (UserPromptSubmit)</h3>
+                    <p class="description">Inyecta automáticamente contexto relevante (git status, memory) antes de procesar prompts.</p>
+                </article>
+
+                <article class="card hook-card">
+                    <h3>Hook 4: Cost Warning (PreToolUse)</h3>
+                    <p class="description">Advierte si una acción va a consumir muchos tokens o hacer muchas API calls.</p>
+                </article>
+
+                <article class="card hook-card">
+                    <h3>Hook 5: Performance Monitoring (PostToolUse)</h3>
+                    <p class="description">Registra timing, tokens, y recursos de cada acción para análisis posterior.</p>
+                </article>
+            </section>
+
+            <!-- ==================== MULTI-MCP ORCHESTRATION ==================== -->
+            <section class="content-section" data-section="multi-mcp-orchestration">
+                <h2>🎼 Multi-MCP Orchestration</h2>
+                <p class="section-intro">Patrones de coordinación: Fork-Join para paralelismo, Cascading Validation para secuencias.</p>
+
+                <article class="card orchestration-card">
+                    <h3>Patrón 1: Fork-Join (Paralelismo con MCPs)</h3>
+                    <p class="description">Ejecuta múltiples MCPs en paralelo y agrega resultados. Ideal para análisis multi-fuente.</p>
+                    <div class="info-block">
+                        <strong>Uso:</strong>
+                        <p>Cuando necesitas información de múltiples fuentes (GitHub + PostgreSQL + Slack) en paralelo.</p>
+                    </div>
+                </article>
+
+                <article class="card orchestration-card">
+                    <h3>Patrón 2: Cascading Validation</h3>
+                    <p class="description">Validaciones secuenciales: cada paso ejecuta solo si anterior pasó. Ideal para CI/CD.</p>
+                    <div class="info-block">
+                        <strong>Flujo típico:</strong>
+                        <p>Lint → Format → Typecheck → Tests → Build → Merge</p>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3>Recomendaciones por Tamaño de Equipo</h3>
+                    <div class="responsive-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tamaño</th>
+                                    <th>Workflow</th>
+                                    <th>MCPs Clave</th>
+                                    <th>Paralelismo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Solo tú</strong></td>
+                                    <td>Trunk-based</td>
+                                    <td>GitHub</td>
+                                    <td>Worktrees</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>2-5</strong></td>
+                                    <td>Trunk-based</td>
+                                    <td>GitHub + Slack</td>
+                                    <td>Forks</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>5-15</strong></td>
+                                    <td>Gitflow</td>
+                                    <td>GitHub + PostgreSQL + Slack</td>
+                                    <td>Cascading + Forks</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>15+</strong></td>
+                                    <td>Multi-repo</td>
+                                    <td>↑ + Custom MCPs</td>
+                                    <td>Orchestration avanzado</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
             </section>
 
         </main>

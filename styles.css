@@ -2305,8 +2305,213 @@ kbd {
     color: var(--text-primary);
 }
 
+/* ============ PRODUCTION ADVANCED SECTIONS ============ */
+
+.workflow-card { border-left: 4px solid #3ddc97; }
+.mcp-card { border-left: 4px solid #60a5fa; }
+.hook-card { border-left: 4px solid #fbbf24; }
+.orchestration-card { border-left: 4px solid #a78bfa; }
+
+.badge-small {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(96, 165, 250, 0.15);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.code-example {
+    margin: 1.5rem 0;
+    background: var(--bg-surface);
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-subtle);
+}
+
+.code-example strong {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--accent);
+    font-size: 0.9rem;
+}
+
+.description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.info-block {
+    background: rgba(96, 165, 250, 0.08);
+    border-left: 4px solid #60a5fa;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1.5rem 0;
+}
+
+.info-block strong {
+    display: block;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+}
+
+.info-block ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.info-block li {
+    margin-bottom: 0.5rem;
+}
+
+.pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.pros, .cons {
+    padding: 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.pros {
+    background: rgba(76, 175, 80, 0.1);
+    border-left: 4px solid #4caf50;
+}
+
+.cons {
+    background: rgba(244, 67, 54, 0.1);
+    border-left: 4px solid #f44336;
+}
+
+.pros strong, .cons strong {
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.pros ul, .cons ul {
+    padding-left: 1.5rem;
+    margin: 0;
+}
+
+.pros li, .cons li {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.responsive-table {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+.responsive-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.responsive-table thead {
+    background: var(--bg-elevated);
+    border-bottom: 2px solid var(--accent);
+}
+
+.responsive-table th {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.responsive-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+}
+
+.responsive-table tr:hover {
+    background: rgba(96, 165, 250, 0.05);
+}
+
+.diagram-block {
+    background: var(--bg-surface);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+}
+
+.steps {
+    counter-reset: step-counter;
+    padding-left: 0;
+    list-style: none;
+}
+
+.steps li {
+    counter-increment: step-counter;
+    margin-bottom: 1.5rem;
+    padding-left: 2.5rem;
+    position: relative;
+    color: var(--text-secondary);
+}
+
+.steps li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: var(--accent);
+    color: var(--bg-base);
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.steps strong {
+    color: var(--text-primary);
+}
+
+.example-block {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin: 1.5rem 0;
+}
+
+.example-block strong {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--accent);
+}
+
+.section-intro {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
 /* ============ 5. RESPONSIVE ============ */
 @media (max-width: 1024px) {
+    .pros-cons { grid-template-columns: 1fr; }
     .app-shell {
         grid-template-columns: 1fr;
     }
