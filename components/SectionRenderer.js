@@ -58,11 +58,11 @@ const ContentTypeMap = {
     <CodeBlock lang={lang} code={code} title={title} />
   ),
 
-  list: ({ items, ordered = false }) => {
+  list: ({ items = [], ordered = false }) => {
     const Tag = ordered ? 'ol' : 'ul'
     return (
       <Tag style={{ marginLeft: '20px', marginBottom: '12px' }}>
-        {items.map((item, idx) => (
+        {Array.isArray(items) && items.map((item, idx) => (
           <li key={idx} style={{ marginBottom: '6px', color: 'var(--text-secondary)' }}>
             {item}
           </li>
@@ -71,7 +71,7 @@ const ContentTypeMap = {
     )
   },
 
-  table: ({ headers, rows }) => (
+  table: ({ headers = [], rows = [] }) => (
     <div style={{ overflowX: 'auto', marginBottom: '24px' }}>
       <table style={{
         width: '100%',
@@ -81,7 +81,7 @@ const ContentTypeMap = {
       }}>
         <thead style={{ background: 'var(--bg-tertiary)' }}>
           <tr>
-            {headers.map((h, i) => (
+            {Array.isArray(headers) && headers.map((h, i) => (
               <th key={i} style={{
                 padding: '12px',
                 textAlign: 'left',
@@ -97,7 +97,7 @@ const ContentTypeMap = {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, rowIdx) => (
+          {Array.isArray(rows) && rows.map((row, rowIdx) => (
             <tr key={rowIdx} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
               {(Array.isArray(row) ? row : Object.values(row)).map((cell, cellIdx) => (
                 <td key={cellIdx} style={{
@@ -125,152 +125,152 @@ const ContentTypeMap = {
 
   card: (props) => <Card {...props} />,
 
-  grid: ({ columns = 3, items }) => (
+  grid: ({ columns = 3, items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: `repeat(auto-fit, minmax(250px, 1fr))`,
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <Card key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'stats-grid': ({ items }) => (
+  'stats-grid': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <StatsCard key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'course-stats': ({ items }) => (
+  'course-stats': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <StatsCard key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'stats': ({ items }) => (
+  'stats': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <StatsCard key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'path-cards': ({ items }) => (
+  'path-cards': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
       gap: '20px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <PathCard key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'flow-card': ({ items }) => (
+  'flow-card': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <Card key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'mcp-card': ({ items }) => (
+  'mcp-card': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <Card key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'hook-card': ({ items }) => (
+  'hook-card': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <Card key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'workflow-card': ({ items }) => (
+  'workflow-card': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <Card key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'orchestration-card': ({ items }) => (
+  'orchestration-card': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <Card key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'pattern-cards': ({ items }) => (
+  'pattern-cards': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <Card key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'cheatsheet': ({ items }) => (
+  'cheatsheet': ({ items = [] }) => (
     <div style={{ marginBottom: '24px' }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <div key={idx} style={{
           padding: '12px',
           background: 'var(--bg-secondary)',
@@ -285,9 +285,9 @@ const ContentTypeMap = {
     </div>
   ),
 
-  'checklist': ({ items }) => (
+  'checklist': ({ items = [] }) => (
     <ul style={{ marginLeft: '20px', marginBottom: '12px' }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <li key={idx} style={{ marginBottom: '6px', color: 'var(--text-secondary)' }}>
           ☐ {item}
         </li>
@@ -295,9 +295,9 @@ const ContentTypeMap = {
     </ul>
   ),
 
-  'course-tips': ({ items }) => (
+  'course-tips': ({ items = [] }) => (
     <div style={{ marginBottom: '24px' }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <div key={idx} style={{
           padding: '12px',
           background: 'rgba(74, 222, 128, 0.1)',
@@ -312,16 +312,16 @@ const ContentTypeMap = {
     </div>
   ),
 
-  'sprint': ({ title, items }) => (
+  'sprint': ({ title = '', items = [] }) => (
     <div style={{ marginBottom: '24px', padding: '16px', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
       {title && <h4 style={{ marginBottom: '12px' }}>{title}</h4>}
-      {items && items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <div key={idx} style={{ marginBottom: '8px', color: 'var(--text-secondary)' }}>• {item}</div>
       ))}
     </div>
   ),
 
-  'comparison-table': ({ headers, rows }) => (
+  'comparison-table': ({ headers = [], rows = [] }) => (
     <div style={{ overflowX: 'auto', marginBottom: '24px' }}>
       <table style={{
         width: '100%',
@@ -330,7 +330,7 @@ const ContentTypeMap = {
       }}>
         <thead style={{ background: 'var(--bg-tertiary)' }}>
           <tr>
-            {headers.map((h, i) => (
+            {Array.isArray(headers) && headers.map((h, i) => (
               <th key={i} style={{
                 padding: '12px',
                 textAlign: 'left',
@@ -345,7 +345,7 @@ const ContentTypeMap = {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, rowIdx) => (
+          {Array.isArray(rows) && rows.map((row, rowIdx) => (
             <tr key={rowIdx} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
               {(Array.isArray(row) ? row : Object.values(row)).map((cell, cellIdx) => (
                 <td key={cellIdx} style={{
@@ -363,22 +363,22 @@ const ContentTypeMap = {
     </div>
   ),
 
-  'comparison-grid': ({ items }) => (
+  'comparison-grid': ({ items = [] }) => (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
       gap: '16px',
       marginBottom: '24px'
     }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <Card key={idx} {...item} />
       ))}
     </div>
   ),
 
-  'roadmap': ({ items }) => (
+  'roadmap': ({ items = [] }) => (
     <div style={{ marginBottom: '24px' }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <div key={idx} style={{
           padding: '16px',
           background: 'var(--bg-secondary)',
@@ -393,9 +393,9 @@ const ContentTypeMap = {
     </div>
   ),
 
-  'filters': ({ items }) => (
+  'filters': ({ items = [] }) => (
     <div style={{ marginBottom: '24px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <button key={idx} style={{
           padding: '8px 12px',
           background: 'var(--bg-secondary)',
@@ -412,9 +412,9 @@ const ContentTypeMap = {
     </div>
   ),
 
-  'memory-commands': ({ items }) => (
+  'memory-commands': ({ items = [] }) => (
     <div style={{ marginBottom: '24px' }}>
-      {items.map((item, idx) => (
+      {Array.isArray(items) && items.map((item, idx) => (
         <div key={idx} style={{
           padding: '12px',
           background: 'var(--bg-secondary)',
