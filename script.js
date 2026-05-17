@@ -174,6 +174,38 @@
         { cmd: 'claude mcp serve', level: 3, category: 'shell',
           desc: 'Expone Claude Code como un servidor MCP para que otros clientes se conecten.',
           example: 'claude mcp serve' },
+
+        // --- Nivel 4: Comandos Maestría Práctica ---
+        { cmd: 'mcpb init', level: 4, category: 'shell',
+          desc: 'Inicializa manifest.json para empaquetar un MCP server como .mcpb distribuible.',
+          example: 'mcpb init' },
+        { cmd: 'mcpb pack', level: 4, category: 'shell',
+          desc: 'Empaqueta el MCP server en un archivo .mcpb listo para distribución.',
+          example: 'mcpb pack' },
+        { cmd: 'mcpb validate', level: 4, category: 'shell',
+          desc: 'Valida el manifest.json antes de empaquetar (evita errores en campos obligatorios).',
+          example: 'mcpb validate' },
+        { cmd: 'claude --worktree', level: 4, category: 'shell',
+          desc: 'Inicia sesión en un git worktree aislado para trabajo paralelo sin conflictos.',
+          example: 'claude --worktree feature-auth' },
+        { cmd: 'claude --from-pr', level: 4, category: 'shell',
+          desc: 'Carga diff + comentarios de un PR automáticamente al contexto de la sesión.',
+          example: 'claude --from-pr 42' },
+        { cmd: 'claude --permission-mode auto', level: 4, category: 'shell',
+          desc: 'Usa el clasificador IA para evaluar el riesgo de cada acción antes de ejecutarla.',
+          example: 'claude --permission-mode auto -p "fix all lint errors"' },
+        { cmd: '/fork', level: 4, category: 'built-in',
+          desc: 'Bifurca la sesión heredando contexto completo + caché compartida (10× cost savings).',
+          example: '/fork "Explorar enfoque alternativo"' },
+        { cmd: '/team-onboarding', level: 4, category: 'built-in',
+          desc: 'Genera TEAM_ONBOARDING.md automático desde historial real del proyecto.',
+          example: '/team-onboarding' },
+        { cmd: '/btw', level: 4, category: 'built-in',
+          desc: 'Pregunta fuera de contexto sin contaminar historial de conversación.',
+          example: '/btw ¿cuántos tokens llevo en esta sesión?' },
+        { cmd: 'claude mcp add --scope project', level: 4, category: 'shell',
+          desc: 'Registra MCP server a nivel proyecto (compartible en git vía .mcp.json).',
+          example: 'claude mcp add --scope project --transport http github https://api.githubcopilot.com/mcp/' },
     ];
 
     /* ============================================================
@@ -331,6 +363,84 @@
                 troubleshooting: [
                     '**MCP aparece como "failed"** → revisa que el comando del servidor exista (`npx -y @modelcontextprotocol/server-x`) y que las variables de entorno estén exportadas.',
                     '**No usa el MCP aunque está conectado** → menciona explícitamente la herramienta o el servicio en el prompt ("usa el MCP de GitHub para...").',
+                ],
+            },
+        },
+
+        4: {
+            title: 'Maestría Práctica — De Experimentación a Producción',
+            objectives: [
+                'Construir y empaquetar un MCP Server personalizado (.mcpb) listo para distribución.',
+                'Crear Skills reutilizables con hooks integrados y desplegarlas en equipo.',
+                'Orquestar múltiples agentes en paralelo (Split-and-Merge, Fork, Worktrees).',
+                'Reducir costos de tokens 40-60% con Prompt Caching y optimización de contexto.',
+                'Configurar settings.json, hooks y sandbox para sistemas de producción reales.',
+            ],
+            tools: ['/fork', '/team-onboarding', 'mcpb', '--worktree', '--from-pr', 'settings.json', 'hooks', 'Batch API'],
+            subtopics: [
+                { name: 'MCP Server Development', desc: 'Estructura .mcpb, manifest.json, empaquetamiento y marketplaces (Smithery, mpak, MCPFinder).' },
+                { name: 'Custom Skills & Hooks', desc: 'SKILL.md avanzado, 12 hook events (PreToolUse, PostToolUse, onFileChange...), lifecycle completo.' },
+                { name: 'Multi-Agent Orchestration', desc: 'Split-and-merge, fork (10× cost savings con caché compartida), worktrees, agent teams.' },
+                { name: 'Token Optimization', desc: '8 técnicas para 40-60% ahorro. Prompt Caching, Batch API, sumarización jerárquica.' },
+                { name: 'Production & Settings', desc: 'settings.json deep dive, sandbox, managed settings enterprise, 20 errores críticos reales.' },
+            ],
+            caseStudy: {
+                title: '🛠️ Caso práctico: sistema de review automatizado',
+                context: 'Quieres que 3 agentes paralelos revisen cada PR automáticamente (seguridad, performance, style) con prompt caching para ahorrar tokens.',
+                steps: [
+                    { cmd: 'mcpb init && mcpb pack', what: 'Creas y empaquetas tu MCP server con herramientas de análisis de código.' },
+                    { cmd: 'mkdir -p .claude/skills/parallel-review', what: 'Skill que lanza 3 subagentes en paralelo con /fork.' },
+                    { cmd: 'Configura .claude/settings.json con hooks y prompt caching', what: 'Ahorro automático de tokens en cada llamada.' },
+                    { cmd: 'claude --from-pr 42 --permission-mode auto', what: 'Review real sobre PR con autonomía configurada.' },
+                ],
+                expected: 'Review completo en <60s con 3 agentes en paralelo, 40% menos tokens por prompt caching.',
+            },
+            quiz: [
+                {
+                    q: '¿Qué ventaja clave tiene /fork sobre lanzar un subagente independiente?',
+                    options: [
+                        'El fork tiene más herramientas disponibles.',
+                        'Hereda el contexto completo con caché compartida — tokens cacheados cuestan solo 10%.',
+                        'El fork se ejecuta más rápido en el servidor de Anthropic.',
+                    ],
+                    correct: 1,
+                    explain: 'Con fork el contexto del padre ya está cacheado. Los tokens cacheados cuestan ~10% del precio normal — hasta 10× de reducción de costo en subagentes.',
+                },
+                {
+                    q: '¿Cuál técnica de optimización tiene mayor impacto con menor esfuerzo?',
+                    options: [
+                        'Comprimir el código quitando comentarios y espacios.',
+                        'Prompt Caching con cache_control: ephemeral en el system prompt.',
+                        'Usar siempre Haiku en lugar de Sonnet u Opus.',
+                    ],
+                    correct: 1,
+                    explain: 'Prompt Caching logra 40-50% de ahorro con solo agregar cache_control. Una hora de implementación, impacto inmediato desde la segunda llamada.',
+                },
+                {
+                    q: '¿Qué permission mode de settings.json es más recomendado para automatización segura?',
+                    options: [
+                        'bypassPermissions — salta todas las confirmaciones.',
+                        'auto — un clasificador IA evalúa el riesgo de cada acción antes de ejecutarla.',
+                        'default — pide confirmación manual en cada operación.',
+                    ],
+                    correct: 1,
+                    explain: 'auto mode (v2.1.85+) usa un clasificador IA. Más seguro que bypass y más fluido que default. Ideal para workflows CI/CD y scripts automatizados.',
+                },
+            ],
+            mission: {
+                title: '🎯 Misión final del Nivel 4',
+                goal: 'Construir un sistema integrado: MCP Server + Skill paralela + Hooks + Prompt Caching.',
+                steps: [
+                    'Día 1: `mcpb init` → crea un MCP server con al menos 1 tool real. Empaquétalo con `mcpb pack`.',
+                    'Día 2: Crea una Skill que use tu MCP y lance 2 subagentes en paralelo con /fork.',
+                    'Día 3: Configura prompt caching y rate limiting en settings.json. Mide baseline con `/usage`.',
+                    'Día 4: Testea con `claude --from-pr <numero> --permission-mode auto`. Compara tokens antes/después.',
+                ],
+                success: 'Sistema funcionando en <60s por operación, costos reducidos >30% respecto a llamadas sin cachear.',
+                troubleshooting: [
+                    '**mcpb pack falla** → verifica manifest.json: name, version, serverType y entrypoint son obligatorios. Valida con `mcpb validate`.',
+                    '**Fork no hereda contexto** → necesitas CLAUDE_CODE_FORK_SUBAGENT=1 en variables de entorno.',
+                    '**Prompt cache miss siempre** → TTL del cache es 5 minutos. El system prompt debe ser idéntico entre llamadas.',
                 ],
             },
         },
@@ -1141,6 +1251,55 @@
             { type: 'output',  text: '            claude -p "Audita este archivo" < "$file" | jq .' },
             { type: 'output',  text: '          done' },
             { type: 'success', text: '✓ Headless mode — ideal para automatización' },
+        ],
+
+        mcpBuild: [
+            { type: 'comment', text: '# Nivel 4 — Crear y empaquetar un MCP Server' },
+            { type: 'output',  text: '' },
+            { type: 'comment', text: '# 1) Inicializar manifest' },
+            { type: 'prompt',  text: 'mcpb init', delay: 200 },
+            { type: 'success', text: '✓ manifest.json creado', delay: 600 },
+            { type: 'output',  text: '' },
+            { type: 'comment', text: '# 2) Editar manifest.json con datos del servidor' },
+            { type: 'output',  text: '{ "name": "weather-mcp", "version": "1.0.0",' },
+            { type: 'output',  text: '  "serverType": "stdio", "entrypoint": "dist/index.js" }' },
+            { type: 'output',  text: '' },
+            { type: 'comment', text: '# 3) Validar antes de empaquetar' },
+            { type: 'prompt',  text: 'mcpb validate', delay: 300 },
+            { type: 'success', text: '✓ manifest válido — todos los campos requeridos presentes', delay: 800 },
+            { type: 'output',  text: '' },
+            { type: 'comment', text: '# 4) Empaquetar' },
+            { type: 'prompt',  text: 'mcpb pack', delay: 300 },
+            { type: 'info',    text: '⏺ Bundling server + dependencies...', delay: 1200 },
+            { type: 'success', text: '✓ weather-mcp-1.0.0.mcpb (2.4 MB)', delay: 1000 },
+            { type: 'output',  text: '' },
+            { type: 'comment', text: '# 5) Instalar localmente para prueba' },
+            { type: 'prompt',  text: 'claude mcp add weather ./weather-mcp-1.0.0.mcpb', delay: 300 },
+            { type: 'success', text: '✓ MCP server "weather" registrado — reinicia Claude para activarlo', delay: 1000 },
+        ],
+
+        multiAgent: [
+            { type: 'comment', text: '# Nivel 4 — Orquestación Multi-Agente (Split-and-Merge)' },
+            { type: 'output',  text: '' },
+            { type: 'user',    text: 'Revisa los 3 módulos del PR #42 en paralelo', delay: 500 },
+            { type: 'info',    text: '⏺ Read(PR #42 diff)...', delay: 800 },
+            { type: 'output',  text: '' },
+            { type: 'comment', text: '# Claude lanza 3 subagentes paralelos vía Task tool' },
+            { type: 'info',    text: '⏺ Task("Revisar auth module") — iniciado', delay: 400 },
+            { type: 'info',    text: '⏺ Task("Revisar API routes") — iniciado', delay: 200 },
+            { type: 'info',    text: '⏺ Task("Revisar tests coverage") — iniciado', delay: 200 },
+            { type: 'output',  text: '' },
+            { type: 'comment', text: '# Los 3 agentes trabajan concurrentemente...' },
+            { type: 'info',    text: '✓ Agent 1: auth — 2 vulnerabilidades encontradas', delay: 2000 },
+            { type: 'info',    text: '✓ Agent 2: routes — sin issues, LGTM', delay: 800 },
+            { type: 'info',    text: '✓ Agent 3: tests — cobertura 67% (recomendado 80%)', delay: 600 },
+            { type: 'output',  text: '' },
+            { type: 'comment', text: '# Merge de resultados por el orquestador' },
+            { type: 'success', text: '✓ Review consolidado en 18s (vs 54s secuencial)', delay: 1000 },
+            { type: 'output',  text: '' },
+            { type: 'output',  text: '📋 Resumen: 2 issues críticos en auth.ts líneas 47, 83' },
+            { type: 'output',  text: '   Cobertura insuficiente en user.service.ts' },
+            { type: 'output',  text: '   API routes: aprobadas ✓' },
         ],
     };
 
@@ -1961,11 +2120,13 @@
         renderCommandsTable('commands-table-nivel-1', 1);
         renderCommandsTable('commands-table-nivel-2', 2);
         renderCommandsTable('commands-table-nivel-3', 3);
+        renderCommandsTable('commands-table-nivel-4', 4);
 
         // 1.5) Lecciones didácticas
         renderLesson(1);
         renderLesson(2);
         renderLesson(3);
+        renderLesson(4);
 
         // 2) Navegación
         setupNavigation();
