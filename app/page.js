@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { COMMANDS_DATA } from '@/lib/commandsData'
-import { SECTIONS_CONFIG } from '@/lib/sectionsData'
+import { ALL_SECTIONS_CONTENT } from '@/lib/allSectionsContent'
 import { ProgressTracker } from '@/lib/progressTracker'
 import Sidebar from '@/components/Sidebar'
 import Dashboard from '@/components/Dashboard'
@@ -10,37 +10,38 @@ import CourseSection from '@/components/CourseSection'
 import ChallengesSection from '@/components/ChallengesSection'
 import CommandsTable from '@/components/CommandsTable'
 import GenericSection from '@/components/GenericSection'
-import SearchCommand from '@/components/SearchCommand'
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('dashboard')
   const [mode, setMode] = useState('technical')
-  const [progress, setProgress] = useState(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     const prog = ProgressTracker.getProgress()
-    setProgress(prog)
-    setActiveSection(prog.currentSection || 'dashboard')
+    let sectionToLoad = prog.currentSection || 'dashboard'
+
+    // Validar que la sección existe
+    if (sectionToLoad && !ALL_SECTIONS_CONTENT[sectionToLoad] && sectionToLoad !== 'dashboard') {
+      console.warn(`Saved section "${sectionToLoad}" not found in content, using dashboard`)
+      sectionToLoad = 'dashboard'
+    }
+
+    setActiveSection(sectionToLoad)
+    setMounted(true)
   }, [])
 
   useEffect(() => {
-    if (activeSection) {
+    if (mounted) {
       ProgressTracker.setCurrentSection(activeSection)
     }
-  }, [activeSection])
+  }, [activeSection, mounted])
 
-  const handleSelectCommand = (cmd) => {
-    // Buscar sección relacionada o ir a Dashboard
-    setActiveSection('dashboard')
-  }
-
-  const levelCommands = useMemo(() => {
-    const level = parseInt(activeSection.split('-')[1])
-    if (isNaN(level)) return []
-    return COMMANDS_DATA.filter(cmd => cmd.level === level)
-  }, [activeSection])
+  if (!mounted) return null
 
   const isLevelSection = activeSection.startsWith('nivel-')
+  const levelCommands = isLevelSection
+    ? COMMANDS_DATA.filter(cmd => cmd.level === parseInt(activeSection.split('-')[1]))
+    : []
 
   return (
     <div className="app-shell">
