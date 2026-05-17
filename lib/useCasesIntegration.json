@@ -1,0 +1,533 @@
+{
+  "title": "Claude Code: Practical Use Cases & Real-World Workflows",
+  "description": "Production-tested scenarios from 3 learning levels. Each includes exact commands, expected outputs, tips, and pitfalls.",
+  "structure": "Organized by learning_level (1-3). Each case has: scenario, steps array, expected_output, tips array, pitfalls array, when_to_use",
+  "useCases": [
+    {
+      "id": "level1-new-project",
+      "level": 1,
+      "category": "Setup & Configuration",
+      "title": "Caso 1: Configurar primer proyecto con Claude Code",
+      "description": "Acabas de clonar un repositorio que no conoces. Entiende su estructura rápidamente y configura CLAUDE.md para futuras sesiones.",
+      "timeEstimate": "15-20 minutos",
+      "priorKnowledge": "Git, Node.js básico",
+      "scenario": {
+        "context": "Nuevo desarrollador en un equipo. Repo es Next.js + Postgres. Necesitas entender la stack, arquitectura y convenciones.",
+        "startState": "Repo clonado, sin CLAUDE.md, sin contexto",
+        "endState": "CLAUDE.md completo, contexto cargado, próxima sesión será fluida"
+      },
+      "steps": [
+        {
+          "number": 1,
+          "action": "Verificar instalación",
+          "command": "cd mi-proyecto && claude --version",
+          "expectedResult": "Output: 'Claude Code v2.x.x'. Confirma que Claude está instalado.",
+          "tip": "Si falla, ejecuta: npm install -g @anthropic-ai/claude-code",
+          "pitfall": "Asumir que Claude está instalado. Siempre verifica primero."
+        },
+        {
+          "number": 2,
+          "action": "Iniciar sesión",
+          "command": "cd mi-proyecto && claude",
+          "expectedResult": "Se abre sesión interactiva. Claude espera comandos.",
+          "tip": "Primera vez pide OAuth en navegador. Es automático y seguro.",
+          "pitfall": "No autenticarse. /init y otros comandos requieren sesión activa."
+        },
+        {
+          "number": 3,
+          "action": "Generar CLAUDE.md automático",
+          "command": "/init",
+          "expectedResult": "Claude analiza el repo y genera CLAUDE.md con:\n- Stack detectado (Next.js, Postgres, etc.)\n- Scripts npm\n- Archivos clave\n- Convenciones básicas",
+          "tip": "Revisa el resultado. Edítalo si está incompleto.",
+          "pitfall": "Ignorar CLAUDE.md generado. Es tu base. Mejóralo después."
+        },
+        {
+          "number": 4,
+          "action": "Cargar contexto con menciones @",
+          "command": "@package.json @src/app.tsx @prisma/schema.prisma — ¿Cuál es la arquitectura? ¿Dónde empezaría si agregara autenticación?",
+          "expectedResult": "Claude explica:\n- Dependencias principales\n- Estructura de carpetas\n- Dónde añadir features\n- Patrones usados",
+          "tip": "@ es tu amiga. Carga archivos sin copiar-pegar.",
+          "pitfall": "Copiar contenido completo de archivos. Usa @ en su lugar."
+        },
+        {
+          "number": 5,
+          "action": "Mejora CLAUDE.md",
+          "command": "Abre CLAUDE.md y añade secciones: ## Arquitectura, ## Comandos Frecuentes, ## Stack",
+          "expectedResult": "CLAUDE.md completo y personalizado.",
+          "tip": "Próxima sesión lo carga automáticamente. Es tu 'memory' del proyecto.",
+          "pitfall": "Dejar CLAUDE.md vacío. Actualízalo cada vez que aprendas algo."
+        },
+        {
+          "number": 6,
+          "action": "Verificar configuración",
+          "command": "/doctor",
+          "expectedResult": "Diagnóstico que verifica CLAUDE.md, Node.js, variables de entorno, estado de .git",
+          "tip": "Si hay warnings, léelos. Usualmente sobre .env o variables.",
+          "pitfall": "Ignorar warnings de /doctor. Son señales de problemas futuros."
+        }
+      ],
+      "expectedOutput": {
+        "filesCreated": ["CLAUDE.md en la raíz del proyecto"],
+        "projectState": "Configurado. Próxima sesión cargará contexto automáticamente.",
+        "exampleCLAUDEmd": "# Project: Mi-Proyecto\n\n## Stack\nNext.js 14 + TypeScript + Prisma + PostgreSQL\n\n## Commands\nnpm run dev       # Dev server\nnpm run build     # Build\nnpm test          # Tests\nnpm run migrate   # Migrations\n\n## Key Files\n- /src/app: Next.js app router\n- /prisma: Database schema\n- /tests: Vitest suite"
+      },
+      "tips": [
+        "CLAUDE.md es tu 'system prompt'. Actualízalo regularmente.",
+        "Cada sesión lo carga automáticamente. Sin re-explicación.",
+        "Usa @ para mencionar archivos. Claude los carga en contexto.",
+        "/doctor es tu amigo. Úsalo cuando algo se sienta raro."
+      ],
+      "pitfalls": [
+        "❌ No generar CLAUDE.md → cada sesión necesita setup de 5 min.",
+        "❌ Pegar archivos completos en lugar de usar @ → desperdicia tokens.",
+        "❌ CLAUDE.md obsoleto → información incorrecta. Actualiza cada 2 semanas.",
+        "❌ Usar Haiku para /init → insuficiente para análisis. Usa Sonnet."
+      ],
+      "whenToUseClaude": {
+        "useClaude": "Análisis inicial, entender stack desconocida, generar CLAUDE.md, preguntas sobre arquitectura",
+        "manual": "Editar archivos, configurar .env, instalar dependencias"
+      }
+    },
+    {
+      "id": "level1-code-review",
+      "level": 1,
+      "category": "Code Review & Quality",
+      "title": "Caso 2: First Solo Code Review con Claude",
+      "description": "Te piden que revises un PR. Genera feedback exhaustivo y profesional sin pasar horas.",
+      "timeEstimate": "10-15 minutos",
+      "priorKnowledge": "Leer código, testing, OWASP básico",
+      "scenario": {
+        "context": "PR de compañero: 200 líneas en auth/login.ts. Tests incluidos. Necesitas feedback constructivo.",
+        "startState": "PR abierto en GitHub, código pendiente de revisar",
+        "endState": "Comentarios profesionales, claro qué mejorar"
+      },
+      "steps": [
+        {
+          "number": 1,
+          "action": "Obtener el diff del PR",
+          "command": "git show <commit-hash> > /tmp/pr-diff.txt",
+          "expectedResult": "Archivo con cambios completos.",
+          "tip": "En GitHub, descarga el .patch directo.",
+          "pitfall": "Intentar revisar PR entero en la cabeza. Siempre exporta el diff."
+        },
+        {
+          "number": 2,
+          "action": "Iniciar sesión y opcionalmente renombra",
+          "command": "claude\n/rename \"PR-review-auth\"",
+          "expectedResult": "Sesión abierta y nombrada.",
+          "tip": "Puedes volver con /resume después si hay preguntas.",
+          "pitfall": "Perder la sesión. Renombra para poder recuperarla."
+        },
+        {
+          "number": 3,
+          "action": "Cargar archivos y pedir review",
+          "command": "@auth/login.ts @tests/auth.spec.ts — Code review profesional:\n1. ¿Bugs o vulnerabilidades?\n2. ¿Sigue convenciones? (Usa @CLAUDE.md)\n3. ¿Tests cubren edge cases?\n4. ¿Simplificaciones posibles?\n\nFormato: feedback por sección + score 1-10",
+          "expectedResult": "Review estructurado con:\n- Cada sección analizada\n- Comparación con convenciones\n- Tests validados\n- Propuestas específicas",
+          "tip": "Pide 'review enfocado en seguridad' si quieres algo más corto.",
+          "pitfall": "Review genérico. Menciona CLAUDE.md para contexto de proyecto."
+        },
+        {
+          "number": 4,
+          "action": "Documentar en el PR",
+          "command": "Copia feedback a comentarios en GitHub. Agrupa por categoría: Security, Code Style, Tests, Optional.",
+          "expectedResult": "Comentarios profesionales. Autor sabe qué mejorar.",
+          "tip": "Si es muy largo, agrupa para claridad.",
+          "pitfall": "Copiar feedback de Claude literalmente. Parafrasea y personaliza."
+        },
+        {
+          "number": 5,
+          "action": "Follow-up en cambios",
+          "command": "/rename \"PR-review-auth-UPDATED\"\n@auth/login.ts — El autor hizo cambios. ¿Se resolvieron tus comentarios?",
+          "expectedResult": "Confirmación de fixes.",
+          "tip": "/resume para volver a sesión anterior.",
+          "pitfall": "No hacer follow-up. Los cambios pueden no resolver el problema."
+        }
+      ],
+      "expectedOutput": {
+        "prComments": [
+          "✓ Security: validateInput() no valida espacios. Riesgo de bypass.",
+          "✓ Style: Error handling inconsistente (catch vs try-catch).",
+          "✓ Tests: Falta test para 'empty password'.",
+          "✓ Minor: Renombra 'usr' a 'user' para claridad."
+        ],
+        "reviewScore": "7/10 — Sólido, fixes menores recomendados",
+        "timeSaved": "5 min vs 30 min manual"
+      },
+      "tips": [
+        "Menciona @CLAUDE.md para que respete convenciones del proyecto.",
+        "Pide score overall. Es útil para el autor.",
+        "PR grande (>500 líneas)? Divide en partes.",
+        "Guarda sesión con /rename para dudas posteriores."
+      ],
+      "pitfalls": [
+        "❌ Sin CLAUDE.md → feedback genérico que no respeta style.",
+        "❌ PR gigante sin contexto → Claude se pierde.",
+        "❌ Copiar feedback directamente sin editar → suena como IA.",
+        "❌ Sin follow-up → no verificas si fixes se aplicaron."
+      ],
+      "whenToUseClaude": {
+        "useClaude": "Seguridad, detectar ineficiencias, generar test cases, comparar vs convenciones",
+        "manual": "Decisiones arquitectónicas, merge final"
+      }
+    },
+    {
+      "id": "level1-debug-production",
+      "level": 1,
+      "category": "Debugging & Incident Response",
+      "title": "Caso 3: Debugging Rápido de Prod (Error Fatal)",
+      "description": "Error en producción, clientes afectados, 10 minutos para arreglar. Claude te da el diagnóstico en 2 min.",
+      "timeEstimate": "5-10 minutos",
+      "priorKnowledge": "Stack traces básicos, debugging, git diff",
+      "scenario": {
+        "context": "API endpoint /api/users/:id returns 500. Logs: 'TypeError: undefined is not a function' línea 42 en userService.ts",
+        "startState": "Prod caída, clientes sin acceso",
+        "endState": "Fix deployado, usuarios recuperados"
+      },
+      "steps": [
+        {
+          "number": 1,
+          "action": "Obtener error y contexto",
+          "command": "tail -100 /var/log/app.log | grep -A 5 'TypeError'\n# O en dashboard (Vercel/Railway): descargar logs",
+          "expectedResult": "Stack trace completo con línea y contexto.",
+          "tip": "Sé específico. Stack trace exacto = diagnóstico rápido.",
+          "pitfall": "Descripción vaga ('algo está roto'). Copia el error real."
+        },
+        {
+          "number": 2,
+          "action": "Iniciar sesión",
+          "command": "claude\n/rename \"PROD-BUG-FIX-userService\"",
+          "expectedResult": "Sesión abierta y nombrada.",
+          "tip": "Rename para poder volver si necesitas help después.",
+          "pitfall": "No nombrar. Si desconectas, pierdes contexto."
+        },
+        {
+          "number": 3,
+          "action": "Pedir diagnóstico",
+          "command": "@src/services/userService.ts @src/api/users.ts — Stack trace:\n\nTypeError: undefined is not a function\n  at userService.ts:42\n\n¿Qué está roto? Fix mínimo.",
+          "expectedResult": "Claude identifica:\n- Función undefined\n- Línea exacta\n- Fix (1-5 líneas)",
+          "tip": "Claude entiende stack traces bien.",
+          "pitfall": "Información incompleta. Copia el stack trace entero."
+        },
+        {
+          "number": 4,
+          "action": "Aplicar fix",
+          "command": "Edita archivo según sugerencia de Claude.",
+          "expectedResult": "Archivo arreglado.",
+          "tip": "Verifica que importaste lo necesario.",
+          "pitfall": "Aplicar fix sin entender. Si falla de nuevo, pides help a Claude."
+        },
+        {
+          "number": 5,
+          "action": "Testear localmente",
+          "command": "npm run dev\n# Abre http://localhost:3000/api/users/123\n# Verifica status 200",
+          "expectedResult": "Endpoint responde correctamente.",
+          "tip": "Siempre testea local antes de merge.",
+          "pitfall": "Mergear sin testear. Confías sin verificar."
+        },
+        {
+          "number": 6,
+          "action": "Commit y deploy",
+          "command": "git add -A\ngit commit -m \"fix: undefined function in userService line 42\"\ngit push",
+          "expectedResult": "Fix en prod en <2 minutos.",
+          "tip": "Usa 'claude commit' si quieres que genere mensaje automático.",
+          "pitfall": "Mensaje de commit poco claro ('fix bug lol')."
+        }
+      ],
+      "expectedOutput": {
+        "before": "API returns 500. Customers see blank page.",
+        "after": "API returns 200 with user data.",
+        "time": "~10 min from error to fixed",
+        "exampleFix": "// BEFORE\nconst userData = userHelper.fetch(userId);\n\n// AFTER\nconst { fetch: fetchUser } = require('../helpers/userHelper');\nconst userData = await fetchUser(userId);"
+      },
+      "tips": [
+        "Para prod bugs, sé específico. Stack trace + archivo = diagnóstico rápido.",
+        "Si fix es 'obvious', dale solución a Claude y aplícala.",
+        "git revert <hash> para revert rápido si algo sale mal.",
+        "Siempre testea local antes de mergear."
+      ],
+      "pitfalls": [
+        "❌ Adivinar qué está roto → pierdes 5 min. Copia el stack trace.",
+        "❌ Fix sin entender causa raíz → vuelve a fallar mañana.",
+        "❌ No testear → deploy a ciegas.",
+        "❌ Commit sin mensaje claro → nadie sabe qué fue."
+      ],
+      "whenToUseClaude": {
+        "useClaude": "Interpretar stack traces, proponer fixes, explicar por qué pasó",
+        "manual": "Aplicar fix, testear, mergear, deploy"
+      }
+    },
+    {
+      "id": "level2-github-mcp",
+      "level": 2,
+      "category": "Team Workflows & MCP",
+      "title": "Caso 1: Code Review Automático vía GitHub MCP",
+      "description": "Cada PR abierto se revisa automáticamente. Comentarios postean directamente en GitHub sin tocar CLI.",
+      "timeEstimate": "30 min setup + 2 min per PR (automático)",
+      "priorKnowledge": "GitHub, personal access tokens, Level 1",
+      "scenario": {
+        "context": "Equipo de 4 devs, 15 PRs/semana. Reviews manuales se demoran 1-2 días. Quieres acelerar sin perder calidad.",
+        "startState": "Sin automatización, reviews lentos",
+        "endState": "Cada PR revisado automáticamente, feedback instantáneo"
+      },
+      "steps": [
+        {
+          "number": 1,
+          "action": "Crear GitHub Personal Access Token",
+          "command": "GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)\n\nScopes: repo (full control), workflow\n\nCopia: ghp_xxxxxxxxxxxxx",
+          "expectedResult": "Token válido.",
+          "tip": "Guarda en ~/.env o ~/.bashrc",
+          "pitfall": "Token con scopes limitados. Verifica 'repo' esté incluido."
+        },
+        {
+          "number": 2,
+          "action": "Agregar MCP GitHub",
+          "command": "claude mcp add github \\\n  -e GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxxx \\\n  -- npx -y @modelcontextprotocol/server-github",
+          "expectedResult": "✓ GitHub MCP registrado.",
+          "tip": "Usa --scope user para todos tus proyectos.",
+          "pitfall": "Token inválido. Verifica que copiaste bien."
+        },
+        {
+          "number": 3,
+          "action": "Verificar herramientas disponibles",
+          "command": "claude\n/mcp\n\n# Busca 'github' — lista: get_pr, create_pr_comment, etc",
+          "expectedResult": "Lista de herramientas GitHub.",
+          "tip": "Estas son acciones que Claude puede hacer automáticamente.",
+          "pitfall": "MCP no conecta. Verifica token y scopes."
+        },
+        {
+          "number": 4,
+          "action": "Crear Skill para auto-review",
+          "command": "mkdir -p ~/.claude/skills/github-pr-review\n\ncat > ~/.claude/skills/github-pr-review/SKILL.md << 'EOF'\n# GitHub PR Auto-Review\n\nRevisa un PR automáticamente y postea comentarios.\n\n## Parameters\n- $1: owner/repo (ej: myteam/backend)\n- $2: PR number\n\n## Execution\nObtén diff, analiza, postea feedback.\nEOF",
+          "expectedResult": "Skill registrada.",
+          "tip": "Expande según necesidades.",
+          "pitfall": "Skill demasiado genérica. Personaliza para tu proyecto."
+        },
+        {
+          "number": 5,
+          "action": "Testear el Skill",
+          "command": "cd tu-repo && claude\n/github-pr-review myteam/backend 247",
+          "expectedResult": "Claude postea comentarios en GitHub automáticamente.",
+          "tip": "Revisa con /mcp que GitHub esté conectado.",
+          "pitfall": "Token invalido o permisos faltantes. Verifica /mcp."
+        },
+        {
+          "number": 6,
+          "action": "Integrar en GitHub Actions (opcional)",
+          "command": "cat > .github/workflows/auto-review.yml << 'EOF'\nname: Auto Review\non:\n  pull_request:\n    types: [opened, synchronize]\njobs:\n  review:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n      - run: |\n          npm install -g @anthropic-ai/claude-code\n          claude mcp add github ...\n          claude -p \"/github-pr-review ${{ github.repository }} ${{ github.event.pull_request.number }}\"\nEOF",
+          "expectedResult": "Cada PR abierto dispara auto-review.",
+          "tip": "Usa secrets.GITHUB_TOKEN que GitHub proporciona.",
+          "pitfall": "Workflow con timeout corto. Aumenta a 10 min."
+        }
+      ],
+      "expectedOutput": {
+        "githubComment": "### Claude Code Review 🤖\n\n**Security**: ✓ Validación sólida\n**Code Quality**: ✓ Bien estructurado\n**Tests**: ✓ 85% cobertura\n\n**Overall**: 8/10 → Ready to merge 🟢",
+        "timeSaved": "~20 min/PR × 15 PRs/week = 5 horas/week",
+        "automation": "Post-merge automático sin intervención"
+      },
+      "tips": [
+        "Skill en .claude/skills/ es reutilizable para equipo.",
+        "/mcp para verificar conexión GitHub.",
+        "GitHub MCP también puede crear issues, etiquetar, cerrar automáticamente.",
+        "/compact para conservar memoria de reviews previos."
+      ],
+      "pitfalls": [
+        "❌ Token con permisos limitados → MCP falla.",
+        "❌ Skill sin análisis profundo → comentarios genéricos.",
+        "❌ CI sin cache → cada run cuesta tokens nuevos.",
+        "❌ Rate limits no configurados → spamea GitHub."
+      ],
+      "whenToUseClaude": {
+        "useClaude": "Primera pasada de review, comentarios iniciales, análisis automático",
+        "manual": "Decisiones arquitectónicas, aprobación final humana"
+      }
+    },
+    {
+      "id": "level2-ci-cd-integration",
+      "level": 2,
+      "category": "CI/CD & Automation",
+      "title": "Caso 2: Integración en CI/CD — Tests Inteligentes Post-Merge",
+      "description": "Cada commit a main ejecuta análisis de regresión. Claude detecta cambios riesgosos y alerta al equipo via Slack.",
+      "timeEstimate": "45 min setup + 3 min per commit (automático)",
+      "priorKnowledge": "GitHub Actions, Slack webhooks, Level 1",
+      "scenario": {
+        "context": "App backend crítica. Cambios en auth/database pueden romper silenciosamente. Necesitas 'safety net' automático.",
+        "startState": "Sin análisis de riesgo, cambios riesgosos se mergen sin detección",
+        "endState": "Cada merge analizado, riesgos detectados y alertados al equipo"
+      },
+      "steps": [
+        {
+          "number": 1,
+          "action": "Crear Slack Bot Token",
+          "command": "https://api.slack.com/apps → Create New App → From scratch\nName: \"Claude Code Guardian\"\nOAuth & Permissions → Scopes: chat:write, files:write\nCopia: xoxb_xxxxx",
+          "expectedResult": "Slack token válido.",
+          "tip": "Guarda en GitHub Secrets como SLACK_BOT_TOKEN",
+          "pitfall": "Scopes insuficientes. Verifica chat:write está incluido."
+        },
+        {
+          "number": 2,
+          "action": "Agregar MCP Slack",
+          "command": "claude mcp add slack \\\n  -e SLACK_BOT_TOKEN=xoxb_xxxxx \\\n  -- npx -y @modelcontextprotocol/server-slack",
+          "expectedResult": "✓ Slack MCP conectado.",
+          "tip": "Verifica con /mcp que esté 'connected'",
+          "pitfall": "Token inválido o bot no en canal."
+        },
+        {
+          "number": 3,
+          "action": "Crear Skill \"Risk Analysis\"",
+          "command": "mkdir -p ~/.claude/skills/risk-analysis\n\ncat > ~/.claude/skills/risk-analysis/SKILL.md << 'EOF'\n# Risk Analysis After Merge\n\nAnaliza cambios en commit y alerta si hay riesgos.\n\n## Parameters\n- $1: Commit hash\n\n## Execution\n1. Obtén diff: !`git show $1 --stat`\n2. Analiza cambios en archivos sensibles (auth, database)\n3. Postea en Slack si hay riesgos\nEOF",
+          "expectedResult": "Skill creada.",
+          "tip": "Personaliza archivos 'sensibles' según stack."
+        },
+        {
+          "number": 4,
+          "action": "GitHub Actions Workflow",
+          "command": "cat > .github/workflows/claude-risk-check.yml << 'EOF'\nname: Claude Risk Analysis\non:\n  push:\n    branches: [main]\njobs:\n  risk-check:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n        with:\n          fetch-depth: 0\n      - run: |\n          npm install -g @anthropic-ai/claude-code\n          claude mcp add slack ...\n          claude -p \"/risk-analysis ${{ github.event.head_commit.id }}\"\nEOF",
+          "expectedResult": "Workflow configurado.",
+          "tip": "Se ejecuta cada vez que pushes a main."
+        },
+        {
+          "number": 5,
+          "action": "Testear manualmente",
+          "command": "cd tu-repo && claude\n/risk-analysis 1a2b3c4d",
+          "expectedResult": "Mensaje en Slack #deployments indicando riesgo.",
+          "tip": "Verifica que bot esté en el canal.",
+          "pitfall": "Token inválido o bot sin permisos en canal."
+        },
+        {
+          "number": 6,
+          "action": "Escalar a análisis profundo (opcional)",
+          "command": "Modifica Skill para:\n- Comparar vs baseline histórico\n- Ejecutar tests específicos\n- Generar resumen ejecutivo\n- Bloquear deploy si riesgo es crítico",
+          "expectedResult": "Análisis exhaustivo automático.",
+          "tip": "Usa /compact si historial es muy largo."
+        }
+      ],
+      "expectedOutput": {
+        "slackAlert": "⚠️ **Claude Risk Alert** — Commit abc123\n\n**Risk Level**: 🔴 HIGH\n\n**Changes**:\n- auth/login.ts: 45 líneas (riesgo alto)\n- userService.ts: 30 líneas (depende de auth)\n\n**Concerns**:\n- Sin tests nuevos\n- Middleware de autenticación\n- Afecta /api/auth/login\n\n**Recommendation**: Considera rollback o hotfix inmediato.",
+        "metrics": "Detecta ~80% de bugs potenciales antes de usuarios"
+      },
+      "tips": [
+        "Configura 'sensible files' que tu equipo considera críticas.",
+        "Combina con /memory para aprender de bugs históricos.",
+        "Usa Slack para alertas, Issues para tracking formal.",
+        "Si riesgo es muy alto, bloquea deploy (requiere aprobación manual)."
+      ],
+      "pitfalls": [
+        "❌ Alertas falsas positivas → equipo ignora después.",
+        "❌ No mencionar cómo remediar → solo alerta sin acción.",
+        "❌ Análisis demasiado lento → CI/CD embotellado.",
+        "❌ Slack Token en GitHub Secrets público → rota cada 90 días."
+      ],
+      "whenToUseClaude": {
+        "useClaude": "Análisis automático, detección de riesgos, alertas, comparación vs histórico",
+        "manual": "Aprobación de deployment, decisiones de rollback, post-mortem"
+      }
+    },
+    {
+      "id": "level3-custom-skill",
+      "level": 3,
+      "category": "Custom Skills & Automation",
+      "title": "Caso 1: Skill Personalizada para Refactor Automático",
+      "description": "Skill reutilizable que transforma código CommonJS a ES modules. Reutilizable, shareable con equipo.",
+      "timeEstimate": "60 min crear Skill + 5 min per file (automático)",
+      "priorKnowledge": "Level 2 completo, Bash, MCP",
+      "scenario": {
+        "context": "Codebase antiguo con 500+ archivos CommonJS. Necesitas migrar a ES modules sin manual. Skill para reutilizar.",
+        "startState": "500 archivos CommonJS, sin automatización",
+        "endState": "Skill reutilizable, archivos refactorizados, equipo puede ejecutar"
+      },
+      "steps": [
+        {
+          "number": 1,
+          "action": "Crear estructura Skill",
+          "command": "mkdir -p ~/.claude/skills/refactor-to-esm\n\ncat > ~/.claude/skills/refactor-to-esm/SKILL.md << 'EOF'\n# Refactor to ES Modules\n\nTransforma código CommonJS a ES modules automáticamente.\n\n## Usage\n/refactor-to-esm src/services/auth.js\n/refactor-to-esm src/**/*.js\n\n## Parameters\n- $1: File path o glob\nEOF",
+          "expectedResult": "Estructura base.",
+          "tip": "SKILL.md es tu documentación pública."
+        },
+        {
+          "number": 2,
+          "action": "Implementar lógica del Skill",
+          "command": "cat > ~/.claude/skills/refactor-to-esm/SKILL.md << 'EOF'\n# Refactor to ES Modules\n\n## Execution\n\n### 1. Analizar\n!`grep -n \"require\\|module.exports\" $1 | head -20`\n\n### 2. Generar refactor\nDado $1, reescribe:\n- require() → import\n- module.exports → export\n- Callbacks → async-await (donde aplique)\n\n### 3. Validar\n!`npm run build && npm test`\n\n### 4. Mostrar diff\n!`diff -u $1.bak $1`\n\n### 5. Commit\n!`git add $1 && git commit -m \"refactor: transform $1 to ES modules\"`\nEOF",
+          "expectedResult": "Skill funcional.",
+          "tip": "!`...` ejecuta bash. Poderoso para automatización."
+        },
+        {
+          "number": 3,
+          "action": "Testear Skill",
+          "command": "cd tu-repo && claude\n/refactor-to-esm src/services/auth.js",
+          "expectedResult": "Archivo refactorizado, commit automático.",
+          "tip": "Si falla, edita SKILL.md e reintentas."
+        },
+        {
+          "number": 4,
+          "action": "Ejecutar batch con /fork",
+          "command": "claude\n\n/fork \"Refactor services layer\"\n# En fork 1: /refactor-to-esm src/services/*.js\n\n/fork \"Refactor utils layer\"\n# En fork 2: /refactor-to-esm src/utils/*.js\n\n# Paralelización = 10× más rápido",
+          "expectedResult": "Múltiples archivos refactorizados en paralelo.",
+          "tip": "/fork hereda contexto pero es sesión separada."
+        },
+        {
+          "number": 5,
+          "action": "Compartir con equipo",
+          "command": "git add ~/.claude/skills/refactor-to-esm/\ngit commit -m \"skill: add refactor-to-esm for team\"\ngit push",
+          "expectedResult": "Skill disponible para equipo.",
+          "tip": "Considera crear SKILLS.md de documentación centralizada."
+        }
+      ],
+      "expectedOutput": {
+        "beforeAfter": "// BEFORE (CommonJS)\nconst auth = require('./auth');\nmodule.exports = { loginUser };\n\n// AFTER (ES modules)\nimport * as auth from './auth.js';\nexport { loginUser };",
+        "metrics": "500 files en ~2 horas (manual: 1 semana)"
+      },
+      "tips": [
+        "Skill reutilizable = invertir 1h para ahorrar 8h después.",
+        "/fork para paralelizar.",
+        "Siempre valida con tests.",
+        "Documenta bien para que equipo sepa usar."
+      ],
+      "pitfalls": [
+        "❌ Skill demasiado genérico → no funciona bien.",
+        "❌ No validar output → quebrantas código.",
+        "❌ Sin documentación → nadie sabe usarla.",
+        "❌ Ignorar edge cases → funciona 90%, falla 10%."
+      ],
+      "whenToUseClaude": {
+        "useClaude": "Análisis, generación de código, validación",
+        "manual": "Decisiones arquitectónicas, cambios de lógica biz, merge complejo"
+      }
+    }
+  ],
+  "integrationGuide": {
+    "title": "Cómo Integrar en Tu Proyecto",
+    "format": "Los casos están en formato JSON pronto para React/Vue/Svelte",
+    "htmlIntegration": {
+      "description": "Para static HTML, crea secciones nuevas:",
+      "example": "<section data-section='practical-level1'>\n  <h2>Nivel 1: Casos Prácticos</h2>\n  <div class='use-cases-container' id='level1-cases'></div>\n</section>",
+      "javascript": "const useCases = PRACTICAL_USE_CASES.nivel1.cases;\nuseCases.forEach(case => {\n  // Renderiza cada caso como card\n});"
+    },
+    "fileStructure": {
+      "lib/practicalUseCases.js": "Datos completos con estructura detallada",
+      "lib/useCasesIntegration.json": "Versión JSON para UI integration",
+      "script.js": "Añade funciones para renderizar use cases",
+      "index.html": "Nuevas secciones para cada nivel"
+    },
+    "renderingStrategy": {
+      "approach": "Data-driven, como COMMANDS_DATA",
+      "steps": [
+        "1. Carga PRACTICAL_USE_CASES en script.js",
+        "2. Crea función renderUseCase(caseObj) en initUI()",
+        "3. Usa data-section para routing (dashboard muestra todos los casos)",
+        "4. Implementa collapsible steps, código con syntax highlighting, toggle tips/pitfalls"
+      ]
+    }
+  },
+  "metadata": {
+    "totalCases": 9,
+    "level1Cases": 3,
+    "level2Cases": 3,
+    "level3Cases": 3,
+    "estimatedReadTime": "45-60 minutos para completar todos los casos",
+    "lastUpdated": "2024-05-17",
+    "version": "1.0",
+    "targetAudience": "Developers at all levels learning Claude Code",
+    "format": "JSON + JavaScript modules",
+    "keywords": ["practical", "workflows", "real-world", "scenarios", "step-by-step", "beginners", "advanced"]
+  }
+}
