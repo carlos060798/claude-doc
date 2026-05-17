@@ -1,16 +1,18 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Claude Code Mastery — Guía Interactiva',
-  description: 'Guía interactiva para dominar Claude Code: desde la instalación hasta la creación de Skills y MCP avanzados.',
-  charset: 'utf-8',
-  viewport: 'width=device-width, initial-scale=1.0',
+  title: 'Claude Code Mastery',
+  description: 'Aprende Claude Code desde fundamentos hasta skills avanzados. Guía interactiva con ejemplos prácticos.',
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es">
-      <body>{children}</body>
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   )
 }
