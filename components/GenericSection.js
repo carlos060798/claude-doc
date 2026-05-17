@@ -1,33 +1,44 @@
 'use client'
 
-import { SECTION_CONTENT } from '@/lib/sectionsData'
+import { ALL_SECTIONS_CONTENT } from '@/lib/allSectionsContent'
+import SectionRenderer from './SectionRenderer'
 
 export default function GenericSection({ sectionId }) {
-  const content = SECTION_CONTENT[sectionId] || {
-    title: 'Sección',
-    lead: 'Contenido en construcción...'
+  const sectionData = ALL_SECTIONS_CONTENT[sectionId]
+
+  if (!sectionData) {
+    return (
+      <section className="content-section">
+        <div className="dashboard-header">
+          <h1>Sección no encontrada</h1>
+          <p className="subtitle">Lo sentimos, esta sección no existe.</p>
+        </div>
+      </section>
+    )
   }
 
   return (
     <section className="content-section">
       <div className="dashboard-header">
-        <h1>{content.title}</h1>
-        <p className="subtitle">{content.lead}</p>
+        {sectionData.breadcrumb && <span className="breadcrumb">{sectionData.breadcrumb}</span>}
+        <h1>{sectionData.title}</h1>
+        {sectionData.lead && <p className="subtitle">{sectionData.lead}</p>}
       </div>
 
-      <div style={{
-        padding: '32px',
-        background: 'var(--bg-secondary)',
-        borderRadius: '8px',
-        border: '1px solid var(--border-default)',
-        textAlign: 'center',
-        color: 'var(--text-secondary)'
-      }}>
-        <p>📝 <strong>Contenido en construcción</strong></p>
-        <p style={{ fontSize: '13px', marginTop: '8px' }}>
-          Esta sección está siendo migrada desde el proyecto original. Vuelve pronto.
-        </p>
-      </div>
+      {sectionData.content && sectionData.content.length > 0 ? (
+        <SectionRenderer content={sectionData.content} />
+      ) : (
+        <div style={{
+          padding: '32px',
+          background: 'var(--bg-secondary)',
+          borderRadius: '8px',
+          border: '1px solid var(--border-default)',
+          textAlign: 'center',
+          color: 'var(--text-secondary)'
+        }}>
+          <p>📝 <strong>Sección vacía</strong></p>
+        </div>
+      )}
     </section>
   )
 }
