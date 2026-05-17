@@ -26,12 +26,99 @@ const CHALLENGES = [
   },
   {
     id: 3,
+    level: 1,
+    question: '¿Cómo mencionas un archivo en una conversación?',
+    options: ['file@archivo.js', '@archivo.js', '#archivo.js', '->archivo.js'],
+    correct: 1,
+    explanation: 'Usa @ seguido del nombre del archivo para incluirlo en el contexto'
+  },
+  {
+    id: 4,
+    level: 1,
+    question: '¿Cuál es el archivo de configuración principal de Claude Code?',
+    options: ['.claude.json', 'CLAUDE.md', '.claude.yml', 'claude-config.js'],
+    correct: 1,
+    explanation: 'El archivo CLAUDE.md contiene la documentación y configuración del proyecto'
+  },
+  {
+    id: 5,
     level: 2,
     question: '¿Qué comando muestra tu uso actual de tokens?',
     options: ['/tokens', '/usage', '/context', '/stats'],
     correct: 1,
     explanation: 'El comando /usage muestra el consumo de tokens y costo estimado'
   },
+  {
+    id: 6,
+    level: 2,
+    question: '¿Qué comando comprime el historial preservando lo esencial?',
+    options: ['/compress', '/compact', '/shrink', '/archive'],
+    correct: 1,
+    explanation: 'El comando /compact comprime el historial mientras preserva información crítica'
+  },
+  {
+    id: 7,
+    level: 2,
+    question: '¿Qué herramienta permite exponer funciones a Claude Code?',
+    options: ['Claude SDK', 'Model Context Protocol (MCP)', 'Claude API', 'REST API'],
+    correct: 1,
+    explanation: 'El Model Context Protocol (MCP) permite integrar herramientas y servidores'
+  },
+  {
+    id: 8,
+    level: 3,
+    question: '¿Cómo invocas una Skill personalizada?',
+    options: ['/exec-skill nombre', '/skill nombre', '/skill-name', '/invoke nombre'],
+    correct: 2,
+    explanation: 'Las Skills se invocan con el patrón /skill-name, donde "name" es el nombre de la Skill'
+  },
+  {
+    id: 9,
+    level: 3,
+    question: '¿Qué comando bifurca la conversación en una sesión paralela?',
+    options: ['/branch', '/parallel', '/fork', '/split'],
+    correct: 2,
+    explanation: 'El comando /fork crea una nueva sesión independiente a partir del punto actual'
+  },
+  {
+    id: 10,
+    level: 4,
+    question: '¿Cuál es el propósito del comando /workspace?',
+    options: [
+      'Gestiona carpetas del proyecto',
+      'Crea múltiples sesiones paralelas aisladas',
+      'Configura el IDE',
+      'Descarga dependencias'
+    ],
+    correct: 1,
+    explanation: '/workspace permite manejar múltiples contextos de trabajo simultáneamente'
+  },
+  {
+    id: 11,
+    level: 4,
+    question: '¿Qué hace el comando /orchestrate?',
+    options: [
+      'Ordena los archivos del proyecto',
+      'Crea un orquesta de servidores MCP',
+      'Ejecuta sub-agentes en paralelo para tareas complejas',
+      'Sincroniza con un servidor remoto'
+    ],
+    correct: 2,
+    explanation: '/orchestrate permite distribuir tareas complejas entre múltiples agentes especializados'
+  },
+  {
+    id: 12,
+    level: 4,
+    question: '¿Cuál es la ventaja del modo /autopilot?',
+    options: [
+      'Aumenta la velocidad de escritura',
+      'Modo autónomo con checkpoints y rollback inteligente',
+      'Automatiza las compilaciones',
+      'Sincroniza cambios en tiempo real'
+    ],
+    correct: 1,
+    explanation: 'El /autopilot permite que Claude Code trabaje de forma autónoma con puntos de recuperación'
+  }
 ]
 
 export default function ChallengeEngine() {
