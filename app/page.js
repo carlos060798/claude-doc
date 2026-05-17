@@ -1,14 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
-import { COMMANDS_DATA, LESSONS_DATA, SCENARIOS } from '@/lib/data'
+import { SECTIONS, GIT_WORKFLOWS, MCP_SERVERS, HOOKS_PRODUCTION, MULTI_MCP_ORCHESTRATION, COMMANDS_DATA, LESSONS_DATA, SCENARIOS } from '@/lib/data'
+import './globals.css'
 
 export default function Dashboard() {
+  const [activeSection, setActiveSection] = useState('dashboard')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  // Filtrar comandos
   const filteredCommands = COMMANDS_DATA.filter(cmd => {
     const matchesSearch = cmd.cmd.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          cmd.desc.toLowerCase().includes(searchQuery.toLowerCase())
@@ -16,9 +16,21 @@ export default function Dashboard() {
     return matchesSearch && matchesLevel
   })
 
+  const handleSectionClick = (sectionId) => {
+    setActiveSection(sectionId)
+    setSearchQuery('')
+  }
+
+  const groupedSections = {}
+  SECTIONS.forEach(section => {
+    if (!groupedSections[section.group]) {
+      groupedSections[section.group] = []
+    }
+    groupedSections[section.group].push(section)
+  })
+
   return (
     <div className="app-shell">
-      {/* TOPBAR */}
       <header className="topbar">
         <div className="brand">
           <div className="brand-logo">
@@ -32,194 +44,262 @@ export default function Dashboard() {
             <span className="brand-subtitle">Mastery Guide</span>
           </div>
         </div>
-
-        <nav className="topbar-nav">
-          <Link href="/" className="nav-link active">Dashboard</Link>
-          <Link href="/prompt-maestro" className="nav-link">Prompt Maestro</Link>
-          <Link href="/playground" className="nav-link">Playground</Link>
-        </nav>
       </header>
 
-      <div className="layout">
+      <div className="main-wrapper">
         {/* SIDEBAR */}
         <aside className="sidebar">
-          <div className="sidebar-group">
-            <h3 className="sidebar-title">Niveles</h3>
-            <button
-              className={`sidebar-filter ${!selectedLevel ? 'active' : ''}`}
-              onClick={() => setSelectedLevel(null)}
-            >
-              Todos
-            </button>
-            {[1, 2, 3].map(level => (
-              <button
-                key={level}
-                className={`sidebar-filter level-${level} ${selectedLevel === level ? 'active' : ''}`}
-                onClick={() => setSelectedLevel(level)}
-              >
-                Nivel {level}
-              </button>
+          <nav>
+            {Object.entries(groupedSections).map(([group, sections]) => (
+              <div key={group}>
+                <p className="nav-group-title">{group}</p>
+                <ul className="nav-list">
+                  {sections.map(section => (
+                    <li key={section.id}>
+                      <button
+                        className={`nav-link ${activeSection === section.id ? 'active' : ''}`}
+                        onClick={() => handleSectionClick(section.id)}
+                      >
+                        <span className="nav-icon">{section.icon}</span>
+                        {section.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </div>
-
-          <div className="sidebar-group">
-            <h3 className="sidebar-title">Aprendizaje</h3>
-            <ul className="sidebar-links">
-              {[1, 2, 3].map(level => (
-                <li key={level}>
-                  <a href={`#nivel-${level}`} className="sidebar-link">
-                    {LESSONS_DATA[level].title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="sidebar-group">
-            <h3 className="sidebar-title">Recursos</h3>
-            <ul className="sidebar-links">
-              <li><a href="#hooks" className="sidebar-link">🪝 Hooks</a></li>
-              <li><a href="#cli-flags" className="sidebar-link">🚀 CLI Flags</a></li>
-              <li><a href="#scenarios" className="sidebar-link">▶ Escenarios</a></li>
-            </ul>
-          </div>
+          </nav>
         </aside>
 
         {/* MAIN CONTENT */}
         <main className="main-content">
-          {/* SEARCH BAR */}
-          <div className="search-container">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Busca comandos, ej: /init, claude mcp, hooks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            {searchQuery && (
-              <button
-                className="search-clear"
-                onClick={() => setSearchQuery('')}
-              >
-                ✕
-              </button>
-            )}
-          </div>
-
-          {/* HERO SECTION */}
-          {!searchQuery && (
-            <section className="hero">
-              <h2>Claude Code Mastery</h2>
-              <p>La guía interactiva para dominar comandos, MCP, Skills y Hooks</p>
-              <div className="hero-cta">
-                <Link href="#nivel-1" className="btn btn-primary">
-                  Comenzar Nivel 1
-                </Link>
-                <Link href="/prompt-maestro" className="btn btn-secondary">
-                  Prompt Maestro
-                </Link>
+          {/* DASHBOARD */}
+          {activeSection === 'dashboard' && (
+            <section className="content-section active">
+              <div className="dashboard-header">
+                <h1>Claude Code Mastery</h1>
+                <p className="subtitle">La guía interactiva para dominar Claude Code desde fundamentos hasta producción avanzada.</p>
               </div>
-            </section>
-          )}
 
-          {/* RESULTADOS DE BÚSQUEDA */}
-          {searchQuery && (
-            <div className="search-results">
-              <p className="results-count">
-                {filteredCommands.length} resultado{filteredCommands.length !== 1 ? 's' : ''}
-              </p>
-            </div>
-          )}
+              <div className="search-bar">
+                <input
+                  type="text"
+                  placeholder="Busca comandos... ej: /compact, mcp, git, hooks"
+                  className="search-input"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
 
-          {/* TABLA DE COMANDOS */}
-          <section className="commands-section">
-            <h3 className="section-title">
-              {selectedLevel ? `Nivel ${selectedLevel}` : 'Todos los Comandos'}
-            </h3>
-            <div className="commands-grid">
-              {filteredCommands.map((cmd, idx) => (
-                <CommandCard key={idx} command={cmd} />
-              ))}
-            </div>
-            {filteredCommands.length === 0 && (
-              <div className="empty-state">
-                <p>No se encontraron comandos</p>
-                <button onClick={() => { setSearchQuery(''); setSelectedLevel(null); }} className="btn btn-secondary">
-                  Limpiar filtros
+              <div className="level-filters">
+                <button
+                  className={`filter-btn ${!selectedLevel ? 'active' : ''}`}
+                  onClick={() => setSelectedLevel(null)}
+                >
+                  Todos
                 </button>
+                {[1, 2, 3, 4].map(level => (
+                  <button
+                    key={level}
+                    className={`filter-btn ${selectedLevel === level ? 'active' : ''}`}
+                    onClick={() => setSelectedLevel(level)}
+                  >
+                    Nivel {level}
+                  </button>
+                ))}
               </div>
-            )}
-          </section>
 
-          {/* SECCIÓN HOOKS */}
-          <section id="hooks" className="feature-section">
-            <h2>🪝 Hooks — Automatización de Eventos</h2>
-            <p>Configura comandos shell que se ejecutan automáticamente en momentos clave del ciclo de vida.</p>
-            <div className="hooks-examples">
-              <div className="hook-card">
-                <h4>after-tool-execution</h4>
-                <p>Se ejecuta después de que una herramienta termina</p>
-                <pre><code>{`#!/bin/bash
-if [ $1 -gt 10000ms ]; then
-  notify-send "Tarea completada"
-fi`}</code></pre>
-              </div>
-              <div className="hook-card">
-                <h4>on-file-save</h4>
-                <p>Se ejecuta cuando un archivo es guardado</p>
-                <pre><code>{`#!/bin/bash
-prettier --write $FILE
-eslint --fix $FILE`}</code></pre>
-              </div>
-            </div>
-          </section>
-
-          {/* SECCIÓN ESCENARIOS */}
-          <section id="scenarios" className="feature-section">
-            <h2>▶ Escenarios Interactivos</h2>
-            <p>Ejemplos prácticos de flujos comunes con Claude Code</p>
-            <div className="scenarios-list">
-              {Object.entries(SCENARIOS).map(([key, scenario]) => (
-                <TerminalSimulator key={key} scenario={scenario} title={key} />
-              ))}
-            </div>
-          </section>
-
-          {/* NIVELES DE APRENDIZAJE */}
-          {[1, 2, 3].map(level => (
-            <section key={level} id={`nivel-${level}`} className="lesson-section">
-              <div className={`lesson-header level-${level}`}>
-                <span className="level-badge">Nivel {level}</span>
-                <h2>{LESSONS_DATA[level].title}</h2>
-              </div>
-              <p className="lesson-subtitle">
-                Tiempo estimado: {LESSONS_DATA[level].estimatedTime}
-              </p>
-              <div className="lesson-objectives">
-                <h4>Objetivos</h4>
-                <ul>
-                  {LESSONS_DATA[level].objectives.map((obj, idx) => (
-                    <li key={idx}>{obj}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="lesson-tools">
-                <h4>Herramientas</h4>
-                <div className="tools-grid">
-                  {LESSONS_DATA[level].tools.map((tool, idx) => (
-                    <span key={idx} className="tool-badge">{tool}</span>
+              <div className="commands-section">
+                <h2>Comandos Disponibles ({filteredCommands.length})</h2>
+                <div className="commands-grid">
+                  {filteredCommands.map((cmd, idx) => (
+                    <CommandCard key={idx} command={cmd} />
                   ))}
                 </div>
               </div>
+
+              <div className="quick-start">
+                <h2>Primeros Pasos</h2>
+                <div className="quick-start-cards">
+                  <div className="card">
+                    <h3>📦 Instalar</h3>
+                    <code>npm install -g @anthropic-ai/claude-code</code>
+                  </div>
+                  <div className="card">
+                    <h3>🚀 Iniciar sesión</h3>
+                    <code>claude</code>
+                  </div>
+                  <div className="card">
+                    <h3>❓ Obtener ayuda</h3>
+                    <code>/help</code>
+                  </div>
+                </div>
+              </div>
             </section>
-          ))}
+          )}
+
+          {/* GIT WORKFLOWS */}
+          {activeSection === 'git-workflows' && (
+            <section className="content-section active">
+              <h2>{GIT_WORKFLOWS.title}</h2>
+              <p className="section-intro">{GIT_WORKFLOWS.intro}</p>
+
+              {GIT_WORKFLOWS.workflows.map((workflow, idx) => (
+                <article key={idx} className="card workflow-card">
+                  <h3>{workflow.title}</h3>
+                  <p className="badge-small">{workflow.badge}</p>
+                  <div className="info-block">
+                    <strong>¿Cuándo usar?</strong>
+                    <ul>
+                      {workflow.when.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="code-example">
+                    <strong>Workflow típico:</strong>
+                    <pre><code>{workflow.code}</code></pre>
+                  </div>
+                  <div className="pros-cons">
+                    <div className="pros">
+                      <strong>✓ Ventajas:</strong>
+                      <ul>
+                        {workflow.pros.map((pro, i) => (
+                          <li key={i}>{pro}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="cons">
+                      <strong>✗ Desventajas:</strong>
+                      <ul>
+                        {workflow.cons.map((con, i) => (
+                          <li key={i}>{con}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </article>
+              ))}
+
+              <article className="card">
+                <h3>Tabla Comparativa: ¿Cuál elegir?</h3>
+                <div className="responsive-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        {GIT_WORKFLOWS.comparison.headers.map((header, i) => (
+                          <th key={i}>{header}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {GIT_WORKFLOWS.comparison.rows.map((row, i) => (
+                        <tr key={i}>
+                          {row.map((cell, j) => (
+                            <td key={j}><strong>{j === 0 ? cell : cell}</strong></td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+            </section>
+          )}
+
+          {/* MCP SERVERS */}
+          {activeSection === 'mcp-use-cases' && (
+            <section className="content-section active">
+              <h2>{MCP_SERVERS.title}</h2>
+              <p className="section-intro">{MCP_SERVERS.intro}</p>
+
+              {MCP_SERVERS.servers.map((server, idx) => (
+                <article key={idx} className="card mcp-card">
+                  <h3>{server.title}</h3>
+                  <p className="badge-small">{server.badge}</p>
+                  <div className="info-block">
+                    <strong>¿Por qué?</strong>
+                    <ul>
+                      {server.why.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="code-example">
+                    <strong>Setup (copy-paste):</strong>
+                    <pre><code>{server.setup}</code></pre>
+                  </div>
+                </article>
+              ))}
+            </section>
+          )}
+
+          {/* HOOKS */}
+          {activeSection === 'hooks-production' && (
+            <section className="content-section active">
+              <h2>{HOOKS_PRODUCTION.title}</h2>
+              <p className="section-intro">{HOOKS_PRODUCTION.intro}</p>
+
+              {HOOKS_PRODUCTION.hooks.map((hook, idx) => (
+                <article key={idx} className="card hook-card">
+                  <h3>{hook.title}</h3>
+                  <p className="description">{hook.description}</p>
+                  <div className="code-example">
+                    <strong>Configuración:</strong>
+                    <pre><code>{hook.config}</code></pre>
+                  </div>
+                </article>
+              ))}
+            </section>
+          )}
+
+          {/* MULTI-MCP ORCHESTRATION */}
+          {activeSection === 'multi-mcp-orchestration' && (
+            <section className="content-section active">
+              <h2>{MULTI_MCP_ORCHESTRATION.title}</h2>
+              <p className="section-intro">{MULTI_MCP_ORCHESTRATION.intro}</p>
+
+              {MULTI_MCP_ORCHESTRATION.patterns.map((pattern, idx) => (
+                <article key={idx} className="card orchestration-card">
+                  <h3>{pattern.title}</h3>
+                  <p className="description">{pattern.description}</p>
+                  <div className="diagram-block">
+                    <pre>{pattern.diagram}</pre>
+                  </div>
+                </article>
+              ))}
+
+              <article className="card">
+                <h3>Recomendaciones por Tamaño de Equipo</h3>
+                <div className="responsive-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        {MULTI_MCP_ORCHESTRATION.recommendations.headers.map((header, i) => (
+                          <th key={i}>{header}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {MULTI_MCP_ORCHESTRATION.recommendations.rows.map((row, i) => (
+                        <tr key={i}>
+                          {row.map((cell, j) => (
+                            <td key={j}><strong>{j === 0 ? cell : cell}</strong></td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+            </section>
+          )}
         </main>
       </div>
     </div>
   )
 }
 
-// Componente CommandCard
 function CommandCard({ command }) {
   const [expanded, setExpanded] = useState(false)
 
@@ -228,39 +308,17 @@ function CommandCard({ command }) {
       <div className="command-header" onClick={() => setExpanded(!expanded)}>
         <code className="command-name">{command.cmd}</code>
         <span className={`command-level level-${command.level}`}>Nivel {command.level}</span>
-        <span className="command-category">{command.category}</span>
       </div>
       <p className="command-desc">{command.desc}</p>
-      {expanded && command.examples && (
-        <div className="command-examples">
-          {command.examples.map((ex, idx) => (
-            <div key={idx} className="example">
-              <code>{ex.input}</code>
-              <p>{ex.desc}</p>
-            </div>
-          ))}
+      {expanded && (
+        <div className="command-example">
+          <strong>Ejemplo:</strong>
+          <code>{command.example}</code>
         </div>
       )}
       <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
-        {expanded ? '▼ Ocultar' : '▶ Ver ejemplos'}
+        {expanded ? '▼ Ocultar' : '▶ Ver ejemplo'}
       </button>
-    </div>
-  )
-}
-
-// Componente TerminalSimulator
-function TerminalSimulator({ scenario, title }) {
-  return (
-    <div className="terminal-simulator">
-      <div className="terminal-header">{title}</div>
-      <div className="terminal-content">
-        {scenario.map((line, idx) => (
-          <div key={idx} className={`terminal-line ${line.type}`}>
-            {line.type === 'prompt' && <span className="prompt">$ </span>}
-            <span>{line.text}</span>
-          </div>
-        ))}
-      </div>
     </div>
   )
 }
