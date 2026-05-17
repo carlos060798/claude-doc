@@ -1,18 +1,38 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { COMMANDS_DATA } from '@/lib/commandsData'
 import { SECTIONS_CONFIG } from '@/lib/sectionsData'
+import { ProgressTracker } from '@/lib/progressTracker'
 import Sidebar from '@/components/Sidebar'
 import Dashboard from '@/components/Dashboard'
 import CourseSection from '@/components/CourseSection'
 import ChallengesSection from '@/components/ChallengesSection'
 import CommandsTable from '@/components/CommandsTable'
 import GenericSection from '@/components/GenericSection'
+import SearchCommand from '@/components/SearchCommand'
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('dashboard')
   const [mode, setMode] = useState('technical')
+  const [progress, setProgress] = useState(null)
+
+  useEffect(() => {
+    const prog = ProgressTracker.getProgress()
+    setProgress(prog)
+    setActiveSection(prog.currentSection || 'dashboard')
+  }, [])
+
+  useEffect(() => {
+    if (activeSection) {
+      ProgressTracker.setCurrentSection(activeSection)
+    }
+  }, [activeSection])
+
+  const handleSelectCommand = (cmd) => {
+    // Buscar sección relacionada o ir a Dashboard
+    setActiveSection('dashboard')
+  }
 
   const levelCommands = useMemo(() => {
     const level = parseInt(activeSection.split('-')[1])
