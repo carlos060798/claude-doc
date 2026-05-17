@@ -5506,59 +5506,174 @@ claude mcp add --scope user github \
                 <div class="section-header">
                     <span class="breadcrumb">Fundamentos / CLAUDE.md</span>
                     <h2>📝 CLAUDE.md: Tu System Prompt Persistente</h2>
-                    <p class="section-lead">Estructura, convenciones y reglas de tu proyecto en un archivo que Claude Code lee automáticamente.</p>
+                    <p class="section-lead">Estructura, convenciones y reglas de tu proyecto en un archivo que Claude Code lee automáticamente en cada sesión.</p>
                 </div>
 
                 <article class="card">
                     <h3>¿Qué es CLAUDE.md?</h3>
-                    <p>Un archivo de configuración que define:</p>
+                    <p>CLAUDE.md es un archivo especial (markdown) que Claude Code lee <strong>automáticamente</strong> al iniciar una sesión en tu proyecto. Actúa como una "memoria persistente" que define cómo debe comportarse Claude en tu contexto específico.</p>
+                    <h4>Define automáticamente:</h4>
                     <ul>
-                        <li><strong>Stack</strong>: Tech stack de tu proyecto (Next.js, React, Node, etc.)</li>
-                        <li><strong>Convenciones</strong>: Patrones de código, naming, estructura</li>
-                        <li><strong>Comandos útiles</strong>: Scripts para desarrollo, testing, deploy</li>
-                        <li><strong>Reglas de código</strong>: Lo que Claude DEBE y NO DEBE hacer</li>
-                        <li><strong>Contexto importante</strong>: Decisiones arquitectónicas, gotchas</li>
+                        <li><strong>Stack técnico</strong>: Versiones de frameworks, lenguajes, herramientas (Next.js 16, React 19, Node 20, etc.)</li>
+                        <li><strong>Convenciones de código</strong>: Naming (camelCase, PascalCase), patrones de estructura, imports</li>
+                        <li><strong>Comandos útiles</strong>: Scripts para dev, test, build, deploy que Claude puede sugerir/usar</li>
+                        <li><strong>Reglas de código</strong>: Lo que Claude DEBE hacer (inmutabilidad, tests) y lo que NO DEBE (modificar schema sin migration)</li>
+                        <li><strong>Arquitectura y gotchas</strong>: Decisiones de diseño, limitaciones, patterns especiales del proyecto</li>
+                        <li><strong>Integraciones MCP</strong>: Conexiones a GitHub, bases de datos, APIs internas</li>
                     </ul>
+                    <div class="info-banner" style="background-color: #f0f7ff; border-left: 4px solid #0084ff; padding: 12px; margin-top: 12px; border-radius: 4px;">
+                        <strong>💡 Tip:</strong> CLAUDE.md se actualiza cada vez que cambias el proyecto. Mantenlo sincronizado para máxima efectividad.
+                    </div>
                 </article>
 
                 <article class="card">
-                    <h3>Estructura básica</h3>
-                    <pre><code class="language-markdown"># Project Name
+                    <h3>Estructura esencial para todos los proyectos</h3>
+                    <pre><code class="language-markdown"># Mi Proyecto Web
 
-## Stack
+## Stack Actual
 - **Frontend**: Next.js 16 + React 19
-- **Backend**: Node.js + Express
-- **Database**: PostgreSQL
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS v4
+- **Language**: TypeScript 5.x
+- **Package Manager**: npm 10+
 
-## Conventions
-- Naming: camelCase para variables, PascalCase para componentes
-- Imports: alias @/* para rutas
-- Testing: Jest + React Testing Library
-- Commits: Conventional Commits (feat:, fix:, docs:)
+## Convenciones
+- **Naming**: camelCase para variables/funciones, PascalCase para componentes
+- **Imports**: @/* alias para rutas relativas (configured in tsconfig.json)
+- **Commits**: Conventional Commits (feat:, fix:, docs:, refactor:)
+- **Testing**: Jest + React Testing Library
 
 ## Key Commands
 ```bash
-npm run dev      # Start dev server
-npm test         # Run tests
-npm run build    # Production build
-npm run deploy   # Deploy to production
+npm run dev        # Start dev server (localhost:3000)
+npm test           # Run all tests
+npm run build      # Production build
+npm run lint       # Check code quality
+npm run format     # Auto-format code
 ```
 
 ## Rules
-- ✅ Prefer immutability
-- ✅ Write tests for features
-- ❌ Don't modify database schema without migration
-- ❌ Don't commit secrets or .env files
+- ✅ Always write tests for features
+- ✅ Use TypeScript strict mode
+- ✅ Keep components under 300 lines
+- ❌ Don't modify schema without migration
+- ❌ Don't commit .env or secrets
+- ❌ Don't use !important in CSS
+                    </code></pre>
+                </article>
+
+                <article class="card">
+                    <h3>Ejemplos para diferentes stacks</h3>
+                    <h4>📦 Next.js + Prisma (Full Stack)</h4>
+                    <pre><code class="language-markdown">## Stack
+- Next.js 16, React 19, TypeScript
+- Prisma ORM, PostgreSQL
+- NextAuth.js para autenticación
+- Tailwind CSS
+
+## Database
+- PostgreSQL (production)
+- Docker compose para local dev
+
+## Key Commands
+```bash
+npm run prisma:migrate  # Apply migrations
+npm run prisma:studio   # Open Prisma Studio
+```
+
+## Rules
+- ✅ All schema changes via migrations
+- ✅ Use Prisma client in API routes
+- ❌ Never run migrations in production manually
+                    </code></pre>
+                    <h4>🟢 Node + Express + MongoDB</h4>
+                    <pre><code class="language-markdown">## Stack
+- Node.js 20 LTS, Express 4.x
+- MongoDB (Mongoose ORM)
+- JWT for authentication
+- Jest for testing
+
+## Project Structure
+```
+src/
+  routes/       # Express route handlers
+  models/       # Mongoose schemas
+  middleware/   # Custom middleware
+  tests/        # Jest test files
+```
+
+## Rules
+- ✅ All routes need input validation
+- ✅ Use async/await (no callbacks)
+- ❌ Don't hardcode secrets in code
                     </code></pre>
                 </article>
 
                 <article class="card">
                     <h3>Crear CLAUDE.md automáticamente</h3>
-                    <p>Usa el comando <code>/init</code> en una sesión de Claude Code:</p>
-                    <pre><code class="language-bash">$ claude
+                    <p>Usa el comando <code>/init</code> en una sesión de Claude Code. Claude analizará tu proyecto automáticamente:</p>
+                    <pre><code class="language-bash">$ cd ~/mi-proyecto
+$ claude
 /init</code></pre>
-                    <p>Claude analizará tu proyecto y creará un CLAUDE.md inicial.</p>
+                    <p><strong>Output esperado:</strong> Claude genera un archivo CLAUDE.md inicial con análisis del tu stack, estructura y convenciones detectadas.</p>
+                    <div class="info-banner" style="background-color: #fff3cd; border-left: 4px solid #ff9800; padding: 12px; margin-top: 12px; border-radius: 4px;">
+                        <strong>⚠️ Importante:</strong> El CLAUDE.md generado es un <strong>punto de partida</strong>. Edítalo manualmente para agregar reglas específicas del proyecto.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3>Mejores prácticas para CLAUDE.md</h3>
+                    <h4>✅ Sí, incluir:</h4>
+                    <ul>
+                        <li>Versiones exactas de tecnologías clave</li>
+                        <li>Patrones de estructura (carpetas, naming)</li>
+                        <li>Gotchas o limitaciones del proyecto</li>
+                        <li>Comandos que Claude puede ejecutar</li>
+                        <li>Links a documentación interna</li>
+                        <li>Decisiones arquitectónicas importantes</li>
+                    </ul>
+                    <h4>❌ No, evitar:</h4>
+                    <ul>
+                        <li>Secretos o credenciales (usa .env en su lugar)</li>
+                        <li>Código muy largo (usa archivos externos y referencias)</li>
+                        <li>Información sobre usuarios reales o datos sensibles</li>
+                        <li>Documentación genérica (sirve CLAUDE.md específico del proyecto)</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <h3>Secciones avanzadas (Opcional)</h3>
+                    <h4>Memory Sections (para proyectos grandes)</h4>
+                    <pre><code class="language-markdown">## Memory
+- [x] Authentication flow uses NextAuth.js
+- [x] Database schema in /docs/schema.md
+- [x] API response format (JSON with {data, error, status})
+
+## Key Decisions
+- Moved from GraphQL to REST API in v2
+- Using Prisma over raw SQL for type safety
+                    </code></pre>
+                    <h4>MCP Setup (si usas herramientas externas)</h4>
+                    <pre><code class="language-markdown">## MCP Integrations
+- GitHub MCP: For issue management
+- PostgreSQL MCP: Direct DB queries
+- Custom Internal API: Team sync
+
+## Hooks
+- Before deploy: Run full test suite
+- After merge: Update CHANGELOG.md
+                    </code></pre>
+                </article>
+
+                <article class="card">
+                    <h3>Actualizar CLAUDE.md cuando:</h3>
+                    <ul>
+                        <li>✏️ Cambias framework o versión mayor (Next.js 14 → 16)</li>
+                        <li>✏️ Introduces nuevas convenciones de código</li>
+                        <li>✏️ Agregan nuevos comandos o scripts importantes</li>
+                        <li>✏️ Cambia la estructura del proyecto</li>
+                        <li>✏️ Nuevas reglas o restricciones (ej: "no usar X librería")</li>
+                    </ul>
+                    <p style="margin-top: 12px;"><strong>Pro tip:</strong> Incluye cambios de CLAUDE.md en el mismo PR que el cambio arquitectónico. Así Claude Code sabe desde el inicio el nuevo contexto.</p>
                 </article>
             </section>
 
@@ -5567,44 +5682,198 @@ npm run deploy   # Deploy to production
                 <div class="section-header">
                     <span class="breadcrumb">Fundamentos / Instalación</span>
                     <h2>⚙️ Instalación de Claude Code</h2>
-                    <p class="section-lead">Configura Claude Code en tu máquina en menos de 5 minutos.</p>
+                    <p class="section-lead">Múltiples formas de instalar Claude Code según tu sistema operativo y preferencias.</p>
                 </div>
 
                 <article class="card">
-                    <h3>Requisitos previos</h3>
+                    <h3>Requisitos previos (Todos los sistemas)</h3>
                     <ul>
-                        <li><strong>Node.js</strong> 18+ (incluye npm)</li>
-                        <li><strong>Sistema operativo</strong>: macOS, Linux, Windows (WSL recomendado)</li>
-                        <li><strong>Cuenta de Anthropic</strong>: Para acceso a Claude API</li>
+                        <li><strong>Node.js</strong> 18+ (lts/hydrogen o superior)</li>
+                        <li><strong>npm</strong> 9+ o <strong>yarn</strong> 4+ (incluido con Node)</li>
+                        <li><strong>Cuenta Anthropic</strong>: Acceso a Claude API (free o paid)</li>
+                        <li><strong>Sistema operativo</strong>: macOS, Linux, Windows (WSL2), o Docker</li>
+                        <li><strong>Conexión a internet</strong>: Para descargar dependencias y auth</li>
+                    </ul>
+                    <p style="margin-top: 12px;"><strong>Verifica Node.js:</strong></p>
+                    <pre><code class="language-bash">node --version   # v18.0.0 o superior
+npm --version    # 9.0.0 o superior</code></pre>
+                </article>
+
+                <article class="card">
+                    <h3>Instalación vía npm (Recomendado para la mayoría)</h3>
+                    <p>La forma más simple y mantenida. Funciona en macOS, Linux, WSL y Windows.</p>
+                    <pre><code class="language-bash"># 1. Instalar globalmente
+npm install -g @anthropic-ai/claude-code
+
+# 2. Verificar instalación
+claude --version
+# Output esperado: 1.x.x
+
+# 3. Iniciar sesión
+claude auth login
+# Abre navegador → Autentica con Anthropic → Vuelve a terminal</code></pre>
+                    <p style="margin-top: 12px;"><strong>¿Qué pasa después del login?</strong></p>
+                    <ul>
+                        <li>Claude Code genera <code>~/.anthropic/token.json</code> (NO compartas este archivo)</li>
+                        <li>Token se guarda de forma segura en tu máquina</li>
+                        <li>Ya puedes usar <code>claude</code> en cualquier proyecto</li>
                     </ul>
                 </article>
 
                 <article class="card">
-                    <h3>Instalación via npm (Recomendado)</h3>
-                    <pre><code class="language-bash"># Instalar globalmente
-npm install -g @anthropic-ai/claude-code
+                    <h3>Instalación en Windows (WSL2 recomendado)</h3>
+                    <h4>Opción A: WSL2 (Recomendado)</h4>
+                    <pre><code class="language-bash"># Abre WSL terminal
+wsl
 
-# Verificar instalación
-claude --version
-
-# Iniciar sesión (abre navegador para OAuth)
-claude auth login</code></pre>
-                </article>
-
-                <article class="card">
-                    <h3>Instalación en Windows (WSL)</h3>
-                    <pre><code class="language-bash"># Dentro de WSL (Ubuntu/Debian)
+# Dentro de WSL (Ubuntu/Debian)
 sudo apt update && sudo apt install -y nodejs npm
 
+# Verifica versión
+node --version
+
+# Instala Claude Code
 npm install -g @anthropic-ai/claude-code
+claude auth login</code></pre>
+                    <h4>Opción B: Windows PowerShell (Nativo)</h4>
+                    <pre><code class="language-powershell"># En PowerShell como admin
+npm install -g @anthropic-ai/claude-code
+
+# Verifica
+claude --version
+
+# Inicia sesión
+claude auth login</code></pre>
+                    <div class="info-banner" style="background-color: #f0f7ff; border-left: 4px solid #0084ff; padding: 12px; margin-top: 12px; border-radius: 4px;">
+                        <strong>💡 WSL vs PowerShell:</strong> WSL2 ofrece mejor compatibilidad con bash scripts y herramientas POSIX. Si planeas usar git, Docker o scripts bash, elige WSL.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3>Instalación con Docker (Para máxima portabilidad)</h3>
+                    <p>Si quieres evitar instalar Node.js o prefieres un entorno aislado:</p>
+                    <pre><code class="language-dockerfile"># Dockerfile
+FROM node:20-alpine
+
+RUN npm install -g @anthropic-ai/claude-code
+
+WORKDIR /workspace
+
+ENTRYPOINT ["claude"]</code></pre>
+                    <pre><code class="language-bash"># Build la imagen
+docker build -t claude-code .
+
+# Ejecuta Claude Code
+docker run -it --rm \
+  -v ~/.anthropic:/root/.anthropic \
+  -v $(pwd):/workspace \
+  claude-code</code></pre>
+                    <p style="margin-top: 12px;"><strong>Ventajas:</strong> Aislamiento total, sin conflictos de versiones, fácil de compartir con el equipo.</p>
+                </article>
+
+                <article class="card">
+                    <h3>Instalación desde source (Desarrollo)</h3>
+                    <p>Si quieres contribuir o usar la versión más reciente en desarrollo:</p>
+                    <pre><code class="language-bash"># Clona el repositorio
+git clone https://github.com/anthropics/claude-code.git
+cd claude-code
+
+# Instala dependencias
+npm install
+
+# Link global (para usarlo como `claude` en terminal)
+npm link
+
+# Verifica
+claude --version</code></pre>
+                    <p style="margin-top: 12px;">Esto instala la versión de desarrollo. Los cambios en el repo se reflejan automáticamente en el comando <code>claude</code>.</p>
+                </article>
+
+                <article class="card">
+                    <h3>Validación: ¿Funcionó la instalación?</h3>
+                    <pre><code class="language-bash"># Test 1: Comando disponible
+which claude        # Debe mostrar ruta (/usr/local/bin/claude o similar)
+
+# Test 2: Versión instalada
+claude --version    # Debe mostrar 1.x.x
+
+# Test 3: Auth funciona
+claude auth status  # Debe mostrar "Authenticated" y tu email
+
+# Test 4: Abre un proyecto
+cd ~/mi-proyecto
+claude
+# Debe mostrar prompt de Claude Code listo para comandos</code></pre>
+                    <p style="margin-top: 12px;"><strong>✅ Si ves el prompt de Claude Code, ¡estás listo!</strong></p>
+                </article>
+
+                <article class="card">
+                    <h3>Troubleshooting: Errores comunes</h3>
+                    <h4>❌ "command not found: claude"</h4>
+                    <p><strong>Causa:</strong> npm global bin no está en PATH.</p>
+                    <pre><code class="language-bash"># Encuentra dónde npm instala globales
+npm config get prefix
+# Debería devolver /usr/local o similar
+
+# Agrega a tu .bashrc o .zshrc
+export PATH="/usr/local/bin:$PATH"
+
+# Recarga shell
+source ~/.bashrc</code></pre>
+                    <h4>❌ "npm ERR! code EACCES (Permission denied)"</h4>
+                    <p><strong>Causa:</strong> npm requiere permisos de admin.</p>
+                    <pre><code class="language-bash"># Opción A: Usa sudo (simple pero no recomendado)
+sudo npm install -g @anthropic-ai/claude-code
+
+# Opción B: Cambia permisos npm (recomendado)
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+export PATH="~/.npm-global/bin:$PATH"
+npm install -g @anthropic-ai/claude-code</code></pre>
+                    <h4>❌ "Auth token expired" o "Not authenticated"</h4>
+                    <p><strong>Solución:</strong> Re-autentica.</p>
+                    <pre><code class="language-bash"># Elimina token anterior
+rm ~/.anthropic/token.json
+
+# Inicia sesión nuevamente
+claude auth login</code></pre>
+                    <h4>❌ "Error: Cannot find module 'anthropic'" (en Windows)</h4>
+                    <p><strong>Causa:</strong> Instalación incompleta o antivirus bloqueó descarga.</p>
+                    <pre><code class="language-bash"># Limpia instalación
+npm uninstall -g @anthropic-ai/claude-code
+npm cache clean --force
+npm install -g @anthropic-ai/claude-code</code></pre>
+                </article>
+
+                <article class="card">
+                    <h3>Alternativas de instalación</h3>
+                    <h4>🐧 macOS (con Homebrew)</h4>
+                    <pre><code class="language-bash">brew install anthropic/tap/claude-code
+claude auth login</code></pre>
+                    <h4>🪟 Windows (con Chocolatey o Scoop)</h4>
+                    <pre><code class="language-bash"># Opción Chocolatey
+choco install claude-code
+
+# Opción Scoop
+scoop install claude-code
+
+# Después
+claude auth login</code></pre>
+                    <h4>📦 Via conda (Python developers)</h4>
+                    <pre><code class="language-bash">conda install -c anthropic claude-code
 claude auth login</code></pre>
                 </article>
 
                 <article class="card">
-                    <h3>Verificar que funciona</h3>
-                    <pre><code class="language-bash">cd ~/tu-proyecto
-claude
-# Debería cargar tu proyecto y mostrar un prompt</code></pre>
+                    <h3>Próximos pasos después de instalar</h3>
+                    <p>Una vez que <code>claude --version</code> funciona:</p>
+                    <ol style="padding-left: 20px;">
+                        <li><strong>Navega a tu proyecto:</strong> <code>cd ~/tu-proyecto</code></li>
+                        <li><strong>Abre Claude Code:</strong> <code>claude</code></li>
+                        <li><strong>Crea CLAUDE.md:</strong> <code>/init</code></li>
+                        <li><strong>Pide ayuda:</strong> <code>/help</code></li>
+                        <li><strong>Empieza con un comando:</strong> <code>Refactoriza mi código para mejorar performance</code></li>
+                    </ol>
                 </article>
             </section>
 
@@ -5613,42 +5882,254 @@ claude
                 <div class="section-header">
                     <span class="breadcrumb">Fundamentos / Primeros Pasos</span>
                     <h2>🚀 Primeros Pasos con Claude Code</h2>
-                    <p class="section-lead">Tus primeros comandos después de instalar.</p>
+                    <p class="section-lead">Flujo completo desde abrir Claude Code hasta completar tu primer task.</p>
                 </div>
 
                 <article class="card">
-                    <h3>1. Abre un proyecto</h3>
-                    <pre><code class="language-bash">cd ~/mi-proyecto
-claude</code></pre>
-                    <p>Claude Code analiza tu proyecto (stack, archivos, .git, etc.)</p>
-                </article>
-
-                <article class="card">
-                    <h3>2. Crea CLAUDE.md</h3>
-                    <pre><code class="language-bash">/init</code></pre>
-                    <p>Claude genera un CLAUDE.md con el análisis de tu proyecto.</p>
-                </article>
-
-                <article class="card">
-                    <h3>3. Pide ayuda</h3>
-                    <pre><code class="language-bash">/help</code></pre>
-                    <p>Lista todos los comandos disponibles en tu sesión.</p>
-                </article>
-
-                <article class="card">
-                    <h3>4. Menciona archivos</h3>
-                    <pre><code class="language-bash">Refactoriza @src/components/Button.tsx para usar TypeScript</code></pre>
-                    <p>Usa @ para cargar archivos en contexto.</p>
-                </article>
-
-                <article class="card">
-                    <h3>5. Próximos comandos útiles</h3>
+                    <h3>Paso 1️⃣: Abre un proyecto existente</h3>
+                    <pre><code class="language-bash">$ cd ~/mi-proyecto
+$ claude</code></pre>
+                    <p><strong>¿Qué pasa?</strong> Claude Code:</p>
                     <ul>
-                        <li><code>/model claude-opus-4-7</code> — Cambiar modelo (más rápido/potente)</li>
-                        <li><code>/context</code> — Ver uso de contexto</li>
-                        <li><code>/clear</code> — Limpiar historial</li>
-                        <li><code>/mcp</code> — Conectar MCPs (GitHub, PostgreSQL, etc.)</li>
+                        <li>Detecta el tipo de proyecto (Next.js, Node, React, etc.)</li>
+                        <li>Lee .git, package.json, CLAUDE.md (si existe)</li>
+                        <li>Muestra un prompt listo para comandos</li>
                     </ul>
+                    <p><strong>Output esperado:</strong></p>
+                    <pre><code class="language-bash">✓ Project loaded: ~/mi-proyecto
+✓ Stack detected: Next.js 16, React 19, TypeScript
+✓ CLAUDE.md found (2 KB)
+✓ Git branch: main
+
+You:
+</code></pre>
+                    <div class="info-banner" style="background-color: #f0f7ff; border-left: 4px solid #0084ff; padding: 12px; margin-top: 12px; border-radius: 4px;">
+                        <strong>💡 Tip:</strong> Si es un proyecto nuevo sin CLAUDE.md, Claude puede analizarlo de todas formas. Pero es mejor crear uno explícitamente (ver Paso 2).
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3>Paso 2️⃣: Genera CLAUDE.md automáticamente</h3>
+                    <pre><code class="language-bash">You: /init
+
+Claude:
+✓ Analyzing project structure...
+✓ Detected: Next.js 16 + React 19 + TypeScript + Tailwind
+✓ Found 24 components, 5 API routes
+✓ Generated CLAUDE.md (512 bytes)
+
+File created: ./CLAUDE.md
+Review it and add any project-specific rules.
+                    </code></pre>
+                    <p><strong>Qué contiene el CLAUDE.md generado:</strong></p>
+                    <ul>
+                        <li>Stack detectado (versiones exactas)</li>
+                        <li>Estructura de carpetas</li>
+                        <li>Scripts disponibles (npm run dev, build, etc.)</li>
+                        <li>Tecnologías clave (DB, autenticación, etc.)</li>
+                    </ul>
+                    <p style="margin-top: 12px;"><strong>Próximo paso:</strong> Abre el CLAUDE.md generado en tu editor y personalízalo. Agrega reglas específicas del proyecto.</p>
+                </article>
+
+                <article class="card">
+                    <h3>Paso 3️⃣: Pide ayuda y explora comandos</h3>
+                    <pre><code class="language-bash">You: /help
+
+Claude:
+Available commands in Claude Code:
+
+Core Commands:
+  /init              Generate CLAUDE.md
+  /context           Show current context usage
+  /clear             Clear conversation history
+  /help              Show this help menu
+  /model             Change AI model
+
+Workflow Commands:
+  /code              Enter code editing mode
+  /search            Search codebase
+  /run               Execute shell commands
+  /test              Run tests
+
+Advanced:
+  /mcp               Manage MCP connections
+  /env               Show environment variables
+  /git               Git operations
+
+Type any command above or describe what you want to do.
+                    </code></pre>
+                </article>
+
+                <article class="card">
+                    <h3>Paso 4️⃣: Menciona archivos específicos con @</h3>
+                    <p>Para que Claude context cargue archivos en su análisis, usa <code>@ruta/archivo</code>:</p>
+                    <pre><code class="language-bash">You: Refactoriza @src/components/Button.tsx para mejorar performance
+
+Claude:
+✓ Loaded: src/components/Button.tsx (142 lines)
+✓ Found 3 performance opportunities
+✓ Creating optimized version...
+
+(Claude proporciona el código refactorizado)
+                    </code></pre>
+                    <p><strong>Variantes útiles:</strong></p>
+                    <ul>
+                        <li><code>@src/</code> — Carga toda la carpeta src/</li>
+                        <li><code>@package.json @tsconfig.json</code> — Múltiples archivos</li>
+                        <li><code>@*.tsx</code> — Carga todos los archivos .tsx del proyecto</li>
+                        <li><code>@</code> — Carga el contexto actual (proyecto completo)</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <h3>Paso 5️⃣: Ejecuta tu primer task real</h3>
+                    <p><strong>Ejemplo 1: Crear un componente nuevo</strong></p>
+                    <pre><code class="language-bash">You: Crea un componente Card reutilizable con soporte para dark mode.
+     Usa Tailwind CSS y TypeScript.
+
+Claude:
+✓ Creating: src/components/Card.tsx
+✓ Adding: TypeScript interfaces
+✓ Generated: 45 lines of code
+
+(Muestra el código)
+
+Ready to implement. Should I save it?
+                    </code></pre>
+                    <p style="margin-top: 12px;"><strong>Ejemplo 2: Fijar un bug</strong></p>
+                    <pre><code class="language-bash">You: @src/utils/auth.ts tiene un bug donde el token expira pero
+     no se limpia la sesión. Corrige esto.
+
+Claude:
+✓ Found the issue: Line 67, missing cleanup call
+✓ Created patch: 8 lines changed
+✓ Added fallback for edge cases
+
+(Muestra los cambios)
+
+Should I apply these changes?
+                    </code></pre>
+                    <p style="margin-top: 12px;"><strong>Ejemplo 3: Escribir tests</strong></p>
+                    <pre><code class="language-bash">You: Escribe tests para @src/hooks/useAuth.ts usando Jest
+
+Claude:
+✓ Analyzing hook implementation...
+✓ Creating: src/hooks/__tests__/useAuth.test.ts
+✓ Generated: 12 test cases
+
+(Muestra los tests)
+
+This covers: login, logout, token refresh, error handling.
+                    </code></pre>
+                </article>
+
+                <article class="card">
+                    <h3>Paso 6️⃣: Comandos útiles después de empezar</h3>
+                    <h4>Ver uso de contexto</h4>
+                    <pre><code class="language-bash">You: /context
+
+Claude:
+Context usage:
+  Used: 12,450 tokens (25% of limit)
+  Remaining: 37,550 tokens (75%)
+  Session: 3 messages
+  Files loaded: 5
+  Estimated tokens/message: 4,150
+
+Tip: Use /clear to reset context if needed.
+                    </code></pre>
+                    <h4>Cambiar de modelo AI</h4>
+                    <pre><code class="language-bash">You: /model claude-opus-4-7
+
+Claude:
+✓ Switched to claude-opus-4-7 (more powerful, slower)
+Available models: haiku-4.5, sonnet-4.5, opus-4-7
+                    </code></pre>
+                    <h4>Ejecutar comandos del proyecto</h4>
+                    <pre><code class="language-bash">You: /run npm test
+
+Claude:
+✓ Running: npm test
+PASS  src/hooks/__tests__/useAuth.test.ts
+PASS  src/components/__tests__/Button.test.ts
+Tests: 24 passed, 0 failed
+                    </code></pre>
+                    <h4>Limpiar historial (resetear conversación)</h4>
+                    <pre><code class="language-bash">You: /clear
+
+Claude:
+✓ Cleared 15 messages from history
+✓ Context reset (0 / 50,000 tokens)
+✓ Project reloaded
+
+You:
+                    </code></pre>
+                </article>
+
+                <article class="card">
+                    <h3>Flujo visual: Tu primer minuto</h3>
+                    <pre style="background-color: #f5f5f5; padding: 16px; border-radius: 4px; font-size: 12px; line-height: 1.6;">
+[Terminal]
+$ cd ~/mi-proyecto
+$ claude
+✓ Project loaded
+
+[Prompt]
+You: /init
+Claude: ✓ CLAUDE.md created
+
+[Prompt]
+You: Crea un componente Button reutilizable
+Claude: ✓ Created src/components/Button.tsx
+
+[Prompt]
+You: /run npm test
+Claude: ✓ All tests pass
+
+✅ ¡Listo! Completaste tu primer task con Claude Code
+                    </pre>
+                </article>
+
+                <article class="card">
+                    <h3>Errores comunes en primeros pasos</h3>
+                    <h4>❌ "Error: No CLAUDE.md found"</h4>
+                    <p><strong>Solución:</strong> Corre <code>/init</code> primero. O agrega un CLAUDE.md manual.</p>
+                    <h4>❌ "Context limit exceeded"</h4>
+                    <p><strong>Solución:</strong> Corre <code>/clear</code> para resetear. O sé más específico (@archivo exacto vs @carpeta completa).</p>
+                    <h4>❌ "File not found" al usar @</h4>
+                    <p><strong>Solución:</strong> Verifica la ruta relativa. Usa rutas desde la raíz del proyecto.</p>
+                    <pre><code class="language-bash"># ❌ Incorrecto
+@Button.tsx
+
+# ✅ Correcto
+@src/components/Button.tsx</code></pre>
+                    <h4>❌ "Changes not saved"</h4>
+                    <p><strong>Solución:</strong> Claude no auto-guarda archivos. Responde "yes" cuando pregunte "Should I save it?"</p>
+                </article>
+
+                <article class="card">
+                    <h3>Checklist de configuración inicial</h3>
+                    <p>Después de instalar y abrir tu primer proyecto:</p>
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li>☐ <code>claude --version</code> funciona</li>
+                        <li>☐ <code>claude</code> abre un proyecto sin errores</li>
+                        <li>☐ <code>/init</code> crea CLAUDE.md</li>
+                        <li>☐ Editas CLAUDE.md con reglas específicas</li>
+                        <li>☐ <code>/help</code> muestra comandos disponibles</li>
+                        <li>☐ Completaste al menos 1 task (crear archivo, fijar bug, etc.)</li>
+                        <li>☐ <code>/context</code> muestra tokens restantes</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <h3>Próximos pasos de aprendizaje</h3>
+                    <ol style="padding-left: 20px;">
+                        <li><strong>Lee CLAUDE.md fundamentos</strong> — Entiende cómo configurarlo bien</li>
+                        <li><strong>Explora MCPs</strong> — Conecta GitHub, bases de datos, APIs</li>
+                        <li><strong>Aprende comandos avanzados</strong> — /mcp, /env, git operations</li>
+                        <li><strong>Optimiza tu workflow</strong> — Alias, atajos, CLAUDE.md personalizado</li>
+                        <li><strong>Colabora en equipo</strong> — Comparte CLAUDE.md, mejores prácticas</li>
+                    </ol>
                 </article>
             </section>
 
