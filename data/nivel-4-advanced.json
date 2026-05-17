@@ -1,0 +1,245 @@
+{
+  "nivel": 4,
+  "name": "Maestría Práctica",
+  "description": "Advanced patterns, production deployment, and expert-level features",
+  "sections": [
+    {
+      "id": "mcpb-packaging",
+      "title": ".mcpb Packaging: Complete Guide",
+      "category": "packaging",
+      "content": "Package your MCP servers for distribution",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Install MCPB CLI",
+          "code": "npm install -g @anthropic-ai/mcpb",
+          "explanation": "Global installation of the MCP Bundle packaging tool"
+        },
+        {
+          "step": 2,
+          "title": "Initialize Manifest",
+          "code": "cd your-mcp-server && mcpb init",
+          "explanation": "Creates interactive manifest.json with project metadata"
+        },
+        {
+          "step": 3,
+          "title": "Configure manifest.json",
+          "code": "{\n  \"manifest_version\": \"0.3\",\n  \"name\": \"my-server\",\n  \"display_name\": \"My MCP Server\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Server description\",\n  \"server\": {\n    \"type\": \"node\",\n    \"command\": \"node\",\n    \"args\": [\"${__dirname}/dist/index.js\"]\n  },\n  \"tools\": [\n    {\n      \"name\": \"tool_name\",\n      \"description\": \"What this tool does\",\n      \"inputSchema\": {\"type\": \"object\", \"properties\": {}}\n    }\n  ]\n}",
+          "explanation": "Complete manifest with required and optional fields"
+        },
+        {
+          "step": 4,
+          "title": "Validate Manifest",
+          "code": "mcpb validate manifest.json",
+          "explanation": "Ensures manifest conforms to specification"
+        },
+        {
+          "step": 5,
+          "title": "Pack into .mcpb",
+          "code": "mcpb pack . my-server.mcpb",
+          "explanation": "Creates distributable .mcpb file (ZIP with manifest)"
+        },
+        {
+          "step": 6,
+          "title": "Verify Package",
+          "code": "mcpb verify my-server.mcpb && mcpb info my-server.mcpb",
+          "explanation": "Validates package integrity and displays metadata"
+        },
+        {
+          "step": 7,
+          "title": "Sign for Production (Optional)",
+          "code": "mcpb sign --certificate cert.pem my-server.mcpb",
+          "explanation": "Sign with X.509 certificate for production distribution"
+        }
+      ],
+      "verified": true,
+      "docUrl": "https://github.com/modelcontextprotocol/mcpb",
+      "lastValidated": "2026-05-17"
+    },
+    {
+      "id": "hooks-deep-dive",
+      "title": "29+ Hooks: Lifecycle Events Reference",
+      "category": "advanced",
+      "description": "Complete guide to all lifecycle hooks in Claude Code",
+      "hooks": [
+        {
+          "name": "SessionStart",
+          "category": "Session Lifecycle",
+          "fires": "Session begins or resumes",
+          "blocking": false,
+          "example": "{\n  \"hooks\": {\n    \"SessionStart\": [{\n      \"matchers\": [{\"cwd\": \"/path/to/project\"}],\n      \"handlers\": [{\n        \"type\": \"command\",\n        \"command\": \"bash\",\n        \"args\": [\"-c\", \"git status && cat TASK_BOARD.md\"]\n      }]\n    }]\n  }\n}",
+          "useCase": "Load project context (git status, task board, recent changes)"
+        },
+        {
+          "name": "PreToolUse",
+          "category": "Tool Execution",
+          "fires": "Before tool call executes",
+          "blocking": true,
+          "example": "{\n  \"hooks\": {\n    \"PreToolUse\": [{\n      \"matchers\": [{\"tool\": \"bash\", \"pattern\": \"rm -rf.*\"}],\n      \"handlers\": [{\n        \"type\": \"prompt\",\n        \"system\": \"Validate dangerous commands\",\n        \"prompt\": \"Allow this? ${arguments}\"\n      }]\n    }]\n  }\n}",
+          "useCase": "Block dangerous commands, enforce security policies, log all tool calls"
+        },
+        {
+          "name": "PermissionRequest",
+          "category": "Tool Execution",
+          "fires": "Permission dialog appears",
+          "blocking": true,
+          "example": "{\n  \"hooks\": {\n    \"PermissionRequest\": [{\n      \"matchers\": [{\"tool\": \"bash\", \"pattern\": \"^(ls|cat|grep)\"}],\n      \"handlers\": [{\"type\": \"command\", \"command\": \"echo\", \"args\": [\"ALLOW\"]}]\n    }]\n  }\n}",
+          "useCase": "Auto-approve read-only operations (ls, cat, grep) to reduce friction"
+        },
+        {
+          "name": "PostToolUseFailure",
+          "category": "Tool Execution",
+          "fires": "After tool call fails",
+          "blocking": false,
+          "example": "{\n  \"hooks\": {\n    \"PostToolUseFailure\": [{\n      \"handlers\": [{\n        \"type\": \"http\",\n        \"url\": \"https://monitoring.example.com/errors\",\n        \"method\": \"POST\"\n      }]\n    }]\n  }\n}",
+          "useCase": "Error tracking, send failures to Sentry/DataDog, suggest recovery"
+        },
+        {
+          "name": "CwdChanged",
+          "category": "Context & Configuration",
+          "fires": "Working directory changes",
+          "blocking": false,
+          "example": "{\n  \"hooks\": {\n    \"CwdChanged\": [{\n      \"handlers\": [{\n        \"type\": \"command\",\n        \"command\": \"bash\",\n        \"args\": [\"-c\", \"eval \\\"$(direnv export bash)\\\"\"]\n      }]\n    }]\n  }\n}",
+          "useCase": "Reactive environment (direnv), reload env vars, restart dev servers"
+        },
+        {
+          "name": "InstructionsLoaded",
+          "category": "Context & Configuration",
+          "fires": "CLAUDE.md or .claude/rules/*.md loads",
+          "blocking": false,
+          "useCase": "Audit logging, compliance tracking, notify on instruction changes"
+        },
+        {
+          "name": "ConfigChange",
+          "category": "Context & Configuration",
+          "fires": "Configuration file changes",
+          "blocking": true,
+          "useCase": "Reload config, validate changes, restart necessary services"
+        },
+        {
+          "name": "SubagentStart",
+          "category": "Subagent Management",
+          "fires": "Subagent spawned",
+          "blocking": false,
+          "useCase": "Setup subagent context, configure permissions, logging"
+        },
+        {
+          "name": "TaskCreated",
+          "category": "Subagent Management",
+          "fires": "Task being created via TaskCreate",
+          "blocking": true,
+          "useCase": "Validate task creation, enforce rate limits, logging"
+        },
+        {
+          "name": "PreCompact",
+          "category": "Compaction & Elicitation",
+          "fires": "Before context compaction",
+          "blocking": true,
+          "useCase": "Prepare critical information for compaction, logging, prevent compaction of sensitive data"
+        }
+      ],
+      "verified": true,
+      "docUrl": "https://code.claude.com/docs/en/hooks",
+      "totalHooks": 29,
+      "lastValidated": "2026-05-17"
+    },
+    {
+      "id": "multi-agent-patterns",
+      "title": "Multi-Agent Orchestration Patterns",
+      "category": "architecture",
+      "description": "3 proven patterns for coordinating multiple agents",
+      "patterns": [
+        {
+          "name": "Pipeline Pattern",
+          "description": "Sequential agent execution where output of one feeds input to next",
+          "example": "Agent1 (Research) → Agent2 (Analysis) → Agent3 (Summarize)",
+          "useCase": "Complex multi-step tasks: research problem → analyze solutions → write summary",
+          "code": "const orchestrate = async () => {\n  const research = await agent1.run({query: userQuery});\n  const analysis = await agent2.run({data: research.findings});\n  const summary = await agent3.run({analysis: analysis.results});\n  return summary.output;\n}",
+          "bestFor": "Sequential tasks with clear dependencies"
+        },
+        {
+          "name": "Parallel Pattern",
+          "description": "Multiple agents work on same problem simultaneously, results merged",
+          "example": "Agent1 (Frontend) || Agent2 (Backend) || Agent3 (Infra) → Merge",
+          "useCase": "Diverse expertise: frontend expert, backend expert, infra expert on same feature",
+          "code": "const orchestrate = async () => {\n  const [frontend, backend, infra] = await Promise.all([\n    agentFE.run({task}),\n    agentBE.run({task}),\n    agentInfra.run({task})\n  ]);\n  return mergeResults(frontend, backend, infra);\n}",
+          "bestFor": "Problems needing multiple expert perspectives"
+        },
+        {
+          "name": "Hierarchical Pattern",
+          "description": "Master agent delegates to specialist subagents, coordinates results",
+          "example": "Master → [Specialist1, Specialist2, Specialist3] → Master (decision)",
+          "useCase": "Quality review: agents check different aspects (code review, security, performance)",
+          "code": "const master = new Agent({\n  tools: [\n    {name: 'call_code_reviewer', desc: 'Check code quality'},\n    {name: 'call_security_agent', desc: 'Check security'},\n    {name: 'call_perf_agent', desc: 'Check performance'}\n  ],\n  instructions: 'Call all 3 specialists, synthesize their feedback'\n});",
+          "bestFor": "Quality gates, multi-criteria evaluation, risk assessment"
+        }
+      ],
+      "verified": true,
+      "lastValidated": "2026-05-17"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "l4-q1",
+      "question": "¿Cuál es el primer paso para empaquetar un MCP en formato .mcpb?",
+      "options": [
+        "Instalar @anthropic-ai/mcpb globalmente",
+        "Crear manifest.json manualmente",
+        "Compilar el servidor a binario",
+        "Subir a npm registry"
+      ],
+      "correct": 0,
+      "explanation": "npm install -g @anthropic-ai/mcpb instala la herramienta CLI necesaria para empaquetar MCPs"
+    },
+    {
+      "id": "l4-q2",
+      "question": "¿Cuántos eventos hook existen en settings.json?",
+      "options": [
+        "12 (solo sesión y herramientas)",
+        "21 (incluye configuración)",
+        "29+ (incluye subagentes, compactación, etc)",
+        "50+ (todos los posibles eventos)"
+      ],
+      "correct": 2,
+      "explanation": "Claude Code soporta 29+ eventos: SessionStart, PreToolUse, PermissionRequest, CwdChanged, SubagentStart, TaskCreated, PreCompact, y más"
+    },
+    {
+      "id": "l4-q3",
+      "question": "¿Cuál hook permite bloquear comandos peligrosos?",
+      "options": [
+        "PostToolUseFailure",
+        "PreToolUse",
+        "SessionStart",
+        "CwdChanged"
+      ],
+      "correct": 1,
+      "explanation": "PreToolUse se ejecuta ANTES de la herramienta y es blocking, permitiendo validar/bloquear comandos como 'rm -rf /'"
+    },
+    {
+      "id": "l4-q4",
+      "question": "¿Qué es el patrón 'Pipeline' en orquestación multi-agente?",
+      "options": [
+        "Todos los agentes trabajan en paralelo",
+        "Un agente central delega a especialistas",
+        "Un agente → siguiente agente → siguiente (secuencial)",
+        "Sin coordinación, resultados independientes"
+      ],
+      "correct": 2,
+      "explanation": "Pipeline Pattern: output de agente 1 → input de agente 2 → input de agente 3 (ejecución secuencial)"
+    },
+    {
+      "id": "l4-q5",
+      "question": "¿Cuál es la diferencia entre 'blocking: true' y 'blocking: false' en hooks?",
+      "options": [
+        "No hay diferencia, es solo documentación",
+        "blocking:true = puede detener/modificar evento, blocking:false = solo lectura",
+        "blocking:true = corre en paralelo, blocking:false = corre secuencial",
+        "blocking:true = se ejecuta siempre, blocking:false = se ejecuta a veces"
+      ],
+      "correct": 1,
+      "explanation": "blocking:true permite validar/rechazar comandos (PreToolUse, PermissionRequest). blocking:false es solo observación/logging"
+    }
+  ],
+  "verified": true,
+  "lastUpdated": "2026-05-17"
+}

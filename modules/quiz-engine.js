@@ -126,39 +126,63 @@ const quizEngine = {
     4: [
       {
         id: 'l4-q1',
-        question: '¿Qué es .mcpb?',
+        question: '¿Cuál es el primer paso para empaquetar un MCP en formato .mcpb?',
         options: [
-          'Un archivo de configuración de git',
-          'Un formato de empaquetamiento para MCP servers',
-          'Un tipo de base de datos',
-          'Una herramienta de testing'
+          'Instalar @anthropic-ai/mcpb globalmente',
+          'Crear manifest.json manualmente',
+          'Compilar el servidor a binario',
+          'Subir a npm registry'
         ],
-        correct: 1,
-        explanation: '.mcpb es el formato oficial de Anthropic para empaquetar MCPs'
+        correct: 0,
+        explanation: 'npm install -g @anthropic-ai/mcpb instala la herramienta CLI necesaria'
       },
       {
         id: 'l4-q2',
         question: '¿Cuántos eventos hay documentados en settings.json hooks?',
         options: [
           '12',
-          '15',
+          '21',
           '29+',
-          '5'
+          '50+'
         ],
         correct: 2,
-        explanation: 'La documentación oficial lista 29+ eventos diferentes en hooks'
+        explanation: 'Claude Code soporta 29+ eventos: SessionStart, PreToolUse, PermissionRequest, etc'
       },
       {
         id: 'l4-q3',
-        question: '¿Qué es Agent Teams?',
+        question: '¿Cuál hook permite bloquear comandos peligrosos?',
         options: [
-          'Un equipo de personas usando Claude Code',
-          'Una característica para coordinar múltiples agentes',
-          'Un tipo de organización en GitHub',
-          'Un framework de testing'
+          'PostToolUseFailure',
+          'PreToolUse',
+          'SessionStart',
+          'CwdChanged'
         ],
         correct: 1,
-        explanation: 'Agent Teams permite orquestar múltiples agentes en paralelo'
+        explanation: 'PreToolUse se ejecuta ANTES de la herramienta y es blocking'
+      },
+      {
+        id: 'l4-q4',
+        question: '¿Qué es el patrón "Pipeline" en orquestación multi-agente?',
+        options: [
+          'Todos los agentes trabajan en paralelo',
+          'Un agente central delega a especialistas',
+          'Un agente → siguiente → siguiente (secuencial)',
+          'Sin coordinación, resultados independientes'
+        ],
+        correct: 2,
+        explanation: 'Pipeline Pattern: output de agente 1 → input de agente 2 → agente 3'
+      },
+      {
+        id: 'l4-q5',
+        question: '¿Cuál es la diferencia entre "blocking: true" y "blocking: false" en hooks?',
+        options: [
+          'No hay diferencia, es solo documentación',
+          'blocking:true = puede detener/modificar evento, blocking:false = solo lectura',
+          'blocking:true = corre en paralelo, blocking:false = secuencial',
+          'blocking:true = siempre se ejecuta, blocking:false = a veces'
+        ],
+        correct: 1,
+        explanation: 'blocking:true permite validar/rechazar comandos; blocking:false es solo observación'
       }
     ]
   },
