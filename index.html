@@ -4988,447 +4988,670 @@ Worktrees (paralelo):
 
             <!-- Sección: Rules & Config -->
             <section class="content-section hidden" data-section="rules" data-mode="technical">
-                <h2>📋 .rules & CLAUDE.md — Reglas Determinísticas</h2>
-                <p class="section-lead">Instrucciones que se aplican automáticamente en cada sesión. Configuración versionada + validación en CI/CD.</p>
+                <h2>📋 .rules & Config — Reglas Determinísticas & Validación Pre-Deploy</h2>
+                <p class="section-lead">Rules = instrucciones que se aplican automáticamente en cada sesión. Configuración versionada en git + validación en git hooks y CI/CD.</p>
 
+                <!-- QUÉ SON LAS RULES -->
                 <div class="info-box" style="background: linear-gradient(135deg, rgba(94, 184, 255, 0.1) 0%, rgba(94, 184, 255, 0.05) 100%); border-left: 4px solid #5eb8ff; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
-                    <h3 style="margin-top: 0; color: #5eb8ff;">¿Qué son las rules?</h3>
+                    <h3 style="margin-top: 0; color: #5eb8ff;">¿Qué son las Rules y por qué importan?</h3>
                     <p><strong>Rules</strong> = instrucciones que <strong>SIEMPRE</strong> se ejecutan automáticamente en cada sesión de Claude Code.</p>
                     <p><strong>Skills</strong> = sugerencias que Claude considera aplicar opcionalmente.</p>
-                    <p style="margin-bottom: 0; color: #3ddc97;"><strong>Diferencia clave:</strong> Las rules son <em>determinísticas</em> y <em>versionadas en git</em> — todo dev sigue exactamente las mismas.</p>
+                    <p style="margin-bottom: 0.5em; color: #3ddc97;"><strong>Diferencia clave:</strong> Las rules son <em>determinísticas</em> y <em>versionadas en git</em> — todo dev sigue exactamente las mismas.</p>
+                    <p style="margin-top: 0.5em; font-size: 0.9em; color: var(--text-secondary);"><strong>Para qué sirven:</strong> Garantizar consistencia de código, evitar bugs comunes, asegurar seguridad, mantener testing, validar pre-deploy. Son especialmente útiles en equipos donde múltiples devs trabajan en paralelo.</p>
                 </div>
 
-                <h3>📂 Estructura de archivos de configuración:</h3>
+                <!-- INTEGRACIÓN CON GIT HOOKS -->
+                <h3>🔗 Rules & Git Hooks: Integración Completa</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px; margin: 1.5em 0;">
+                    <p><strong>¿Cómo funciona?</strong> Rules en <code>.claude/CLAUDE.md</code> se ejecutan automáticamente. Para validarlas localmente antes de push, usas git hooks (husky):</p>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; margin: 1em 0;">
+                        <code>
+.claude/CLAUDE.md (rules: code style, testing, security)<br/>
+        ↓<br/>
+Cada sesión de Claude Code aplica estas rules automáticamente<br/>
+        ↓<br/>
+.husky/pre-commit (ejecuta: lint, type-check, tests)<br/>
+        ↓<br/>
+Git bloquea commit si viola alguna rule<br/>
+        ↓<br/>
+GitHub Actions / CI ejecuta validación adicional<br/>
+        ↓<br/>
+PR bloqueado si hay violations, hasta que se arreglen
+                        </code>
+                    </div>
+                </div>
+
+                <!-- ESTRUCTURA DE ARCHIVOS -->
+                <h3>📂 Estructura Completa de Configuración</h3>
                 <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; font-family: var(--font-mono);">
                     <code style="color: #e6edf3; line-height: 2;">
 .claude/<br/>
-├── <span style="color: #3ddc97;"><strong>CLAUDE.md</strong></span>              # Guía del proyecto (versionado en git)<br/>
-├── <span style="color: #3ddc97;"><strong>rules.md</strong></span>              # Reglas específicas de este proyecto<br/>
-├── <span style="color: #ffb454;"><strong>rules.local.md</strong></span>        # Reglas sensibles (gitignore: credenciales, API keys)<br/>
-├── <span style="color: #5eb8ff;"><strong>settings.json</strong></span>        # Config de permisos, hooks, features<br/>
-└── <span style="color: #c084fc;"><strong>settings.local.json</strong></span>  # Overrides locales (gitignore)
+├── <span style="color: #3ddc97;"><strong>CLAUDE.md</strong></span>              # Guía + rules del proyecto (GIT TRACKED)<br/>
+├── <span style="color: #3ddc97;"><strong>rules.md</strong></span>              # Reglas específicas de código (GIT TRACKED)<br/>
+├── <span style="color: #ffb454;"><strong>rules.local.md</strong></span>        # Secretos & credenciales (GITIGNORE)<br/>
+├── <span style="color: #5eb8ff;"><strong>settings.json</strong></span>        # Permisos, hooks, features (GIT TRACKED)<br/>
+└── <span style="color: #c084fc;"><strong>settings.local.json</strong></span>  # Overrides locales (GITIGNORE)<br/>
+<br/>
+.husky/<br/>
+├── <span style="color: #3ddc97;">pre-commit</span>               # Valida antes de commit (lint, type-check, tests)<br/>
+└── <span style="color: #3ddc97;">pre-push</span>                # Valida antes de push (security scan, audit)
                     </code>
                 </div>
 
-                <h3>🎯 Ejemplo 1: Rules para Node.js/TypeScript</h3>
-                <div class="code-block" data-lang="markdown">
-                    <pre><code># .claude/CLAUDE.md
-
-## Code Style
-- TypeScript: strict mode siempre
-- Indentación: 2 espacios
-- Imports: ESM (no CommonJS)
-- const/let/var: prefer const, use let only if necessary
-- No var en absolutamente nada
-
-## Functions & Async
-- Todas las funciones async retornan Promise
-- Error handling: try/catch + logging
-- Timeouts: max 30s para API calls, 5s para DB queries
-- Retry logic: exponential backoff (1s, 2s, 4s, 8s)
-
-## Database (PostgreSQL + Prisma)
-- Schema changes: SIEMPRE via migrations
-- Raw SQL: PROHIBIDO (usa Prisma Client)
-- Transactions: requeridas para operaciones multi-tabla
-- N+1 queries: usar include/select para evitar
-
-## Testing (Jest + Supertest)
-- Coverage mínima: 80% de líneas
-- Unit tests: cada función
-- Integration tests: cada endpoint
-- E2E tests: happy path crítico
-- Fixtures: usar factories (factory.ts)
-
-## Security
-- Env vars: NUNCA hardcodear, usar .env.example
-- Validation: zod o joi en todos los endpoints
-- SQL injection: Prisma parametriza automáticamente
-- CORS: whitelist explícito en envs
-- Rate limiting: 100 req/min para APIs public
-
-## Commits (Conventional)
-- Format: type(scope): description
-- Types: feat, fix, refactor, docs, test, perf, security
-- Scope: opcional pero recomendado
-- Example: "feat(auth): add OAuth2 flow with refresh token"</code></pre>
-                </div>
-
-                <h3>🎯 Ejemplo 2: Rules para Python/FastAPI</h3>
-                <div class="code-block" data-lang="markdown">
-                    <pre><code># .claude/rules.md
-
-## Code Style (Python)
-- Black formatting (88 char line length)
-- isort para imports
-- Type hints: obligatorio (mypy strict)
-- Docstrings: Google style
-- Classes: CapitalCase, functions: snake_case
-
-## FastAPI Routes
-- Validation: Pydantic models en request/response
-- Status codes: 200, 201, 400, 401, 404, 500
-- Error responses: {"detail": "msg"} standard
-- Pagination: ?skip=0&limit=100
-- Filters: ?status=active&sort=created_at
-
-## Database (SQLAlchemy + Alembic)
-- Migrations: versionadas en git (alembic/)
-- Sessions: context managers (with db.session())
-- Lazy loading: explícito (joinedload)
-- Batch size: 1000 max en operaciones bulk
-
-## Testing (pytest)
-- Structure: tests/ mirror src/
-- Fixtures: en conftest.py
-- Coverage: 85% mínimo
-- DB tests: usa transactional fixtures
-
-## Async
-- async def para I/O-bound (API calls, BD)
-- concurrent.futures para CPU-bound
-- Timeouts: asyncio.wait_for() siempre</code></pre>
-                </div>
-
-                <h3>🔐 Ejemplo 3: Rules de Seguridad (Crítico)</h3>
+                <!-- EJEMPLO 1: SECURITY RULES -->
+                <h3>🔐 Ejemplo 1: Rules para Security (Bloquear Credentials)</h3>
+                <p style="color: var(--text-secondary);">Evita que se cometan archivos .env, API keys, o cualquier credencial sensible.</p>
                 <div class="code-block" data-lang="markdown">
                     <pre><code># .claude/rules.local.md (GITIGNORE)
 
-## Secrets & Credentials
-- API Keys: env vars solamente
-- Database passwords: rotadas cada 3 meses
-- OAuth tokens: almacenados encriptados
-- Private keys: nunca en git, usar HashiCorp Vault
+## Environment Variables
+- Nunca hardcodear secrets en código
+- .env: GITIGNORE + .env.example públicamente
+- API Keys: solo en environment variables
+- Database URLs: nunca en código fuente
+- Tokens OAuth: almacenar encriptados en DB
 
-## Audit Log
-- Cambios en datos sensibles: log quien, cuándo, qué
-- Admin actions: requerida doble autenticación
-- Failed login: después de 5 intentos, lock cuenta
+## Pre-commit Validation
+- Husky bloquea commits con strings "PASSWORD", "API_KEY", "SECRET"
+- Scan de archivos sensibles: .pem, .key, .crt
+- Busca credenciales en strings entre comillas
+- Ejemplo: Si haces `password = "abc123"` → COMMIT BLOQUEADO
 
-## PII Handling
-- GDPR compliance: right to deletion
-- Encryption at rest: AES-256
-- Encryption in transit: TLS 1.3+
-- Data retention: 30 días máximo para logs
-
-## Webhook Security
-- Signature verification: HMAC-SHA256
-- Rate limiting: 1000 req/hour por webhook
-- Retry: máximo 3 reintentos (exponential backoff)
-- Timeout: 10 segundos</code></pre>
+## Comando: Generar .env.example
+```
+npm run generate:env-example
+# Genera .env.example sin valores, solo keys
+```</code></pre>
                 </div>
 
-                <h3>⚙️ Cómo aplicar rules automáticamente:</h3>
+                <!-- EJEMPLO 2: FORMATTING RULES -->
+                <h3>🎨 Ejemplo 2: Rules para Formatting (Prettier + ESLint)</h3>
+                <p style="color: var(--text-secondary);">Asegurar consistencia de código en todo el proyecto automaticamente.</p>
+                <div class="code-block" data-lang="markdown">
+                    <pre><code># .claude/rules.md - Code Style Section
+
+## Code Formatting (Prettier)
+- Line length: 100 characters (no más)
+- Indentation: 2 spaces (NUNCA tabs)
+- Trailing commas: always (ES5)
+- Semicolons: yes, explicit
+- Quotes: single (') excepto JSX (")
+- Format auto-run: pre-commit via husky
+
+## Linting (ESLint)
+- Config: .eslintrc.json en raíz
+- Rules: no unused variables, no console.log en prod
+- Exceptions: document con // eslint-disable-next-line
+- Auto-fix: npm run lint -- --fix (pre-commit)
+
+## Pre-commit Hook
+```bash
+# .husky/pre-commit
+npm run format  # prettier --write
+npm run lint    # eslint --fix
+git add .       # Add formatted files
+```</code></pre>
+                </div>
+
+                <!-- EJEMPLO 3: TESTING RULES -->
+                <h3>✅ Ejemplo 3: Rules para Testing (Requerir Tests)</h3>
+                <p style="color: var(--text-secondary);">No permitir código sin tests. Coverage mínimo obligatorio.</p>
+                <div class="code-block" data-lang="markdown">
+                    <pre><code># .claude/rules.md - Testing Section
+
+## Test Coverage Minimum
+- Global: 80% de líneas (hard requirement)
+- Critical functions: 95% coverage
+- Branches: mínimo 75% cubierto
+- Coverage report: generado en pre-push
+
+## Test Types Required
+- Unit tests: para cada función/módulo
+- Integration tests: para cada API endpoint
+- E2E tests: para happy path crítico
+- Snapshot tests: para componentes UI
+
+## Pre-commit Validation
+```bash
+# Si algún test falla → commit bloqueado
+npm test -- --coverage
+if coverage < 80%; then
+  echo "Coverage insuficiente: $(cat coverage/summary.txt)"
+  exit 1
+fi
+```
+
+## CI/CD Validation
+- GitHub Actions: npm test -- --coverage
+- Codecov: requerida aprobación (no baja coverage)
+- SonarQube: code quality gates</code></pre>
+                </div>
+
+                <!-- EJEMPLO 4: PRODUCTION RULES -->
+                <h3>🚀 Ejemplo 4: Rules para Production (Pre-Deploy Validación)</h3>
+                <p style="color: var(--text-secondary);">Validaciones que deben pasar ANTES de hacer deploy.</p>
+                <div class="code-block" data-lang="markdown">
+                    <pre><code># .claude/rules.md - Production Section
+
+## Pre-Deploy Checklist
+- TypeScript: npm run type-check (ZERO errors)
+- Tests: npm test -- --coverage 80%
+- Security: npm audit --audit-level=moderate (ZERO high/critical)
+- Linting: npm run lint (ZERO violations)
+- Build: npm run build (succeeds, no warnings)
+- Documentation: README.md actualizado con cambios
+
+## Production Environment Rules
+- Database: migraciones versionadas en git (solo via migrations/)
+- API versioning: v1, v2, etc. en URLs
+- Logging: error, warn, info (never debug en prod)
+- Rate limiting: 1000 req/hour para API public
+- Timeouts: max 30s para requests, 5s para DB queries
+- Monitoring: error rates, latency, disk usage
+
+## Rollback Procedure
+- Antes de deploy: backup de DB
+- Deployment: canary → 10% → 50% → 100%
+- Monitoring: 10min después de 100% rollout
+- Si error: git revert + npm run deploy
+
+## Example: npm run deploy
+```bash
+npm run build  # or exits with error
+npm test -- --coverage  # or exits
+npm audit --audit-level=moderate  # or exits
+npm run type-check  # or exits
+git tag production/v1.2.3
+npm run docker:build
+npm run docker:push
+kubectl apply -f k8s/ --wait=true
+```</code></pre>
+                </div>
+
+                <!-- CUÁNDO ACTUALIZAR RULES -->
+                <h3>📅 Cuándo Actualizar y Revisar Rules</h3>
                 <div style="display: grid; gap: 1.5em; margin: 1.5em 0;">
                     <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px;">
-                        <h4 style="color: #3ddc97; margin-top: 0;">Opción 1: Manual (Claude lee CLAUDE.md automáticamente)</h4>
-                        <p>Cada sesión, Claude Lee .claude/CLAUDE.md y .claude/rules.md al inicio.</p>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
-                            <code>
-claude  # Inicia sesión<br/>
-# Claude automáticamente:<br/>
-# 1. Lee .claude/CLAUDE.md<br/>
-# 2. Aplica rules en cada respuesta<br/>
-# 3. Valida código antes de commit
-                            </code>
-                        </div>
+                        <h4 style="color: #3ddc97; margin-top: 0;">📊 Sprint Review (Cada 2 semanas)</h4>
+                        <p>En retrospectiva: ¿qué rules funcionaron? ¿Cuáles fueron obstáculos?</p>
+                        <ul style="margin: 0.5em 0; padding-left: 1.5em; font-size: 0.9em;">
+                            <li>¿Alguien violó una rule más de 3 veces?</li>
+                            <li>¿Hay confusión sobre cómo aplicar la rule?</li>
+                            <li>¿La rule ayudó a evitar bugs?</li>
+                        </ul>
                     </div>
 
                     <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
-                        <h4 style="color: #5eb8ff; margin-top: 0;">Opción 2: Pre-commit Hooks (Validación Local)</h4>
-                        <p>Bloquea commits si violan rules antes de push.</p>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
-                            <code>
-# .husky/pre-commit<br/>
-#!/bin/bash<br/>
-npm run lint  # ESLint<br/>
-npm run type-check  # TypeScript<br/>
-npm test -- --coverage  # Tests<br/>
-# Si algo falla → commit bloqueado<br/>
-<br/>
-git add .husky<br/>
-git commit -m "chore: add git hooks"
-                            </code>
-                        </div>
+                        <h4 style="color: #5eb8ff; margin-top: 0;">🆕 Cuando agregas nueva dependencia</h4>
+                        <p>Cada librería nueva puede necesitar una rule nueva.</p>
+                        <ul style="margin: 0.5em 0; padding-left: 1.5em; font-size: 0.9em;">
+                            <li>npm install react → agregar rule sobre hooks</li>
+                            <li>npm install eslint → actualizar .eslintrc.json</li>
+                            <li>npm install prisma → agregar rule sobre migrations</li>
+                        </ul>
                     </div>
 
                     <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ffb454; border-radius: 8px;">
-                        <h4 style="color: #ffb454; margin-top: 0;">Opción 3: CI/CD Pipeline (Validación Remota)</h4>
-                        <p>GitHub Actions / GitLab CI valida rules en cada PR.</p>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
-                            <code>
-# .github/workflows/rules.yml<br/>
-on: [pull_request]<br/>
-jobs:<br/>
-&nbsp;&nbsp;lint: <code style="color: #3ddc97;">npm run lint</code><br/>
-&nbsp;&nbsp;typecheck: <code style="color: #3ddc97;">npm run type-check</code><br/>
-&nbsp;&nbsp;tests: <code style="color: #3ddc97;">npm test</code><br/>
-&nbsp;&nbsp;coverage: <code style="color: #3ddc97;">codecov</code><br/>
-&nbsp;&nbsp;security: <code style="color: #3ddc97;">npm audit</code><br/>
-<br/>
-# Si algo falla → PR bloqueado, comenta feedback
-                            </code>
-                        </div>
+                        <h4 style="color: #ffb454; margin-top: 0;">🐛 Después de cada bug importante</h4>
+                        <p>Bug crítico = falta una rule. Agregala inmediatamente.</p>
+                        <ul style="margin: 0.5em 0; padding-left: 1.5em; font-size: 0.9em;">
+                            <li>SQL injection attack → agregar rule: validación obligatoria</li>
+                            <li>Performance issue → agregar rule: indexing requirement</li>
+                            <li>Deploy fallido → agregar rule: pre-deploy validation</li>
+                        </ul>
                     </div>
 
                     <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px;">
-                        <h4 style="color: #c084fc; margin-top: 0;">Opción 4: Custom Hooks en settings.json</h4>
-                        <p>Ejecuta scripts de validación automáticos con cada comando de Claude.</p>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
-                            <code>
-# .claude/settings.json<br/>
-{<br/>
-&nbsp;&nbsp;"hooks": {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;"before-edit": "npm run lint -- --fix",<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;"before-commit": "npm test && npm run type-check",<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;"after-merge": "npm install && npm audit"<br/>
-&nbsp;&nbsp;}<br/>
-}
-                            </code>
+                        <h4 style="color: #c084fc; margin-top: 0;">✨ Cuando team crece</h4>
+                        <p>Más devs = más necesidad de rules claras.</p>
+                        <ul style="margin: 0.5em 0; padding-left: 1.5em; font-size: 0.9em;">
+                            <li>1-2 devs: rules básicas (style, security, tests)</li>
+                            <li>5+ devs: rules detalladas (naming, architecture, deployment)</li>
+                            <li>10+ devs: rules por especialidad (frontend rules ≠ backend)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- TROUBLESHOOTING -->
+                <h3>🚨 Troubleshooting: Rules que no Funcionan</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <div style="display: grid; gap: 1.5em;">
+                        <div style="border-left: 4px solid #ff6b6b; padding-left: 1.5em;">
+                            <p><strong style="color: #ff6b6b;">❌ Problema: Devs ignoran las rules</strong></p>
+                            <p style="margin: 0.5em 0; color: var(--text-secondary);">Las rules están en CLAUDE.md pero nadie las lee</p>
+                            <p style="margin: 0.5em 0;"><strong>Solución:</strong></p>
+                            <ul style="margin: 0.5em 0; padding-left: 1.5em;">
+                                <li>Hacer pre-commit hooks: fuerza a que se ejecuten</li>
+                                <li>Documentar WHY: no solo WHAT, explica el por qué</li>
+                                <li>Excepciones documentadas: si hay, usar // rule:skip con motivo</li>
+                            </ul>
+                        </div>
+
+                        <div style="border-left: 4px solid #ff6b6b; padding-left: 1.5em;">
+                            <p><strong style="color: #ff6b6b;">❌ Problema: Pre-commit hook no se ejecuta</strong></p>
+                            <p style="margin: 0.5em 0; color: var(--text-secondary);">npm run lint nunca se ejecuta antes de commit</p>
+                            <p style="margin: 0.5em 0;"><strong>Solución:</strong></p>
+                            <div style="background: var(--bg-elevated); padding: 0.75em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; margin: 0.5em 0;">
+                                <code>
+npm install husky --save-dev<br/>
+npx husky install<br/>
+npx husky add .husky/pre-commit "npm run lint && npm test"<br/>
+git add .husky/pre-commit<br/>
+git commit -m "chore: add git hooks"
+                                </code>
+                            </div>
+                        </div>
+
+                        <div style="border-left: 4px solid #ff6b6b; padding-left: 1.5em;">
+                            <p><strong style="color: #ff6b6b;">❌ Problema: Regla demasiado estricta, bloquea todo</strong></p>
+                            <p style="margin: 0.5em 0; color: var(--text-secondary);">coverage: 95% = nadie puede hacer commit</p>
+                            <p style="margin: 0.5em 0;"><strong>Solución:</strong></p>
+                            <ul style="margin: 0.5em 0; padding-left: 1.5em;">
+                                <li>Bajar a 80% (pragmático, todavía riguroso)</li>
+                                <li>Permitir excepciones con eslint-disable + motivo</li>
+                                <li>Revisar: quizás falta entrenamiento, no que rule sea mala</li>
+                            </ul>
+                        </div>
+
+                        <div style="border-left: 4px solid #ff6b6b; padding-left: 1.5em;">
+                            <p><strong style="color: #ff6b6b;">❌ Problema: Conflicto entre rules (rule A contradice rule B)</strong></p>
+                            <p style="margin: 0.5em 0; color: var(--text-secondary);">"Usa try/catch" vs "nunca captures excepciones"</p>
+                            <p style="margin: 0.5em 0;"><strong>Solución:</strong></p>
+                            <ul style="margin: 0.5em 0; padding-left: 1.5em;">
+                                <li>Reunión urgente: aclarar cuál regla prevalece</li>
+                                <li>Documentar contexto: cuándo se aplica cada rule</li>
+                                <li>Test: escribir ejemplo de código que satisface ambas</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
+                <!-- CHECKLIST -->
                 <h3>✅ Checklist: Implementar Rules Correctamente</h3>
                 <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
-                    <ul style="padding-left: 1.5em; color: var(--text-secondary); line-height: 2;">
-                        <li>☐ Crear <code>.claude/CLAUDE.md</code> con stack del proyecto</li>
-                        <li>☐ Crear <code>.claude/rules.md</code> con code standards</li>
-                        <li>☐ Crear <code>.claude/rules.local.md</code> para secretos (gitignore)</li>
-                        <li>☐ Configurar pre-commit hooks (husky) para validación local</li>
-                        <li>☐ Configurar GitHub Actions / CI para validación en PR</li>
-                        <li>☐ Documentar excepciones en README (ej: legacy code que no sigue rules)</li>
-                        <li>☐ Revisar rules cada sprint: ¿siguen siendo válidas?</li>
-                        <li>☐ Entrenar team: "por qué existen estas rules"</li>
-                    </ul>
+                    <ol style="padding-left: 1.5em; color: var(--text-secondary); line-height: 2;">
+                        <li>☐ Crear <code>.claude/CLAUDE.md</code> con stack del proyecto + rules básicas</li>
+                        <li>☐ Crear <code>.claude/rules.md</code> con code standards específicos</li>
+                        <li>☐ Crear <code>.claude/rules.local.md</code> para credenciales (gitignore)</li>
+                        <li>☐ Instalar husky: <code>npm install husky --save-dev && npx husky install</code></li>
+                        <li>☐ Crear pre-commit hooks que ejecuten: lint, type-check, tests, security scan</li>
+                        <li>☐ Crear pre-push hooks para validación adicional (npm audit, coverage)</li>
+                        <li>☐ Configurar GitHub Actions / CI con validación de rules</li>
+                        <li>☐ Documentar excepciones en README (legacy code, temporal workarounds)</li>
+                        <li>☐ Entrenar team: explicar cada rule, no solo el QUÉ sino el POR QUÉ</li>
+                        <li>☐ Revisar rules cada sprint: ¿siguen siendo válidas? ¿Hay que agregar?</li>
+                    </ol>
+                </div>
+
+                <!-- PRO TIPS & BANNERS -->
+                <div class="info-banner" style="background: linear-gradient(135deg, rgba(61, 220, 151, 0.15) 0%, rgba(61, 220, 151, 0.05) 100%); border-left: 4px solid #3ddc97; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
+                    <strong>💡 Pro Tip 1 - Empieza Small:</strong> Comienza con 5-7 rules críticas (code style, security, testing). Agrega más con el tiempo. Too many rules = nadie las sigue. Mejor 7 que se respetan que 50 ignoradas.
                 </div>
 
                 <div class="info-banner" style="background: linear-gradient(135deg, rgba(255, 180, 84, 0.15) 0%, rgba(255, 180, 84, 0.05) 100%); border-left: 4px solid #ffb454; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
-                    <strong>💡 Pro Tip:</strong> Empieza con 5-7 rules críticas (code style, seguridad, testing). Agrega más con el tiempo. Too many rules = nadie las sigue.
+                    <strong>💡 Pro Tip 2 - Documentar Contexto:</strong> No escribas solo "no usar var en JavaScript". Explica: "var es hoisted y confuso, causa bugs. Usa const/let." Rules con contexto se respetan más.
+                </div>
+
+                <div class="info-banner" style="background: linear-gradient(135deg, rgba(94, 184, 255, 0.15) 0%, rgba(94, 184, 255, 0.05) 100%); border-left: 4px solid #5eb8ff; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
+                    <strong>💡 Pro Tip 3 - Make Violations Visible:</strong> Pre-commit hooks hacen que violaciones sean obvias ANTES de push, no después en PR. Más rápido arreglarlo, menos frustración.
                 </div>
 
                 <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
-                    <strong>📖 Lectura completa:</strong> Ver <code>RULES_CONFIG.md</code> para templates de rules por stack (Node.js, Python, Go, Rust, etc).
+                    <strong>📖 Lectura completa:</strong> Ver <code>RULES_CONFIG.md</code> para templates de rules por stack (Node.js, Python, Go, Rust, etc). O usar <code>/rules generate</code> para crear rules automáticamente basadas en tu stack.
                 </p>
             </section>
 
             <!-- Sección: Memory Management -->
             <section class="content-section" data-section="memory" data-mode="technical">
-                <h2>💾 Memory Management — Persistencia Entre Sesiones</h2>
-                <p class="section-lead">Sistema de memoria en 3 niveles. Compactación, forks, estrategias de persistencia sin contaminar contexto.</p>
+                <h2>💾 Memory Management — Token Limits & Persistencia Entre Sesiones</h2>
+                <p class="section-lead">Sistema de memoria en 3 niveles. Explora contexto, límites de tokens, estrategias de compactación, forks, y persistencia sin contaminar contexto.</p>
 
+                <!-- POR QUÉ MEMORY MATTERS -->
                 <div class="info-box" style="background: linear-gradient(135deg, rgba(192, 132, 252, 0.1) 0%, rgba(192, 132, 252, 0.05) 100%); border-left: 4px solid #c084fc; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
-                    <h3 style="margin-top: 0; color: #c084fc;">3 Niveles de Memory</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin-top: 1em;">
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px;">
-                            <strong style="color: #3ddc97;">🔵 Session</strong>
-                            <p style="font-size: 0.85em; margin: 0.5em 0 0 0;">Esta sesión (se pierde al cerrar)</p>
-                            <p style="font-size: 0.75em; color: var(--text-secondary);">Volatile, rápido acceso</p>
-                        </div>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px;">
-                            <strong style="color: #5eb8ff;">📁 Project</strong>
-                            <p style="font-size: 0.85em; margin: 0.5em 0 0 0;">Todos los devs del proyecto (versionado en git)</p>
-                            <p style="font-size: 0.75em; color: var(--text-secondary);">.claude/memory/, compartido</p>
-                        </div>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px;">
-                            <strong style="color: #c084fc;">🌍 Global</strong>
-                            <p style="font-size: 0.85em; margin: 0.5em 0 0 0;">Todos tus proyectos (permanente)</p>
-                            <p style="font-size: 0.75em; color: var(--text-secondary);">~/.claude/memory/, personal</p>
-                        </div>
-                    </div>
-                </div>
-
-                <h3>📝 Comandos principales:</h3>
-                <div style="display: grid; gap: 1em; margin: 1.5em 0;">
-                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
-                        <code>/memory add "Database: PostgreSQL + Prisma ORM"</code>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Agregar entrada a memoria del proyecto (versionada)</p>
-                    </div>
-                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
-                        <code>/memory search "database"</code>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Buscar términos en memoria (busca por palabra clave)</p>
-                    </div>
-                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
-                        <code>/memory list</code>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Ver toda la memoria del proyecto (categorizada)</p>
-                    </div>
-                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
-                        <code>/memory compact "Keep arch decisions, drop logs"</code>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Comprime memoria (remove ruido, mantiene contexto útil)</p>
-                    </div>
-                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
-                        <code>/memory fork "Create branch for refactor"</code>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Snapshot de memoria para rama (sin contaminar main)</p>
-                    </div>
-                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
-                        <code>/memory persist "Key learning: index on users.email"</code>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Guarda entrada en memoria global (permanente, todos los proyectos)</p>
-                    </div>
-                </div>
-
-                <h3>🎯 Estrategias de Memory Management:</h3>
-                <div style="display: grid; gap: 1.5em; margin: 1.5em 0;">
-                    <!-- COMPACTACIÓN -->
-                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px;">
-                        <h4 style="color: #3ddc97; margin-top: 0;">🗜️ Compactación (/compact)</h4>
-                        <p style="margin: 0.5em 0;">Cuando memoria crece (> 10KB), remueve ruido manteniendo conocimiento útil.</p>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
-                            <code>
-# Día 3 de refactor, memoria tiene logs y dead ends<br/>
-/memory compact "Keep: API v1→v2 decisions. <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Drop: Failed hypothesis #1, #2, debug logs"<br/>
+                    <h3 style="margin-top: 0; color: #c084fc;">¿Por qué Memory Importa? (Contexto & Token Limits)</h3>
+                    <p><strong>Contexto (Context Window)</strong> = cantidad de tokens que un modelo puede procesar. Claude Haiku: 200k tokens. Claude Opus: 200k tokens.</p>
+                    <p><strong>Token Limit Problem:</strong> Después de 3-5 días de trabajo intenso, la conversación puede alcanzar 100k+ tokens, dejándote sin espacio para nuevo código.</p>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em;">
+                        <code>
+Día 1: 10k tokens (inicio, leer proyecto)<br/>
+Día 2: 40k tokens (primeras features)<br/>
+Día 3: 80k tokens (refactor + bugs)<br/>
+Día 4: 150k tokens ← CASI LLENO, poco espacio para nuevo trabajo<br/>
+Día 5: 190k tokens ← BLOQUEADO, no puedes continuar<br/>
 <br/>
-# Resultado: 10KB → 3KB, sin perder contexto importante<br/>
-# Impacto: Más tokens para código, menos para logs
-                            </code>
-                        </div>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>Cuándo usar:</strong> Trabajos > 3 días, experiencias frecuentes de "context limit exceeded"</p>
+Solución: /memory compact en Día 3 → 150k → 50k (3x más espacio)
+                        </code>
                     </div>
+                    <p style="margin-bottom: 0; color: #3ddc97;"><strong>Diferencia clave:</strong> Memory ≠ Conversation History. Memory es <em>persistente, comprimible, versionada</em>. Conversation crece sin límite.</p>
+                </div>
 
-                    <!-- FORKS -->
+                <!-- 3 NIVELES DE MEMORY -->
+                <h3>🔵 3 Niveles de Memory: Session, Project, Global</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5em; margin: 1.5em 0;">
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px;">
+                        <strong style="color: #3ddc97;">🔵 Session Memory</strong>
+                        <p style="font-size: 0.85em; margin: 0.5em 0 0 0;"><strong>Alcance:</strong> Esta sesión solo (se pierde al cerrar)</p>
+                        <p style="font-size: 0.75em; color: var(--text-secondary); margin: 0.5em 0;">Volatile, rápido acceso, temporal</p>
+                        <p style="font-size: 0.75em; color: var(--text-secondary); margin: 0;">Ejemplos: "Context from last message", variables locales</p>
+                    </div>
                     <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
-                        <h4 style="color: #5eb8ff; margin-top: 0;">🔀 Forks (/memory fork)</h4>
-                        <p style="margin: 0.5em 0;">Crea snapshot aislado de memoria para rama sin contaminar main.</p>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
-                            <code>
-# main branch: memoria con [user auth, payments, api spec]<br/>
+                        <strong style="color: #5eb8ff;">📁 Project Memory</strong>
+                        <p style="font-size: 0.85em; margin: 0.5em 0 0 0;"><strong>Alcance:</strong> Todos los devs del proyecto</p>
+                        <p style="font-size: 0.75em; color: var(--text-secondary); margin: 0.5em 0;">Versionado en git: <code>.claude/memory/</code></p>
+                        <p style="font-size: 0.75em; color: var(--text-secondary); margin: 0;">Ejemplos: arquitectura, decisiones, APIs</p>
+                    </div>
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px;">
+                        <strong style="color: #c084fc;">🌍 Global Memory</strong>
+                        <p style="font-size: 0.85em; margin: 0.5em 0 0 0;"><strong>Alcance:</strong> Todos tus proyectos (permanente)</p>
+                        <p style="font-size: 0.75em; color: var(--text-secondary); margin: 0.5em 0;">Local: <code>~/.claude/memory/</code></p>
+                        <p style="font-size: 0.75em; color: var(--text-secondary); margin: 0;">Ejemplos: patrones, soluciones, best practices</p>
+                    </div>
+                </div>
+
+                <!-- EXPLICACIÓN: CONTEXTO & TOKEN LIMITS -->
+                <h3>📊 Entender Contexto y Token Limits</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <p><strong>¿Qué es un Token?</strong> Aproximadamente 1 token = 4 caracteres. Un párrafo de 200 caracteres = 50 tokens.</p>
+                    <div style="display: grid; gap: 1em;">
+                        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px;">
+                            <strong style="color: #3ddc97;">Token Budget (Claude Haiku):</strong>
+                            <div style="font-family: var(--font-mono); font-size: 0.85em; margin-top: 0.5em;">
+                                <code>
+Total context: 200,000 tokens<br/>
+Reserved para output: 4,000 tokens<br/>
+Available para input: 196,000 tokens<br/>
+<br/>
+Si conversation = 150k tokens:<br/>
+→ Espacio restante: 46k (suficiente para 200KB de código nuevo)
+                                </code>
+                            </div>
+                        </div>
+                        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px;">
+                            <strong style="color: #5eb8ff;">Señales de Alerta:</strong>
+                            <ul style="margin: 0.5em 0; padding-left: 1.5em; font-size: 0.85em;">
+                                <li>Claude dice: "approaching token limit"</li>
+                                <li>Respuestas empiezan a ser más cortas</li>
+                                <li>Errores: "context length exceeded"</li>
+                                <li>Sesión que lleva 3-4 días intensos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ESTRATEGIA 1: /COMPACT -->
+                <h3>🗜️ Estrategia 1: Compactación (/memory compact)</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1em;"><strong>Cuándo usar:</strong> Cuando memoria > 10KB o después de 2-3 días de trabajo intenso.</p>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px; margin: 1.5em 0;">
+                    <p><strong>¿Qué hace?</strong> Remueve ruido (logs, dead ends, failed experiments) manteniendo conocimiento útil.</p>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                        <code>
+# Estado actual: 20KB memory<br/>
+# Contiene: API decisions, DB schema, refactor logs, failed hypothesis<br/>
+<br/>
+/memory compact "Keep: API v1→v2 decisions, DB schema optimizations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Drop: Failed hypothesis #1, #2, debug logs, dead code experiments"<br/>
+<br/>
+# Resultado: 20KB → 5KB<br/>
+# Impacto en tokens: Conversation 150k → 135k (-15k), +15k espacio nuevo
+                        </code>
+                    </div>
+                    <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>Costo/Beneficio:</strong> -5% context size, +50% nuevos tokens disponibles. Muy recomendado cada 3 días.</p>
+                </div>
+
+                <!-- ESTRATEGIA 2: /FORK -->
+                <h3>🔀 Estrategia 2: Memory Forks (/memory fork)</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1em;"><strong>Cuándo usar:</strong> Ramas de larga duración (feature branches, refactors). Experimentos sin afectar main.</p>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px; margin: 1.5em 0;">
+                    <p><strong>¿Qué hace?</strong> Crea snapshot aislado de memoria para rama específica.</p>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                        <code>
+# main branch: memoria con [architecture, API spec, DB schema]<br/>
 <br/>
 git checkout -b feature/experimental-db<br/>
 /memory fork "experimental-db"<br/>
-# Ahora memoria tiene copia aislada de main<br/>
-# Agregamos: [DB migration notes, benchmarks]<br/>
+# Ahora: nueva sesión con copia aislada de main memory<br/>
+# Agregamos notas específicas de feature, sin contaminar main<br/>
 <br/>
+git add notas.md && git commit ...<br/>
 git checkout main<br/>
-/memory list  # Sigue mostrando original, sin noise de feature
-                            </code>
-                        </div>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>Cuándo usar:</strong> Ramas de larga duración, experimentos sin afectar contexto de main</p>
-                    </div>
-
-                    <!-- PERSISTENT MEMORY -->
-                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px;">
-                        <h4 style="color: #c084fc; margin-top: 0;">🌍 Persistent Memory (/memory persist)</h4>
-                        <p style="margin: 0.5em 0;">Guarda aprendizajes en memoria global — accesibles en todos los proyectos.</p>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
-                            <code>
-# En proyecto-a, descubres patrón útil<br/>
-/memory persist "Pattern: Exponential backoff for API retries <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1s → 2s → 4s → 8s → fail. <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max retries: 4. Jitter: random(0, delay)."<br/>
-<br/>
-# En proyecto-b (diferente), semanas después<br/>
-/memory search "backoff"  # ← Encuentra la entrada persistent<br/>
-# Reutiliza patrón sin reinventar
-                            </code>
-                        </div>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>Cuándo usar:</strong> Patrones reutilizables, soluciones a problemas recurrentes, buenas prácticas aprendidas</p>
-                    </div>
-
-                    <!-- CLEAR -->
-                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ff6b6b; border-radius: 8px;">
-                        <h4 style="color: #ff6b6b; margin-top: 0;">🗑️ Clear (/memory clear)</h4>
-                        <p style="margin: 0.5em 0;">Borra toda la memoria del proyecto (irreversible). Úsalo antes de cambiar stack completamente.</p>
-                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
-                            <code>
-# Migrando de Node.js a Go<br/>
-/memory clear  # Borra notas sobre Node.js<br/>
-<br/>
-# WARNING: Irreversible. Hacer git commit primero si es importante.
-                            </code>
-                        </div>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>⚠️ Uso raro:</strong> Solo cuando cambio de stack drástico</p>
-                    </div>
-                </div>
-
-                <h3>📂 Estructura recomendada en Project Memory:</h3>
-                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
-                    <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; font-family: var(--font-mono); margin-bottom: 1em;">
-                        <code style="color: #e6edf3; line-height: 2;">
-.claude/memory/<br/>
-├── <span style="color: #3ddc97;">📋 architecture.md</span>        # Stack, decisiones principales, tech choices<br/>
-├── <span style="color: #3ddc97;">🔌 api-spec.md</span>           # Endpoints, schemas, auth, rate limits<br/>
-├── <span style="color: #3ddc97;">🗄️ database.md</span>          # Schema, migrations, índices, performance notes<br/>
-├── <span style="color: #5eb8ff;">🚀 deployment.md</span>        # Envs, CI/CD workflow, rollback procedures<br/>
-├── <span style="color: #5eb8ff;">📝 learned-lessons.md</span>   # Bugs resolvidos, antipatterns, "don't do X"<br/>
-├── <span style="color: #c084fc;">⚡ performance.md</span>       # Benchmarks, bottlenecks, optimization notes<br/>
-└── <span style="color: #c084fc;">🔒 security-notes.md</span>    # OWASP, compliance, vulnerabilities known
+/memory list<br/>
+# ← Sigue mostrando original, sin noise de experimental-db
                         </code>
                     </div>
-                    <p style="margin-top: 1em; color: var(--text-secondary);">Cada archivo es <code>YAML + Markdown</code>, versionado en git, accesible para todo el equipo.</p>
+                    <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>Caso real:</strong> Refactor de 2 semanas. Sin fork, main memory estaría llena de "temporary refactor notes". Con fork, main se mantiene limpio.</p>
                 </div>
 
-                <h3>🚨 Troubleshooting: "Context Limit Exceeded"</h3>
-                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
-                    <p style="margin-top: 0;"><strong>Problema:</strong> "Token limit exceeded" después de 2-3 días de trabajo</p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin: 1em 0;">
-                        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px;">
-                            <strong style="color: #3ddc97;">❌ Solución Mala</strong>
-                            <p style="font-size: 0.85em; margin-top: 0.5em;">Crear nueva sesión (pierdes contexto)</p>
-                        </div>
-                        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px;">
-                            <strong style="color: #3ddc97;">✅ Solución Buena</strong>
-                            <p style="font-size: 0.85em; margin-top: 0.5em;">/compact + /fork + guardar en git</p>
-                        </div>
-                    </div>
-                    <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 6px; margin: 1em 0;">
-                        <p style="margin-top: 0;"><strong>Paso a paso:</strong></p>
-                        <div style="font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
-                            <code>
-1. /memory compact "Keep decisions, drop logs"<br/>
-2. /memory list  # Verifica qué quedó<br/>
-3. /checkpoint "Compacted memory, ready for phase 2"<br/>
-4. git add .claude/memory/ && git commit -m "docs: compress memory"<br/>
-5. /clear  # Reinicia sesión con memoria comprimida<br/>
-6. Continúa con código <br/>
+                <!-- ESTRATEGIA 3: /CLEAR -->
+                <h3>🗑️ Estrategia 3: Clear Memory (/memory clear)</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1em;"><strong>Cuándo usar:</strong> Muy raro. Solo si cambias stack completamente (Node.js → Go) o necesitas reset total.</p>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ff6b6b; border-radius: 8px; margin: 1.5em 0;">
+                    <p><strong>⚠️ Advertencia:</strong> Irreversible. Borra toda la memoria del proyecto.</p>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                        <code>
+# Antes de clear:<br/>
+git add .claude/memory/ && git commit -m "backup: memory before clear"<br/>
 <br/>
-# Resultado: 20KB → 5KB memory, ahora tienes 50% más tokens
+# Ahora:<br/>
+/memory clear  # Borra .claude/memory/\<br/>
+<br/>
+# Nueva sesión con memory limpia (blank slate)
+                        </code>
+                    </div>
+                </div>
+
+                <!-- ESTRATEGIA 4: MEMORY PERSISTENCE -->
+                <h3>🌍 Estrategia 4: Memory Persistence (Reutilizar Aprendizajes)</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1em;"><strong>Cuándo usar:</strong> Patrones reutilizables, soluciones a problemas recurrentes, best practices aprendidas.</p>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px; margin: 1.5em 0;">
+                    <p><strong>¿Qué hace?</strong> Guarda en memoria global (~/.claude/memory/) accesible en todos los proyectos.</p>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                        <code>
+# En proyecto-a (Nest.js), descubres patrón útil<br/>
+/memory persist "Pattern: Exponential backoff for API retries.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1s → 2s → 4s → 8s → fail.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max retries: 4. Jitter: random(0, delay).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Code: const delay = Math.min(2**attempt * 1000, 30000) + Math.random()*1000"<br/>
+<br/>
+# En proyecto-b (FastAPI), 2 meses después<br/>
+/memory search "backoff"<br/>
+# ← Encuentra entrada persistent, reutiliza patrón sin reinventar
+                        </code>
+                    </div>
+                    <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>Ejemplos buenos para persistir:</strong> Retry patterns, error handling, DB optimization, security checks, deployment procedures.</p>
+                </div>
+
+                <!-- EJEMPLO REAL: 350K TOKEN SESIÓN -->
+                <h3>💡 Ejemplo Real: Sesión de 350K Tokens → /compact</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <p><strong>Contexto:</strong> Proyecto e-commerce, refactor de 5 días. Sesión alcanza 180k tokens, mucho ruido.</p>
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 6px; margin: 1em 0;">
+                        <p style="margin-top: 0;"><strong>Día 5 - Problema detectado:</strong></p>
+                        <div style="font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3; margin: 1em 0;">
+                            <code>
+Claude: "Approaching token limit. 180k/200k used."<br/>
+Available context: 20k tokens (insuficiente para continuar)
                             </code>
                         </div>
+                        <p><strong>Análisis de memoria actual:</strong></p>
+                        <div style="font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3; margin: 1em 0;">
+                            <code>
+/memory list<br/>
+<br/>
+Contenido:<br/>
+- Architecture decisions ✓ (importante: 2KB)<br/>
+- API schema updates ✓ (importante: 3KB)<br/>
+- DB migration plan ✓ (importante: 1.5KB)<br/>
+- Refactor logs (temp: 8KB) ← REMOVE<br/>
+- Failed hypothesis #1, #2, #3 (temp: 6KB) ← REMOVE<br/>
+- Debug notes from debugging sessions (temp: 4KB) ← REMOVE<br/>
+- Performance benchmarks ✓ (importante: 2KB)<br/>
+<br/>
+Total: 26.5KB actual (comprimible a 8.5KB)
+                            </code>
+                        </div>
+                        <p><strong>Acción:</strong></p>
+                        <div style="font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3; margin: 1em 0;">
+                            <code>
+/memory compact "Keep: Architecture decisions, API schema, DB migrations, performance benchmarks.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Drop: Refactor logs, failed hypothesis #1-3, old debug notes."<br/>
+<br/>
+Resultado:<br/>
+- Memory: 26.5KB → 8.5KB (68% reduction)<br/>
+- Conversation tokens: 180k → 160k<br/>
+- Available tokens: 20k → 40k (doble!)
+                            </code>
+                        </div>
+                        <p style="margin-top: 1em;"><strong>Resultado:</strong> Ahora puedo continuar 2-3 días más sin hitting limit. Si vuelve a pasar, uso /fork para nueva rama.</p>
                     </div>
                 </div>
 
-                <h3>📊 Comparativa: Memory vs Conversation History</h3>
+                <!-- TROUBLESHOOTING -->
+                <h3>🚨 Troubleshooting: "Context Limit Exceeded"</h3>
                 <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                    <p style="margin-top: 0;"><strong>Síntomas:</strong> Claude dice "context limit exceeded" o "approaching token limit"</p>
+                    <div style="display: grid; gap: 1.5em;">
+                        <div style="border-left: 4px solid #ff6b6b; padding-left: 1.5em;">
+                            <p><strong style="color: #ff6b6b;">❌ Solución Mala #1: Crear nueva sesión</strong></p>
+                            <p style="color: var(--text-secondary);">Pierdes todo el contexto, tienes que re-explicar el proyecto.</p>
+                        </div>
+
+                        <div style="border-left: 4px solid #ff6b6b; padding-left: 1.5em;">
+                            <p><strong style="color: #ff6b6b;">❌ Solución Mala #2: Ignorar y continuar</strong></p>
+                            <p style="color: var(--text-secondary);">Sesión falla de repente, pierdes trabajo no guardado.</p>
+                        </div>
+
+                        <div style="border-left: 4px solid #3ddc97; padding-left: 1.5em;">
+                            <p><strong style="color: #3ddc97;">✅ Solución Buena: /compact + /fork + git commit</strong></p>
+                            <p style="color: var(--text-secondary);">Preserva contexto, limpia memory, continúa trabajando.</p>
+                            <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                                <code>
+1. /memory compact "Mantén decisiones, elimina logs"<br/>
+2. /memory list  # Verifica qué quedó<br/>
+3. git add .claude/memory/ && git commit -m "docs: compact memory after 3 days"<br/>
+4. git status  # Asegúrate todo esté guardado<br/>
+5. Continúa con código<br/>
+<br/>
+Si problema persiste (muy raro):<br/>
+6. /memory fork "new-session"  # Crea rama isolada<br/>
+7. git checkout -b feature/continue<br/>
+8. /memory fork "continue"<br/>
+9. Sigue trabajando
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BEST PRACTICES -->
+                <h3>📋 Best Practices: Cuándo Compactar, Cuándo Dividir</h3>
+                <div style="display: grid; gap: 1.5em; margin: 1.5em 0;">
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px;">
+                        <h4 style="color: #3ddc97; margin-top: 0;">📅 Cronograma recomendado:</h4>
+                        <ul style="margin: 0.5em 0; padding-left: 1.5em; font-size: 0.9em;">
+                            <li><strong>Día 1-2:</strong> No compactar, memory pequeña</li>
+                            <li><strong>Día 3:</strong> Considera /compact si memory > 10KB</li>
+                            <li><strong>Día 5:</strong> /compact obligatorio (150k+ tokens)</li>
+                            <li><strong>Semana 2:</strong> /fork para rama nueva + /compact</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
+                        <h4 style="color: #5eb8ff; margin-top: 0;">🎯 Qué guardar vs. qué eliminar:</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em; font-size: 0.9em;">
+                            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px;">
+                                <strong style="color: #3ddc97;">Guardar (Duradero)</strong>
+                                <ul style="margin: 0.5em 0; padding-left: 1.5em; font-size: 0.85em;">
+                                    <li>Architecture decisions</li>
+                                    <li>API contracts</li>
+                                    <li>DB schema</li>
+                                    <li>Security decisions</li>
+                                    <li>Performance learnings</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px;">
+                                <strong style="color: #ff6b6b;">Eliminar (Temporal)</strong>
+                                <ul style="margin: 0.5em 0; padding-left: 1.5em; font-size: 0.85em;">
+                                    <li>Debug logs</li>
+                                    <li>Failed experiments</li>
+                                    <li>Refactor notes obsoletas</li>
+                                    <li>Conversation history</li>
+                                    <li>Notas que ya están en git</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPARATIVA TABLE -->
+                <h3>📊 Estrategias de Memory: Comparativa Completa</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
                         <tr style="border-bottom: 2px solid var(--bg-elevated);">
-                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Feature</th>
-                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Memory (/memory add)</th>
-                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Conversation History</th>
+                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Estrategia</th>
+                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Cuándo</th>
+                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Impacto</th>
+                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Costo</th>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--bg-elevated);">
-                            <td style="padding: 0.75em;"><strong>Persistencia</strong></td>
-                            <td style="padding: 0.75em; color: #3ddc97;">✓ Entre sesiones</td>
-                            <td style="padding: 0.75em; color: #ff6b6b;">✗ Se pierde al cerrar</td>
+                            <td style="padding: 0.75em;"><strong>/compact</strong></td>
+                            <td style="padding: 0.75em;">Día 3+, memory > 10KB</td>
+                            <td style="padding: 0.75em; color: #3ddc97;">+50% tokens disponibles</td>
+                            <td style="padding: 0.75em;">Pierdes logs temporales (ok)</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--bg-elevated);">
-                            <td style="padding: 0.75em;"><strong>Tamaño</strong></td>
-                            <td style="padding: 0.75em; color: #3ddc97;">Comprimible, ~5KB-20KB</td>
-                            <td style="padding: 0.75em; color: #ff6b6b;">Crece sin límite, 100KB+</td>
+                            <td style="padding: 0.75em;"><strong>/fork</strong></td>
+                            <td style="padding: 0.75em;">Ramas largas, experimentos</td>
+                            <td style="padding: 0.75em; color: #3ddc97;">+15% tokens (branch isolation)</td>
+                            <td style="padding: 0.75em;">Slight memory duplication</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--bg-elevated);">
-                            <td style="padding: 0.75em;"><strong>Versionado</strong></td>
-                            <td style="padding: 0.75em; color: #3ddc97;">✓ En git</td>
-                            <td style="padding: 0.75em; color: #ff6b6b;">✗ Privado</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--bg-elevated);">
-                            <td style="padding: 0.75em;"><strong>Compartido</strong></td>
-                            <td style="padding: 0.75em; color: #3ddc97;">✓ Todo el equipo</td>
-                            <td style="padding: 0.75em; color: #ff6b6b;">✗ Solo tú</td>
+                            <td style="padding: 0.75em;"><strong>/persist</strong></td>
+                            <td style="padding: 0.75em;">Patrones reutilizables</td>
+                            <td style="padding: 0.75em; color: #3ddc97;">+100% productividad (next project)</td>
+                            <td style="padding: 0.75em;">Tiempo para documentar</td>
                         </tr>
                         <tr>
-                            <td style="padding: 0.75em;"><strong>Caso de uso</strong></td>
-                            <td style="padding: 0.75em; color: #3ddc97;">Arquitectura, decisiones, patrones</td>
-                            <td style="padding: 0.75em; color: #ff6b6b;">Contexto temporal, debug actual</td>
+                            <td style="padding: 0.75em;"><strong>/clear</strong></td>
+                            <td style="padding: 0.75em;">Stack change (muy raro)</td>
+                            <td style="padding: 0.75em; color: #3ddc97;">Clean slate</td>
+                            <td style="padding: 0.75em;">⚠️ Irreversible, perder todo</td>
                         </tr>
                     </table>
                 </div>
 
+                <!-- MEMORY STRUCTURE -->
+                <h3>📂 Estructura Recomendada de Project Memory</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; font-family: var(--font-mono); margin-bottom: 1.5em;">
+                        <code style="color: #e6edf3; line-height: 2;">
+.claude/memory/<br/>
+├── <span style="color: #3ddc97;">📋 architecture.md</span>        # Stack, decisiones tech, patterns<br/>
+├── <span style="color: #3ddc97;">🔌 api-spec.md</span>           # Endpoints, schemas, auth, rate limits<br/>
+├── <span style="color: #3ddc97;">🗄️ database.md</span>          # Schema, migrations, índices, perf<br/>
+├── <span style="color: #5eb8ff;">🚀 deployment.md</span>        # Envs, CI/CD workflow, rollback<br/>
+├── <span style="color: #5eb8ff;">📝 learned-lessons.md</span>   # Bugs resolvidos, antipatterns<br/>
+├── <span style="color: #c084fc;">⚡ performance.md</span>       # Benchmarks, bottlenecks, optimization<br/>
+└── <span style="color: #c084fc;">🔒 security-notes.md</span>    # OWASP, compliance, vulnerabilities
+                        </code>
+                    </div>
+                    <p style="color: var(--text-secondary); margin: 0;">Cada archivo es YAML + Markdown, versionado en git, accesible para todo el equipo. Usar este formato = fácil de buscar, actualizar y mantener.</p>
+                </div>
+
+                <!-- PRO TIPS -->
+                <div class="info-banner" style="background: linear-gradient(135deg, rgba(61, 220, 151, 0.15) 0%, rgba(61, 220, 151, 0.05) 100%); border-left: 4px solid #3ddc97; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
+                    <strong>💡 Pro Tip 1 - Monitor Token Usage:</strong> Si ves "approaching token limit", no esperes. Compacta inmediatamente. Es mejor prevenir que improvisar.
+                </div>
+
                 <div class="info-banner" style="background: linear-gradient(135deg, rgba(255, 180, 84, 0.15) 0%, rgba(255, 180, 84, 0.05) 100%); border-left: 4px solid #ffb454; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
-                    <strong>💡 Best Practice:</strong> Usa Memory para <em>lo que necesita durar</em> (decisiones, aprendizajes). Usa conversation para <em>lo temporal</em> (preguntas, debugging). Compacta cada 3 días para mantener limpio.
+                    <strong>💡 Pro Tip 2 - Commit Before Compact:</strong> Siempre haz git commit de work-in-progress ANTES de /compact. Si algo sale mal, puedes revert.
+                </div>
+
+                <div class="info-banner" style="background: linear-gradient(135deg, rgba(94, 184, 255, 0.15) 0%, rgba(94, 184, 255, 0.05) 100%); border-left: 4px solid #5eb8ff; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
+                    <strong>💡 Pro Tip 3 - Persist > Forget:</strong> Si algo fue útil una vez, /memory persist. Puede salvar horas en futuros proyectos.
                 </div>
 
                 <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
-                    <strong>📖 Lectura completa:</strong> Ver <code>MEMORY_MANAGEMENT.md</code> para flujos de trabajo prácticos con ejemplos reales.
+                    <strong>📖 Lectura completa:</strong> Ver <code>MEMORY_MANAGEMENT.md</code> para workflows prácticos, ejemplos de compactación en tiempo real, y soluciones a problemas edge cases.
                 </p>
             </section>
 
