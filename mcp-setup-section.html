@@ -1,0 +1,1085 @@
+<!-- Sección: MCP Setup -->
+<section class="content-section hidden" data-section="mcp-setup" data-mode="technical">
+    <div class="breadcrumb" style="margin-bottom: 1.5em;">
+        <a href="#" style="color: var(--text-secondary); text-decoration: none;">Producción</a>
+        <span style="margin: 0 0.5em; color: var(--text-secondary);">/</span>
+        <span style="color: var(--text-primary);">MCP Setup</span>
+    </div>
+
+    <h2 style="margin-top: 0;">🔧 MCP Setup: Connecting External Tools & Integrations</h2>
+    <p class="section-lead">Complete guide to installing, configuring, and orchestrating MCPs (Model Context Protocol servers) to extend Claude Code with external APIs, databases, and services. Real configurations, security best practices, and production workflows.</p>
+
+    <!-- ========== SECTION 1: MCP OVERVIEW ========== -->
+    <h3>📚 MCP Overview & Architecture</h3>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+        <h4 style="margin-top: 0; color: #3ddc97;">What is the Model Context Protocol?</h4>
+        <p>MCP (Model Context Protocol) is a standardized interface that allows Claude Code to connect to external systems—databases, APIs, file systems, and services—without losing context or breaking your development workflow.</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; margin: 1.5em 0;">
+            <div style="background: var(--bg-elevated); padding: 1em; border-left: 4px solid #5eb8ff; border-radius: 6px;">
+                <h5 style="margin: 0 0 0.5em 0; color: #5eb8ff;">Without MCP</h5>
+                <pre style="margin: 0; font-size: 0.8em; color: #9aa7b8;"><code>Claude: "Check the database"
+You: Copy SQL, paste in terminal
+Terminal: Run query, copy results
+You: Paste results back to Claude
+Claude: Process results, repeat</code></pre>
+                <p style="margin: 0.5em 0 0 0; font-size: 0.85em; color: var(--text-secondary);">❌ Manual, slow, context loss</p>
+            </div>
+
+            <div style="background: var(--bg-elevated); padding: 1em; border-left: 4px solid #3ddc97; border-radius: 6px;">
+                <h5 style="margin: 0 0 0.5em 0; color: #3ddc97;">With MCP</h5>
+                <pre style="margin: 0; font-size: 0.8em; color: #9aa7b8;"><code>Claude: "Query the users table"
+MCP (PostgreSQL): Auto-execute
+Claude: Receives results instantly
+Claude: Analyzes + acts on results
+✅ Seamless, fast, full context</code></pre>
+                <p style="margin: 0.5em 0 0 0; font-size: 0.85em; color: var(--text-secondary);">✅ Automatic, instant, preserved</p>
+            </div>
+        </div>
+
+        <h4 style="margin-top: 1.5em; color: #5eb8ff;">How MCPs Extend Claude Code Capabilities</h4>
+        <ul style="color: var(--text-secondary);">
+            <li><strong>Direct Tool Access:</strong> Query databases, call APIs, read/write files without manual copy-paste</li>
+            <li><strong>Context Preservation:</strong> Entire interaction history stays accessible—Claude remembers what data came from which API</li>
+            <li><strong>Multi-Step Workflows:</strong> Chain MCPs: GitHub → Process → Slack → Log. Each step feeds into the next automatically</li>
+            <li><strong>Real-Time Data:</strong> Always working with live data, not stale snapshots. Perfect for CI/CD, monitoring, and dynamic systems</li>
+            <li><strong>Secure Credential Handling:</strong> API keys, database passwords stored locally, never sent to Claude API</li>
+        </ul>
+
+        <h4 style="margin-top: 1.5em; color: #ffb454;">When to Use MCPs vs Built-In Tools</h4>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; margin-top: 1em;">
+            <tr style="background: var(--bg-elevated);">
+                <th style="padding: 0.75em; border: 1px solid var(--border-default); text-align: left; color: #3ddc97;">Use MCPs When</th>
+                <th style="padding: 0.75em; border: 1px solid var(--border-default); text-align: left; color: #5eb8ff;">Use Built-In Tools When</th>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Querying databases repeatedly</td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">One-off Bash commands</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Integrating with SaaS (Slack, Stripe)</td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">File operations on your machine</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Long-running workflows (monitoring)</td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Local development tools (npm, git)</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Handling sensitive credentials</td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Quick previewing or debugging</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Multi-MCP orchestration</td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Things already in your shell environment</td>
+            </tr>
+        </table>
+
+        <h4 style="margin-top: 1.5em; color: #5eb8ff;">The MCP Registry</h4>
+        <p style="color: var(--text-secondary);">
+            <strong>Public Registry:</strong> <code style="background: var(--bg-elevated); padding: 0.25em 0.5em; border-radius: 4px; font-size: 0.9em;">https://github.com/modelcontextprotocol/servers</code> contains ~50+ official MCPs maintained by Anthropic and the community (PostgreSQL, MySQL, Redis, GitHub, Slack, Google Drive, etc.)
+        </p>
+        <p style="color: var(--text-secondary);">
+            <strong>Private MCPs:</strong> Build your own to wrap internal APIs, legacy systems, or proprietary tools. Stored in <code style="background: var(--bg-elevated); padding: 0.25em 0.5em; border-radius: 4px;">.mcp.local.json</code> for security.
+        </p>
+    </div>
+
+    <!-- ========== SECTION 2: INSTALLATION & CONFIG ========== -->
+    <h3>⚙️ Installation & Configuration</h3>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 4px solid #3ddc97;">
+        <h4 style="margin-top: 0; color: #3ddc97;">Step 1: Install MCP CLI</h4>
+        <p style="color: var(--text-secondary);">The MCP CLI is a Node.js package that manages MCP servers for Claude Code.</p>
+
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; margin: 1em 0;">
+            <p style="margin-top: 0; color: #9aa7b8; font-size: 0.85em;">Bash</p>
+            <pre style="margin: 0; color: #3ddc97; font-family: var(--font-mono); font-size: 0.85em;"><code>npm install -g @anthropic-ai/mcp
+mcp --version
+# Output: @anthropic-ai/mcp 1.0.0</code></pre>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 0.9em;">
+            <strong>Alternative (Homebrew on macOS):</strong><br/>
+            <code style="background: var(--bg-elevated); padding: 0.25em 0.5em; border-radius: 4px;">brew install @anthropic-ai/mcp</code>
+        </p>
+    </div>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 4px solid #5eb8ff;">
+        <h4 style="margin-top: 0; color: #5eb8ff;">Step 2: Create MCP Configuration Files</h4>
+        <p style="color: var(--text-secondary);">MCP uses two configuration files: global config and local secrets.</p>
+
+        <h5 style="color: #5eb8ff; margin-top: 1.5em;">File: ~/.mcp/config.json (Global)</h5>
+        <p style="color: var(--text-secondary); font-size: 0.9em;">Stores all installed MCPs and their public settings. Versionable in git.</p>
+
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; margin: 1em 0; overflow-x: auto;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "version": "1.0",
+  "mcps": [
+    {
+      "name": "github",
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "~/.mcp/servers/github/index.js"
+      ],
+      "env": {
+        "MCP_GITHUB_OWNER": "your-org",
+        "MCP_GITHUB_REPO": "your-repo"
+      },
+      "scope": "project"
+    },
+    {
+      "name": "postgresql",
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "~/.mcp/servers/postgres/index.js"
+      ],
+      "scope": "global"
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <h5 style="color: #5eb8ff; margin-top: 1.5em;">File: ~/.mcp/.env.local (Secrets)</h5>
+        <p style="color: var(--text-secondary); font-size: 0.9em;">API keys, database passwords, tokens. Never commit to git. Added to .gitignore.</p>
+
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; margin: 1em 0;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code># GitHub API
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GITHUB_API_URL=https://api.github.com
+
+# PostgreSQL
+PG_HOST=localhost
+PG_PORT=5432
+PG_USER=admin
+PG_PASSWORD=your_secure_password
+PG_DATABASE=production
+
+# Slack
+SLACK_BOT_TOKEN=xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SLACK_SIGNING_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Stripe
+STRIPE_API_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxxxxxxxx</code></pre>
+        </div>
+
+        <p style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%); border-left: 4px solid #ff6b6b; padding: 1em; border-radius: 6px; margin-top: 1em; color: var(--text-secondary);">
+            <strong>⚠️ Security:</strong> Never commit <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">.env.local</code>. Add to <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">.gitignore</code> immediately.
+        </p>
+    </div>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 4px solid #c084fc;">
+        <h4 style="margin-top: 0; color: #c084fc;">Step 3: Verify Your Setup</h4>
+
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; margin: 1em 0;">
+            <pre style="margin: 0; color: #3ddc97; font-family: var(--font-mono); font-size: 0.85em;"><code># List all installed MCPs
+mcp list
+
+# Test a specific MCP
+mcp test github
+
+# Show config status
+mcp config --validate
+
+# Check logs
+mcp logs --tail 50</code></pre>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 0.9em;">
+            <strong>Expected output:</strong> All MCPs should show <code style="background: var(--bg-elevated); padding: 0.25em 0.5em; border-radius: 4px; color: #3ddc97;">✓ healthy</code>
+        </p>
+    </div>
+
+    <!-- ========== SECTION 3: POPULAR MCPs ========== -->
+    <h3>🔌 Popular MCPs & Setup Guides</h3>
+
+    <p style="color: var(--text-secondary); margin-bottom: 2em;">Below are 8 of the most useful MCPs with copy-paste ready configurations and real use cases.</p>
+
+    <div style="display: grid; gap: 2em; margin: 2em 0;">
+
+        <!-- MCP 1: GitHub -->
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; border-left: 6px solid #3ddc97;">
+            <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 1em;">
+                <span style="font-size: 2em;">🐙</span>
+                <div>
+                    <h4 style="margin: 0; color: #3ddc97;">GitHub MCP</h4>
+                    <p style="margin: 0.25em 0; color: var(--text-secondary); font-size: 0.9em;">Read PRs, issues, commits, create comments</p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Purpose:</strong> Full GitHub integration without leaving Claude. Read PR diffs, list issues, add review comments, trigger workflows.</p>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Setup command:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #3ddc97; margin: 0.5em 0;">
+                <code>mcp add github --scope project --token YOUR_GITHUB_TOKEN</code>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Config example:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; overflow-x: auto;">
+                <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "name": "github",
+  "type": "stdio",
+  "command": "node",
+  "args": ["~/.mcp/servers/github/index.js"],
+  "env": {
+    "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+    "GITHUB_OWNER": "your-org",
+    "GITHUB_REPO": "your-repo"
+  }
+}</code></pre>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Use case:</strong> Auto-review incoming PRs, check CI status, create issues from bugs found in code</p>
+        </div>
+
+        <!-- MCP 2: PostgreSQL -->
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; border-left: 6px solid #5eb8ff;">
+            <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 1em;">
+                <span style="font-size: 2em;">🐘</span>
+                <div>
+                    <h4 style="margin: 0; color: #5eb8ff;">PostgreSQL MCP</h4>
+                    <p style="margin: 0.25em 0; color: var(--text-secondary); font-size: 0.9em;">Query, analyze, migrate databases</p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Purpose:</strong> Execute SQL directly from Claude. Query data, run migrations, analyze performance bottlenecks, generate sample data.</p>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Setup command:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #5eb8ff; margin: 0.5em 0;">
+                <code>mcp add postgresql --scope global --db-url postgres://user:pass@localhost/db</code>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Config example:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; overflow-x: auto;">
+                <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "name": "postgresql",
+  "type": "stdio",
+  "command": "node",
+  "args": ["~/.mcp/servers/postgresql/index.js"],
+  "env": {
+    "DATABASE_URL": "postgresql://user:password@localhost:5432/myapp",
+    "PG_QUERY_TIMEOUT": "30000",
+    "PG_READONLY": "false"
+  }
+}</code></pre>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Use case:</strong> "Query all users created in the last 24h", "Run migration safely with rollback", "Find N+1 queries in API"</p>
+        </div>
+
+        <!-- MCP 3: Slack -->
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; border-left: 6px solid #c084fc;">
+            <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 1em;">
+                <span style="font-size: 2em;">💬</span>
+                <div>
+                    <h4 style="margin: 0; color: #c084fc;">Slack MCP</h4>
+                    <p style="margin: 0.25em 0; color: var(--text-secondary); font-size: 0.9em;">Send messages, list channels, manage workflows</p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Purpose:</strong> Post updates to Slack channels, get channel history, send DMs, trigger workflows. Perfect for notifications and team communication.</p>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Setup command:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #c084fc; margin: 0.5em 0;">
+                <code>mcp add slack --scope project --token YOUR_BOT_TOKEN --signing-secret SECRET</code>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Config example:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; overflow-x: auto;">
+                <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "name": "slack",
+  "type": "stdio",
+  "command": "node",
+  "args": ["~/.mcp/servers/slack/index.js"],
+  "env": {
+    "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+    "SLACK_SIGNING_SECRET": "${SLACK_SIGNING_SECRET}",
+    "SLACK_CHANNEL_PREFIX": "#deploy-notifications"
+  }
+}</code></pre>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Use case:</strong> Auto-notify team when deploy finishes, post test results to #qa, send deployment alerts to #incidents</p>
+        </div>
+
+        <!-- MCP 4: GitHub Gist -->
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; border-left: 6px solid #ffb454;">
+            <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 1em;">
+                <span style="font-size: 2em;">📋</span>
+                <div>
+                    <h4 style="margin: 0; color: #ffb454;">GitHub Gist MCP</h4>
+                    <p style="margin: 0.25em 0; color: var(--text-secondary); font-size: 0.9em;">Create, update, share code snippets</p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Purpose:</strong> Save code snippets, configs, and logs as gists. Public or private. Useful for documentation, sharing solutions, or creating runnable examples.</p>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Setup command:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #ffb454; margin: 0.5em 0;">
+                <code>mcp add github-gist --scope global --token YOUR_GITHUB_TOKEN</code>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Config example:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; overflow-x: auto;">
+                <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "name": "github-gist",
+  "type": "stdio",
+  "command": "node",
+  "args": ["~/.mcp/servers/gist/index.js"],
+  "env": {
+    "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+    "GIST_VISIBILITY": "public"
+  }
+}</code></pre>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Use case:</strong> Save SQL migration scripts, Docker Compose configs, CI/CD templates for team reuse</p>
+        </div>
+
+        <!-- MCP 5: Stripe -->
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; border-left: 6px solid #ff6b6b;">
+            <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 1em;">
+                <span style="font-size: 2em;">💳</span>
+                <div>
+                    <h4 style="margin: 0; color: #ff6b6b;">Stripe MCP</h4>
+                    <p style="margin: 0.25em 0; color: var(--text-secondary); font-size: 0.9em;">Manage charges, customers, webhooks</p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Purpose:</strong> List transactions, refund charges, manage customers, analyze payment patterns. Essential for financial operations and debugging.</p>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Setup command:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #ff6b6b; margin: 0.5em 0;">
+                <code>mcp add stripe --scope global --api-key YOUR_STRIPE_API_KEY</code>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Config example:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; overflow-x: auto;">
+                <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "name": "stripe",
+  "type": "stdio",
+  "command": "node",
+  "args": ["~/.mcp/servers/stripe/index.js"],
+  "env": {
+    "STRIPE_API_KEY": "${STRIPE_API_KEY}",
+    "STRIPE_WEBHOOK_SECRET": "${STRIPE_WEBHOOK_SECRET}",
+    "STRIPE_LOG_LEVEL": "info"
+  }
+}</code></pre>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Use case:</strong> "Find all failed transactions today", "List customers who churned", "Refund order #12345"</p>
+        </div>
+
+        <!-- MCP 6: Google Drive -->
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; border-left: 6px solid #3ddc97;">
+            <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 1em;">
+                <span style="font-size: 2em;">📁</span>
+                <div>
+                    <h4 style="margin: 0; color: #3ddc97;">Google Drive MCP</h4>
+                    <p style="margin: 0.25em 0; color: var(--text-secondary); font-size: 0.9em;">Read, upload, share documents</p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Purpose:</strong> Access Google Drive files programmatically. Read spreadsheets, upload reports, share documents. Great for documentation and data workflows.</p>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Setup command:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #3ddc97; margin: 0.5em 0;">
+                <code>mcp add google-drive --scope global --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET</code>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Config example:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; overflow-x: auto;">
+                <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "name": "google-drive",
+  "type": "stdio",
+  "command": "node",
+  "args": ["~/.mcp/servers/google-drive/index.js"],
+  "env": {
+    "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
+    "GOOGLE_CLIENT_SECRET": "${GOOGLE_CLIENT_SECRET}",
+    "GOOGLE_DRIVE_FOLDER_ID": "1234567890abcdefg"
+  }
+}</code></pre>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Use case:</strong> "Generate monthly report and save to Google Drive", "Read latest OKRs from team folder"</p>
+        </div>
+
+        <!-- MCP 7: Redis -->
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; border-left: 6px solid #c084fc;">
+            <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 1em;">
+                <span style="font-size: 2em;">⚡</span>
+                <div>
+                    <h4 style="margin: 0; color: #c084fc;">Redis MCP</h4>
+                    <p style="margin: 0.25em 0; color: var(--text-secondary); font-size: 0.9em;">Query, monitor, clear caches</p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Purpose:</strong> Inspect Redis keys, debug cache issues, run maintenance scripts. Essential for performance troubleshooting.</p>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Setup command:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #c084fc; margin: 0.5em 0;">
+                <code>mcp add redis --scope global --host localhost --port 6379</code>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Config example:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; overflow-x: auto;">
+                <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "name": "redis",
+  "type": "stdio",
+  "command": "node",
+  "args": ["~/.mcp/servers/redis/index.js"],
+  "env": {
+    "REDIS_URL": "redis://:password@localhost:6379",
+    "REDIS_DB": "0"
+  }
+}</code></pre>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Use case:</strong> "Find all session keys", "Clear user caches after deploy", "Monitor cache hit rate"</p>
+        </div>
+
+        <!-- MCP 8: Anthropic Docs -->
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; border-left: 6px solid #5eb8ff;">
+            <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 1em;">
+                <span style="font-size: 2em;">📚</span>
+                <div>
+                    <h4 style="margin: 0; color: #5eb8ff;">Anthropic Docs MCP</h4>
+                    <p style="margin: 0.25em 0; color: var(--text-secondary); font-size: 0.9em;">Search Claude API docs, get model info</p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Purpose:</strong> Access official Anthropic documentation, API reference, and model specifications without leaving Claude Code. Always up-to-date.</p>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Setup command:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #5eb8ff; margin: 0.5em 0;">
+                <code>mcp add anthropic-docs --scope global</code>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Config example:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; overflow-x: auto;">
+                <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "name": "anthropic-docs",
+  "type": "stdio",
+  "command": "node",
+  "args": ["~/.mcp/servers/anthropic-docs/index.js"],
+  "env": {
+    "DOCS_CACHE_TTL": "3600"
+  }
+}</code></pre>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Use case:</strong> "Check the max token limit for Claude Opus", "Show me the vision API reference", "What's the latest model available?"</p>
+        </div>
+
+    </div>
+
+    <!-- ========== SECTION 4: CONFIGURATION DEEP DIVE ========== -->
+    <h3>🎯 Configuration Deep Dive</h3>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 4px solid #5eb8ff;">
+        <h4 style="margin-top: 0; color: #5eb8ff;">Global vs Project Scope</h4>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; margin-top: 1em;">
+            <tr style="background: var(--bg-elevated);">
+                <th style="padding: 0.75em; border: 1px solid var(--border-default); text-align: left; color: #5eb8ff;">Global Scope</th>
+                <th style="padding: 0.75em; border: 1px solid var(--border-default); text-align: left; color: #3ddc97;">Project Scope</th>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Stored in: <code>~/.mcp/config.json</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Stored in: <code>.mcp.json</code> (project root)</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Shared across all projects</td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Specific to one project</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Example: PostgreSQL, Redis (dev)</td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Example: GitHub (this repo), Custom APIs</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Not in git (personal machine)</td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Can be in git (team shared)</td>
+            </tr>
+        </table>
+
+        <h5 style="color: #5eb8ff; margin-top: 1.5em;">Example: Project-Level Config</h5>
+        <p style="color: var(--text-secondary); font-size: 0.9em;">Create <code style="background: var(--bg-elevated); padding: 0.25em 0.5em; border-radius: 4px;">.mcp.json</code> in your project root:</p>
+
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; overflow-x: auto; margin-top: 1em;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "version": "1.0",
+  "scope": "project",
+  "mcps": [
+    {
+      "name": "github",
+      "command": "node",
+      "args": ["~/.mcp/servers/github/index.js"],
+      "env": {
+        "GITHUB_OWNER": "your-org",
+        "GITHUB_REPO": "this-project",
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    {
+      "name": "postgres-dev",
+      "command": "node",
+      "args": ["~/.mcp/servers/postgres/index.js"],
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost:5432/myapp_dev"
+      }
+    }
+  ]
+}</code></pre>
+        </div>
+    </div>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 4px solid #c084fc;">
+        <h4 style="margin-top: 0; color: #c084fc;">Environment Variables & Credential Management</h4>
+
+        <p style="color: var(--text-secondary); margin: 1em 0;">MCPs support secure credential injection via environment variables. Use <code style="background: var(--bg-elevated); padding: 0.25em 0.5em; border-radius: 4px;">${VAR_NAME}</code> syntax in config files.</p>
+
+        <h5 style="color: #c084fc;">Recommended Pattern:</h5>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 1em 0;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code># 1. Store secrets in ~/.mcp/.env.local
+cat >> ~/.mcp/.env.local << 'EOF'
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DATABASE_URL=postgresql://user:pass@localhost/db
+EOF
+
+# 2. Source in your shell or Claude session
+export $(cat ~/.mcp/.env.local | xargs)
+
+# 3. Reference in config files
+{
+  "env": {
+    "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+    "DATABASE_URL": "${DATABASE_URL}"
+  }
+}</code></pre>
+        </div>
+
+        <p style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%); border-left: 4px solid #ff6b6b; padding: 1em; border-radius: 6px; color: var(--text-secondary); margin-top: 1em;">
+            <strong>⚠️ NEVER:</strong> Commit API keys, passwords, or tokens to git. Use <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">.mcp.local.json</code> for secrets, add to <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">.gitignore</code>.
+        </p>
+    </div>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 4px solid #ffb454;">
+        <h4 style="margin-top: 0; color: #ffb454;">Multiple MCPs Coordination</h4>
+
+        <p style="color: var(--text-secondary); margin: 1em 0;">When using 3+ MCPs together, coordination matters. Define clear dependencies and order of execution.</p>
+
+        <h5 style="color: #ffb454;">Example: GitHub + Slack + Stripe (Auto-notify customers on deploy)</h5>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 1em 0;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "version": "1.0",
+  "mcps": [
+    {
+      "name": "github",
+      "command": "node",
+      "args": ["~/.mcp/servers/github/index.js"],
+      "order": 1,
+      "dependencies": []
+    },
+    {
+      "name": "stripe",
+      "command": "node",
+      "args": ["~/.mcp/servers/stripe/index.js"],
+      "order": 2,
+      "dependencies": ["github"]
+    },
+    {
+      "name": "slack",
+      "command": "node",
+      "args": ["~/.mcp/servers/slack/index.js"],
+      "order": 3,
+      "dependencies": ["github", "stripe"]
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 0.9em;"><strong>Workflow:</strong> GitHub detects deploy → Stripe queries affected customers → Slack notifies each customer in DM → All coordinated in one context.</p>
+    </div>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 4px solid #3ddc97;">
+        <h4 style="margin-top: 0; color: #3ddc97;">Version Pinning & Updates</h4>
+
+        <p style="color: var(--text-secondary); margin: 1em 0;">Keep MCPs stable by pinning versions. Auto-updates can break workflows.</p>
+
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 1em 0;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "mcps": [
+    {
+      "name": "postgresql",
+      "version": "1.2.3",
+      "checkForUpdates": true,
+      "updateChannel": "stable",
+      "rollbackOnFailure": true
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Check for updates:</strong></p>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #3ddc97;">
+            <code>mcp update --check<br/>mcp update postgresql@1.3.0  # Pin specific version</code>
+        </div>
+    </div>
+
+    <!-- ========== SECTION 5: REAL-WORLD EXAMPLES ========== -->
+    <h3>🚀 Real-World Integration Examples</h3>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 6px solid #5eb8ff;">
+        <h4 style="margin-top: 0; color: #5eb8ff;">Example 1: GitHub + Slack — Auto-Review PRs & Notify Team</h4>
+
+        <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Scenario:</strong> Whenever a PR arrives, Claude reviews it and posts results to Slack.</p>
+
+        <h5 style="color: #5eb8ff; margin-top: 1.5em;">Step 1: Configure MCPs</h5>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 1em 0;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "version": "1.0",
+  "mcps": [
+    {
+      "name": "github",
+      "command": "node",
+      "args": ["~/.mcp/servers/github/index.js"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+        "GITHUB_OWNER": "my-org",
+        "GITHUB_REPO": "backend"
+      }
+    },
+    {
+      "name": "slack",
+      "command": "node",
+      "args": ["~/.mcp/servers/slack/index.js"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_CHANNEL": "#code-reviews"
+      }
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <h5 style="color: #5eb8ff; margin-top: 1.5em;">Step 2: Create GitHub Action Trigger</h5>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 1em 0;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code># .github/workflows/pr-review.yml
+name: Auto-Review PR
+
+on: [pull_request]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Review PR with Claude
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        run: |
+          mcp run github --action "review-pr" --pr ${{ github.event.pull_request.number }}
+          mcp run slack --action "post-review"</code></pre>
+        </div>
+
+        <h5 style="color: #5eb8ff; margin-top: 1.5em;">Expected Output</h5>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; border-left: 4px solid #3ddc97;">
+            <p style="margin: 0; color: #3ddc97; font-family: var(--font-mono);">Slack message to #code-reviews:</p>
+            <p style="margin: 0.5em 0; color: var(--text-secondary);">
+                <strong>✅ PR #42: Add user authentication</strong><br/>
+                Changes: 350 lines | Security: Looks good | Tests: ✅ Pass<br/>
+                Comment added to PR with detailed suggestions
+            </p>
+        </div>
+    </div>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 6px solid #c084fc;">
+        <h4 style="margin-top: 0; color: #c084fc;">Example 2: PostgreSQL + DataDog — Query DB & Log to APM</h4>
+
+        <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Scenario:</strong> Detect anomalies in database and send structured logs to DataDog for monitoring.</p>
+
+        <h5 style="color: #c084fc; margin-top: 1.5em;">Complete Config</h5>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 1em 0;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "version": "1.0",
+  "mcps": [
+    {
+      "name": "postgresql",
+      "command": "node",
+      "args": ["~/.mcp/servers/postgresql/index.js"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}",
+        "QUERY_TIMEOUT": "30000"
+      }
+    },
+    {
+      "name": "datadog-logger",
+      "command": "node",
+      "args": ["~/.mcp/servers/datadog/index.js"],
+      "env": {
+        "DATADOG_API_KEY": "${DATADOG_API_KEY}",
+        "DATADOG_SITE": "datadoghq.com",
+        "DATADOG_SERVICE": "my-app"
+      }
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <h5 style="color: #c084fc; margin-top: 1.5em;">Usage in Claude</h5>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #e6edf3; font-size: 0.85em;">
+            <code>
+Claude: "Find users with > 10 failed logins today"<br/>
+PostgreSQL MCP: Executes query, returns 47 users<br/>
+<br/>
+Claude: "Log these as security anomalies in DataDog"<br/>
+DataDog MCP: Sends structured logs with user IDs, timestamps<br/>
+<br/>
+Result: Dashboards auto-update, alerts trigger if threshold exceeded
+            </code>
+        </div>
+    </div>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; border-left: 6px solid #ffb454;">
+        <h4 style="margin-top: 0; color: #ffb454;">Example 3: Multi-MCP Orchestration — Deploy Workflow</h4>
+
+        <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Scenario:</strong> Full deployment pipeline: GitHub PR → Merge → DB Migration → Slack Notification → Health Check</p>
+
+        <h5 style="color: #ffb454; margin-top: 1.5em;">Orchestration Config</h5>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 1em 0;">
+            <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "version": "1.0",
+  "workflows": [
+    {
+      "name": "deploy-production",
+      "trigger": "manual",
+      "steps": [
+        {
+          "name": "check-pr-status",
+          "mcp": "github",
+          "action": "list-open-prs",
+          "onSuccess": "merge-pr"
+        },
+        {
+          "name": "merge-pr",
+          "mcp": "github",
+          "action": "merge-to-main",
+          "onSuccess": "run-migrations"
+        },
+        {
+          "name": "run-migrations",
+          "mcp": "postgresql",
+          "action": "execute",
+          "command": "SELECT * FROM pending_migrations",
+          "onSuccess": "notify-slack"
+        },
+        {
+          "name": "notify-slack",
+          "mcp": "slack",
+          "action": "post-message",
+          "channel": "#deployments",
+          "message": "Deployment complete! v1.2.3 live",
+          "onSuccess": "health-check"
+        },
+        {
+          "name": "health-check",
+          "mcp": "http",
+          "action": "check-endpoint",
+          "url": "https://api.example.com/health",
+          "expectedStatus": 200,
+          "onFailure": "rollback"
+        }
+      ]
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <h5 style="color: #ffb454; margin-top: 1.5em;">Execute Workflow</h5>
+        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #ffb454;">
+            <code>mcp workflow run deploy-production</code>
+        </div>
+    </div>
+
+    <!-- ========== SECTION 6: TROUBLESHOOTING ========== -->
+    <h3>🐛 Troubleshooting Guide</h3>
+
+    <div style="display: grid; gap: 1.5em; margin: 1.5em 0;">
+
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ff6b6b; border-radius: 8px;">
+            <h4 style="color: #ff6b6b; margin-top: 0;">❌ MCP not found error</h4>
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Error:</strong> <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">Error: MCP 'postgresql' not found</code></p>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Solutions:</strong></p>
+            <ol style="color: var(--text-secondary); margin: 0;">
+                <li>Verify MCP is installed: <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp list</code></li>
+                <li>Check config file path: <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp config --validate</code></li>
+                <li>Reinstall: <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp add postgresql --scope global</code></li>
+                <li>Check project scope: Ensure <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">.mcp.json</code> exists in project root</li>
+            </ol>
+        </div>
+
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ff6b6b; border-radius: 8px;">
+            <h4 style="color: #ff6b6b; margin-top: 0;">❌ Permission denied errors</h4>
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Error:</strong> <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">permission denied: ~/.mcp/servers/github/index.js</code></p>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Fix:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #3ddc97; margin: 0.5em 0;">
+                <code>chmod +x ~/.mcp/servers/*/index.js<br/>chmod +x ~/.mcp/servers/*/bin/*</code>
+            </div>
+        </div>
+
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ff6b6b; border-radius: 8px;">
+            <h4 style="color: #ff6b6b; margin-top: 0;">❌ Credential/Auth Issues</h4>
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Error:</strong> <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">401 Unauthorized: Invalid GitHub token</code></p>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Solutions:</strong></p>
+            <ol style="color: var(--text-secondary); margin: 0;">
+                <li>Verify token in environment: <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">echo $GITHUB_TOKEN</code></li>
+                <li>Check token expiration: GitHub Settings → Developer Settings → Personal Access Tokens</li>
+                <li>Verify scopes: Token should have <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">repo</code>, <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">read:org</code> scopes</li>
+                <li>Regenerate token: <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp auth github --refresh</code></li>
+            </ol>
+        </div>
+
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ff6b6b; border-radius: 8px;">
+            <h4 style="color: #ff6b6b; margin-top: 0;">❌ Slow or Timing Out MCPs</h4>
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Error:</strong> <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">MCP timeout after 30s</code></p>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;"><strong>Fixes:</strong></p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 0.5em 0;">
+                <pre style="margin: 0; color: #e6edf3; font-family: var(--font-mono); font-size: 0.8em;"><code>{
+  "mcp": "postgresql",
+  "timeout": 60000,  # Increase to 60 seconds
+  "retries": 3,      # Retry failed queries
+  "pool": {
+    "max": 5,        # Max concurrent queries
+    "idleTimeoutMillis": 30000
+  }
+}</code></pre>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 0.5em 0;"><strong>Or optimize queries:</strong></p>
+            <ol style="color: var(--text-secondary); margin: 0;">
+                <li>Add indexes: <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">CREATE INDEX idx_users_email ON users(email)</code></li>
+                <li>Use LIMIT: Avoid querying millions of rows at once</li>
+                <li>Cache results: Store in Redis for repeat queries</li>
+            </ol>
+        </div>
+
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
+            <h4 style="color: #5eb8ff; margin-top: 0;">✅ Testing MCPs Before Deployment</h4>
+
+            <p style="color: var(--text-secondary); margin: 1em 0;">Always validate MCPs before using in production workflows.</p>
+
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #3ddc97; margin: 1em 0;">
+                <code>
+# Test individual MCP<br/>
+mcp test postgresql<br/>
+<br/>
+# Test with sample query<br/>
+mcp test postgresql --query "SELECT 1"<br/>
+<br/>
+# Test all MCPs<br/>
+mcp test --all<br/>
+<br/>
+# Show detailed logs<br/>
+mcp test postgresql --verbose<br/>
+                </code>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== SECTION 7: BEST PRACTICES ========== -->
+    <h3>✦ Best Practices & Security</h3>
+
+    <div style="display: grid; gap: 1.5em; margin: 1.5em 0;">
+
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px;">
+            <h4 style="color: #3ddc97; margin-top: 0;">1. Test MCPs in Isolation</h4>
+            <p style="color: var(--text-secondary);">Never deploy an untested MCP to production. Always validate in a dev environment first.</p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #3ddc97; margin: 1em 0;">
+                <code>
+# Create dev MCP config<br/>
+cp ~/.mcp/config.json ~/.mcp/config.dev.json<br/>
+<br/>
+# Point to dev database<br/>
+mcp test postgresql --config ~/.mcp/config.dev.json<br/>
+<br/>
+# Run integration tests<br/>
+npm run test:mcp
+                </code>
+            </div>
+        </div>
+
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
+            <h4 style="color: #5eb8ff; margin-top: 0;">2. Limit MCP Output Tokens</h4>
+            <p style="color: var(--text-secondary);">Large query results can bloat token usage. Always LIMIT results and paginate if needed.</p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #5eb8ff; margin: 1em 0;">
+                <code>
+-- ❌ BAD: Query millions of rows<br/>
+SELECT * FROM events<br/>
+<br/>
+-- ✅ GOOD: Explicit LIMIT<br/>
+SELECT * FROM events WHERE created_at > NOW() - INTERVAL '1 day' LIMIT 100<br/>
+<br/>
+-- ✅ GOOD: Pagination<br/>
+SELECT * FROM users OFFSET 0 LIMIT 50  # Page 1<br/>
+SELECT * FROM users OFFSET 50 LIMIT 50  # Page 2
+                </code>
+            </div>
+        </div>
+
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px;">
+            <h4 style="color: #c084fc; margin-top: 0;">3. Handle MCP Failures Gracefully</h4>
+            <p style="color: var(--text-secondary);">When MCPs fail, always have fallback logic.</p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #c084fc; margin: 1em 0;">
+                <code>
+try {<br/>
+&nbsp;&nbsp;const result = await mcp.postgresql.query("SELECT ...");<br/>
+} catch (error) {<br/>
+&nbsp;&nbsp;if (error.code === 'TIMEOUT') {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;console.log('Query timeout, using cached result');<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;return cachedData;<br/>
+&nbsp;&nbsp;} else if (error.code === 'UNAVAILABLE') {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;console.log('Database down, alerting ops');<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;await mcp.slack.send('DB unavailable!');<br/>
+&nbsp;&nbsp;}<br/>
+}<br/>
+                </code>
+            </div>
+        </div>
+
+        <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ffb454; border-radius: 8px;">
+            <h4 style="color: #ffb454; margin-top: 0;">4. Monitor MCP Usage & Costs</h4>
+            <p style="color: var(--text-secondary);">Track API calls and token usage to avoid surprise bills.</p>
+            <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); color: #ffb454; margin: 1em 0;">
+                <code>
+# Enable MCP logging<br/>
+mcp config set log-level=debug<br/>
+<br/>
+# View usage stats<br/>
+mcp stats<br/>
+<br/>
+# Set usage alerts<br/>
+mcp config set cost-alert=100  # Alert at $100 spend<br/>
+                </code>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%); padding: 1.5em; border-left: 6px solid #ff6b6b; border-radius: 8px;">
+            <h4 style="color: #ff6b6b; margin-top: 0;">5. Security Best Practices</h4>
+            <ul style="color: var(--text-secondary); margin: 0;">
+                <li><strong>Never log credentials:</strong> Disable logging for sensitive MCPs in production</li>
+                <li><strong>Rotate tokens regularly:</strong> Set 90-day rotation for API keys, database passwords</li>
+                <li><strong>Use read-only credentials when possible:</strong> GitHub: use <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">read:repository</code> scopes</li>
+                <li><strong>Audit MCP access:</strong> Log all queries, API calls. Use database audit logs.</li>
+                <li><strong>Isolate sensitive MCPs:</strong> Keep Stripe, payment MCPs in separate config with restricted access</li>
+                <li><strong>VPN for production:</strong> Connect to production databases only through VPN or bastion hosts</li>
+                <li><strong>Encrypt MCP configs:</strong> Use <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">gpg</code> or <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">sops</code> to encrypt sensitive configs</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- ========== SECTION 8: QUICK REFERENCE ========== -->
+    <h3 style="margin-top: 2em;">📖 Quick Reference & Cheatsheet</h3>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+        <h4 style="margin-top: 0; color: #5eb8ff;">Common MCP Commands</h4>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85em; margin-top: 1em;">
+            <tr style="background: var(--bg-elevated);">
+                <th style="padding: 0.75em; border: 1px solid var(--border-default); text-align: left; color: #3ddc97;">Command</th>
+                <th style="padding: 0.75em; border: 1px solid var(--border-default); text-align: left; color: #5eb8ff;">Purpose</th>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp list</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">List all installed MCPs</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp add NAME --scope global</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Install MCP globally</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp remove NAME</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Uninstall MCP</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp test NAME</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Test MCP connectivity</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp config --validate</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Validate all configs</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp logs --tail 50</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Show last 50 log lines</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp auth NAME --refresh</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Refresh token for MCP</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp workflow run WORKFLOW</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Execute MCP workflow</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp stats</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Show usage and cost stats</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+        <h4 style="margin-top: 0; color: #ffb454;">File Locations Quick Reference</h4>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85em; margin-top: 1em;">
+            <tr style="background: var(--bg-elevated);">
+                <th style="padding: 0.75em; border: 1px solid var(--border-default); text-align: left; color: #ffb454;">File/Directory</th>
+                <th style="padding: 0.75em; border: 1px solid var(--border-default); text-align: left; color: #5eb8ff;">Purpose</th>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">~/.mcp/config.json</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Global MCP configuration</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">~/.mcp/.env.local</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">API keys and secrets (never commit)</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">.mcp.json</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Project-level MCP config (can commit)</td>
+            </tr>
+            <tr style="background: var(--bg-elevated);">
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">~/.mcp/servers/</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">Installed MCP server implementations</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);"><code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">~/.mcp/logs/</code></td>
+                <td style="padding: 0.75em; border: 1px solid var(--border-default); color: var(--text-secondary);">MCP activity logs and debugging</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ========== CLOSING ========== -->
+    <div style="background: linear-gradient(135deg, rgba(62, 220, 151, 0.1) 0%, rgba(62, 220, 151, 0.05) 100%); border-left: 4px solid #3ddc97; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
+        <h4 style="margin-top: 0; color: #3ddc97;">Next Steps</h4>
+        <ol style="color: var(--text-secondary); margin: 0;">
+            <li>Install MCP CLI: <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">npm install -g @anthropic-ai/mcp</code></li>
+            <li>Create <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">~/.mcp/config.json</code> with your first MCP (start with PostgreSQL or GitHub)</li>
+            <li>Add secrets to <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">~/.mcp/.env.local</code></li>
+            <li>Test: <code style="background: var(--bg-surface); padding: 0.25em 0.5em; border-radius: 4px;">mcp test postgresql</code></li>
+            <li>Start using in Claude Code: Ask it to query your database, check GitHub, etc.</li>
+            <li>Gradually add more MCPs as you need them</li>
+        </ol>
+    </div>
+
+</section>

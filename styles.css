@@ -2975,3 +2975,539 @@ kbd {
     .commands-table th:nth-child(3),
     .commands-table td:nth-child(3) { display: none; }
 }
+/* ============ PLUGINS & MARKETPLACE SECTIONS ============ */
+/* Minimalist Claude Code aesthetic with clean borders, soft shadows, no radius */
+
+/* ============ TASK 1: .ability-card COMPONENT ============ */
+
+.ability-card {
+  /* Card container styling */
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-subtle);
+  border-radius: 0px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+
+  /* Icon styling - centered, 2rem size */
+}
+
+.ability-card .ability-icon {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.ability-card h4 {
+  margin: 0.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.ability-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0.75rem 0;
+  flex: 1;
+}
+
+/* Hover state - subtle lift */
+.ability-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent);
+}
+
+/* ============ TASK 2: .ability-grid COMPONENT ============ */
+
+.ability-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+
+  /* Ensure equal height cards */
+}
+
+.ability-grid .ability-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============ TASK 3: .claude-execution-window COMPONENT ============ */
+
+.claude-execution-window {
+  background: var(--bg-base);
+  border: 1px solid var(--border-default);
+  border-radius: 0px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.execution-header {
+  background: #3e3e42;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+
+  /* VS Code title bar style */
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+.execution-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--success);
+  animation: executionBlinking 1s step-end infinite;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  margin-right: 0.25rem;
+}
+
+.execution-label {
+  flex: 1;
+}
+
+.execution-editor {
+  padding: 1rem;
+  background: var(--bg-base);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.file-path {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.execution-output {
+  background: #0a0e14;
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-height: 200px;
+  overflow-y: auto;
+
+  /* Simulate terminal output */
+  border-top: 1px solid var(--border-subtle);
+}
+
+.output-line {
+  margin: 0.25rem 0;
+}
+
+/* Success output styling */
+.output-line.success {
+  color: var(--success);
+}
+
+/* Error output styling */
+.output-line.error {
+  color: var(--danger);
+}
+
+/* Warning output styling */
+.output-line.warning {
+  color: var(--warning);
+}
+
+/* Prompt symbol */
+.output-line::before {
+  content: '$ ';
+  color: var(--primary);
+  margin-right: 0.5rem;
+  font-weight: 600;
+}
+
+/* ============ TASK 4: EXECUTION BLINKING ANIMATION ============ */
+
+@keyframes executionBlinking {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0.5;
+  }
+}
+
+/* ============ TASK 5: MINIMALIST DESIGN REFINEMENTS ============ */
+
+/* Reduce box-shadow intensity across all cards */
+.path-card,
+.challenge-card,
+.card,
+.resource-card,
+.stat-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Cleaner info-banner styling */
+.info-banner {
+  background: rgba(94, 184, 255, 0.06);
+  border-left: 2px solid var(--primary);
+  border-radius: 0px;
+  padding: var(--sp-4) var(--sp-5);
+  margin: var(--sp-5) 0;
+  color: #b0bfce;
+  font-size: 0.9rem;
+}
+
+.info-banner strong {
+  color: var(--text-primary);
+}
+
+.info-banner code {
+  font-size: 0.85em;
+}
+
+.info-banner--tip {
+  background: rgba(61, 220, 151, 0.08);
+  border-left-color: var(--success);
+}
+
+.info-banner--warn {
+  background: rgba(255, 180, 84, 0.08);
+  border-left-color: var(--warning);
+}
+
+/* Responsive adjustments for execution window */
+@media (max-width: 768px) {
+  .claude-execution-window {
+    font-size: 0.8rem;
+  }
+
+  .execution-editor,
+  .execution-output {
+    padding: 0.75rem;
+  }
+
+  .ability-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============ TASK 6: CODE BLOCK STYLING FOR MINIMALISM ============ */
+
+.code-block {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: #0d0d0d;
+  border: 1px solid var(--border-default);
+  border-radius: 0px;
+  margin: var(--sp-4) 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.code-block::before {
+  content: attr(data-title);
+  display: block;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  padding: var(--sp-2) var(--sp-4);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  border-bottom: 1px solid var(--border-subtle);
+  letter-spacing: 0.02em;
+}
+
+.code-block::after {
+  content: attr(data-lang);
+  position: absolute;
+  top: var(--sp-2);
+  right: 70px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+
+.code-block pre {
+  padding: var(--sp-5);
+  overflow-x: auto;
+  margin: 0;
+  position: relative;
+}
+
+.code-block pre::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: transparent;
+  opacity: 0;
+  z-index: 1;
+}
+
+.code-block pre code {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #c9d1d9;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: block;
+  white-space: pre;
+}
+
+/* ============ PLUGINS SECTION SPECIFIC STYLES ============ */
+
+.plugin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--sp-6);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.plugin-search {
+  flex: 1;
+  max-width: 400px;
+}
+
+.plugin-search input {
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 0px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.plugin-search input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 122, 89, 0.12);
+}
+
+.plugin-filters {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.plugin-filter-btn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  border-radius: 0px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.plugin-filter-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.plugin-filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* ============ MARKETPLACE SECTION SPECIFIC STYLES ============ */
+
+.marketplace-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+
+.marketplace-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+
+.marketplace-stat {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-subtle);
+  border-radius: 0px;
+  padding: var(--sp-4);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.marketplace-stat-num {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+.marketplace-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.marketplace-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+
+.marketplace-category-card {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-subtle);
+  border-radius: 0px;
+  padding: var(--sp-5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.marketplace-category-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(94, 184, 255, 0.1);
+}
+
+.category-icon {
+  font-size: 2rem;
+  color: var(--primary);
+}
+
+.category-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.category-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ============ RESPONSIVE REFINEMENTS ============ */
+
+@media (max-width: 900px) {
+  .marketplace-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .marketplace-categories {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ability-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .plugin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .plugin-search {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .plugin-filters {
+    margin-bottom: var(--sp-4);
+  }
+
+  .marketplace-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .marketplace-categories {
+    grid-template-columns: 1fr;
+  }
+
+  .ability-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .execution-header {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .execution-editor,
+  .execution-output {
+    padding: 0.5rem;
+  }
+}
+
+/* ============ ADDITIONAL MINIMALIST ENHANCEMENTS ============ */
+
+/* Smooth transitions for all interactive elements */
+.ability-card,
+.marketplace-category-card,
+.plugin-filter-btn,
+.execution-output {
+  transition: all 0.2s ease;
+}
+
+/* Consistent focus states */
+.plugin-search input:focus,
+.plugin-filter-btn:focus,
+.marketplace-category-card:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Subtle borders for separation */
+.claude-execution-window,
+.plugin-header,
+.marketplace-header {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Typography consistency */
+.ability-card h4,
+.category-name {
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+.file-path,
+.execution-header {
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}

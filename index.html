@@ -107,6 +107,10 @@
                 <ul class="nav-list">
                     <li><a href="#agente-sdk" class="nav-link" data-section="agente-sdk" data-mode="technical">
                         <span class="nav-icon">🤖</span> Agent SDK</a></li>
+                    <li><a href="#plugins" class="nav-link" data-section="plugins" data-mode="technical">
+                        <span class="nav-icon">🔌</span> Plugins & Abilities</a></li>
+                    <li><a href="#marketplace" class="nav-link" data-section="marketplace" data-mode="technical">
+                        <span class="nav-icon">🛍️</span> Marketplace (Smithery)</a></li>
                     <li><a href="#api-anthropic" class="nav-link" data-section="api-anthropic" data-mode="technical">
                         <span class="nav-icon">⚡</span> Anthropic API</a></li>
                     <li><a href="#skills-avanzados" class="nav-link" data-section="skills-avanzados" data-mode="technical">
@@ -4409,6 +4413,741 @@ variables:
                 </div>
             </section>
 
+            <!-- ====== SECCIÓN: PLUGINS & INTEGRATIONS ====== -->
+            <section class="content-section" data-section="plugins" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Profundización / Plugins</span>
+                    <h2>🔌 Plugins & Integrations</h2>
+                    <p class="section-lead">
+                        Los plugins extienden Claude Code en VS Code y JetBrains, proporcionando integraciones
+                        nativas, aceleradores de desarrollo, y acceso a herramientas especializadas sin salir
+                        de tu entorno de desarrollo.
+                    </p>
+                </div>
+
+                <h3 class="block-title">¿Qué son los Plugins?</h3>
+                <div class="info-banner info-banner--tip">
+                    <strong>💡 Plugins vs CLI:</strong> Claude Code CLI es para automatización sin interfaz.
+                    Los plugins integran Claude directamente en el editor con UI nativa, shortcuts de teclado,
+                    y sincronización bidireccional con tu código. Usa CLI para scripts y background jobs;
+                    usa plugins para desarrollo interactivo.
+                </div>
+                <p>
+                    Los plugins oficiales de Anthropic para VS Code y JetBrains transforman la forma en que
+                    trabajas con Claude:
+                </p>
+                <ul class="bullet-list">
+                    <li><strong>Integración nativa:</strong> Aparecen como side panels, comandos de paleta, y decoradores en el editor</li>
+                    <li><strong>Contexto automático:</strong> Archivos abiertos, selección actual, historial de git se envían automáticamente</li>
+                    <li><strong>Ejecución segura:</strong> Permisos granulares — nunca ejecuta comandos sin tu aprobación</li>
+                    <li><strong>Sincronización en tiempo real:</strong> Los cambios de Claude se aplican inmediatamente a tu código</li>
+                    <li><strong>Extensibilidad:</strong> Hooks personalizados, atajos de teclado, y macros para flujos específicos</li>
+                </ul>
+
+                <h3 class="block-title">VS Code Plugin — 8 Capacidades Principales</h3>
+                <div class="ability-grid">
+                    <div class="ability-card">
+                        <div class="ability-icon">⚡</div>
+                        <h4>AI-Powered Code Completion</h4>
+                        <p>Completaciones contextuales con inteligencia multilinea. Claude entiende tu función actual y completa bloques enteros de código.</p>
+                        <div class="code-block" data-lang="bash" data-title="Uso: Presiona Ctrl+K en VS Code">
+                            <pre><code>// Escribe: function calculateTotal(items) {
+// Claude sugiere la implementación completa:
+function calculateTotal(items) {
+  return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">🚀</div>
+                        <h4>One-Click Cloud Run</h4>
+                        <p>Ejecuta scripts y servidores locales directamente desde el editor. Claude puede iniciar dev servers, tests, y deployments.</p>
+                        <div class="code-block" data-lang="bash" data-title="Ejemplo: Ejecutar tests con un click">
+                            <pre><code># Claude ejecuta automáticamente:
+npm run test:watch
+
+# Luego muestra los resultados en el panel lateral:
+✅ 45 passed
+❌ 2 failed</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">📝</div>
+                        <h4>Inline Editing & Diffs</h4>
+                        <p>Realiza cambios inline sin ocupar pantalla. El editor muestra diffs lado a lado antes de aplicar cambios.</p>
+                        <div class="code-block" data-lang="bash" data-title="Workflow: Refactoring con preview">
+                            <pre><code># Selecciona código → Ctrl+Shift+C → "refactor to arrow function"
+// Antes:
+function mapUser(user) {
+  return { name: user.name, email: user.email };
+}
+
+// Después (preview en diff):
+const mapUser = (user) => ({ name: user.name, email: user.email });</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">⚙️</div>
+                        <h4>Settings & Hooks Management</h4>
+                        <p>Configura comportamientos personalizados sin editar JSON. UI gráfica para activar/desactivar features, permisos, y valores por defecto.</p>
+                        <div class="code-block" data-lang="json" data-title="Configuración visual (detrás de los botones)">
+                            <pre><code>{
+  "claude.autoFormat": true,
+  "claude.maxTokens": 4096,
+  "claude.model": "claude-opus-4-7",
+  "claude.hooks.preCommit": "lint+format",
+  "claude.permissions.allowBashExecution": true
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">🌳</div>
+                        <h4>Git Integration & Context Awareness</h4>
+                        <p>Claude analiza diffs, branches, y commits. Entiende qué cambios hiciste y proporciona feedback contextualizado.</p>
+                        <div class="code-block" data-lang="bash" data-title="Análisis automático de PR">
+                            <pre><code># Abre PR en VS Code → Claude analiza:
+- Diff vs main
+- Commits en la rama
+- Tests affected
+- Cambios en dependencias
+
+# Genera review automático:
+✅ Cambios sintácticamente correctos
+⚠ Nuevo dependency sin lock
+🔒 Acceso a secretos en variable de entorno</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">🎤</div>
+                        <h4>Voice Commands & Accessibility</h4>
+                        <p>Controla Claude con comandos de voz. Accesibilidad mejorada para desarrolladores con limitaciones de movilidad.</p>
+                        <div class="code-block" data-lang="bash" data-title="Ejemplo: Control por voz">
+                            <pre><code># Di: "Refactor to async-await"
+# Claude entiende el contexto y convierte callbacks automáticamente
+
+// Antes (callback hell):
+fetchUser(id, (err, user) => {
+  if (!err) processUser(user);
+});
+
+// Después (async-await):
+try {
+  const user = await fetchUser(id);
+  await processUser(user);
+} catch (err) { /* manejo */ }</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">👥</div>
+                        <h4>Team Collaboration Features</h4>
+                        <p>Comparte prompts, atajos, y configuración con tu equipo. Control de sesión y logs de auditoría para equipos empresariales.</p>
+                        <div class="code-block" data-lang="bash" data-title="Shared Team Settings">
+                            <pre><code># .claude/team-config.json (versionado en git)
+{
+  "team": "backend-team",
+  "sharedPrompts": ["code-review", "security-audit"],
+  "enforceModel": "claude-opus-4-7",
+  "auditLog": true
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">🔌</div>
+                        <h4>Extension Marketplace Integration</h4>
+                        <p>Conecta plugins de terceros (Smithery MCPs) directamente desde VS Code. Un click para instalar herramientas especializadas.</p>
+                        <div class="code-block" data-lang="bash" data-title="Instalación de MCP desde Smithery">
+                            <pre><code># VS Code Command Palette: "Claude: Install MCP"
+# Busca: "postgres-query-builder"
+# Un click → instalado y disponible en sesiones Claude
+
+# Ahora puedes usar en prompts:
+"Crea una query de PostgreSQL que..."</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="block-title">JetBrains Plugin — 6 Capacidades Principales</h3>
+                <div class="ability-grid">
+                    <div class="ability-card">
+                        <div class="ability-icon">🛠️</div>
+                        <h4>IDE-Native Context Awareness</h4>
+                        <p>IntelliJ, WebStorm, PyCharm — Claude entiende la estructura del proyecto, incluye símbolos, y proporciona refactoring IDE-aware.</p>
+                        <div class="code-block" data-lang="bash" data-title="Rename refactor con inteligencia IDE">
+                            <pre><code># Renombra función: SearchUser → findUserByEmail
+# Claude automáticamente:
+# - Actualiza todas las referencias
+# - Actualiza tests y mocks
+# - Actualiza docs y comentarios
+# Sin romper tipos ni imports</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">💬</div>
+                        <h4>Language-Specific Completions</h4>
+                        <p>Completaciones inteligentes para Kotlin, Python, TypeScript, Go, Rust. Claude entiende idiomas, librerías estándar, y patrones.</p>
+                        <div class="code-block" data-lang="kotlin" data-title="Kotlin completion en IntelliJ">
+                            <pre><code># Escribe: data class User(
+# Claude completa con tipo seguro:
+data class User(
+    val id: UUID = UUID.randomUUID(),
+    val email: String,
+    val createdAt: Instant = Instant.now()
+)</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">♻️</div>
+                        <h4>Refactoring Integration</h4>
+                        <p>Usa el catálogo de refactoring de JetBrains. Claude propone refactorings y los aplica con seguridad tipo-completa.</p>
+                        <div class="code-block" data-lang="bash" data-title="Refactoring asistido por Claude">
+                            <pre><code># Abre "Analyze Code" → Claude analiza:
+- Duplicación de código
+- Métodos largos
+- Ciclos complejos
+
+# Propone refactorings con validación IDE:
+✅ Extract method: calculateTotal() [líneas 45-52]
+✅ Replace loop with stream: [línea 78]</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">🏗️</div>
+                        <h4>Build System Awareness</h4>
+                        <p>Entiende Maven, Gradle, npm, Cargo, y otros. Claude sabe qué artefactos existen, dependencias, y cómo ejecutar builds.</p>
+                        <div class="code-block" data-lang="bash" data-title="Gradle-aware code generation">
+                            <pre><code># Claude sabe que estás en Gradle + Kotlin + Spring
+# Genera automáticamente:
+@RestController
+@RequestMapping("/api/users")
+class UserController(val service: UserService) {
+    @GetMapping("/{id}")
+    suspend fun getUser(@PathVariable id: UUID): UserDto = service.findById(id)
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">📦</div>
+                        <h4>VCS Integration & History</h4>
+                        <p>Acceso a git blame, history, branches. Claude analiza cambios recientes y proporciona feedback considerando el historial.</p>
+                        <div class="code-block" data-lang="bash" data-title="VCS-aware review">
+                            <pre><code># Claude abre PR → ve que UserService cambió hace 3 días
+# Pregunta automáticamente:
+"¿Este cambio es compatible con refactoring de UserService?"
+# Muestra commit anterior para contexto</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="ability-card">
+                        <div class="ability-icon">💻</div>
+                        <h4>Terminal Embedding</h4>
+                        <p>Terminal integrado en la herramienta Claude. Ejecuta tests, builds, y comandos sin cambiar de ventana.</p>
+                        <div class="code-block" data-lang="bash" data-title="Terminal integrado">
+                            <pre><code># Claude propone:
+./gradlew test --include-build-cache
+
+# Ejecuta en terminal embebido:
+> Task :test
+✅ 142 tests passed
+
+# Claude ve el resultado y ajusta código si es necesario</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="block-title">Configuration & Setup</h3>
+                <p>
+                    Ambos plugins se configuran a través de archivos JSON simples. No requiere UI — todo es versionable en git.
+                </p>
+
+                <div class="code-block" data-lang="json" data-title="Keyboard Shortcuts (.claude/keybindings.json)">
+                    <pre><code>{
+  "bindings": [
+    {
+      "key": "ctrl+shift+a",
+      "command": "claude.quickAsk",
+      "when": "editorFocus"
+    },
+    {
+      "key": "ctrl+shift+r",
+      "command": "claude.refactor",
+      "when": "editorHasSelection"
+    },
+    {
+      "key": "ctrl+shift+t",
+      "command": "claude.generateTests",
+      "when": "editorFocus && editorLangId == 'typescript'"
+    },
+    {
+      "key": "ctrl+shift+f",
+      "command": "claude.formatWithClaude",
+      "when": "editorFocus"
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <div class="code-block" data-lang="json" data-title="Settings (.claude/plugin-settings.json)">
+                    <pre><code>{
+  "editor.vscodeVersion": "1.95+",
+  "plugin.autoFormat": false,
+  "plugin.formatOnSave": true,
+  "plugin.maxLinesToRefactor": 500,
+  "completion.debounceMs": 300,
+  "completion.maxSuggestions": 5,
+  "sidebar.width": "400px",
+  "theme": "auto"
+}</code></pre>
+                </div>
+
+                <div class="code-block" data-lang="json" data-title="Hooks Integration (.claude/hooks.json)">
+                    <pre><code>{
+  "hooks": [
+    {
+      "name": "preCommit",
+      "command": "claude",
+      "args": ["-p", "Revisa este código para errores comunes"],
+      "triggerOn": "commit"
+    },
+    {
+      "name": "onSave",
+      "command": "claude",
+      "args": ["-p", "Formatea y mejora este archivo"],
+      "triggerOn": "save",
+      "filePatterns": ["**/*.ts", "**/*.tsx"]
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <h3 class="block-title">Troubleshooting</h3>
+                <div class="info-banner info-banner--warn">
+                    <strong>⚠ Plugin Version Compatibility:</strong> VS Code y JetBrains actualizan con frecuencia.
+                    Si experimentas problemas, verifica que tu IDE está actualizado y que tienes la última
+                    versión del plugin desde el marketplace (VS Code Extensions o JetBrains Plugins).
+                </div>
+
+                <p><strong>Problema:</strong> Plugin no aparece en VS Code</p>
+                <ul class="bullet-list">
+                    <li>Verifica: VS Code → Extensions → busca "Claude Code"</li>
+                    <li>Reinstala si es necesario</li>
+                    <li>Recarga la ventana: Ctrl+K Ctrl+R</li>
+                </ul>
+
+                <p><strong>Problema:</strong> Completaciones lentas</p>
+                <ul class="bullet-list">
+                    <li>Reduce completion.maxSuggestions en settings</li>
+                    <li>Aumenta completion.debounceMs a 500ms</li>
+                    <li>Desactiva completaciones en archivo muy grandes (mayor a 5000 líneas)</li>
+                </ul>
+
+                <p><strong>Problema:</strong> Permisos denegados para ejecución</p>
+                <ul class="bullet-list">
+                    <li>Abre Command Palette: Claude: Manage Permissions</li>
+                    <li>Habilita permisos para herramientas específicas</li>
+                    <li>Revisa .claude/settings.json para configuración de team-wide</li>
+                </ul>
+            </section>
+
+            <!-- ====== SECCIÓN: MARKETPLACE & PUBLISHING ====== -->
+            <section class="content-section" data-section="marketplace" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Profundización / Marketplace</span>
+                    <h2>🛍️ Marketplace & Publishing (Smithery)</h2>
+                    <p class="section-lead">
+                        Smithery es el marketplace oficial para MCPs, Skills, y extensiones de Claude Code.
+                        Publica tus herramientas para que otros desarrolladores las descubran, reutilicen,
+                        y construyan sobre tu trabajo.
+                    </p>
+                </div>
+
+                <h3 class="block-title">¿Qué es Smithery?</h3>
+                <div class="info-banner info-banner--tip">
+                    <strong>💡 Smithery = NPM para Claude:</strong> Así como npm centraliza paquetes JavaScript,
+                    Smithery centraliza herramientas de Claude. Publica un MCP, un Skill, una integración,
+                    o un prompt. La comunidad las descubre, instala, y extiende.
+                </div>
+
+                <p>
+                    Smithery proporciona:
+                </p>
+                <ul class="bullet-list">
+                    <li><strong>Publicación centralizada:</strong> Un lugar donde todos buscan herramientas de Claude</li>
+                    <li><strong>Versionado semántico:</strong> Control de versiones automático, breaking changes detectados</li>
+                    <li><strong>Distribución CDN:</strong> Descargas rápidas globales sin latencia</li>
+                    <li><strong>Verificación de seguridad:</strong> Escaneo automático de vulnerabilidades, análisis de permisos</li>
+                    <li><strong>Comunidad:</strong> Ratings, comentarios, colaboradores, y adopción visible</li>
+                    <li><strong>Monetización (opcional):</strong> Vende plugins premium, recibe donaciones, o mantén gratis</li>
+                </ul>
+
+                <h3 class="block-title">Publishing Workflow — 5 Pasos</h3>
+
+                <h4>Paso 1: Preparar tu MCP</h4>
+                <p>
+                    Antes de publicar, asegúrate de que tu MCP esté listo para producción:
+                </p>
+                <ul class="bullet-list">
+                    <li>README.md con instrucciones de instalación claras</li>
+                    <li>Ejemplos de uso funcionando</li>
+                    <li>Tests automatizados (unit + integration)</li>
+                    <li>Linting y format pass</li>
+                    <li>Licencia explícita (MIT, Apache 2.0, etc.)</li>
+                </ul>
+                <div class="code-block" data-lang="bash" data-title="Pre-publish checklist">
+                    <pre><code># 1. Tests
+npm test
+npm run test:integration
+
+# 2. Build
+npm run build
+
+# 3. Lint
+npm run lint
+npm run format:check
+
+# 4. Security
+npm audit
+
+# 5. Validación de MCP
+npx mcp validate
+
+# 6. Tag de versión
+git tag v1.0.0
+git push origin v1.0.0</code></pre>
+                </div>
+
+                <h4>Paso 2: Crear Manifest de Publicación</h4>
+                <p>
+                    Smithery lee un archivo de manifiesto JSON que describe tu herramienta:
+                </p>
+                <div class="code-block" data-lang="json" data-title="smithery.json — Manifest oficial">
+                    <pre><code>{
+  "name": "postgres-query-builder",
+  "version": "1.0.0",
+  "description": "MCP para construir y ejecutar queries de PostgreSQL de forma segura",
+  "keywords": ["database", "postgresql", "sql", "query-builder"],
+  "author": {
+    "name": "Tu Nombre",
+    "email": "tu@email.com",
+    "url": "https://github.com/tuusername"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/tuusername/postgres-query-builder",
+  "homepage": "https://github.com/tuusername/postgres-query-builder#readme",
+  "icon": "https://raw.githubusercontent.com/tuusername/postgres-query-builder/main/icon.png",
+  "type": "mcp",
+  "target": "node",
+  "capabilities": {
+    "tools": ["query_builder", "execute_query", "schema_inspector"],
+    "permissions": ["filesystem", "network"]
+  },
+  "installation": {
+    "command": "npm install",
+    "entryPoint": "./dist/index.js"
+  },
+  "documentation": {
+    "gettingStarted": "https://github.com/tuusername/postgres-query-builder#getting-started",
+    "apiDocs": "https://github.com/tuusername/postgres-query-builder/blob/main/API.md"
+  },
+  "metadata": {
+    "category": "database",
+    "featured": false,
+    "verified": false,
+    "maintainerStatus": "active"
+  }
+}</code></pre>
+                </div>
+
+                <h4>Paso 3: Empaquetar y Probar</h4>
+                <p>
+                    Crea un paquete distribuible que otros puedan instalar localmente:
+                </p>
+                <div class="code-block" data-lang="bash" data-title="Empaquetamiento y testing pre-publicación">
+                    <pre><code># 1. Build con bundling
+npm run build
+npm run bundle
+
+# 2. Crear tarball
+npm pack
+
+# 3. Instalar localmente para testing
+npm install -g ./postgres-query-builder-1.0.0.tgz
+
+# 4. Test en otra carpeta
+mkdir /tmp/test-install
+cd /tmp/test-install
+claude install postgres-query-builder
+claude -p "Usa el MCP postgres-query-builder para..."
+
+# 5. Verificar que todo funciona
+npm test:e2e</code></pre>
+                </div>
+
+                <h4>Paso 4: Enviar a Smithery</h4>
+                <p>
+                    Autentícate en Smithery y publica:
+                </p>
+                <div class="code-block" data-lang="bash" data-title="Publicar en Smithery">
+                    <pre><code># 1. Login
+smithery login
+
+# 2. Validar manifest
+smithery validate ./smithery.json
+
+# 3. Publicar
+smithery publish
+
+# 4. Output:
+# ✅ Published postgres-query-builder@1.0.0
+# 🔗 Available at: smithery.ai/mcp/postgres-query-builder
+# 📊 CDN: cdn.smithery.ai/mcp/postgres-query-builder/v1.0.0
+
+# 5. Verificar en web
+open https://smithery.ai/mcp/postgres-query-builder</code></pre>
+                </div>
+
+                <h4>Paso 5: Distribuir y Promover</h4>
+                <p>
+                    Ahora que está publicado, promociona tu herramienta:
+                </p>
+                <ul class="bullet-list">
+                    <li>Comparte enlace de Smithery en GitHub, LinkedIn, comunidades</li>
+                    <li>Crea badges para README: [![Smithery](badge.svg)](https://smithery.ai/...)</li>
+                    <li>Publica tutorial de uso en Dev.to, Medium, o tu blog</li>
+                    <li>Responde preguntas y issues — mantén engagement activo</li>
+                    <li>Actualiza regularmente: bugs, features, nuevas versiones</li>
+                </ul>
+
+                <div class="code-block" data-lang="markdown" data-title="Badges para tu README">
+                    <pre><code># PostgreSQL Query Builder
+
+[![Smithery](https://img.shields.io/badge/Smithery-Published-blue)](https://smithery.ai/mcp/postgres-query-builder)
+[![npm version](https://img.shields.io/npm/v/postgres-query-builder)](https://npmjs.com/package/postgres-query-builder)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
+## Installation
+
+```bash
+claude install postgres-query-builder
+```</code></pre>
+                </div>
+
+                <h3 class="block-title">Package.json Manifest Completo</h3>
+                <p>
+                    Aunque smithery.json es el manifest oficial, tu package.json también juega un rol importante:
+                </p>
+                <div class="code-block" data-lang="json" data-title="package.json para MCPs publicables">
+                    <pre><code>{
+  "name": "postgres-query-builder",
+  "version": "1.0.0",
+  "description": "Safe PostgreSQL query builder MCP with schema introspection",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "bundle": "esbuild src/index.ts --bundle --platform=node --outfile=dist/bundle.js",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:e2e": "vitest --run src/__tests__/e2e.test.ts",
+    "test:integration": "npm run build && node scripts/integration-test.js",
+    "lint": "eslint src",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src",
+    "prepublishOnly": "npm run build && npm run test && npm run lint"
+  },
+  "keywords": [
+    "mcp",
+    "claude",
+    "database",
+    "postgresql",
+    "sql",
+    "query-builder",
+    "anthropic"
+  ],
+  "author": "Tu Nombre <tu@email.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tuusername/postgres-query-builder"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.31.0",
+    "pg": "^8.10.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0",
+    "esbuild": "^0.19.0"
+  }
+}</code></pre>
+                </div>
+
+                <div class="info-banner info-banner--tip">
+                    <strong>💡 Campo publish:</strong> Si tu herramienta tiene una sección Smithery especial,
+                    decláralo en package.json para que publicadores de terceros no creen conflictos:
+                </div>
+
+                <div class="code-block" data-lang="json" data-title="Campo smithery en package.json (opcional)">
+                    <pre><code>{
+  "name": "postgres-query-builder",
+  "smithery": {
+    "category": "database",
+    "keywords": ["postgresql", "sql"],
+    "featured": false,
+    "verified": true
+  }
+}</code></pre>
+                </div>
+
+                <h3 class="block-title">Estrategia de Versionado</h3>
+                <p>
+                    Usa Semantic Versioning. Smithery automáticamente detecta breaking changes y advierte a usuarios:
+                </p>
+                <ul class="bullet-list">
+                    <li><strong>PATCH (1.0.0 → 1.0.1):</strong> Bugfixes, cambios internos sin impacto en API</li>
+                    <li><strong>MINOR (1.0.0 → 1.1.0):</strong> Nuevas features, backwards compatible</li>
+                    <li><strong>MAJOR (1.0.0 → 2.0.0):</strong> Breaking changes — cambios en parámetros, nombres de tools, removals</li>
+                </ul>
+
+                <div class="code-block" data-lang="bash" data-title="Versionado y tagging">
+                    <pre><code># 1. Hacer cambios, testear
+npm test:integration
+
+# 2. Aumentar versión en package.json y smithery.json
+npm version minor
+# O manualmente: npm version 1.1.0
+
+# 3. Crear commit y tag
+git commit -am "feat: add index creation tool"
+git tag v1.1.0
+
+# 4. Push a GitHub
+git push origin main --tags
+
+# 5. Publicar a Smithery (automático si está conectado)
+# O manual:
+smithery publish --version 1.1.0</code></pre>
+                </div>
+
+                <h3 class="block-title">Distribución & Promoción</h3>
+                <p>
+                    Una vez publicado, hay varias formas de que usuarios lo encuentren:
+                </p>
+
+                <p><strong>1. Smithery UI — Búsqueda automática</strong></p>
+                <ul class="bullet-list">
+                    <li>Usuarios buscan en smithery.ai por keywords</li>
+                    <li>Classificación por stars, actualizaciones recientes, verificación</li>
+                    <li>Instalan con un click desde Claude Code</li>
+                </ul>
+
+                <p><strong>2. CLI — Instalación directa</strong></p>
+                <div class="code-block" data-lang="bash" data-title="Instalación por CLI">
+                    <pre><code># Instalación por CLI:
+claude install postgres-query-builder
+
+# O con versión específica:
+claude install postgres-query-builder@1.0.5</code></pre>
+                </div>
+
+                <p><strong>3. GitHub Integration — Badges y Links</strong></p>
+                <div class="code-block" data-lang="markdown" data-title="Badge markdown para GitHub README">
+                    <pre><code># PostgreSQL Query Builder
+
+## Installation
+
+You can install this via [Smithery](https://smithery.ai):
+
+Or via npm:
+
+```bash
+npm install postgres-query-builder
+```</code></pre>
+                </div>
+
+                <p><strong>4. Documentación & Tutoriales</strong></p>
+                <ul class="bullet-list">
+                    <li>Escribe un tutorial en Dev.to, Medium, o blog personal</li>
+                    <li>Crea video tutorial en YouTube para visibilidad</li>
+                    <li>Comparte en comunidades (Discord, Reddit, Forums de Claude)</li>
+                </ul>
+
+                <h3 class="block-title">Seguridad & Compliance</h3>
+
+                <div class="info-banner info-banner--warn">
+                    <strong>⚠ Requisitos de publicación:</strong> Todas las herramientas publicadas en Smithery
+                    deben pasar auditoría de seguridad automática antes de disponibilidad pública.
+                </div>
+
+                <p><strong>Checklist de seguridad:</strong></p>
+                <ul class="bullet-list">
+                    <li>✅ Sin secretos/credenciales en código público</li>
+                    <li>✅ Sin dependencias con vulnerabilidades conocidas (npm audit)</li>
+                    <li>✅ Permisos explícitos declarados (filesystem, network, etc.)</li>
+                    <li>✅ Validación de entrada en todos los tools</li>
+                    <li>✅ Rate limiting si accede a APIs externas</li>
+                    <li>✅ Logs de auditoría para operaciones críticas</li>
+                    <li>✅ Términos de servicio claros si es premium</li>
+                </ul>
+
+                <div class="code-block" data-lang="json" data-title="Declaración de permisos en smithery.json">
+                    <pre><code>{
+  "name": "postgres-query-builder",
+  "capabilities": {
+    "tools": ["query_builder", "execute_query"],
+    "permissions": {
+      "network": {
+        "description": "Conecta a servidores PostgreSQL",
+        "required": true
+      },
+      "filesystem": {
+        "description": "Lee archivos de configuración locales",
+        "required": false
+      },
+      "environment": {
+        "description": "Lee DATABASE_URL para conexión",
+        "required": true
+      }
+    }
+  }
+}</code></pre>
+                </div>
+
+                <p><strong>Licencia:</strong> Elige una licencia permisiva:</p>
+                <ul class="bullet-list">
+                    <li><strong>MIT:</strong> Máxima flexibilidad, perfecta para la mayoría</li>
+                    <li><strong>Apache 2.0:</strong> Incluye cláusula de patent, buena para empresas</li>
+                    <li><strong>GPL 3.0:</strong> Requires derivados sean open-source también</li>
+                </ul>
+
+                <div class="code-block" data-lang="bash" data-title="Agregar licencia">
+                    <pre><code># 1. Crear archivo LICENSE
+cp /path/to/MIT.txt LICENSE
+
+# 2. Mencionar en README
+# 3. Versionado en git
+git add LICENSE
+git commit -m "docs: add MIT license"</code></pre>
+                </div>
+            </section>
+
             <!-- ====== SECCIÓN: MEJORES PRÁCTICAS ====== -->
             <section class="content-section" data-section="mejores-practicas" data-mode="technical">
                 <div class="section-header">
@@ -7700,80 +8439,754 @@ Traza: cómo se parsean argumentos, validación, error handling"</code></pre>
                 <div class="section-header">
                     <span class="breadcrumb">Producción / Git Workflows Detallado</span>
                     <h2>🌿 Git Workflows Reales en Producción</h2>
-                    <p class="section-lead">Tres flujos probados: Trunk-based, Gitflow, Worktrees. Con comandos copy-paste.</p>
+                    <p class="section-lead">Tres flujos probados con casos de uso reales, ejemplos step-by-step y estrategias avanzadas.</p>
                 </div>
 
-                <article class="card">
-                    <h3>Flujo A: Trunk-Based Development</h3>
-                    <p><strong>Para:</strong> Equipos 2-8 personas, ciclos cortos (diarios/semanales)</p>
-                    <pre><code class="language-bash"># 1. Sincroniza master
-git checkout master && git pull origin master
+                <!-- WORKFLOW OVERVIEW CARDS -->
+                <div style="margin-bottom: 48px;">
+                    <h3 style="margin-bottom: 24px;">Elige tu Flujo</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div class="ability-card">
+                            <div class="ability-icon">⚡</div>
+                            <h4>Trunk-Based Development</h4>
+                            <p><strong>Mejor para:</strong> Equipos pequeños (2-8), ciclos rápidos (diarios)</p>
+                            <p style="font-size: 0.9em; color: #666; margin-top: 12px;">🚀 Integración continua • Menos conflictos • Deploy seguro</p>
+                            <p style="font-size: 0.9em; color: #666; margin-top: 4px;">⚠️ Requiere CI/CD sólido • Tests confiables</p>
+                        </div>
 
-# 2. Feature branch corta (max 1 día)
+                        <div class="ability-card">
+                            <div class="ability-icon">🔀</div>
+                            <h4>Feature Branches + Gitflow</h4>
+                            <p><strong>Mejor para:</strong> Equipos grandes (8-20+), releases planeadas</p>
+                            <p style="font-size: 0.9em; color: #666; margin-top: 12px;">📦 Releases controladas • Hotfixes aislados • Estructurado</p>
+                            <p style="font-size: 0.9em; color: #666; margin-top: 4px;">⚠️ Más complejo • Riesgo de divergencia</p>
+                        </div>
+
+                        <div class="ability-card">
+                            <div class="ability-icon">⚙️</div>
+                            <h4>Git Worktrees</h4>
+                            <p><strong>Mejor para:</strong> Paralelismo sin conflictos (2-3 branches)</p>
+                            <p style="font-size: 0.9em; color: #666; margin-top: 12px;">🧩 Contexto aislado • Cero conflictos • Multiplexing</p>
+                            <p style="font-size: 0.9em; color: #666; margin-top: 4px;">⚠️ Más almacenamiento • Cleanup manual</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DECISION TREE / QUICK SELECTOR -->
+                <div class="info-banner info-banner--tip" style="margin-bottom: 48px;">
+                    <h4>¿Por Dónde Empiezo?</h4>
+                    <ul style="margin-top: 12px; line-height: 1.8;">
+                        <li><strong>Tu equipo es pequeño (≤8 personas) y quieres iterar rápido:</strong> → Trunk-Based Development</li>
+                        <li><strong>Tu equipo es grande y necesitas releases predecibles:</strong> → Gitflow</li>
+                        <li><strong>Necesitas trabajar en 2-3 features sin conflictos simultáneamente:</strong> → Git Worktrees</li>
+                        <li><strong>Combina: Gitflow + Worktrees para escalabilidad:</strong> → Avanzado (ver abajo)</li>
+                    </ul>
+                </div>
+
+                <!-- FLUJO A: TRUNK-BASED -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <h3>Flujo A: Trunk-Based Development</h3>
+                    <p><strong>Equipo ideal:</strong> 2-8 personas | <strong>Ciclo:</strong> Diario/Semanal | <strong>Velocidad:</strong> ⚡⚡⚡</p>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Principios Clave</h4>
+                    <ul style="margin-bottom: 24px; line-height: 1.8;">
+                        <li><strong>Feature flags</strong> para código en progreso (no se rompe main)</li>
+                        <li><strong>Branches cortas</strong> (máximo 1-2 días)</li>
+                        <li><strong>CI/CD strong</strong> valida cada PR automáticamente</li>
+                        <li><strong>Integración continua</strong> = menos merge conflicts</li>
+                    </ul>
+
+                    <h4 style="margin-bottom: 12px;">Setup Inicial</h4>
+                    <div class="code-block" data-lang="bash" data-title="Configurar proyecto para Trunk-Based">
+                        <pre><code># 1. Protege main/master
+git branch --list
+git push origin --set-upstream main main
+
+# 2. Activa branch protection en GitHub/GitLab
+# Settings > Branches > Add rule
+# - Require pull request reviews: 1
+# - Require status checks to pass: true
+# - Require branches to be up to date: true
+
+# 3. Alias útil para flujo rápido
+git config --global alias.new '!sh -c "git checkout -b $1 && git push -u origin"'
+git new fix/auth-token  # Crea + pushea en 1 comando</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Paso a Paso: Feature A Production</h4>
+                    <div class="code-block" data-lang="bash" data-title="Trunk-Based: Desde cero a merge">
+                        <pre><code># 1. Sincroniza y crea branch corta
+git checkout main && git pull origin main
 git checkout -b fix/auth-token-refresh
 
-# 3. Commits atómicos
+# 2. Commits atómicos y descriptivos
 git commit -m "fix: refresh token antes de expiración
-- Valida expiration en middleware
-- Usa /refresh endpoint
-- Tests en auth.spec.ts"
 
-# 4. Push + PR
+Cambios:
+- Valida expiration en middleware (src/auth/middleware.ts)
+- Usa endpoint /refresh antes del timeout (3600s default)
+- Tests: auth.spec.ts:L23-L45 (✅ 5 casos)
+- Evita redirect loop en 401 responses"
+
+# 3. Push inmediato (mantén sincronizado)
 git push -u origin fix/auth-token-refresh
 
-# 5. Cleanup
-git checkout master
-git pull origin master
+# 4. Abre PR: GitHub UI o CLI
+gh pr create --title "fix: refresh token antes de expiración" \
+  --body "Resuelve: [TOKEN_EXPIRY_BUG]"
+
+# 5. Espera CI green + review rápido (< 2 horas ideal)
+gh pr checks  # Ver status
+gh pr review --approve # Auto-merge si es simple
+
+# 6. Merge y cleanup (después del merge)
+git checkout main && git pull origin main
 git branch -d fix/auth-token-refresh</code></pre>
-                    <p><strong>Pros:</strong> Integración continua = menos conflictos, deploy seguro, feedback rápido</p>
-                    <p><strong>Contras:</strong> Requiere CI/CD sólido, tests confiables, presión para merge rápido</p>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Feature Flags: Código Incompleto sin Romper Main</h4>
+                    <div class="code-block" data-lang="typescript" data-title="src/features.ts - Feature flag pattern">
+                        <pre><code>// Feature flags centralizadas
+export const FEATURES = {
+  NEW_AUTH_FLOW: process.env.FEATURE_NEW_AUTH === 'true',
+  BETA_DASHBOARD: process.env.FEATURE_BETA_DASHBOARD === 'true',
+};
+
+// En tu código:
+import { FEATURES } from '@/features';
+
+export function AuthComponent() {
+  if (FEATURES.NEW_AUTH_FLOW) {
+    return <NewAuthFlow />;  // Work in progress, safe in main
+  }
+  return <LegacyAuth />;
+}
+
+// En .env.local (desarrollo) o CI/CD:
+FEATURE_NEW_AUTH=true  # Enable en tu branch
+FEATURE_NEW_AUTH=false # Disable en main para otros</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">⚠️ Gotchas y Soluciones</h4>
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> CI/CD lento → merges se apilan sin testear</p>
+                        <p><strong>Solución:</strong> Corre tests localmente antes de push:</p>
+                        <code style="background: #f5f5f5; padding: 8px; display: block; margin-top: 8px;">npm run test:affected && npm run lint</code>
+                    </div>
+
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> Main se rompe frecuentemente</p>
+                        <p><strong>Solución:</strong> Requiere code review + 2 checks antes de merge. Ver branch protection arriba.</p>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Métricas de Éxito</h4>
+                    <ul style="margin-bottom: 24px; line-height: 1.8;">
+                        <li>✅ Lead time: < 1 día (de commit a producción)</li>
+                        <li>✅ Merge frequency: 3-5 veces/día por developer</li>
+                        <li>✅ Merge time: < 30 minutos desde PR abierto</li>
+                        <li>✅ Main green rate: > 99% (casi nunca roto)</li>
+                    </ul>
                 </article>
 
-                <article class="card">
+                <!-- FLUJO B: GITFLOW -->
+                <article class="card" style="margin-bottom: 48px;">
                     <h3>Flujo B: Feature Branches + Gitflow</h3>
-                    <p><strong>Para:</strong> Equipos 8-20 personas, releases planeadas cada 2-4 semanas</p>
-                    <pre><code class="language-bash"># STEP 1: Feature branch desde develop
-git checkout -b feature/otp-auth develop
-git commit -m "feat: agregar TOTP authentication"
-git push origin feature/otp-auth
+                    <p><strong>Equipo ideal:</strong> 8-20+ personas | <strong>Ciclo:</strong> Releases 2-4 semanas | <strong>Complejidad:</strong> 🔀🔀</p>
 
-# STEP 2: Code freeze para release
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Estructura de Ramas</h4>
+                    <ul style="margin-bottom: 24px; line-height: 1.8;">
+                        <li><strong>main/master:</strong> Producción (tags de versión v1.2.3)</li>
+                        <li><strong>develop:</strong> Integration branch para features</li>
+                        <li><strong>feature/*:</strong> Features nuevas (feature/auth, feature/billing)</li>
+                        <li><strong>release/*:</strong> Preparing release (release/v2.5.0)</li>
+                        <li><strong>hotfix/*:</strong> Fixes críticos de producción</li>
+                    </ul>
+
+                    <h4 style="margin-bottom: 12px;">Setup Inicial</h4>
+                    <div class="code-block" data-lang="bash" data-title="Gitflow: Crear ramas principales">
+                        <pre><code># 1. Crea develop desde main
+git checkout -b develop
+git push -u origin develop
+
+# 2. Configura branch protection para ambas
+# main: require PR review + status checks
+# develop: require PR review (menos estricto que main)
+
+# 3. Instala Git Flow helper (opcional pero recomendado)
+# macOS/Linux:
+brew install git-flow
+# Windows:
+# Descarga desde https://github.com/nvie/gitflow
+
+# 4. Inicializa gitflow
+git flow init
+# Responde con defaults (main, develop, etc)</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Ciclo Completo: Feature → Release → Production</h4>
+                    <div class="code-block" data-lang="bash" data-title="Gitflow: Ejemplo real con timestamps">
+                        <pre><code># ===== SEMANA 1: Desarrollo de features =====
+# LUNES: Inicia feature desde develop
+git checkout develop && git pull origin develop
+git checkout -b feature/otp-authentication develop
+git commit -m "feat: TOTP 2FA implementation
+- Genera secrets con speakeasy
+- QR code en settings
+- Tests: 12 casos (recovery codes, etc)"
+git push -u origin feature/otp-authentication
+
+# MARTES-JUEVES: Trabajo continuo
+git commit -m "feat: TOTP recovery codes
+- Almacena hash en DB
+- UI para guardar/reutilizar"
+git push origin feature/otp-authentication
+
+# VIERNES: Merge a develop
+gh pr create --title "feat: TOTP 2FA" --base develop
+# Espera review + approval
+git checkout develop && git pull
+git merge --no-ff feature/otp-authentication
+git push origin develop
+git branch -d feature/otp-authentication
+
+# ===== SEMANA 2: Release planeada =====
+# LUNES: Code freeze y rama de release
 git checkout -b release/2.5.0 develop
-git commit -m "chore: bump to v2.5.0"
+git commit -m "chore: bump version v2.4.0 → v2.5.0"
 
-# STEP 3: Tests finales + tag
+# Edita package.json, CHANGELOG.md:
+# - version: 2.5.0
+# - fecha: 2024-01-22
+# - features: [TOTP, dashboard redesign, API v2]
+git add package.json CHANGELOG.md
+git commit -m "docs: update CHANGELOG for v2.5.0"
+
+# MARTES-MIÉRCOLES: QA y hotfixes solo en release
+git commit -m "fix: TOTP QR code size en mobile"
+
+# JUEVES: Tests finales
 npm test && npm run build
-git tag -a v2.5.0 -m "Release 2.5.0"
+npm run e2e  # Full integration tests
 
-# STEP 4: Merge a master + back a develop
-git checkout master && git pull origin master
+# VIERNES: Tag y merge a main
+git tag -a v2.5.0 -m "Release v2.5.0 - TOTP + Dashboard"
+git checkout main && git pull origin main
 git merge --no-ff release/2.5.0
-git push origin master v2.5.0</code></pre>
-                    <p><strong>Pros:</strong> Estructura clara (develop ≠ production), releases controladas, hotfixes sin afectar features</p>
-                    <p><strong>Contras:</strong> Más complicado, merge frequentes, riesgo de divergencia</p>
+git push origin main v2.5.0
+
+# Merge back a develop para mantener sincronizado
+git checkout develop && git pull origin develop
+git merge --no-ff release/2.5.0
+git push origin develop
+
+# Limpia rama de release
+git branch -d release/2.5.0
+git push origin :release/2.5.0
+
+# ===== SEMANA 3: Hotfix crítico de producción =====
+# DOMINGO 2AM: Se descubre bug en TOTP
+git checkout -b hotfix/totp-secret-validation main
+git commit -m "fix: valida secret en TOTP durante setup
+
+Problema: No validaba entropy de secret generado.
+Solución: Usa speakeasy.verify antes de guardar.
+Hotfix cherry-picked a develop después."
+
+# Build y test rápido
+npm test && npm run build
+
+# Tag y merge rápido
+git tag -a v2.5.1 -m "Hotfix: TOTP secret validation"
+git checkout main && git pull origin main
+git merge --no-ff hotfix/totp-secret-validation
+git push origin main v2.5.1
+
+# Cherry-pick a develop para no perder fix
+git checkout develop && git pull origin develop
+git cherry-pick hotfix/totp-secret-validation
+git push origin develop
+
+git branch -d hotfix/totp-secret-validation</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Gestión de Versiones y Tags</h4>
+                    <div class="code-block" data-lang="bash" data-title="Semantic Versioning y Git tags">
+                        <pre><code># Formato: MAJOR.MINOR.PATCH
+# - MAJOR: Breaking changes (v2.0.0)
+# - MINOR: New features, backwards compatible (v2.5.0)
+# - PATCH: Hotfixes (v2.5.1)
+
+# Tag anotado (recomendado):
+git tag -a v2.5.0 -m "Release v2.5.0 - TOTP + Dashboard"
+
+# Ver todos los tags:
+git tag -l
+
+# Ver información de un tag:
+git show v2.5.0
+
+# Listar tags con commits recientes:
+git tag -l --sort=-version:refname | head -5</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">⚠️ Gotchas y Soluciones</h4>
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> Release branch y develop divergen → merge conflicts</p>
+                        <p><strong>Solución:</strong> Merge hotfixes a ambas, cherry-pick release fixes a develop después del merge</p>
+                    </div>
+
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> Features se demoran → release bloqueada</p>
+                        <p><strong>Solución:</strong> Feature flags + soft deadlines. Mueve features incompletas a siguiente sprint</p>
+                    </div>
+
+                    <div class="info-banner info-banner--tip">
+                        <p><strong>Pro tip:</strong> Usa git-flow commands para automatizar:</p>
+                        <code style="background: #f5f5f5; padding: 8px; display: block; margin-top: 8px;">git flow feature start otp-auth  # vs git checkout -b feature/otp-auth develop</code>
+                    </div>
                 </article>
 
-                <article class="card">
-                    <h3>Flujo C: Git Worktrees (Paralelismo)</h3>
-                    <p><strong>Para:</strong> Trabajar en 2-3 branches en paralelo sin conflictos</p>
-                    <pre><code class="language-bash"># Opción 1: Manual git worktree
-git worktree add ~/work/auth-refactor -b feature/auth-refactor
-cd ~/work/auth-refactor
+                <!-- FLUJO C: WORKTREES -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <h3>Flujo C: Git Worktrees (Paralelismo Avanzado)</h3>
+                    <p><strong>Mejor para:</strong> Trabajar 2-3 branches en paralelo | <strong>Contexto:</strong> Aislado por directorio</p>
 
-# Opción 2: Automático con Claude Code
-claude --worktree feature/auth-refactor
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">¿Por Qué Worktrees?</h4>
+                    <ul style="margin-bottom: 24px; line-height: 1.8;">
+                        <li><strong>Cero conflictos:</strong> Cada branch tiene su propio directorio</li>
+                        <li><strong>Debugging paralelo:</strong> Testing simultáneo sin checkout</li>
+                        <li><strong>CI/CD local:</strong> Correo tests en múltiples branches a la vez</li>
+                        <li><strong>Context switching:</strong> Evita perder estado (node_modules, build cache)</li>
+                    </ul>
 
-# Listing
+                    <h4 style="margin-bottom: 12px;">Setup: Organiza tu Workspace</h4>
+                    <div class="code-block" data-lang="bash" data-title="Estructura de directorios con worktrees">
+                        <pre><code>~/projects/myapp/
+├── main/                    # Worktree: main branch (production)
+├── develop/                 # Worktree: develop (integration)
+├── feature-auth/            # Worktree: feature/auth-v2
+├── feature-billing/         # Worktree: feature/billing-redesign
+└── .git/                    # Repositorio compartido
+
+# Crea esta estructura:
+mkdir -p ~/projects/myapp-workspace
+cd ~/projects/myapp-workspace
+git clone https://github.com/user/myapp main
+cd main
+
+# Agrega worktrees adicionales:
+git worktree add ../develop develop
+git worktree add ../feature-auth -b feature/auth-v2 develop
+git worktree add ../feature-billing -b feature/billing-redesign develop</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Caso Real: Desarrolla 3 Features en Paralelo</h4>
+                    <div class="code-block" data-lang="bash" data-title="Workflow: Multiplexing con worktrees">
+                        <pre><code># Terminal 1: Branch auth
+cd ~/projects/myapp-workspace/feature-auth
+git status  # En feature/auth-v2
+npm run dev  # Dev server en puerto 3001
+
+# Terminal 2: Branch billing (simultaneo)
+cd ~/projects/myapp-workspace/feature-billing
+git status  # En feature/billing-redesign
+npm run dev  # Dev server en puerto 3002
+
+# Terminal 3: Main para hotfixes
+cd ~/projects/myapp-workspace/main
+git checkout -b hotfix/critical-bug
+npm test && npm run build
+git push -u origin hotfix/critical-bug
+
+# Vuelve a feature-auth en terminal 1:
+# (Sin hacer git checkout, ya estás en el directorio correcto!)
+git commit -m "feat: implement TOTP setup flow"
+git push origin feature/auth-v2
+
+# List todos los worktrees:
+cd ~/projects/myapp-workspace/main
 git worktree list
+# Output:
+# /home/user/projects/myapp-workspace/main         abd1234 [develop]
+# /home/user/projects/myapp-workspace/develop      def5678 [develop]
+# /home/user/projects/myapp-workspace/feature-auth ghi9012 [feature/auth-v2]
+# /home/user/projects/myapp-workspace/feature-billing jkl3456 [feature/billing-redesign]</code></pre>
+                    </div>
 
-# Cleanup
-git worktree remove ~/work/auth-refactor</code></pre>
-                    <p><strong>Pros:</strong> Paralelismo sin conflictos, contexto aislado, sin "git checkout"</p>
-                    <p><strong>Contras:</strong> Requiere más storage, puede ser confuso con directorios, cleanup manual</p>
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Limpieza y Mantenimiento</h4>
+                    <div class="code-block" data-lang="bash" data-title="Workflow: Cleanup después del merge">
+                        <pre><code># Después de hacer merge en GitHub/GitLab:
+
+# Terminal que está en la rama completada:
+cd ~/projects/myapp-workspace/feature-auth
+git branch -a | grep auth-v2  # Verifica que no esté en la rama
+
+# Elimina el worktree:
+git worktree remove ~/projects/myapp-workspace/feature-auth
+# O con -f si hay cambios sin commitear (¡cuidado!):
+git worktree remove ~/projects/myapp-workspace/feature-auth --force
+
+# Sincroniza main/develop en otros worktrees:
+cd ~/projects/myapp-workspace/main
+git fetch origin
+git pull origin main
+
+cd ../develop
+git fetch origin
+git pull origin develop
+
+# Verifica limpieza:
+git worktree prune  # Elimina referencias obsoletas</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Con Claude Code: Automation</h4>
+                    <div class="code-block" data-lang="bash" data-title="Integración con Claude Code">
+                        <pre><code># Claude Code crea worktrees automáticamente:
+claude --worktree feature/new-auth
+# Resultado:
+# ✓ Crea worktree en .claude/worktrees/feature-new-auth
+# ✓ Abre nueva sesión en ese directorio
+# ✓ Lista el branch para referencia
+
+# Función equivalente manual:
+git worktree add .claude/worktrees/feature-new-auth -b feature/new-auth develop
+cd .claude/worktrees/feature-new-auth
+
+# Cuando terminas:
+# Claude Code limpia automáticamente al exit
+# O manualmente:
+cd ../../../
+git worktree remove .claude/worktrees/feature-new-auth</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">⚠️ Gotchas</h4>
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> npm install en cada worktree → triplicado el espacio</p>
+                        <p><strong>Solución:</strong> Usa npm ci (respeta lock file) o considera monorepo tools (pnpm, yarn workspaces)</p>
+                    </div>
+
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> Conflicto con node_modules compartido</p>
+                        <p><strong>Solución:</strong> Ignora node_modules en git, instala localmente por worktree</p>
+                    </div>
                 </article>
 
+                <!-- COMPARISON MATRIX -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <h3>Matriz de Comparación Detallada</h3>
+                    <table class="comparison-table" style="font-size: 0.95em;">
+                        <thead>
+                            <tr>
+                                <th>Criterio</th>
+                                <th>Trunk-Based</th>
+                                <th>Gitflow</th>
+                                <th>Worktrees</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Complejidad</strong></td>
+                                <td>⭐ Baja</td>
+                                <td>⭐⭐⭐ Alta</td>
+                                <td>⭐⭐ Media</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tamaño equipo ideal</strong></td>
+                                <td>2-8 personas</td>
+                                <td>8-50+ personas</td>
+                                <td>Cualquiera (best: 2-4)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Release cycle</strong></td>
+                                <td>Diario/Semanal</td>
+                                <td>Cada 2-4 semanas</td>
+                                <td>Variable (N/A)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lead time (commit → prod)</strong></td>
+                                <td>< 1 día</td>
+                                <td>1-2 semanas</td>
+                                <td>< 1 día (depende)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Merge conflicts</strong></td>
+                                <td>Frecuentes pero pequeños</td>
+                                <td>Menos frecuentes, potencialmente grandes</td>
+                                <td>Casi nulos (aislados)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CI/CD requerido</strong></td>
+                                <td>✅ Muy sólido (crítico)</td>
+                                <td>✅ Moderado</td>
+                                <td>✅ Sólido (local + remote)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hotfixes en producción</strong></td>
+                                <td>Branch corta de main</td>
+                                <td>hotfix/* → main + develop</td>
+                                <td>Worktree temporal de main</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Feature flags necesarios</strong></td>
+                                <td>Sí (integración continua)</td>
+                                <td>Opcional (isolated branches)</td>
+                                <td>No (aislamiento natural)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Paralelismo (multiple features)</strong></td>
+                                <td>Sequential (rápido pero serial)</td>
+                                <td>Paralelo (risgo de divergencia)</td>
+                                <td>Paralelo (aislado, sin conflictos)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Learning curve</strong></td>
+                                <td>1 día</td>
+                                <td>1 semana</td>
+                                <td>2-3 días</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+
+                <!-- ADVANCED STRATEGIES -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <h3>Estrategias Avanzadas: Rebase & Squash</h3>
+                    <p><strong>Para:</strong> Mantener histories limpias en repositorios grandes</p>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Interactive Rebase: Reorganiza Commits Antes de Merge</h4>
+                    <div class="code-block" data-lang="bash" data-title="Interactive rebase para limpiar historia">
+                        <pre><code># Supón que tienes 5 commits con mensajes malos:
+git log --oneline main..HEAD
+# a1b2c3d fix: typo
+# b2c3d4e feat: TOTP setup
+# c3d4e5f fix: linting error
+# d4e5f6g feat: TOTP recovery codes
+# e5f6g7h fix: test warnings
+
+# Abre editor interactivo:
+git rebase -i main
+# En el editor aparece:
+# pick a1b2c3d fix: typo
+# pick b2c3d4e feat: TOTP setup
+# pick c3d4e5f fix: linting error
+# pick d4e5f6g feat: TOTP recovery codes
+# pick e5f6g7h fix: test warnings
+
+# Reorganiza y fusiona:
+# pick b2c3d4e feat: TOTP setup
+# squash c3d4e5f fix: linting error
+# squash a1b2c3d fix: typo
+# pick d4e5f6g feat: TOTP recovery codes
+# squash e5f6g7h fix: test warnings
+
+# Resultado:
+# - 1 commit: TOTP setup + fixes
+# - 1 commit: TOTP recovery codes + fixes
+
+# Git abre editor para coalescar mensajes. Limpia:
+# feat: TOTP 2FA implementation
+# - Setup flow with QR code
+# - Recovery codes for account recovery
+# - Full test coverage (12 cases)
+
+git rebase --continue  # Si hay conflicts, git add . && git rebase --continue</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Squash Merge: 1 Commit por Feature</h4>
+                    <div class="code-block" data-lang="bash" data-title="Squash: Fusiona N commits en 1">
+                        <pre><code># En vez de:
+git merge feature/otp-auth
+# Que genera: Merge pull request #42 (mantiene todos los commits)
+
+# Usa squash:
+git merge --squash feature/otp-auth
+git commit -m "feat: TOTP 2FA implementation"
+
+# Resultado en main:
+# Solo 1 commit limpio, sin histórico de "fix: typo", "fix: lint", etc.
+
+# En GitHub/GitLab:
+# PR settings → "Squash and merge" (opción por defecto para muchos)
+
+# Ventaja: main history limpio
+# Desventaja: Pierdes granularidad de commits individuales</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Cherry-Pick: Copia Commits Selectivos</h4>
+                    <div class="code-block" data-lang="bash" data-title="Cherry-pick: Aplica fix a múltiples branches">
+                        <pre><code># Hotfix en main, necesita estar en develop también:
+git log --oneline main | head -3
+# abc1234 fix: TOTP secret validation
+# def5678 chore: v2.5.1
+# ghi9012 Merge hotfix/totp-secret...
+
+# Copia ese commit a develop:
+git checkout develop
+git cherry-pick abc1234
+
+# Si hay conflicts:
+git add .
+git cherry-pick --continue
+
+# Útil para:
+# 1. Hotfixes → main + develop
+# 2. Backport de features a versiones antiguas
+# 3. Compartir commits entre release branches</code></pre>
+                    </div>
+                </article>
+
+                <!-- TROUBLESHOOTING -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <h3>Troubleshooting: Merge Conflicts & Recovery</h3>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Conflictos de Merge: Caso Real</h4>
+                    <div class="code-block" data-lang="bash" data-title="Resolver merge conflict paso a paso">
+                        <pre><code># Intenta mergear feature/auth a develop:
+git checkout develop && git pull origin develop
+git merge feature/auth
+# CONFLICT (content): Merge conflict in src/auth/middleware.ts
+# CONFLICT (content): Merge conflict in package.json
+# Automatic merge failed; fix conflicts and then commit the result.
+
+# 1. Ver el estado:
+git status
+# both modified: src/auth/middleware.ts
+# both modified: package.json
+
+# 2. Abre los archivos con conflictos:
+cat src/auth/middleware.ts
+# <<<<<<< HEAD (develop)
+# export const AUTH_TIMEOUT = 3600;
+# =======
+# export const AUTH_TIMEOUT = 7200;
+# >>>>>>> feature/auth
+#
+# Los dos cambios son válidos. Elige:
+
+# 3. Resuelve manualmente:
+# Opción A: Usar VSCode (UI para resolver)
+code src/auth/middleware.ts
+# Click "Accept Current Change" o "Accept Incoming Change"
+
+# Opción B: Terminal
+# Mantén ambos cambios
+export const AUTH_TIMEOUT = 7200;  // Nueva en feature
+// Comentario de develop
+# O elige uno:
+export const AUTH_TIMEOUT = 7200;  // Mantén feature
+
+# 4. Mark como resolved:
+git add src/auth/middleware.ts
+git add package.json
+
+# 5. Completa merge:
+git commit -m "Merge feature/auth into develop
+- Resuelve timeout conflict: 3600 → 7200 (feature)
+- Actualiza dependencies según feature/auth"
+
+# 6. Push:
+git push origin develop</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Abortar Merge en Progreso</h4>
+                    <div class="code-block" data-lang="bash" data-title="Reset: Vuelve atrás si algo sale mal">
+                        <pre><code># Si el merge se pone feo:
+git merge --abort
+
+# Si ya hiciste commit (oops):
+git reset --soft HEAD~1  # Deshace commit, mantiene cambios
+git reset --hard HEAD~1  # Deshace todo (peligroso, perderás cambios)</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Stash: Pausa Trabajo Temporal</h4>
+                    <div class="code-block" data-lang="bash" data-title="Stash: Guarda trabajo sin commitear">
+                        <pre><code># Estás en feature/auth con cambios sin commitear
+# Necesitas cambiar a main para hotfix
+
+# Guardar todo:
+git stash save "WIP: TOTP flow incomplete"
+
+# Cambiar de rama sin problemas:
+git checkout main
+
+# ... hace hotfix ...
+
+# Vuelve a feature/auth:
+git checkout feature/auth
+
+# Recupera tu stash:
+git stash pop
+
+# O ver el stash:
+git stash list
+git stash show stash@{0}  # Ver qué hay
+git stash apply stash@{0}  # Aplicar sin eliminar</code></pre>
+                    </div>
+                </article>
+
+                <!-- TEAM COORDINATION -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <h3>Coordinación de Equipo: Sincronización</h3>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Daily Standup: Git Info</h4>
+                    <div class="code-block" data-lang="bash" data-title="Comando para reportar progreso en standup">
+                        <pre><code># Ayer:
+git log --since="1 day ago" --pretty=format:"%h %s" --author="tu-email"
+# a1b2c3d fix: TOTP QR code size
+# b2c3d4e feat: Recovery code generation
+
+# Hoy:
+git branch -a | grep feature  # Branches activos
+git diff develop..HEAD --stat  # Cambios desde develop
+
+# Próxima reunión: resumen:
+# "Mergeé TOTP + recovery codes ayer. Hoy trabajo en validation + tests."</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Sincronizar Cambios: Pull/Fetch Rutina</h4>
+                    <div class="code-block" data-lang="bash" data-title="Morning routine: Sincroniza remoto">
+                        <pre><code># Al iniciar el día:
+git fetch origin  # Descarga sin mergear
+git status  # Ve si develop/main divergió
+
+# Si tu branch está detrás:
+git pull origin feature/otp-auth
+# Equivalente: git fetch origin && git merge origin/feature/otp-auth
+
+# Si develop avanzó y necesitas actualizar tu feature:
+git fetch origin develop
+git merge origin/develop  # Trae cambios nuevos
+# Resuelve conflicts si hay</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 12px;">Crear Alias para Flujos Comunes</h4>
+                    <div class="code-block" data-lang="bash" data-title="~/.gitconfig - Alias útiles">
+                        <pre><code>[alias]
+  # Trunk-based
+  sync = "!git fetch origin && git rebase origin/main"
+  new = "!sh -c 'git checkout -b $1 && git push -u origin' -"
+  done = "!git checkout main && git pull && git branch -d"
+
+  # Gitflow
+  rel = "!git checkout -b release/"
+  hf = "!git checkout -b hotfix/"
+
+  # Info
+  ready = "!git log origin/main..HEAD --oneline"
+  today = "!git log --since='1 day ago' --pretty=format:'%h %s'"
+  authors = "!git shortlog -sn"
+
+# Uso:
+git sync        # Fetch + rebase en main
+git new fix/bug # Crea + pushea fix/bug
+git ready       # Ver commits listos para PR
+git today       # Ver mi trabajo hoy</code></pre>
+                    </div>
+                </article>
+
+                <!-- ORIGINAL COMPARISON TABLE -->
                 <article class="card">
-                    <h3>Comparativa Rápida</h3>
+                    <h3>Comparativa Rápida (Clásica)</h3>
                     <table class="comparison-table">
                         <thead>
                             <tr>
@@ -7901,13 +9314,99 @@ claude mcp add --scope user slack \
                 <div class="section-header">
                     <span class="breadcrumb">Producción / Hooks en Producción</span>
                     <h2>🎣 Hooks para Seguridad & Automación</h2>
-                    <p class="section-lead">5 hooks reales que automatizan seguridad, tests y monitoreo.</p>
+                    <p class="section-lead">8 hooks reales que automatizan seguridad, tests, monitoreo y manejo de errores en ciclo completo de ejecución.</p>
                 </div>
 
+                <!-- HOOK OVERVIEW GRID -->
+                <article class="card">
+                    <h3>📋 Visión General: 8 Hooks Disponibles</h3>
+                    <p>Cada hook se ejecuta en un momento específico del ciclo de vida de Claude Code. Selecciona el que necesites:</p>
+                    <div class="ability-grid">
+                        <div class="ability-card">
+                            <div class="ability-icon">🔒</div>
+                            <div class="ability-name">Security Audit</div>
+                            <div class="ability-meta">PreToolUse</div>
+                            <div class="ability-purpose">Valida comandos peligrosos antes de ejecutar</div>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-icon">✅</div>
+                            <div class="ability-name">Auto-Format + Tests</div>
+                            <div class="ability-meta">PostToolUse</div>
+                            <div class="ability-purpose">Formatea código y corre tests automáticamente</div>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-icon">💉</div>
+                            <div class="ability-name">Context Injection</div>
+                            <div class="ability-meta">UserPromptSubmit</div>
+                            <div class="ability-purpose">Inyecta contexto antes de procesar prompts</div>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-icon">💰</div>
+                            <div class="ability-name">Cost Warning</div>
+                            <div class="ability-meta">PreToolUse</div>
+                            <div class="ability-purpose">Alerta sobre consumo de tokens y API calls</div>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-icon">🚀</div>
+                            <div class="ability-name">Session Start</div>
+                            <div class="ability-meta">SessionInitialize</div>
+                            <div class="ability-purpose">Inicializa memoria y contexto al comenzar</div>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-icon">💾</div>
+                            <div class="ability-name">Session End</div>
+                            <div class="ability-meta">SessionCleanup</div>
+                            <div class="ability-purpose">Guarda estado, limpia y hace logging</div>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-icon">🛡️</div>
+                            <div class="ability-name">Tool Error Recovery</div>
+                            <div class="ability-meta">OnToolError</div>
+                            <div class="ability-purpose">Maneja errores y ejecuta fallbacks</div>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-icon">⏱️</div>
+                            <div class="ability-name">Rate Limiting</div>
+                            <div class="ability-meta">PreToolUse / RateLimiter</div>
+                            <div class="ability-purpose">Throttle APIs y presupuesto de tokens</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- HOOK LIFECYCLE SECTION -->
+                <article class="card">
+                    <h3>🔄 Hook Lifecycle: Cuándo se ejecutan</h3>
+                    <p>Los hooks se disparan en momentos precisos del ciclo de ejecución. Este es el orden cronológico:</p>
+                    <div style="background: #f5f5f5; padding: 20px; border-radius: 6px; margin: 15px 0; font-family: monospace; line-height: 1.8;">
+                        <div style="color: #666; margin-bottom: 10px;"><strong>FASE 1: INICIALIZACIÓN</strong></div>
+                        <div style="margin-left: 20px; color: #333;">
+                            ① SessionInitialize → Carga memoria y config<br>
+                            ② UserPromptSubmit Hook → Inyecta contexto automático
+                        </div>
+                        <div style="color: #666; margin: 15px 0 10px 0;"><strong>FASE 2: EJECUCIÓN</strong></div>
+                        <div style="margin-left: 20px; color: #333;">
+                            ③ PreToolUse Hook → Valida, checa costos, aplica rate limits<br>
+                            ④ Tool ejecuta → Bash, Read, Edit, etc<br>
+                            ⑤ PostToolUse Hook → Formatea, testa, monitorea
+                        </div>
+                        <div style="color: #666; margin: 15px 0 10px 0;"><strong>FASE 3: ERROR/RECUPERACIÓN</strong></div>
+                        <div style="margin-left: 20px; color: #333;">
+                            ⑥ OnToolError Hook (si falla) → Recuperación automática
+                        </div>
+                        <div style="color: #666; margin: 15px 0 10px 0;"><strong>FASE 4: LIMPIEZA</strong></div>
+                        <div style="margin-left: 20px; color: #333;">
+                            ⑦ SessionCleanup → Guarda estado, logging, exit
+                        </div>
+                    </div>
+                </article>
+
+                <!-- HOOK 1: SECURITY AUDIT -->
                 <article class="card">
                     <h3>Hook 1: Security Audit (PreToolUse)</h3>
-                    <p>Valida cada acción antes de ejecutarla — bloquea comandos peligrosos.</p>
-                    <pre><code class="language-json">{
+                    <p>Valida cada acción antes de ejecutarla — bloquea comandos peligrosos y previene exposición de credenciales.</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Configuración: .claude.json</div>
+                        <pre><code class="language-json">{
   "hooks": {
     "PreToolUse": {
       "enabled": true,
@@ -7920,98 +9419,546 @@ claude mcp add --scope user slack \
         },
         {
           "name": "Block PII exposure",
-          "pattern": "(password|token|secret)\\s*=",
+          "pattern": "(password|token|secret|apiKey|API_KEY)\\s*=",
           "action": "block",
           "message": "No se permite escribir credenciales."
+        },
+        {
+          "name": "Block SQL injection patterns",
+          "pattern": "(DROP|TRUNCATE|DELETE)\\s+FROM\\s+(users|auth|payments)",
+          "action": "block",
+          "message": "Operación destructiva bloqueada."
         }
       ]
     }
   }
 }</code></pre>
+                    </div>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Flujo de Ejecución</div>
+                        <pre style="background: #f9f9f9; padding: 15px; font-size: 0.85em;">Claude intenta ejecutar: rm -rf /data
+    ↓
+PreToolUse hook intercepts
+    ↓
+Checa contra pattern: "(rm -rf|...)"
+    ↓
+MATCH encontrada ✗
+    ↓
+Acción: "block"
+    ↓
+Respuesta: ❌ "Comando potencialmente peligroso."
+    ↓
+Tool NO se ejecuta, usuario informado</pre>
+                    </div>
                 </article>
 
+                <!-- HOOK 2: AUTO-FORMAT + TESTS -->
                 <article class="card">
                     <h3>Hook 2: Auto-Format + Tests (PostToolUse)</h3>
-                    <p>Después de escribir código, formatea automáticamente y corre tests.</p>
-                    <pre><code class="language-json">{
+                    <p>Después de escribir código, formatea automáticamente y corre tests. Garantiza calidad sin intervención manual.</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Configuración: .claude.json</div>
+                        <pre><code class="language-json">{
   "hooks": {
     "PostToolUse": {
       "enabled": true,
       "sequence": [
-        { "name": "Format code", "command": "npm run format", "onError": "warn" },
-        { "name": "Lint check", "command": "npm run lint", "onError": "warn" },
-        { "name": "Run tests", "command": "npm test -- --watch=false", "onError": "abort" }
+        {
+          "name": "Format code",
+          "command": "npm run format",
+          "onError": "warn",
+          "timeout": "30s"
+        },
+        {
+          "name": "Lint check",
+          "command": "npm run lint",
+          "onError": "warn",
+          "timeout": "30s"
+        },
+        {
+          "name": "Run tests",
+          "command": "npm test -- --watch=false",
+          "onError": "abort",
+          "timeout": "120s"
+        }
       ]
     }
   }
 }</code></pre>
+                    </div>
                 </article>
 
+                <!-- HOOK 3: CONTEXT INJECTION -->
                 <article class="card">
                     <h3>Hook 3: Context Injection (UserPromptSubmit)</h3>
-                    <p>Inyecta automáticamente contexto relevante antes de procesar prompts.</p>
-                    <pre><code class="language-json">{
+                    <p>Inyecta automáticamente contexto relevante (git status, memory, env) antes de procesar cada prompt del usuario.</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Configuración: .claude.json</div>
+                        <pre><code class="language-json">{
   "hooks": {
     "UserPromptSubmit": {
       "enabled": true,
       "injections": [
-        { "name": "Git status", "command": "git status -s", "inject": true },
-        { "name": "Session memory", "command": "head -20 ~/.claude/memory", "inject": true }
+        {
+          "name": "Git status",
+          "command": "git status -s",
+          "inject": true,
+          "label": "Current git changes"
+        },
+        {
+          "name": "Session memory",
+          "command": "head -50 ~/.claude/memory",
+          "inject": true,
+          "label": "Session context"
+        },
+        {
+          "name": "Package version",
+          "command": "jq '.version' package.json",
+          "inject": true,
+          "label": "App version"
+        }
       ]
     }
   }
 }</code></pre>
+                    </div>
                 </article>
 
+                <!-- HOOK 4: COST WARNING -->
                 <article class="card">
                     <h3>Hook 4: Cost Warning (PreToolUse)</h3>
-                    <p>Advierte si una acción va a consumir muchos tokens o hacer muchas API calls.</p>
-                    <pre><code class="language-json">{
+                    <p>Advierte si una acción va a consumir muchos tokens o hacer muchas API calls. Previene sorpresas en el presupuesto.</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Configuración: .claude.json</div>
+                        <pre><code class="language-json">{
   "hooks": {
     "PreToolUse": {
       "enabled": true,
       "costWarnings": [
-        { "name": "Large file", "pattern": "@.*(\\.log|\\.csv)", "fileSize": "10MB", "action": "warn" },
-        { "name": "Database bulk op", "pattern": "DELETE|DROP|TRUNCATE", "action": "warn" }
+        {
+          "name": "Large file read",
+          "pattern": "Read.*\\.(log|csv|json)",
+          "fileSize": "10MB",
+          "estimatedTokens": "200k",
+          "action": "warn"
+        },
+        {
+          "name": "Database bulk operation",
+          "pattern": "DELETE|TRUNCATE|UPDATE.*WHERE",
+          "estimatedAPICalls": "1000+",
+          "action": "warn"
+        },
+        {
+          "name": "Recursive directory scan",
+          "pattern": "Glob.*\\*\\*",
+          "warningThreshold": "1000+ files",
+          "action": "warn"
+        }
       ]
     }
   }
 }</code></pre>
+                    </div>
                 </article>
 
+                <!-- HOOK 5: SESSION START -->
                 <article class="card">
-                    <h3>Hook 5: Performance Monitoring (PostToolUse)</h3>
-                    <p>Registra timing, tokens y recursos de cada acción para análisis posterior.</p>
-                    <pre><code class="language-json">{
+                    <h3>Hook 5: Session Start (SessionInitialize)</h3>
+                    <p>Se ejecuta cuando Claude Code inicia. Carga memoria, inicializa contexto y verifica prerequisitos del proyecto.</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Configuración: .claude.json</div>
+                        <pre><code class="language-json">{
   "hooks": {
-    "PostToolUse": {
+    "SessionInitialize": {
       "enabled": true,
-      "monitoring": {
-        "logFile": "~/.claude/performance.log",
-        "metrics": ["duration", "tokensUsed", "errorsEncountered"],
-        "alerts": [{ "metric": "duration", "threshold": "60s", "action": "log" }]
-      }
+      "initialization": [
+        {
+          "name": "Load memory",
+          "command": "test -f ~/.claude/memory && cat ~/.claude/memory || true",
+          "required": false
+        },
+        {
+          "name": "Check Node version",
+          "command": "node --version",
+          "expected": "v18.0.0+",
+          "onMismatch": "warn"
+        },
+        {
+          "name": "Install dependencies",
+          "command": "test -d node_modules || npm install",
+          "required": true,
+          "onError": "abort"
+        },
+        {
+          "name": "Verify .env exists",
+          "command": "test -f .env || echo 'WARNING: .env not found'",
+          "required": false
+        }
+      ]
     }
   }
 }</code></pre>
+                    </div>
                 </article>
 
+                <!-- HOOK 6: SESSION END -->
                 <article class="card">
-                    <h3>Cómo Aplicar Hooks</h3>
-                    <pre><code class="language-bash"># Crea archivo .claude.json en raíz de tu proyecto
-cat > .claude.json << 'EOF'
-{
+                    <h3>Hook 6: Session End (SessionCleanup)</h3>
+                    <p>Se ejecuta cuando termina la sesión. Guarda estado, limpia archivos temporales y genera logs para auditoría.</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Configuración: .claude.json</div>
+                        <pre><code class="language-json">{
   "hooks": {
-    "PreToolUse": { ... },
-    "PostToolUse": { ... }
+    "SessionCleanup": {
+      "enabled": true,
+      "cleanup": [
+        {
+          "name": "Save memory",
+          "command": "cat > ~/.claude/memory << 'EOF'\nLAST_COMPLETED: task-123\nBLOCKERS: None\nNEXT_STEPS: Review PR\nEOF",
+          "required": true
+        },
+        {
+          "name": "Clean temp files",
+          "command": "rm -f /tmp/claude-*.tmp",
+          "required": false
+        },
+        {
+          "name": "Log session summary",
+          "command": "echo '[{timestamp}] Session: {duration}min, {commands}cmds' >> ~/.claude/session.log",
+          "required": false
+        },
+        {
+          "name": "Generate usage report",
+          "command": "echo 'Tokens: 250k, Cost: $1.25' >> ~/.claude/usage.log",
+          "required": false
+        }
+      ]
+    }
   }
-}
-EOF
-
-# Claude Code los carga automáticamente en cada sesión
-cd tu-proyecto && claude
-# Los hooks están activos</code></pre>
+}</code></pre>
+                    </div>
                 </article>
+
+                <!-- HOOK 7: ON TOOL ERROR -->
+                <article class="card">
+                    <h3>Hook 7: Tool Error Recovery (OnToolError)</h3>
+                    <p>Maneja errores automáticamente cuando una tool falla. Ejecuta fallbacks y estrategias de recuperación.</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Configuración: .claude.json</div>
+                        <pre><code class="language-json">{
+  "hooks": {
+    "OnToolError": {
+      "enabled": true,
+      "errorHandlers": [
+        {
+          "name": "Bash timeout",
+          "pattern": "timeout|timed out",
+          "recovery": [
+            { "action": "log", "message": "Command timed out after 120s" },
+            { "action": "retry", "times": 2, "backoff": "exponential" },
+            { "action": "notify", "message": "⚠️ Command failed" }
+          ]
+        },
+        {
+          "name": "File not found",
+          "pattern": "ENOENT|No such file",
+          "recovery": [
+            { "action": "suggest", "message": "Did you mean: ..." },
+            { "action": "list_similar" }
+          ]
+        },
+        {
+          "name": "Permission denied",
+          "pattern": "Permission denied|EACCES",
+          "recovery": [
+            { "action": "log", "severity": "error" },
+            { "action": "request_permission" }
+          ]
+        },
+        {
+          "name": "Network error",
+          "pattern": "ECONNREFUSED|ETIMEDOUT",
+          "recovery": [
+            { "action": "wait", "seconds": 5 },
+            { "action": "retry", "times": 3 }
+          ]
+        }
+      ]
+    }
+  }
+}</code></pre>
+                    </div>
+                </article>
+
+                <!-- HOOK 8: RATE LIMITING -->
+                <article class="card">
+                    <h3>Hook 8: Rate Limiting (PreToolUse)</h3>
+                    <p>Throttle API calls y gestiona presupuesto de tokens. Previene rate limits y controla costos.</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Configuración: .claude.json</div>
+                        <pre><code class="language-json">{
+  "hooks": {
+    "RateLimiting": {
+      "enabled": true,
+      "budgets": {
+        "tokens": {
+          "daily": 1000000,
+          "session": 250000,
+          "prompt": 50000
+        },
+        "apiCalls": {
+          "daily": 10000,
+          "perMinute": 60
+        }
+      },
+      "throttling": [
+        {
+          "service": "github",
+          "requestsPerHour": 5000,
+          "burstLimit": 100,
+          "action": "queue"
+        },
+        {
+          "service": "database",
+          "queriesPerSecond": 10,
+          "action": "delay"
+        }
+      ]
+    }
+  }
+}</code></pre>
+                    </div>
+                </article>
+
+                <!-- HOOK COMPARISON TABLE -->
+                <article class="card">
+                    <h3>📊 Tabla Comparativa: Todos los Hooks</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead style="background: #f0f0f0;">
+                                <tr style="border-bottom: 2px solid #ccc;">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hook</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Trigger</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Caso de Uso</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Riesgo</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Tiempo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Security Audit</strong></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Antes de tool</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Bloquear comandos peligrosos</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><span style="color: #c00;">CRÍTICO</span></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">10-50ms</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Auto-Format + Tests</strong></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Después de write</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Calidad de código</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><span style="color: #080;">BAJO</span></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">5-120s</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Context Injection</strong></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Antes de prompt</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Mejorar contexto</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><span style="color: #080;">BAJO</span></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">1-5s</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Cost Warning</strong></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Antes de tool</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Alertar sobre costos</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><span style="color: #f80;">MEDIO</span></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">50-200ms</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Session Start</strong></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Al inicializar</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Setup automático</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><span style="color: #080;">BAJO</span></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">2-30s</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Session End</strong></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Al terminar</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Guardar estado</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><span style="color: #080;">BAJO</span></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">1-10s</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Tool Error Recovery</strong></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Si falla tool</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Recuperación automática</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><span style="color: #f80;">MEDIO</span></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Variable</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Rate Limiting</strong></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Antes de API</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">Control de uso</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;"><span style="color: #f80;">MEDIO</span></td>
+                                    <td style="padding: 12px; border: 1px solid #ddd;">5-100ms</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <!-- CHAINING HOOKS -->
+                <article class="card">
+                    <h3>🔗 Chaining: Ejecutar Múltiples Hooks en Secuencia</h3>
+                    <p>Combina todos los hooks para crear flujos complejos. Ejemplo de .claude.json completo con 5 hooks coordinados:</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Configuración Completa: .claude.json</div>
+                        <pre><code class="language-json">{
+  "version": "1.0",
+  "hooks": {
+    "SessionInitialize": {
+      "enabled": true,
+      "initialization": [
+        { "name": "Load memory", "command": "cat ~/.claude/memory" }
+      ]
+    },
+    "UserPromptSubmit": {
+      "enabled": true,
+      "injections": [
+        { "name": "Git status", "command": "git status -s", "inject": true }
+      ]
+    },
+    "PreToolUse": {
+      "enabled": true,
+      "rules": [{ "name": "Security", "pattern": "(rm -rf|sudo)", "action": "block" }]
+    },
+    "PostToolUse": {
+      "enabled": true,
+      "sequence": [
+        { "name": "Format", "command": "npm run format" },
+        { "name": "Test", "command": "npm test" }
+      ]
+    },
+    "SessionCleanup": {
+      "enabled": true,
+      "cleanup": [{ "name": "Save memory", "command": "echo 'Done' >> ~/.claude/memory" }]
+    }
+  }
+}</code></pre>
+                    </div>
+                </article>
+
+                <!-- TESTING HOOKS -->
+                <article class="card">
+                    <h3>✅ Testing Hooks: Verificar Funcionamiento</h3>
+                    <p>Herramientas para probar que tus hooks se ejecutan correctamente:</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Test 1: Verificar Ejecución</div>
+                        <pre><code class="language-bash"># Crear .claude.json test simple
+# Prueba en CLI:
+$ claude --dry-run --hooks
+
+# Esperado: ✓ Todos los hooks cargan sin error</code></pre>
+                    </div>
+                    <div class="claude-execution-window">
+                        <div class="window-header">Test 2: Debug Log</div>
+                        <pre><code class="language-bash"># Activar logging de hooks
+export CLAUDE_DEBUG=hooks
+export CLAUDE_HOOK_LOG=/tmp/hooks.log
+
+$ claude
+# ... trabaja ...
+tail -f /tmp/hooks.log  # Ver logs en tiempo real</code></pre>
+                    </div>
+                </article>
+
+                <!-- HOOK PERFORMANCE -->
+                <article class="card">
+                    <h3>⚡ Hook Performance: Impacto en Ejecución</h3>
+                    <p>Overhead por hook (valores promedio en milisegundos):</p>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 6px; margin: 15px 0; font-family: monospace; font-size: 0.9em;">
+                        Security Audit...................... 15ms<br>
+                        Context Injection.................. 50ms<br>
+                        Cost Warning....................... 20ms<br>
+                        Rate Limiting...................... 10ms<br>
+                        SessionInitialize (first run)...... 5-10s<br>
+                        SessionCleanup (exit).............. 1-5s<br>
+                        PostToolUse (tests)................ 30-120s<br>
+                        <br>
+                        <strong>Total overhead típico por sesión:</strong> 10-20s
+                    </div>
+                </article>
+
+                <!-- ERROR HANDLING IN HOOKS -->
+                <article class="card">
+                    <h3>🛡️ Error Handling: ¿Qué pasa si un Hook Falla?</h3>
+                    <p>Estrategias de recuperación cuando hooks encuentran problemas:</p>
+                    <div style="background: #fff3cd; padding: 15px; border-left: 4px solid #ff9800; border-radius: 4px; margin: 15px 0;">
+                        <strong>Escenario 1:</strong> PreToolUse hook se crashea<br>
+                        → onHookError: "warn" → Hook skipped, tool ejecuta normalmente
+                    </div>
+                    <div style="background: #f8d7da; padding: 15px; border-left: 4px solid #c00; border-radius: 4px; margin: 15px 0;">
+                        <strong>Escenario 2:</strong> SessionInitialize falla (required: true)<br>
+                        → onError: "abort" → Claude Code NO inicia, debe fijar el error
+                    </div>
+                    <div style="background: #d1ecf1; padding: 15px; border-left: 4px solid #0c5460; border-radius: 4px; margin: 15px 0;">
+                        <strong>Configuración:</strong> onHookError vs onError<br>
+                        onHookError = si hook se crashea | onError = si acción en hook falla
+                    </div>
+                </article>
+
+                <!-- CÓMO APLICAR HOOKS -->
+                <article class="card">
+                    <h3>📝 Pasos: Aplicar Hooks en tu Proyecto</h3>
+                    <div class="steps">
+                        <div class="step">
+                            <h4>1. Crear .claude.json</h4>
+                            <pre><code class="language-bash">cd mi-proyecto
+cat > .claude.json << 'EOF'
+{ "hooks": { ... } }
+EOF</code></pre>
+                        </div>
+                        <div class="step">
+                            <h4>2. Validar JSON</h4>
+                            <pre><code class="language-bash">npm install -g jsonlint
+jsonlint .claude.json  # ✓ valid JSON</code></pre>
+                        </div>
+                        <div class="step">
+                            <h4>3. Iniciar Claude (carga automática)</h4>
+                            <pre><code class="language-bash">$ claude
+# Detecta .claude.json, carga hooks
+# SessionInitialize ejecuta
+# ✅ Listo</code></pre>
+                        </div>
+                        <div class="step">
+                            <h4>4. Testear Hooks</h4>
+                            <pre><code class="language-bash">$ claude --dry-run --hooks
+# Verifica que cargan correctamente</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- INTEGRATION WITH CLAUDE.MD -->
+                <article class="card">
+                    <h3>🔗 Integración: Hooks + CLAUDE.md</h3>
+                    <p>Combina hooks con CLAUDE.md para máxima automatización del proyecto:</p>
+                    <div class="claude-execution-window">
+                        <div class="window-header">.claude.json: Cargar contexto de CLAUDE.md</div>
+                        <pre><code class="language-json">{
+  "hooks": {
+    "SessionInitialize": {
+      "initialization": [
+        {
+          "name": "Load project context",
+          "command": "test -f CLAUDE.md && cat CLAUDE.md || true",
+          "inject": true
+        }
+      ]
+    }
+  }
+}</code></pre>
+                    </div>
+                </article>
+
             </section>
 
             <!-- MULTI-MCP ORCHESTRATION SECTION -->
@@ -8021,86 +9968,1598 @@ cd tu-proyecto && claude
                 <div class="section-header">
                     <span class="breadcrumb">Casos Prácticos / Nivel 2: Avanzado</span>
                     <h2>🚀 Nivel 2: Flujos de Equipo e Integración MCP</h2>
-                    <p class="section-lead">Escalas más allá de proyectos individuales. Integras Claude Code en CI/CD, usas MCPs para GitHub/Slack/DB.</p>
+                    <p class="section-lead">Escalas más allá de proyectos individuales. Integras Claude Code en CI/CD, usas MCPs para GitHub/Slack/DB, y automatizas workflows complejos.</p>
                 </div>
 
-                <article class="card">
-                    <h3>Caso 1: Code Review Automático vía GitHub MCP</h3>
-                    <p><strong>Situación:</strong> Cada PR abierto se revisa automáticamente. Comentarios postean directamente en GitHub.</p>
-                    <p><strong>Beneficio:</strong> 5 horas/semana ahorradas si tienes 15 PRs/semana</p>
-
-                    <div class="steps">
-                        <div class="step">
-                            <h4>1. GitHub Personal Access Token</h4>
-                            <pre><code>GitHub Settings → Developer settings → Personal access tokens
-Scopes: repo (full), workflow
-Token: ghp_xxxxxxxxxxxxx</code></pre>
+                <!-- OVERVIEW GRID DE CASOS -->
+                <div style="margin-bottom: 48px;">
+                    <h3 style="margin-bottom: 24px;">Los 6 Casos: Visión General</h3>
+                    <div class="ability-card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                        <!-- Caso 1 -->
+                        <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; background: #f9fafb; transition: all 0.2s;">
+                            <div style="font-size: 24px; margin-bottom: 8px;">🟢</div>
+                            <h4 style="margin: 0 0 8px; font-size: 1.1em;">Code Review Automático</h4>
+                            <p style="margin: 0 0 12px; color: #666; font-size: 0.95em;">GitHub PRs revisadas automáticamente con feedback detallado</p>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85em;">
+                                <span style="color: #059669; font-weight: 500;">5h/semana ahorradas</span>
+                                <span style="color: #999;">15 min/PR</span>
+                            </div>
                         </div>
-                        <div class="step">
-                            <h4>2. Agregar GitHub MCP</h4>
-                            <pre><code class="language-bash">claude mcp add github -e GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxxx</code></pre>
-                        </div>
-                        <div class="step">
-                            <h4>3. GitHub Actions Workflow</h4>
-                            <pre><code class="language-bash">Cada PR abierto → GitHub Actions dispara → Claude revisa → comenta automáticamente
 
-Tiempo ahorrado: 20 min/PR vs 30 min manual review</code></pre>
+                        <!-- Caso 2 -->
+                        <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; background: #f9fafb; transition: all 0.2s;">
+                            <div style="font-size: 24px; margin-bottom: 8px;">🟡</div>
+                            <h4 style="margin: 0 0 8px; font-size: 1.1em;">Risk Analysis en CI/CD</h4>
+                            <p style="margin: 0 0 12px; color: #666; font-size: 0.95em;">Post-merge análisis de cambios riesgosos con alertas Slack</p>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85em;">
+                                <span style="color: #d97706; font-weight: 500;">Prevención de bugs</span>
+                                <span style="color: #999;">2 min/merge</span>
+                            </div>
+                        </div>
+
+                        <!-- Caso 3 -->
+                        <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; background: #f9fafb; transition: all 0.2s;">
+                            <div style="font-size: 24px; margin-bottom: 8px;">🟡</div>
+                            <h4 style="margin: 0 0 8px; font-size: 1.1em;">Team Context Sharing</h4>
+                            <p style="margin: 0 0 12px; color: #666; font-size: 0.95em;">Onboarding automático con arquitectura y decisiones de diseño</p>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85em;">
+                                <span style="color: #d97706; font-weight: 500;">Onboarding en 15min</span>
+                                <span style="color: #999;">vs 2-3h manual</span>
+                            </div>
+                        </div>
+
+                        <!-- Caso 4 -->
+                        <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; background: #f9fafb; transition: all 0.2s;">
+                            <div style="font-size: 24px; margin-bottom: 8px;">🔴</div>
+                            <h4 style="margin: 0 0 8px; font-size: 1.1em;">Multi-MCP Integration</h4>
+                            <p style="margin: 0 0 12px; color: #666; font-size: 0.95em;">GitHub + Postgres + Slack workflow orquestado</p>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85em;">
+                                <span style="color: #dc2626; font-weight: 500;">Automatización 80%</span>
+                                <span style="color: #999;">Sin código</span>
+                            </div>
+                        </div>
+
+                        <!-- Caso 5 -->
+                        <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; background: #f9fafb; transition: all 0.2s;">
+                            <div style="font-size: 24px; margin-bottom: 8px;">🔴</div>
+                            <h4 style="margin: 0 0 8px; font-size: 1.1em;">Auto-Documentation</h4>
+                            <p style="margin: 0 0 12px; color: #666; font-size: 0.95em;">Generar docs desde código con Agent SDK</p>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85em;">
+                                <span style="color: #dc2626; font-weight: 500;">8h/semana ahorradas</span>
+                                <span style="color: #999;">Siempre actualizado</span>
+                            </div>
+                        </div>
+
+                        <!-- Caso 6 -->
+                        <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; background: #f9fafb; transition: all 0.2s;">
+                            <div style="font-size: 24px; margin-bottom: 8px;">🔴</div>
+                            <h4 style="margin: 0 0 8px; font-size: 1.1em;">Quality Gates</h4>
+                            <p style="margin: 0 0 12px; color: #666; font-size: 0.95em;">Coverage, security, performance baselines automáticos</p>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85em;">
+                                <span style="color: #dc2626; font-weight: 500;">100% validación</span>
+                                <span style="color: #999;">Pre-deploy</span>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <p><strong>Resultado:</strong> Code review profesional automático ✅</p>
-                </article>
+                <!-- MATRIZ DE IMPACTO -->
+                <div style="margin-bottom: 48px;">
+                    <h3 style="margin-bottom: 24px;">Matriz de Impacto y Ahorros</h3>
+                    <div style="overflow-x: auto;">
+                        <table class="comparison-table" style="font-size: 0.9em; min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Caso</th>
+                                    <th>Esfuerzo Manual</th>
+                                    <th>Con Automation</th>
+                                    <th>Ahorros/Semana</th>
+                                    <th>ROI (semanas)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Code Review</strong></td>
+                                    <td>450 min (15 PRs × 30min)</td>
+                                    <td>300 min (15 PRs × 20min)</td>
+                                    <td><span style="color: #059669; font-weight: 500;">2.5 horas</span></td>
+                                    <td>2-3 semanas</td>
+                                </tr>
+                                <tr style="background: #f9fafb;">
+                                    <td><strong>Risk Analysis</strong></td>
+                                    <td>60 min/merge (manual check)</td>
+                                    <td>5 min/merge (automated)</td>
+                                    <td><span style="color: #059669; font-weight: 500;">3+ horas</span></td>
+                                    <td>1-2 semanas</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Team Context</strong></td>
+                                    <td>120 min onboarding/persona</td>
+                                    <td>15 min (auto-read CLAUDE.md)</td>
+                                    <td><span style="color: #059669; font-weight: 500;">Per-onboarding</span></td>
+                                    <td>Inmediato</td>
+                                </tr>
+                                <tr style="background: #f9fafb;">
+                                    <td><strong>Multi-MCP</strong></td>
+                                    <td>Manual coordination 3-4h/día</td>
+                                    <td>Automático 5-10 min/ciclo</td>
+                                    <td><span style="color: #dc2626; font-weight: 500;">15+ horas</span></td>
+                                    <td>3-4 semanas</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Auto-Documentation</strong></td>
+                                    <td>480 min/semana (dev + docs)</td>
+                                    <td>60 min/semana (reviews)</td>
+                                    <td><span style="color: #dc2626; font-weight: 500;">7 horas</span></td>
+                                    <td>2 semanas</td>
+                                </tr>
+                                <tr style="background: #f9fafb;">
+                                    <td><strong>Quality Gates</strong></td>
+                                    <td>90 min/merge (manual testing)</td>
+                                    <td>20 min (automated gates)</td>
+                                    <td><span style="color: #dc2626; font-weight: 500;">4+ horas</span></td>
+                                    <td>2-3 semanas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                <article class="card">
-                    <h3>Caso 2: Integración CI/CD — Risk Analysis Post-Merge</h3>
-                    <p><strong>Situación:</strong> Cada commit mergeado a main ejecuta análisis profundo. Claude detecta cambios riesgosos y alerta via Slack.</p>
-
-                    <div class="steps">
-                        <div class="step">
-                            <h4>1. Slack Bot Token</h4>
-                            <pre><code>https://api.slack.com/apps → Create New App
-OAuth Scopes: chat:write, files:write
-Bot Token: xoxb_xxxxx</code></pre>
-                        </div>
-                        <div class="step">
-                            <h4>2. Workflow Automático</h4>
-                            <pre><code class="language-bash">Push a main → Risk analysis → Alerta en Slack si cambios riesgosos
-(auth, database, sin tests nuevos, etc)</code></pre>
-                        </div>
+                <!-- CASO 1 -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <span style="font-size: 32px;">🟢</span>
+                        <h3 style="margin: 0;">Caso 1: Code Review Automático vía GitHub MCP</h3>
                     </div>
 
-                    <p><strong>Alerta esperada:</strong> Mensaje Slack: "⚠️ Risk HIGH: cambios en auth, no hay tests nuevos" ✅</p>
+                    <div class="info-banner" style="background: #f0fdf4; border-color: #86efac; margin-bottom: 24px;">
+                        <strong>Dificultad:</strong> Fácil | <strong>Setup:</strong> 30 minutos | <strong>Ahorros:</strong> 5 horas/semana
+                    </div>
+
+                    <h4 style="margin-top: 0;">Objetivo</h4>
+                    <p>Automatizar la revisión de código en GitHub PRs. Cada PR nueva se revisa automáticamente con feedback detallado sobre calidad, seguridad y mejoras, eliminando la necesidad de reviews manuales.</p>
+
+                    <h4>Beneficio Esperado</h4>
+                    <ul>
+                        <li><strong>5 horas/semana ahorradas:</strong> 15 PRs/semana × 20 min auto vs 30 min manual</li>
+                        <li><strong>Feedback consistente:</strong> Sin variación por revisor, siempre criterios iguales</li>
+                        <li><strong>CI/CD más rápido:</strong> Reviews se completan mientras haces otra cosa</li>
+                        <li><strong>Mejora de calidad:</strong> Catches edge cases y patrones antes de merge</li>
+                    </ul>
+
+                    <h4>Requisitos Previos</h4>
+                    <ul>
+                        <li>Repositorio público o privado en GitHub</li>
+                        <li>GitHub Personal Access Token (PAT) con scopes: repo, workflow</li>
+                        <li>GitHub Actions habilitado en el repo</li>
+                        <li>MCP: github (oficial de Anthropic)</li>
+                    </ul>
+
+                    <h4>Pasos Detallados</h4>
+
+                    <div class="code-block" data-lang="text" data-title="Paso 1: GitHub Personal Access Token">
+                        <pre><code># 1. Ve a GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+# 2. Click "Generate new token (classic)"
+# 3. Token name: "Claude Code Reviews"
+# 4. Expiration: 90 days (rotación recomendada)
+# 5. Scopes necesarios:
+    - repo (completo): read/write repos, workflows, issues, PRs
+    - workflow: acceso a GitHub Actions
+    - gist: opcional si necesitas crear snippets
+# 6. Copia el token: ghp_xxxxxxxxxxxxxxxxx
+# 7. GUARDAR SEGURO: Solo se muestra una vez</code></pre>
+                    </div>
+
+                    <div class="code-block" data-lang="bash" data-title="Paso 2: Configurar el MCP de GitHub">
+                        <pre><code># Setup con environment variable
+export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxxxxxxxxxxxxxxx
+
+# O agregarlo a .bashrc/.zshrc para persistir
+echo 'export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxxxxxxxxxxxxxxx' >> ~/.bashrc
+source ~/.bashrc
+
+# Verificar conexión
+curl -H "Authorization: token ghp_xxxxxxxxxxxxxxxxx" \
+  https://api.github.com/user \
+  -H "Accept: application/vnd.github.v3+json"
+
+# Output esperado:
+# {
+#   "login": "tu-usuario",
+#   "id": 12345,
+#   "repos_url": "https://api.github.com/user/repos",
+#   ...
+# }</code></pre>
+                    </div>
+
+                    <div class="code-block" data-lang="yaml" data-title="Paso 3: GitHub Actions Workflow - .github/workflows/claude-review.yml">
+                        <pre><code>name: Claude Code Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - '**.js'
+      - '**.ts'
+      - '**.tsx'
+      - '**.py'
+      - '**.rs'
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-branch
+          git diff origin/main...pr-branch > /tmp/changes.diff
+          cat /tmp/changes.diff
+
+      - name: Run Claude Code Review
+        id: review
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PERSONAL_ACCESS_TOKEN: ${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          # Usar Claude Code CLI directamente
+          claude --no-input "
+          Eres un code reviewer experto. Analiza estos cambios y proporciona:
+          1. Problemas críticos (seguridad, bugs)
+          2. Mejoras de código (patrones, performance)
+          3. Testing: ¿hay tests nuevos? ¿suficientes?
+          4. Documentación: ¿está actualizada?
+          5. Puntuación general: APROBADO / CAMBIOS_MENORES / RECHAZA
+
+          Cambios:
+          \`\`\`diff
+          $(cat /tmp/changes.diff)
+          \`\`\`
+
+          Responde en formato JSON para que GitHub lo procese.
+          " > /tmp/review.json
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const review = JSON.parse(fs.readFileSync('/tmp/review.json', 'utf8'));
+
+            github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              event: review.decision === 'APROBADO' ? 'APPROVE' : 'REQUEST_CHANGES',
+              body: `## Claude Code Review\n\n${review.summary}\n\n**Issues:** ${review.issues.length}\n**Improvements:** ${review.improvements.length}`
+            });</code></pre>
+                    </div>
+
+                    <h4>Validación</h4>
+                    <div class="info-banner" style="background: #f3f4f6; border-color: #d1d5db;">
+                        <ol style="margin: 0; padding-left: 20px;">
+                            <li>Abre una PR de prueba (cambio pequeño)</li>
+                            <li>Verifica que GitHub Actions corra automáticamente</li>
+                            <li>Espera review de Claude como comentario en PR</li>
+                            <li>Verifica que el review contenga: Issues, Improvements, Score</li>
+                            <li>Prueba modificar código según feedback y hacer push (rereview automático)</li>
+                        </ol>
+                    </div>
+
+                    <h4>Métricas de Éxito</h4>
+                    <ul>
+                        <li>✅ 100% de PRs revieweadas dentro de 5 minutos de abrir</li>
+                        <li>✅ Feedback detallado (3+ puntos por review)</li>
+                        <li>✅ 0 false positives (feedback siempre relevante)</li>
+                        <li>✅ Review time < 5 min (vs 30 min manual)</li>
+                    </ul>
+
+                    <h4>Gotchas y Soluciones</h4>
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> GitHub Actions timeout después de 6 horas</p>
+                        <p><strong>Solución:</strong> Para diffs grandes (>50MB), splitea en chunks o usa git diff --cached</p>
+                    </div>
+
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> Claude review es genérico / no entiende contexto del proyecto</p>
+                        <p><strong>Solución:</strong> Añade contexto en el prompt: "Lee CLAUDE.md del repo para arquitectura y patrones antes de revisar"</p>
+                    </div>
+
+                    <div class="info-banner info-banner--tip">
+                        <p><strong>Pro tip:</strong> Configura reglas de protección de rama: "Requiere revisión de Claude APPROVE antes de merge"</p>
+                    </div>
+
+                    <h4>Integración con Workflow Existente</h4>
+                    <p>Combina con: Branch protection rules + Status checks + CODEOWNERS en .github/CODEOWNERS para que humans revisen solo PRs que Claude marque como riesgosas.</p>
                 </article>
 
-                <article class="card">
-                    <h3>Caso 3: Compartir Contexto en Equipo</h3>
-                    <p><strong>Situación:</strong> Nuevo developer se une. Necesita acceso a decisiones arquitectónicas y bugs históricos.</p>
+                <!-- CASO 2 -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <span style="font-size: 32px;">🟡</span>
+                        <h3 style="margin: 0;">Caso 2: CI/CD Risk Analysis — Post-Merge Safety Gates</h3>
+                    </div>
 
-                    <div class="steps">
-                        <div class="step">
-                            <h4>Centralizar en CLAUDE.md</h4>
-                            <pre><code class="language-markdown">## Arquitectura
-[Overview]
+                    <div class="info-banner" style="background: #fffbeb; border-color: #fcd34d; margin-bottom: 24px;">
+                        <strong>Dificultad:</strong> Media | <strong>Setup:</strong> 45 minutos | <strong>Ahorros:</strong> 3+ horas/semana
+                    </div>
 
-## Bugs Históricos
-- Race condition en auth → SOLUCIÓN: mutex
-- N+1 query en list_users → SOLUCIÓN: aggregation
+                    <h4 style="margin-top: 0;">Objetivo</h4>
+                    <p>Ejecutar análisis de riesgo automático en CADA MERGE a main. Claude identifica cambios peligrosos (auth, database, sin tests) y alerta por Slack con severidad y acciones recomendadas.</p>
 
-## Decisiones de Diseño
-Por qué Postgres, por qué este stack, etc</code></pre>
-                        </div>
-                        <div class="step">
-                            <h4>Onboarding Rápido</h4>
-                            <pre><code class="language-bash">cd mi-repo && claude
+                    <h4>Beneficio Esperado</h4>
+                    <ul>
+                        <li><strong>Prevención de bugs en producción:</strong> Catches cambios riesgosos antes de deployment</li>
+                        <li><strong>Alertas en tiempo real:</strong> Slack notification dentro de 2 minutos del merge</li>
+                        <li><strong>Decisiones informadas:</strong> Equipo sabe qué riesgo tiene cada merge</li>
+                        <li><strong>Auditoría automática:</strong> Historial completo de cambios riesgosos</li>
+                    </ul>
 
+                    <h4>Requisitos Previos</h4>
+                    <ul>
+                        <li>Repository en GitHub/GitLab con acceso a main branch</li>
+                        <li>Slack workspace + bot token</li>
+                        <li>MCPs: github + slack</li>
+                        <li>GitHub Actions o CI/CD runner disponible</li>
+                    </ul>
+
+                    <h4>Pasos Detallados</h4>
+
+                    <div class="code-block" data-lang="bash" data-title="Paso 1: Crear Slack Bot Token">
+                        <pre><code># 1. Ve a https://api.slack.com/apps
+# 2. Click "Create New App" → "From scratch"
+# 3. App name: "Claude Risk Alert Bot"
+# 4. Workspace: Selecciona tu workspace
+# 5. Left menu → OAuth & Permissions
+# 6. Scopes (add these):
+    - chat:write (enviar mensajes)
+    - chat:write.public (en canales públicos)
+    - files:write (para compartir diffs)
+    - reactions:write (para añadir emojis)
+# 7. Install to Workspace
+# 8. Copy Bot Token: xoxb_xxxxxxxxxxxxxxxxx
+# 9. Left menu → Event Subscriptions
+#    Enable Events ON
+#    Subscribe to bot events:
+      - app_mention
+      - message.im
+# 10. Save changes</code></pre>
+                    </div>
+
+                    <div class="code-block" data-lang="yaml" data-title="Paso 2: GitHub Actions Workflow - .github/workflows/claude-risk-analysis.yml">
+                        <pre><code>name: Claude Risk Analysis Post-Merge
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.js'
+      - '**.ts'
+      - '**.py'
+      - '**.sql'
+      - '**.yml'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - 'package.json'
+      - 'requirements.txt'
+
+jobs:
+  risk_analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+
+      - name: Get last commit diff
+        id: diff
+        run: |
+          git show HEAD --format="" --name-only > /tmp/files.txt
+          git show HEAD > /tmp/commit.patch
+          echo "FILES_CHANGED=$(cat /tmp/files.txt | wc -l)" >> $GITHUB_OUTPUT
+
+      - name: Analyze Risk with Claude
+        id: risk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          claude --no-input "
+          Analiza este commit MERGE de seguridad:
+
+          Archivos modificados:
+          \`\`\`
+          $(cat /tmp/files.txt)
+          \`\`\`
+
+          Cambios:
+          \`\`\`patch
+          $(head -100 /tmp/commit.patch)  # Primeros 100 líneas
+          \`\`\`
+
+          Evalúa RIESGO en escala HIGH/MEDIUM/LOW:
+          - ¿Cambios en auth, database, or infrastructure?
+          - ¿Hay tests nuevos covering los cambios?
+          - ¿Dependencies actualizadas? ¿breaking changes?
+          - ¿Secrets o credentials hardcodeadas?
+          - ¿Performance o security implications?
+
+          Responde JSON:
+          {
+            \"severity\": \"HIGH|MEDIUM|LOW\",
+            \"summary\": \"Una línea resumen\",
+            \"risks\": [\"risk 1\", \"risk 2\"],
+            \"recommendations\": [\"action 1\", \"action 2\"],
+            \"affected_areas\": [\"auth\", \"database\", etc]
+          }
+          " > /tmp/risk.json
+
+      - name: Post Slack Alert
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          payload: |
+            {
+              "attachments": [
+                {
+                  "color": "${{ fromJson(steps.risk.outputs.risk).severity == 'HIGH' && 'danger' || 'warning' }}",
+                  "title": "${{ fromJson(steps.risk.outputs.risk).severity }} Risk: ${{ github.event.head_commit.message }}",
+                  "text": "${{ fromJson(steps.risk.outputs.risk).summary }}",
+                  "fields": [
+                    {
+                      "title": "Risks",
+                      "value": "${{ join(fromJson(steps.risk.outputs.risk).risks, '\n') }}",
+                      "short": false
+                    },
+                    {
+                      "title": "Recommended Actions",
+                      "value": "${{ join(fromJson(steps.risk.outputs.risk).recommendations, '\n') }}",
+                      "short": false
+                    },
+                    {
+                      "title": "Files Changed",
+                      "value": "${{ steps.diff.outputs.FILES_CHANGED }}",
+                      "short": true
+                    },
+                    {
+                      "title": "Author",
+                      "value": "${{ github.event.head_commit.author.name }}",
+                      "short": true
+                    }
+                  ],
+                  "footer": "Claude Risk Analysis • ${{ github.repository }}",
+                  "ts": ${{ github.event.head_commit.timestamp }}
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}</code></pre>
+                    </div>
+
+                    <h4>Validación</h4>
+                    <div class="info-banner" style="background: #f3f4f6; border-color: #d1d5db;">
+                        <ol style="margin: 0; padding-left: 20px;">
+                            <li>Haz merge de una PR a main (test branch)</li>
+                            <li>Verifica que GitHub Actions ejecute el workflow dentro de 1 minuto</li>
+                            <li>Verifica Slack message en #deployments o canal configurado</li>
+                            <li>Mensaje debe incluir: Severity badge, summary, risks, recommendations</li>
+                            <li>Prueba con cambio "risky" (auth modification) → debe ser HIGH</li>
+                        </ol>
+                    </div>
+
+                    <h4>Métricas de Éxito</h4>
+                    <ul>
+                        <li>✅ 100% de merges analizados dentro de 2 min</li>
+                        <li>✅ HIGH risk cambios correctamente identificados</li>
+                        <li>✅ Equipo actúa dentro de 30 min en HIGH risk alerts</li>
+                        <li>✅ 0 bugs en producción relacionados a cambios que Claude podría haber detectado</li>
+                    </ul>
+
+                    <h4>Gotchas y Soluciones</h4>
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> Muchos false positives → equipo ignora alertas</p>
+                        <p><strong>Solución:</strong> Añade context: "Ignore library updates que pasen tests. Focus: auth, database, security changes"</p>
+                    </div>
+
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> Slack messages muy largas</p>
+                        <p><strong>Solución:</strong> Limita a top 3 risks. Para análisis completo, linkea a GitHub Actions logs</p>
+                    </div>
+
+                    <h4>Integración con Workflow</h4>
+                    <p>Combina con: GitOps deployment gates. Si risk == HIGH, requiere approval manual antes de deploy a producción. CloudFormation change sets, Terraform plans, etc.</p>
+                </article>
+
+                <!-- CASO 3 -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <span style="font-size: 32px;">🟡</span>
+                        <h3 style="margin: 0;">Caso 3: Team Context Sharing — Onboarding Automático</h3>
+                    </div>
+
+                    <div class="info-banner" style="background: #fffbeb; border-color: #fcd34d; margin-bottom: 24px;">
+                        <strong>Dificultad:</strong> Media | <strong>Setup:</strong> 20 minutos | <strong>Ahorros:</strong> 2-3 horas/onboarding
+                    </div>
+
+                    <h4 style="margin-top: 0;">Objetivo</h4>
+                    <p>Centralizar toda arquitectura, decisiones de diseño y bugs históricos en CLAUDE.md. Nuevos developers leen automáticamente el contexto antes de cualquier pregunta.</p>
+
+                    <h4>Beneficio Esperado</h4>
+                    <ul>
+                        <li><strong>Onboarding en 15 minutos:</strong> vs 2-3 horas de explicación manual</li>
+                        <li><strong>Evitar re-explicar:</strong> Decisiones arquitectónicas documentadas</li>
+                        <li><strong>Consistencia:</strong> Todos entienden por qué ciertas decisiones</li>
+                        <li><strong>Referencia viva:</strong> Se actualiza con el código, no se vuelve stale</li>
+                    </ul>
+
+                    <h4>Requisitos Previos</h4>
+                    <ul>
+                        <li>Acceso write al repo (CLAUDE.md en raíz)</li>
+                        <li>Claude Code instalado localmente</li>
+                        <li>Git history disponible</li>
+                    </ul>
+
+                    <h4>Pasos Detallados</h4>
+
+                    <div class="code-block" data-lang="markdown" data-title="Paso 1: Crear CLAUDE.md en raíz del repo">
+                        <pre><code># CLAUDE.md - Project Context & Architecture
+
+## Project Overview
+**Project:** [Your Project Name]
+**Stack:** Node.js + TypeScript + React + PostgreSQL
+**Repository:** github.com/your-org/project
+**Team:** 5 engineers, 1 tech lead
+
+---
+
+## Architecture at a Glance
+
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│   React UI  │────→│  API Gateway │────→│ PostgreSQL  │
+│  (Next.js)  │     │   (Node.js)  │     │  + Redis    │
+└─────────────┘     └──────────────┘     └─────────────┘
+      ↓                    ↓
+  Auth (OAuth2)    Middleware (Logger,
+                   Auth, Rate Limit)
+```
+
+### Core Components
+1. **Frontend (React/Next.js)**
+   - Pages: /dashboard, /projects, /settings
+   - State: Redux (global) + hooks (local)
+   - Auth: OAuth2 via Auth0
+
+2. **Backend (Node.js/Express)**
+   - REST API at /api/v1/*
+   - Authentication: JWT tokens (24h expiry)
+   - Rate limiting: 100 req/min per IP
+
+3. **Database (PostgreSQL)**
+   - Primary: AWS RDS (us-east-1)
+   - Replica: Read-only for analytics
+   - Migrations: db/migrations/* via Knex
+
+---
+
+## Design Decisions & Why
+
+### Decision: Why PostgreSQL over MongoDB?
+**Date:** 2023-01-15 | **Status:** Active
+**Reasoning:**
+- Strong consistency required for financial transactions
+- Complex joins for reporting
+- ACID compliance non-negotiable
+- Schema validation prevents data corruption
+
+**Alternative Considered:** MongoDB
+**Why rejected:** Weak consistency, ORM overhead
+
+### Decision: Why Redux over Context API?
+**Date:** 2023-03-20 | **Status:** Active
+**Reasoning:**
+- Devtools for time-travel debugging
+- Middleware system for side effects (thunks)
+- Multiple slices = better code organization
+
+**Learning:** Context API fine for small apps, Redux scales
+
+### Decision: OAuth2 instead of basic auth?
+**Date:** 2023-02-01 | **Status:** Active
+**Reasoning:**
+- Users can have multiple identities (Google, GitHub)
+- No password management liability
+- Industry standard
+
+---
+
+## Historical Bugs & Lessons Learned
+
+### Bug: Race Condition in Auth Flow
+**Date Discovered:** 2023-06-14 | **Severity:** CRITICAL
+**Symptom:** Users sometimes logged out unexpectedly
+**Root Cause:** Two concurrent requests modifying `localStorage` + Redux state simultaneously
+**Solution:** Introduced mutex lock in auth reducer using `redux-persist` lock
+**Prevention:** Always sanitize async state updates with `immer` to detect mutations
+
+**Code Reference:** `src/redux/authSlice.ts` line 45
+
+```typescript
+// BAD: Direct mutation
+state.user = action.payload;
+
+// GOOD: Immer-safe
+return { ...state, user: action.payload };
+```
+
+### Bug: N+1 Query in /api/projects
+**Date Discovered:** 2023-07-02 | **Severity:** MEDIUM
+**Symptom:** API response time 5s+ when fetching 100 projects
+**Root Cause:** Loop fetching user for each project: `projects.forEach(p => getUser(p.userId))`
+**Solution:** Use SQL JOIN + aggregation in single query
+**Prevention:** Use DataLoader pattern or batch queries
+
+**Code Reference:** `src/services/projectService.ts` line 78
+
+---
+
+## Deployment & DevOps
+
+### Environments
+- **Development:** localhost:3000 (Webpack dev server)
+- **Staging:** staging.yourapp.com (AWS Lambda)
+- **Production:** yourapp.com (AWS Lambda + CloudFront)
+
+### CI/CD Pipeline
+```
+Push to GitHub → GitHub Actions (lint, test, build)
+   ↓
+Merge to main → Deploy to staging
+   ↓
+Manual approval → Deploy to production (blue/green)
+```
+
+### Monitoring
+- **Errors:** Sentry (real-time alerts to Slack #errors)
+- **Performance:** DataDog (dashboards for response time, error rates)
+- **Logs:** CloudWatch (AWS Lambda logs)
+
+---
+
+## Getting Started (First Day)
+
+1. **Clone & setup:**
+   ```bash
+   git clone https://github.com/your-org/project
+   cd project
+   npm install
+   npm run dev
+   ```
+
+2. **Create `.env.local` (ask tech lead for values):**
+   ```
+   REACT_APP_API_URL=http://localhost:3001
+   REACT_APP_AUTH0_DOMAIN=your-auth0.auth0.com
+   REACT_APP_AUTH0_CLIENT_ID=xxxxx
+   ```
+
+3. **Run migrations:**
+   ```bash
+   npm run db:migrate
+   npm run db:seed  # Test data
+   ```
+
+4. **Start dev server:**
+   ```bash
+   npm run dev
+   # Frontend: http://localhost:3000
+   # Backend: http://localhost:3001
+   ```
+
+5. **Ask in Slack:** @tech-lead if anything breaks
+
+---
+
+## Code Organization
+
+```
+project/
+├── src/
+│   ├── api/              # Express routes & controllers
+│   │   ├── projects.ts
+│   │   ├── users.ts
+│   │   └── auth.ts
+│   ├── services/         # Business logic (reusable)
+│   │   ├── projectService.ts
+│   │   ├── userService.ts
+│   │   └── authService.ts
+│   ├── models/           # Knex/ORM models
+│   │   ├── Project.ts
+│   │   ├── User.ts
+│   │   └── index.ts (barrel export)
+│   ├── ui/               # React components
+│   │   ├── pages/
+│   │   ├── components/
+│   │   └── styles/
+│   ├── redux/            # State management
+│   │   ├── store.ts
+│   │   ├── projectSlice.ts
+│   │   ├── userSlice.ts
+│   │   └── authSlice.ts
+│   ├── utils/            # Helpers (formatters, validators)
+│   └── index.ts
+├── db/
+│   ├── migrations/       # Knex migrations (numbered)
+│   ├── seeds/            # Test data
+│   └── config.ts
+├── tests/                # Jest tests
+│   ├── api.test.ts
+│   ├── services.test.ts
+│   └── components.test.ts
+├── .env.example
+├── tsconfig.json
+├── package.json
+└── README.md
+```
+
+---
+
+## Key Files to Know
+
+| File | Purpose | Frequency |
+|------|---------|-----------|
+| `src/redux/authSlice.ts` | Auth state logic | Every login/logout |
+| `src/services/projectService.ts` | Project CRUD operations | Feature work |
+| `db/migrations/*` | Database schema changes | New columns |
+| `src/ui/pages/Dashboard.tsx` | Main landing page | UI changes |
+| `package.json` | Dependencies & scripts | Adding packages |
+
+---
+
+## Testing Strategy
+
+- **Unit Tests:** Jest for services & utils
+- **Integration Tests:** Jest + @testing-library/react for components
+- **E2E Tests:** Cypress for critical flows (auth, payment)
+
+```bash
+npm run test           # Jest (watch mode)
+npm run test:e2e       # Cypress (interactive)
+npm run test:coverage  # Coverage report
+```
+
+**Requirement:** >80% coverage for services, >60% for UI
+
+---
+
+## Common Tasks
+
+### "I need to add a new API endpoint"
+1. Create route in `src/api/yourFeature.ts`
+2. Create service method in `src/services/yourFeatureService.ts`
+3. Add Redux slice in `src/redux/yourFeatureSlice.ts` (if global state)
+4. Test with Jest
+5. Add UI component to call it
+6. Update docs (this file) if architectural change
+
+### "The app is slow"
+1. Check DataDog dashboard for bottleneck
+2. Profile with Chrome DevTools (Frontend) or NODE --prof (Backend)
+3. Usually: N+1 queries or unnecessary re-renders
+4. See "N+1 Query Bug" above for solution
+
+### "Tests are failing"
+```bash
+npm run test -- --watch src/services  # Run specific test
+npm run test -- --updateSnapshot      # Update snapshots if intentional
+```
+
+---
+
+## Communication
+
+- **Slack:** #dev for questions, #deploys for deployment updates
+- **Tech Decisions:** Post in #architecture with context, team votes
+- **Code Review:** All PRs require 1 approval before merge
+- **Standups:** Daily at 10am UTC in #standup</code></pre>
+                    </div>
+
+                    <div class="code-block" data-lang="bash" data-title="Paso 2: Onboarding automatizado via Claude">
+                        <pre><code># Nuevo dev llega al proyecto
+cd mi-repo
+
+# Lanza Claude
+claude
+
+# Di esto en el chat:
 @CLAUDE.md
-Voy a empezar. Explícame la arquitectura y primeros pasos.
+Acabo de unirme al equipo. Explícame:
+1. Arquitectura general del proyecto
+2. Stack tecnológico y por qué esas decisiones
+3. Pasos para setup local
+4. Bugs históricos importantes que no repetir
+5. Mis primeros pasos hoy
 
-# Claude lee CLAUDE.md y explica todo en 15 min</code></pre>
-                        </div>
+# Claude lee automáticamente CLAUDE.md y responde basado en contexto
+# Respuesta típica: 5-15 minutos, cubre todo sin re-explicar</code></pre>
                     </div>
 
-                    <p><strong>Resultado:</strong> Nuevo dev entiende proyecto sin re-explicar nada ✅</p>
+                    <h4>Validación</h4>
+                    <div class="info-banner" style="background: #f3f4f6; border-color: #d1d5db;">
+                        <ol style="margin: 0; padding-left: 20px;">
+                            <li>Nuevo dev: clone repo</li>
+                            <li>Corre `claude` en el directorio</li>
+                            <li>Pregunta: "¿Cuál es la arquitectura?"</li>
+                            <li>Verifica: Claude responde con contenido de CLAUDE.md</li>
+                            <li>Nuevo dev sigue instrucciones "Getting Started" y hace `npm run dev`</li>
+                            <li>App carga correctamente sin questions</li>
+                        </ol>
+                    </div>
+
+                    <h4>Gotchas y Soluciones</h4>
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> CLAUDE.md se vuelve stale / no refleja cambios</p>
+                        <p><strong>Solución:</strong> Incluye en cada PR importante: "Actualiza CLAUDE.md si hay cambios arquitectónicos". Code review checklist incluye esto.</p>
+                    </div>
+
+                    <div class="info-banner info-banner--tip">
+                        <p><strong>Pro tip:</strong> Versionea CLAUDE.md en git. Changes importante = PR aparte que el tech lead aprueba.</p>
+                    </div>
+
+                    <h4>Integración</h4>
+                    <p>Combina con: README.md (quick start) + CLAUDE.md (contexto profundo) + Slack #onboarding (day 1 checklist)</p>
+                </article>
+
+                <!-- CASO 4 -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <span style="font-size: 32px;">🔴</span>
+                        <h3 style="margin: 0;">Caso 4: Multi-MCP Integration — GitHub + Postgres + Slack Workflow</h3>
+                    </div>
+
+                    <div class="info-banner" style="background: #fef2f2; border-color: #fca5a5; margin-bottom: 24px;">
+                        <strong>Dificultad:</strong> Avanzada | <strong>Setup:</strong> 2-3 horas | <strong>Ahorros:</strong> 15+ horas/semana
+                    </div>
+
+                    <h4 style="margin-top: 0;">Objetivo</h4>
+                    <p>Orquestar un workflow complejo: GitHub MCP lee PRs → Postgres MCP valida datos → Slack MCP notifica al equipo, todo en una sesión automática sin código.</p>
+
+                    <h4>Beneficio Esperado</h4>
+                    <ul>
+                        <li><strong>80% automatización:</strong> Tasks que requerían manual coordination ahora automáticas</li>
+                        <li><strong>Zero context switching:</strong> Un agente orquestra múltiples herramientas</li>
+                        <li><strong>Faster time-to-resolution:</strong> Alerts y acciones se distribuyen en segundos</li>
+                        <li><strong>Data consistency:</strong> Single source of truth via MCPs</li>
+                    </ul>
+
+                    <h4>Requisitos Previos</h4>
+                    <ul>
+                        <li>MCPs: github, postgres (o mysql/sqlite), slack</li>
+                        <li>Credentials para cada servicio</li>
+                        <li>Claude Agent SDK o Claude CLI con multi-tool support</li>
+                        <li>PostgreSQL database con acceso de escritura</li>
+                    </ul>
+
+                    <h4>Pasos Detallados</h4>
+
+                    <div class="code-block" data-lang="bash" data-title="Paso 1: Instalar y configurar MCPs">
+                        <pre><code># Instalar MCPs
+claude mcp add github \
+  --env GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxxx
+
+claude mcp add postgres \
+  --env DATABASE_URL=postgresql://user:pass@localhost:5432/mydb
+
+claude mcp add slack \
+  --env SLACK_BOT_TOKEN=xoxb_xxxxx
+
+# Verificar que están listos
+claude mcp list
+# Output:
+# ✓ github (connected)
+# ✓ postgres (connected)
+# ✓ slack (connected)</code></pre>
+                    </div>
+
+                    <div class="code-block" data-lang="sql" data-title="Paso 2: Crear tablas en PostgreSQL para tracking">
+                        <pre><code>-- Tabla para tracking de PRs procesados
+CREATE TABLE pr_validations (
+  id SERIAL PRIMARY KEY,
+  pr_number INT NOT NULL,
+  repository VARCHAR(255) NOT NULL,
+  author VARCHAR(255),
+  title VARCHAR(512),
+  status VARCHAR(50) DEFAULT 'pending',  -- pending, approved, flagged, merged
+  risk_level VARCHAR(20),  -- LOW, MEDIUM, HIGH
+  validation_date TIMESTAMP DEFAULT NOW(),
+  notes TEXT
+);
+
+-- Tabla para datos que se han validado (cualquier dato crítico)
+CREATE TABLE data_validations (
+  id SERIAL PRIMARY KEY,
+  object_type VARCHAR(100),  -- 'user', 'transaction', 'config'
+  object_id VARCHAR(255),
+  validation_result VARCHAR(20),  -- PASS, FAIL, WARNING
+  details JSONB,
+  validated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Índices para query rápido
+CREATE INDEX idx_pr_number ON pr_validations(pr_number);
+CREATE INDEX idx_status ON pr_validations(status);
+CREATE INDEX idx_validated_at ON data_validations(validated_at DESC);</code></pre>
+                    </div>
+
+                    <div class="code-block" data-lang="typescript" data-title="Paso 3: Orchestrator Script - orchestrate-workflow.ts">
+                        <pre><code>import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic();
+
+// Define tools que Claude puede usar
+const tools: Anthropic.Tool[] = [
+  {
+    name: "github_get_pr",
+    description: "Obtener detalles de un PR en GitHub",
+    input_schema: {
+      type: "object",
+      properties: {
+        repo: { type: "string", description: "owner/repo" },
+        pr_number: { type: "number" }
+      },
+      required: ["repo", "pr_number"]
+    }
+  },
+  {
+    name: "postgres_query",
+    description: "Ejecutar query en PostgreSQL",
+    input_schema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "SQL query" }
+      },
+      required: ["query"]
+    }
+  },
+  {
+    name: "slack_send_message",
+    description: "Enviar mensaje a Slack",
+    input_schema: {
+      type: "object",
+      properties: {
+        channel: { type: "string" },
+        text: { type: "string" }
+      },
+      required: ["channel", "text"]
+    }
+  }
+];
+
+async function processGitHubPR(repo: string, prNumber: number) {
+  const messages: Anthropic.MessageParam[] = [
+    {
+      role: "user",
+      content: `
+      Procesa este PR automáticamente:
+      - Repository: ${repo}
+      - PR Number: ${prNumber}
+
+      Workflow:
+      1. Obtén detalles del PR con github_get_pr
+      2. Valida los cambios en PostgreSQL: ¿hay archivos riesgosos?
+         Inserta validación en tabla data_validations
+      3. Si validación = PASS:
+         - Envía mensaje Slack: ✅ PR ${prNumber} validated
+      4. Si validación = FAIL:
+         - Envía mensaje Slack: ⚠️ PR ${prNumber} flagged for review
+      5. Actualiza tabla pr_validations con el resultado
+
+      Sé específico: Incluye qué archivos fueron validados.
+      `
+    }
+  ];
+
+  let response = await client.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 4096,
+    tools: tools,
+    messages: messages
+  });
+
+  // Agentic loop: ejecuta mientras Claude pida tools
+  while (response.stop_reason === "tool_use") {
+    const toolUseBlock = response.content.find(
+      (block): block is Anthropic.ToolUseBlock => block.type === "tool_use"
+    );
+
+    if (!toolUseBlock) break;
+
+    // Simular respuestas de tools (en prod, llamarías APIs reales)
+    let toolResult = "";
+    if (toolUseBlock.name === "github_get_pr") {
+      // Mock response
+      toolResult = JSON.stringify({
+        title: "feat: add authentication",
+        author: "john-doe",
+        files_changed: ["src/auth.ts", "src/api.ts"],
+        additions: 150,
+        deletions: 30,
+        status: "open"
+      });
+    } else if (toolUseBlock.name === "postgres_query") {
+      // Mock response
+      toolResult = JSON.stringify({
+        affected_rows: 1,
+        status: "success"
+      });
+    } else if (toolUseBlock.name === "slack_send_message") {
+      // Mock response
+      toolResult = JSON.stringify({
+        ts: "1234567890.123456",
+        status: "ok"
+      });
+    }
+
+    // Continúa conversación
+    messages.push({
+      role: "assistant",
+      content: response.content
+    });
+
+    messages.push({
+      role: "user",
+      content: [
+        {
+          type: "tool_result",
+          tool_use_id: toolUseBlock.id,
+          content: toolResult
+        }
+      ]
+    });
+
+    response = await client.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 4096,
+      tools: tools,
+      messages: messages
+    });
+  }
+
+  // Extrae respuesta final
+  const finalText = response.content
+    .filter((block): block is Anthropic.TextBlock => block.type === "text")
+    .map((block) => block.text)
+    .join("\n");
+
+  console.log("Workflow completed:", finalText);
+}
+
+// Trigger: cuando hay PR nueva
+processGitHubPR("your-org/your-repo", 42);</code></pre>
+                    </div>
+
+                    <h4>Validación</h4>
+                    <div class="info-banner" style="background: #f3f4f6; border-color: #d1d5db;">
+                        <ol style="margin: 0; padding-left: 20px;">
+                            <li>Abre un PR de prueba en tu repo</li>
+                            <li>Ejecuta: `npx ts-node orchestrate-workflow.ts`</li>
+                            <li>Verifica logs: "Workflow completed: Validation = PASS"</li>
+                            <li>Verifica PostgreSQL: INSERT en pr_validations completado</li>
+                            <li>Verifica Slack: Mensaje en #pr-validations con resultado</li>
+                            <li>Prueba con cambio riesgoso (auth file) → debe ser FAIL</li>
+                        </ol>
+                    </div>
+
+                    <h4>Métricas de Éxito</h4>
+                    <ul>
+                        <li>✅ 100% de PRs procesadas automáticamente</li>
+                        <li>✅ Slack notification dentro de 5 minutos de abrir PR</li>
+                        <li>✅ PostgreSQL audit trail completo para cada PR</li>
+                        <li>✅ Zero manual coordination needed (vs 3-4h/día antes)</li>
+                    </ul>
+
+                    <h4>Gotchas y Soluciones</h4>
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> MCPs timeout si workflow es larga</p>
+                        <p><strong>Solución:</strong> Divide en sub-workflows. MCP 1 (GitHub), MCP 2 (Postgres), MCP 3 (Slack) en secuencia, no en paralelo</p>
+                    </div>
+
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> Credentials se exponen en logs</p>
+                        <p><strong>Solución:</strong> Usa env variables, nunca logues tokens. Review logs regularmente.</p>
+                    </div>
+
+                    <h4>Integración</h4>
+                    <p>Combina con: GitHub Actions trigger + CloudFunction/Lambda para ejecutar el orchestrator automáticamente en cada PR.</p>
+                </article>
+
+                <!-- CASO 5 -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <span style="font-size: 32px;">🔴</span>
+                        <h3 style="margin: 0;">Caso 5: Automated Documentation Generation — Code to Docs</h3>
+                    </div>
+
+                    <div class="info-banner" style="background: #fef2f2; border-color: #fca5a5; margin-bottom: 24px;">
+                        <strong>Dificultad:</strong> Avanzada | <strong>Setup:</strong> 1-2 horas | <strong>Ahorros:</strong> 8 horas/semana
+                    </div>
+
+                    <h4 style="margin-top: 0;">Objetivo</h4>
+                    <p>Generar documentación automática cada vez que el código cambia. APIs docs, guides, examples siempre sincronizados con el código actual.</p>
+
+                    <h4>Beneficio Esperado</h4>
+                    <ul>
+                        <li><strong>8 horas/semana ahorradas:</strong> Docs generation + reviews + updates automáticas</li>
+                        <li><strong>Docs siempre actualizadas:</strong> Cambio código → Docs se regeneran → PR automático</li>
+                        <li><strong>Mejor developer experience:</strong> Ejemplos siempre funcionales</li>
+                        <li><strong>Menos onboarding time:</strong> Docs comprehensive desde el inicio</li>
+                    </ul>
+
+                    <h4>Requisitos Previos</h4>
+                    <ul>
+                        <li>Codebase con TypeScript/JSDoc o Python docstrings</li>
+                        <li>GitHub repo con acceso write</li>
+                        <li>Claude Agent SDK + MCP github</li>
+                        <li>Automated testing del código (para generar ejemplos)</li>
+                    </ul>
+
+                    <h4>Pasos Detallados</h4>
+
+                    <div class="code-block" data-lang="typescript" data-title="Paso 1: Agent para generar documentación - doc-generator-agent.ts">
+                        <pre><code>import Anthropic from "@anthropic-ai/sdk";
+import fs from "fs";
+import path from "path";
+
+interface DocumentationArtifact {
+  filename: string;
+  content: string;
+  type: "api" | "guide" | "example" | "troubleshooting";
+}
+
+const client = new Anthropic();
+
+async function generateDocumentation(codeDir: string): Promise<DocumentationArtifact[]> {
+  // 1. Leer código fuente
+  const sourceFiles = readSourceFiles(codeDir);
+
+  // 2. Crear mensaje para Claude
+  const response = await client.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 8000,
+    messages: [
+      {
+        role: "user",
+        content: `
+        Eres un experto documentador. Analiza este código y genera documentación:
+
+        ${sourceFiles.map(f => \`
+        FILE: \${f.name}
+        \`\`\`\${f.ext}
+        \${f.content}
+        \`\`\`
+        \`).join('\n')}
+
+        Genera 4 archivos de documentación en formato JSON:
+
+        {
+          "api-reference.md": "Documentación de API (functions, parameters, return types)",
+          "getting-started.md": "Guía rápida de inicio",
+          "examples.md": "Ejemplos de código funcionales",
+          "troubleshooting.md": "Problemas comunes y soluciones"
+        }
+
+        Requisitos:
+        - API reference: Para cada función, incluye signature, description, parámetros, retorno
+        - Examples: Código real que funciona (basado en tests)
+        - Markdown bien formateado
+        - Include <code> blocks cuando sea relevante
+        `
+      }
+    ]
+  });
+
+  // 3. Parse respuesta
+  const textContent = response.content
+    .filter((block): block is Anthropic.TextBlock => block.type === "text")
+    .map(block => block.text)
+    .join("");
+
+  // Extract JSON from response
+  const jsonMatch = textContent.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("Could not parse documentation JSON");
+
+  const docs = JSON.parse(jsonMatch[0]);
+
+  // 4. Convertir a artifacts
+  const artifacts: DocumentationArtifact[] = [
+    { filename: "API-REFERENCE.md", content: docs["api-reference.md"], type: "api" },
+    { filename: "GETTING-STARTED.md", content: docs["getting-started.md"], type: "guide" },
+    { filename: "EXAMPLES.md", content: docs["examples.md"], type: "example" },
+    { filename: "TROUBLESHOOTING.md", content: docs["troubleshooting.md"], type: "troubleshooting" }
+  ];
+
+  return artifacts;
+}
+
+function readSourceFiles(dir: string) {
+  const files = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (entry.isFile() && /\.(ts|tsx|js|jsx|py)$/.test(entry.name)) {
+      const fullPath = path.join(dir, entry.name);
+      const content = fs.readFileSync(fullPath, "utf-8");
+      files.push({
+        name: entry.name,
+        ext: entry.name.split(".").pop(),
+        content: content.slice(0, 3000) // First 3000 chars
+      });
+    } else if (entry.isDirectory() && !entry.name.startsWith(".")) {
+      files.push(...readSourceFiles(path.join(dir, entry.name)));
+    }
+  }
+
+  return files;
+}
+
+// Main execution
+(async () => {
+  const artifacts = await generateDocumentation("./src");
+
+  // Escribe archivos
+  const docsDir = "./docs/generated";
+  fs.mkdirSync(docsDir, { recursive: true });
+
+  for (const artifact of artifacts) {
+    fs.writeFileSync(
+      path.join(docsDir, artifact.filename),
+      artifact.content
+    );
+    console.log(`✓ Generated ${artifact.filename}`);
+  }
+})();</code></pre>
+                    </div>
+
+                    <div class="code-block" data-lang="yaml" data-title="Paso 2: GitHub Actions para ejecutar automaticamente - .github/workflows/generate-docs.yml">
+                        <pre><code>name: Auto-Generate Documentation
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**/*.ts'
+      - 'src/**/*.js'
+      - 'README.md'
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate Documentation
+        run: npx ts-node doc-generator-agent.ts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Check if docs changed
+        id: changed
+        run: |
+          if git diff --exit-code docs/generated/; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create PR with updated docs
+        if: steps.changed.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: 'docs: auto-generate documentation'
+          title: '[AUTO] Documentation Updated'
+          body: |
+            This PR contains auto-generated documentation based on the latest code changes.
+
+            - API Reference: docs/generated/API-REFERENCE.md
+            - Getting Started: docs/generated/GETTING-STARTED.md
+            - Examples: docs/generated/EXAMPLES.md
+            - Troubleshooting: docs/generated/TROUBLESHOOTING.md
+
+            Review and merge if everything looks good.
+          branch: docs/auto-update
+          labels: documentation, automated</code></pre>
+                    </div>
+
+                    <h4>Validación</h4>
+                    <div class="info-banner" style="background: #f3f4f6; border-color: #d1d5db;">
+                        <ol style="margin: 0; padding-left: 20px;">
+                            <li>Haz cambios al código (nuevo function, nueva clase)</li>
+                            <li>Push a main</li>
+                            <li>GitHub Actions dispara automáticamente</li>
+                            <li>Espera 5-10 minutos</li>
+                            <li>Verifica PR automático creado con docs generadas</li>
+                            <li>Revisa que API-REFERENCE.md refleje el nuevo código</li>
+                            <li>Merge the PR</li>
+                        </ol>
+                    </div>
+
+                    <h4>Métricas de Éxito</h4>
+                    <ul>
+                        <li>✅ 100% de cambios de código resultan en docs updated</li>
+                        <li>✅ Docs PR creado dentro de 10 min de push</li>
+                        <li>✅ 0 manual doc maintenance needed</li>
+                        <li>✅ Documentation always matches code (zero stale docs)</li>
+                    </ul>
+
+                    <h4>Integración</h4>
+                    <p>Combina con: Docusaurus o ReadTheDocs para publicar docs automáticamente. Trigger: PR merge → docs publish.</p>
+                </article>
+
+                <!-- CASO 6 -->
+                <article class="card" style="margin-bottom: 48px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <span style="font-size: 32px;">🔴</span>
+                        <h3 style="margin: 0;">Caso 6: Quality Gates in CI/CD — Coverage, Security, Performance</h3>
+                    </div>
+
+                    <div class="info-banner" style="background: #fef2f2; border-color: #fca5a5; margin-bottom: 24px;">
+                        <strong>Dificultad:</strong> Avanzada | <strong>Setup:</strong> 1.5-2 horas | <strong>Ahorros:</strong> 4+ horas/semana
+                    </div>
+
+                    <h4 style="margin-top: 0;">Objetivo</h4>
+                    <p>Implementar quality gates automáticos que bloquean deployment si no cumplen criterios: test coverage 80%+, 0 high-severity security issues, performance baseline no degradado.</p>
+
+                    <h4>Beneficio Esperado</h4>
+                    <ul>
+                        <li><strong>4+ horas/semana ahorradas:</strong> Manual testing / security scanning eliminado</li>
+                        <li><strong>Zero bugs en producción</strong> debidos a coverage insuficiente o vulnerabilidades conocidas</li>
+                        <li><strong>Performance consistency:</strong> Detecta regressions antes de deployment</li>
+                        <li><strong>Compliance automático:</strong> Siempre cumple estándares sin esfuerzo manual</li>
+                    </ul>
+
+                    <h4>Requisitos Previos</h4>
+                    <ul>
+                        <li>Testing suite completo (Jest, pytest, etc.)</li>
+                        <li>Security scanner (npm audit, OWASP ZAP, Snyk)</li>
+                        <li>Performance monitoring (Lighthouse, k6, Artillery)</li>
+                        <li>GitHub Actions disponible</li>
+                    </ul>
+
+                    <h4>Pasos Detallados</h4>
+
+                    <div class="code-block" data-lang="yaml" data-title="Paso 1: GitHub Actions Workflow - .github/workflows/quality-gates.yml">
+                        <pre><code>name: Quality Gates - Pre-Deployment Checks
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - run: npm install
+
+      - name: Run Tests with Coverage
+        run: npm run test:coverage -- --json --outputFile=coverage.json
+
+      - name: Enforce Coverage Threshold
+        run: |
+          COVERAGE=$(jq '.total.lines.pct' coverage.json)
+          if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+            echo "❌ Coverage $COVERAGE% is below 80% threshold"
+            exit 1
+          fi
+          echo "✅ Coverage $COVERAGE% passes threshold"
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.json
+          flags: unittests
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run npm audit
+        run: |
+          npm audit --json > audit.json || true
+
+      - name: Check for high-severity vulnerabilities
+        run: |
+          HIGH_VULNS=$(jq '[.vulnerabilities[] | select(.severity == "high" or .severity == "critical")] | length' audit.json)
+          if [ $HIGH_VULNS -gt 0 ]; then
+            echo "❌ Found $HIGH_VULNS high-severity vulnerabilities"
+            jq '.vulnerabilities[] | select(.severity == "high" or .severity == "critical")' audit.json
+            exit 1
+          fi
+          echo "✅ No high-severity vulnerabilities found"
+
+      - name: Snyk scan (optional, if configured)
+        run: |
+          npx snyk test --severity-threshold=high || echo "⚠️ Snyk issues (non-blocking)"
+
+  performance-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - run: npm install && npm run build
+
+      - name: Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@
+          lhci autorun --config=lighthouserc.json || echo "⚠️ Performance check completed"
+
+      - name: Baseline Comparison
+        run: |
+          # Compare bundle size
+          CURRENT_SIZE=$(du -sb dist/ | awk '{print $1}')
+          BASELINE_SIZE=$(cat .performance-baseline 2>/dev/null || echo $CURRENT_SIZE)
+
+          INCREASE_PCT=$((($CURRENT_SIZE - $BASELINE_SIZE) * 100 / $BASELINE_SIZE))
+
+          if [ $INCREASE_PCT -gt 10 ]; then
+            echo "⚠️ Bundle size increased by ${INCREASE_PCT}%"
+            echo "Previous: $BASELINE_SIZE bytes"
+            echo "Current: $CURRENT_SIZE bytes"
+            exit 1
+          fi
+          echo "✅ Bundle size within baseline (+${INCREASE_PCT}%)"
+
+  quality-gates-report:
+    runs-on: ubuntu-latest
+    needs: [test-coverage, security-scan, performance-check]
+    if: always()
+    steps:
+      - name: Determine Status
+        run: |
+          if [ "${{ needs.test-coverage.result }}" != "success" ]; then
+            echo "❌ Test coverage check failed"
+            exit 1
+          fi
+          if [ "${{ needs.security-scan.result }}" != "success" ]; then
+            echo "❌ Security scan failed"
+            exit 1
+          fi
+          if [ "${{ needs.performance-check.result }}" != "success" ]; then
+            echo "❌ Performance check failed"
+            exit 1
+          fi
+          echo "✅ All quality gates passed!"
+
+      - name: Post Comment (PR only)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## ✅ Quality Gates Passed\n\n- ✅ Test Coverage: 80%+\n- ✅ Security: No high-severity issues\n- ✅ Performance: Within baseline\n\nReady to deploy!'
+            })</code></pre>
+                    </div>
+
+                    <div class="code-block" data-lang="json" data-title="Paso 2: Configuración - lighthouserc.json">
+                        <pre><code>{
+  "ci": {
+    "collect": {
+      "staticDistDir": "./dist",
+      "numberOfRuns": 3,
+      "url": ["http://localhost:3000"]
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    },
+    "assert": {
+      "preset": "lighthouse:recommended",
+      "assertions": {
+        "categories:performance": ["error", { "minScore": 0.85 }],
+        "categories:accessibility": ["error", { "minScore": 0.90 }],
+        "categories:best-practices": ["error", { "minScore": 0.90 }],
+        "categories:seo": ["error", { "minScore": 0.90 }]
+      }
+    }
+  }
+}
+</code></pre>
+                    </div>
+
+                    <div class="code-block" data-lang="bash" data-title="Paso 3: Crear baseline de performance">
+                        <pre><code># Ejecutar una vez cuando el proyecto está en "buena" performance
+du -sb dist/ | awk '{print $1}' > .performance-baseline
+
+# Ver el baseline
+cat .performance-baseline
+# Output: 2048576 (bytes)
+
+# Committear
+git add .performance-baseline
+git commit -m "perf: set performance baseline"
+git push origin main</code></pre>
+                    </div>
+
+                    <h4>Validación</h4>
+                    <div class="info-banner" style="background: #f3f4f6; border-color: #d1d5db;">
+                        <ol style="margin: 0; padding-left: 20px;">
+                            <li>Abre una PR con cambios normales</li>
+                            <li>GitHub Actions ejecuta quality gates automáticamente</li>
+                            <li>Verifica que todos los checks pasen (coverage, security, performance)</li>
+                            <li>Prueba con una PR que reduce coverage < 80% → debe fallar</li>
+                            <li>Prueba agregando dependencia vulnerable → debe fallar</li>
+                            <li>Verifica comentario automático en PR con resumen de gates</li>
+                        </ol>
+                    </div>
+
+                    <h4>Métricas de Éxito</h4>
+                    <ul>
+                        <li>✅ 100% de PRs validadas contra quality gates</li>
+                        <li>✅ 0 merges a main si quality gates fallan</li>
+                        <li>✅ Coverage siempre 80%+ en producción</li>
+                        <li>✅ 0 known vulnerabilities en dependencies</li>
+                        <li>✅ Performance nunca degrada >10% sin aprobación</li>
+                    </ul>
+
+                    <h4>Gotchas y Soluciones</h4>
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> False positives en security scan (fake vulnerabilities)</p>
+                        <p><strong>Solución:</strong> Mantén whitelist de vulnerabilidades conocidas que no afectan. `npm audit --audit-level=moderate` para menos ruido</p>
+                    </div>
+
+                    <div class="info-banner info-banner--warn">
+                        <p><strong>Problema:</strong> Performance check timeout / falla en CI environment</p>
+                        <p><strong>Solución:</strong> Usa URLs locales (http://localhost) en Lighthouse, no URLs externas. Almacena baseline en git.</p>
+                    </div>
+
+                    <div class="info-banner info-banner--tip">
+                        <p><strong>Pro tip:</strong> Configura "soft gates" (warnings) vs "hard gates" (blocking). Security/coverage = hard. Performance = warning si <15% degradación.</p>
+                    </div>
+
+                    <h4>Integración</h4>
+                    <p>Combina con: Branch protection rules. Requiere que quality gates pasen antes de permitir merge. Status check: "Quality Gates Pass" requerido.</p>
                 </article>
             </section>
 
