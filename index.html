@@ -547,7 +547,194 @@
                 </div>
 
                 <div id="challenges-container">
-                    <!-- Renderizado por JS desde CHALLENGES_DATA -->
+                    <!-- DESAFÍO 1: NIVEL FÁCIL -->
+                    <div class="challenge-card" data-category="basics">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty easy">Fácil</span>
+                            <span class="challenge-category">Fundamentos</span>
+                        </div>
+                        <h4>Desafío 1: Crear archivo CLAUDE.md</h4>
+                        <p><strong>Situación:</strong> Acabas de hacer `claude` en un nuevo repo sin CLAUDE.md.</p>
+                        <p><strong>Tarea:</strong> Ejecuta `/init` y personaliza el CLAUDE.md generado. Añade al menos:</p>
+                        <ul>
+                            <li>Descripción del proyecto (1 párrafo)</li>
+                            <li>Stack detectado (versiones exactas)</li>
+                            <li>3 archivos clave del proyecto</li>
+                        </ul>
+                        <p><strong>Validación:</strong> CLAUDE.md con ≥200 caracteres, contiene stack y archivos clave.</p>
+                    </div>
+
+                    <!-- DESAFÍO 2: NIVEL FÁCIL -->
+                    <div class="challenge-card" data-category="basics">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty easy">Fácil</span>
+                            <span class="challenge-category">Fundamentos</span>
+                        </div>
+                        <h4>Desafío 2: Usar @archivo para mencionar contexto</h4>
+                        <p><strong>Situación:</strong> Necesitas refactorizar @src/utils/helpers.ts pero quieres que Claude lo cargue.</p>
+                        <p><strong>Tarea:</strong> Pide a Claude:</p>
+                        <ul>
+                            <li>Carga @src/utils/helpers.ts</li>
+                            <li>Identifica 2 funciones que pueden simplificarse</li>
+                            <li>Propón refactoring sin implementar</li>
+                        </ul>
+                        <p><strong>Validación:</strong> Claude menciona línea exacta del archivo, propone cambios concretos.</p>
+                    </div>
+
+                    <!-- DESAFÍO 3: NIVEL FÁCIL -->
+                    <div class="challenge-card" data-category="basics">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty easy">Fácil</span>
+                            <span class="challenge-category">Contexto</span>
+                        </div>
+                        <h4>Desafío 3: Memory persistence</h4>
+                        <p><strong>Situación:</strong> Empezas a trabajar en una feature de 2 días, quieres recordar decisiones.</p>
+                        <p><strong>Tarea:</strong> Ejecuta:</p>
+                        <ul>
+                            <li><code>/memory add "Feature: dark mode. Decision: use CSS variables, not Tailwind classes"</code></li>
+                            <li>Termina sesión (exit)</li>
+                            <li>Abre nueva sesión, ejecuta <code>/memory list</code></li>
+                        </ul>
+                        <p><strong>Validación:</strong> La memory creada aparece en nueva sesión.</p>
+                    </div>
+
+                    <!-- DESAFÍO 4: NIVEL MEDIO -->
+                    <div class="challenge-card" data-category="context">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty medium">Medio</span>
+                            <span class="challenge-category">Contexto</span>
+                        </div>
+                        <h4>Desafío 4: Hacer PR review con code-review skill</h4>
+                        <p><strong>Situación:</strong> Un compañero abrió PR #42. Tienes 30 min para revisar 400 líneas.</p>
+                        <p><strong>Tarea:</strong> Ejecuta <code>/code-review</code> (o skill similar) y dame:</p>
+                        <ul>
+                            <li>Resumen 1-2 líneas: qué hace la PR</li>
+                            <li>3 hallazgos bloqueantes (si los hay)</li>
+                            <li>5 sugerencias de mejora</li>
+                        </ul>
+                        <p><strong>Validación:</strong> Feedback estructurado, sin falsos positivos, menciona archivos:línea.</p>
+                    </div>
+
+                    <!-- DESAFÍO 5: NIVEL MEDIO -->
+                    <div class="challenge-card" data-category="context">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty medium">Medio</span>
+                            <span class="challenge-category">Fundamentos</span>
+                        </div>
+                        <h4>Desafío 5: Refactor con tests de caracterización</h4>
+                        <p><strong>Situación:</strong> Función God de 200 líneas en checkout.ts sin tests. Necesitas dividirla en 3 módulos.</p>
+                        <p><strong>Tarea:</strong> Sin tocar código todavía:</p>
+                        <ul>
+                            <li>Lee @src/checkout.ts</li>
+                            <li>Escribe 5 tests de caracterización (capturan comportamiento ACTUAL)</li>
+                            <li>Propón división en módulos con responsabilidades claras</li>
+                        </ul>
+                        <p><strong>Validación:</strong> Tests + propuesta de arquitectura. Código original no modificado.</p>
+                    </div>
+
+                    <!-- DESAFÍO 6: NIVEL MEDIO -->
+                    <div class="challenge-card" data-category="mcp">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty medium">Medio</span>
+                            <span class="challenge-category">MCP</span>
+                        </div>
+                        <h4>Desafío 6: Conectar GitHub MCP y listar PRs</h4>
+                        <p><strong>Situación:</strong> Quieres que Claude ayude a manejar tus PRs automáticamente.</p>
+                        <p><strong>Tarea:</strong> Ejecuta:</p>
+                        <ul>
+                            <li><code>gh auth status</code> (verifica GitHub CLI login)</li>
+                            <li>Pide a Claude: "Conecta GitHub MCP"</li>
+                            <li>Pide: "Lista mis 3 últimos PRs con estado"</li>
+                            <li>Pide: "Para cada PR, dame el número de cambios (+/-)"</li>
+                        </ul>
+                        <p><strong>Validación:</strong> Claude devuelve PRs reales, cambios reales, estados correctos.</p>
+                    </div>
+
+                    <!-- DESAFÍO 7: NIVEL DIFÍCIL -->
+                    <div class="challenge-card" data-category="skills">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty hard">Difícil</span>
+                            <span class="challenge-category">Skills</span>
+                        </div>
+                        <h4>Desafío 7: Crear un Custom Skill</h4>
+                        <p><strong>Situación:</strong> Repites cada mañana: git pull, npm install, leer PRs asignados, decidir en qué trabajar.</p>
+                        <p><strong>Tarea:</strong> Crea ~/.claude/skills/morning-brief/SKILL.md que:</p>
+                        <ul>
+                            <li>Hace git pull en el repo actual</li>
+                            <li>Ejecuta gh pr list --assignee @me</li>
+                            <li>Lee /memory para recordar dónde ibas</li>
+                            <li>Devuelve brief en 5 líneas: PRs, tareas de hoy, sugerencia</li>
+                        </ul>
+                        <p><strong>Validación:</strong> Skill funciona: <code>/morning-brief</code> devuelve un brief útil.</p>
+                    </div>
+
+                    <!-- DESAFÍO 8: NIVEL DIFÍCIL -->
+                    <div class="challenge-card" data-category="sdk">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty hard">Difícil</span>
+                            <span class="challenge-category">SDK & API</span>
+                        </div>
+                        <h4>Desafío 8: Integrar Anthropic SDK en tu app</h4>
+                        <p><strong>Situación:</strong> Tu app Next.js necesita hacer llamadas a Claude API para AI features.</p>
+                        <p><strong>Tarea:</strong> Implementa:</p>
+                        <ul>
+                            <li>Instala @anthropic-ai/sdk</li>
+                            <li>Crea @app/api/chat/route.ts (Next.js API route)</li>
+                            <li>Implementa POST /api/chat que:
+                                <ul>
+                                    <li>Recibe {messages: [{role, content}]}</li>
+                                    <li>Llama a Claude API con streaming</li>
+                                    <li>Devuelve respuesta en tiempo real</li>
+                                </ul>
+                            </li>
+                            <li>Frontend consume con fetch + ReadableStream</li>
+                        </ul>
+                        <p><strong>Validación:</strong> App responde a prompts en vivo, streaming visible.</p>
+                    </div>
+
+                    <!-- DESAFÍO 9: NIVEL DIFÍCIL -->
+                    <div class="challenge-card" data-category="security">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty hard">Difícil</span>
+                            <span class="challenge-category">Seguridad</span>
+                        </div>
+                        <h4>Desafío 9: Auditoría de seguridad completa</h4>
+                        <p><strong>Situación:</strong> Antes de deploy a producción con datos reales, necesitas asegurar que no hay vulnerabilidades obvias.</p>
+                        <p><strong>Tarea:</strong> Ejecuta auditoría que cubre:</p>
+                        <ul>
+                            <li>Authentication & authorization (JWT, roles, permisos)</li>
+                            <li>Input validation (SQL injection, XSS)</li>
+                            <li>Secrets management (.env, API keys no hardcoded)</li>
+                            <li>CORS policy (headers correctos)</li>
+                            <li>Dependency audit (npm audit --audit-level high)</li>
+                            <li>Rate limiting (endpoints no expuestos a abuse)</li>
+                        </ul>
+                        <p><strong>Validación:</strong> Reporte con categorías, severidades, y fixes propuestos.</p>
+                    </div>
+
+                    <!-- DESAFÍO 10: NIVEL MÁSTER -->
+                    <div class="challenge-card" data-category="sdk">
+                        <div class="challenge-header">
+                            <span class="challenge-difficulty master">Máster</span>
+                            <span class="challenge-category">Integración Completa</span>
+                        </div>
+                        <h4>Desafío 10: Build a complete AI-assisted workflow</h4>
+                        <p><strong>Situación:</strong> Quieres automatizar tu "code review loop": cuando abres PR, Claude revisa automáticamente, deja comentarios.</p>
+                        <p><strong>Tarea:</strong> Implementa workflow end-to-end:</p>
+                        <ul>
+                            <li><strong>Trigger:</strong> GitHub webhook cuando se abre/actualiza PR</li>
+                            <li><strong>Backend:</strong> Endpoint que:
+                                <ul>
+                                    <li>Recibe webhook, descarga diff del PR</li>
+                                    <li>Llama Claude API con código diff</li>
+                                    <li>Parsea respuesta, formatea como comentarios</li>
+                                </ul>
+                            </li>
+                            <li><strong>Output:</strong> Comentarios automáticos en el PR (via GitHub API)</li>
+                            <li><strong>Bonus:</strong> Configurable: qué tipo de feedback (security, perf, style)</li>
+                        </ul>
+                        <p><strong>Validación:</strong> Abres PR de test, Claude comenta automáticamente. Workflow repetible.</p>
+                    </div>
                 </div>
             </section>
 
@@ -6016,15 +6203,236 @@ Post-mortem: TBD"
                     <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> Hotfix deployed < 1h, communication clara, post-mortem scheduled.</p>
                 </div>
 
-                <h3>📋 Patrones #9-12: Otros (Documentation, Tests Migration, Cleanup, API Review)</h3>
-                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; color: var(--text-secondary);">
-                    <p style="margin: 0 0 1em 0;"><strong>Por brevedad, aquí está el outline. Ver COMMAND_PATTERNS.md para detalles completos:</strong></p>
-                    <ul style="padding-left: 1.5em; margin: 0;">
-                        <li><strong>#9 Documentation Sprint</strong> (2h): Escribe docs from code, OpenAPI, deployment guide</li>
-                        <li><strong>#10 Tests Migration</strong> (1-2d): Mocha → Jest, cambiar test runner sin perder coverage</li>
-                        <li><strong>#11 Cleanup Técnico</strong> (4-6h): Remover dead code, legacy files, tipo dead imports</li>
-                        <li><strong>#12 API Design Review</strong> (2-3h): REST endpoints, schemas, versioning, backward compatibility</li>
-                    </ul>
+                <h3>📋 Patrón #9: Documentation Sprint (2 horas)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Documentar API en OpenAPI, generar README, deployment guide sin tocar código.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code">git checkout -b docs/api-spec
+claude
+
+## PASO 1: Inventario de endpoints
+@src/routes/
+@src/controllers/
+"Lista TODOS los endpoints (método, ruta, params, auth).
+Dame una tabla: Method | Path | Description | Auth | Status Codes"
+
+/memory add "Endpoint inventory: 28 routes total.
+Categories: auth (4), users (6), projects (8), tasks (10)"
+
+## PASO 2: Generar OpenAPI YAML
+@docs/
+"Crea docs/openapi.yaml con OpenAPI 3.1:
+- Schemas reusables en components/
+- Cada endpoint con example request/response
+- Error codes documentados (400, 401, 403, 404, 500)
+- Servers section con dev, staging, prod"
+
+## PASO 3: Validar e instalar previewer
+npx @apidevtools/swagger-cli validate docs/openapi.yaml
+npm install @scalar/api-reference
+# Genera static HTML en docs/index.html
+
+## PASO 4: Setup automático
+@.claude/settings.json
+"Añade hook: cuando cambien src/routes/ o src/controllers/,
+ejecutar npm run docs:generate para regenerar OpenAPI"
+
+git add -A && git commit -m "docs(api): add OpenAPI 3.1 specification"</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> docs/openapi.yaml válido, docs/index.html funcional, hook configurado.</p>
+                </div>
+
+                <h3>📋 Patrón #10: Tests Migration (1-2 días)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Cambiar test runner (Mocha → Vitest) sin perder coverage ni romper tests.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code">git checkout -b test/migrate-to-vitest
+claude --worktree
+
+/memory add "Test migration: Mocha → Vitest
+- Current: Mocha + Chai, 45 test files, 187 tests
+- Target: Vitest (better ESM, faster, same API mostly)
+- Coverage target: maintain ≥85%"
+
+## DÍA 1: Setup + primeros tests
+# Instala Vitest
+npm install -D vitest @vitest/ui
+
+# Configura
+cat > vitest.config.ts << 'EOF'
+import { defineConfig } from 'vitest/config'
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'node',
+    coverage: { provider: 'v8', reporter: ['text', 'json'] },
+  },
+})
+EOF
+
+# Migra 5 test files simple (unit tests, sin mocks complejos)
+@test/unit/helpers.test.js
+"Convierte a Vitest syntax: describe/it/expect igual,
+solo cambia import: from 'chai' → from 'vitest'"
+
+npm run test:unit  # Verifica verde
+
+/checkpoint "5 files migrated, 23 tests passing"
+
+## DÍA 2: Resto de tests
+# Migra 15 más (integraciones)
+# Mockea: axios → vi.mock, express → supertest igual
+
+npm run test:cov
+"¿Coverage en líneas? ¿en funciones? ¿en branches?"
+
+/memory add "Coverage post-migration: lines 86%, functions 84%, branches 79%
+Target: lift branches a ≥82%"
+
+# Coverage report
+npm run test:cov -- --reporter=html
+
+# Final: remover Mocha
+npm uninstall mocha chai
+git add -A && git commit -m "test(vitest): migrate from mocha to vitest
+
+- 45 test files migrated
+- Coverage maintained at 85%+
+- Vitest UI dashboard at npm run test:ui"</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> 100% tests verdes, coverage report HTML, Mocha removido.</p>
+                </div>
+
+                <h3>📋 Patrón #11: Cleanup Técnico (4-6 horas)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Remover dead code, deprecated dependencies, archivos abandonados.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code">git checkout -b chore/cleanup
+claude
+
+/memory add "Tech cleanup:
+- Find dead code (unreachable, unused exports)
+- Remove deprecated files (old migrations, legacy modules)
+- Cleanup imports y dependencies
+- Remove console.log, debugger statements"
+
+## PASO 1: Dead code analysis
+find src/ -name "*.ts" -o -name "*.js" | head -20
+"Para cada archivo, dime:
+1. ¿Se importa en otro lugar?
+2. Si es export, ¿se usa?
+3. Si es Función, ¿se llama desde el código actual?
+
+Dame lista de 'safe to delete' files."
+
+/memory add "Dead files found:
+- src/old-auth/index.ts (replaced by src/api/auth)
+- src/utils/legacy-helpers.ts (no imports)
+- src/migrations/2023-* (ya aplicadas)"
+
+## PASO 2: Limpiar
+# Elimina archivos
+git rm src/old-auth/index.ts
+git rm src/utils/legacy-helpers.ts
+
+# Busca e importa en código vivo
+grep -r "legacy-helpers" src/
+"¿Hay imports muertos de esto?"
+
+# Limpiar console/debugger
+grep -n "console\." src/**/*.ts | grep -v logger
+"Para cada console.log/warn/error que NO sea logger, elimina"
+
+grep -n "debugger" src/**/*.ts
+"Elimina todos los debugger statements"
+
+## PASO 3: Cleanup de imports
+@src/api/
+"Busca imports no usados en cada archivo.
+Dame list of: archivo | import | ¿usado?"
+
+## PASO 4: Verifica
+npm run lint  # ESLint encuentra imports muertos
+npm test      # Todos pasan (si algo dependía de dead code, fallaría)
+
+git add -A && git commit -m "chore: cleanup dead code and imports
+
+- Removed src/old-auth (replaced by api/auth)
+- Removed unused legacy-helpers
+- Cleaned up console statements (kept logger)
+- ESLint unused imports fixed"</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> ~10-20 archivos eliminados, 0 unused imports, lint sin warnings.</p>
+                </div>
+
+                <h3>📋 Patrón #12: API Design Review (2-3 horas)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ffb454; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Revisar design de REST API antes de que se use en producción. Consistencia, versionado, backward compat.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code">git checkout -b api/design-review
+claude
+
+/memory add "API Design Review Checklist:
+- [ ] Naming convention (nouns, plurals, snake_case)
+- [ ] HTTP methods (GET, POST, PUT, DELETE, PATCH)
+- [ ] Status codes (200, 201, 400, 401, 403, 404, 500)
+- [ ] Error response format consistency
+- [ ] Pagination (offset/limit o cursor)
+- [ ] Versioning strategy (v1, v2, etc)
+- [ ] Backward compatibility plan"
+
+## PASO 1: Analizar rutas
+@src/routes/
+@src/api/
+"Lista todos los endpoints en una tabla:
+Method | Path | Query Params | Body Schema | Response | Status Codes
+
+Identifica inconsistencias:
+- ¿Algunos usan snake_case, otros camelCase?
+- ¿Status codes inconsistentes? (e.g., 200 vs 201 para create)
+- ¿Algunos tienen paginación, otros no?"
+
+/memory add "Issues found:
+1. POST /users devuelve 200, POST /projects devuelve 201 → estandarizar
+2. Pagination: GET /users?offset/limit, GET /projects?page/size → unificar
+3. Error format: algunos JSON {error}, otros {message}"
+
+## PASO 2: Diseñar fix sin tocar código
+"Propón estándar para:
+1. Status codes: 201 para creates, 200 para success
+2. Pagination: único formato (limit/offset recomendado)
+3. Errors: respuesta {errors: [{field, message}]}"
+
+## PASO 3: Implement fix progresivamente
+# Endpoint por endpoint, tests primero
+@test/api/users.spec.ts
+"Actualiza tests para esperar 201 en POST /users"
+
+@src/routes/users.ts
+"Cambia: res.status(200) → res.status(201)"
+
+npm test -- users.spec.ts  # ✅ Verde
+
+/checkpoint "POST /users standardized to 201"
+
+# Repite para /projects, /tasks, etc
+
+## PASO 4: Documentar en CLAUDE.md
+/memory add "API Standards (finalized):
+- Creates (POST): 201 Created
+- Updates (PUT/PATCH): 200 OK
+- Deletes (DELETE): 204 No Content
+- Pagination: ?limit=50&offset=0
+- Errors: {errors: [{field, message}]}"
+
+git add -A && git commit -m "api: standardize endpoints design
+
+- All POST creates return 201 (was 200)
+- Unified pagination format (limit/offset)
+- Error responses standardized
+- Backward compat: old clients unaffected if they ignore status"</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> API design doc actualizado, endpoints estandarizados, PR con cambios progresivos.</p>
                 </div>
 
                 <div class="info-banner" style="background: linear-gradient(135deg, rgba(255, 180, 84, 0.15) 0%, rgba(255, 180, 84, 0.05) 100%); border-left: 4px solid #ffb454; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
@@ -7158,56 +7566,116 @@ Claude: ✓ All tests pass
                     <p class="section-lead">Repositorios reales donde puedes ver Claude Code en acción.</p>
                 </div>
 
-                <article class="card">
-                    <h3>Proyecto 1: Web App Simple (Next.js)</h3>
-                    <p><strong>Descripción</strong>: SPA estática con React, Tailwind, buscador en tiempo real.</p>
-                    <p><strong>Tecnologías</strong>: Next.js, React 19, Tailwind CSS</p>
-                    <p><strong>Caso de uso</strong>: Aprende a usar Claude Code para:</p>
+                <article class="card" style="border-left: 4px solid #3ddc97;">
+                    <h3>Proyecto 1: Web App (Next.js + Supabase)</h3>
+                    <p><strong>Descripción</strong>: App de tareas colaborativas. Autenticación, realtime sync, dark mode.</p>
+                    <p><strong>Tech Stack</strong>: Next.js 16, React 19, TypeScript, Tailwind, Supabase, Socket.io</p>
+                    <p><strong>GitHub (ficticio)</strong>: github.com/awesome-devs/taskly</p>
+                    <p><strong>¿Qué aprendes?</strong></p>
                     <ul>
-                        <li>Crear componentes React desde cero</li>
-                        <li>Agregar estilos con Tailwind</li>
-                        <li>Implementar búsqueda en tiempo real</li>
-                        <li>Deploy a Vercel</li>
+                        <li><strong>Frontend:</strong> Componentes React con hooks, custom hooks para state management</li>
+                        <li><strong>Backend:</strong> API routes en Next.js (serverless), integración Supabase</li>
+                        <li><strong>Real-time:</strong> WebSocket setup, actualización en vivo de tareas</li>
+                        <li><strong>Testing:</strong> Vitest para unitarios, Cypress para E2E</li>
+                        <li><strong>Deploy:</strong> Vercel (frontend), Railway (backend si aplica)</li>
                     </ul>
+                    <p><strong>Por qué aprender de este proyecto:</strong> Muestra un flujo completo de feature (desde UI a BD), integración de terceros, y patterns de escalado inicial.</p>
                 </article>
 
-                <article class="card">
-                    <h3>Proyecto 2: API REST (Node + Express)</h3>
-                    <p><strong>Descripción</strong>: API REST con autenticación, base de datos, tests.</p>
-                    <p><strong>Tecnologías</strong>: Node.js, Express, PostgreSQL, JWT</p>
-                    <p><strong>Caso de uso</strong>: Aprende a usar Claude Code para:</p>
+                <article class="card" style="border-left: 4px solid #5eb8ff;">
+                    <h3>Proyecto 2: CLI Tool (Node.js + TypeScript)</h3>
+                    <p><strong>Descripción</strong>: Herramienta CLI para migrar bases de datos. Soporta múltiples DBs, rollback automático, logging.</p>
+                    <p><strong>Tech Stack</strong>: Node.js, TypeScript, Yargs (CLI parsing), Knex (query builder), Winston (logging), Jest</p>
+                    <p><strong>GitHub (ficticio)</strong>: github.com/awesome-devs/db-migrate-pro</p>
+                    <p><strong>¿Qué aprendes?</strong></p>
                     <ul>
-                        <li>Crear endpoints REST</li>
-                        <li>Implementar autenticación JWT</li>
-                        <li>Escribir tests unitarios</li>
-                        <li>Optimizar queries en BD</li>
+                        <li><strong>CLI Design:</strong> Parsear argumentos, validación, user prompts interactivos</li>
+                        <li><strong>Error Handling:</strong> Graceful degradation, logging estructurado, rollback seguro</li>
+                        <li><strong>Database Work:</strong> Conexión a múltiples DBs, transacciones, migraciones</li>
+                        <li><strong>Distribution:</strong> Empaquetar como bin ejecutable, npm publish</li>
+                        <li><strong>Testing:</strong> Mock de conexiones a BD, tests de integración</li>
                     </ul>
+                    <p><strong>Por qué aprender de este proyecto:</strong> Demuestra cómo Claude Code ayuda con tooling, documentación automática, y testing de lado-a-lado.</p>
                 </article>
 
-                <article class="card">
-                    <h3>Proyecto 3: Full Stack (Next.js + BD)</h3>
-                    <p><strong>Descripción</strong>: Aplicación completa con frontend y backend.</p>
-                    <p><strong>Tecnologías</strong>: Next.js, Prisma, PostgreSQL, TailwindCSS</p>
-                    <p><strong>Caso de uso</strong>: Aprende a usar Claude Code para:</p>
+                <article class="card" style="border-left: 4px solid #c084fc;">
+                    <h3>Proyecto 3: Full Stack (React + Django + PostgreSQL)</h3>
+                    <p><strong>Descripción</strong>: Plataforma de analytics. Dashboard interactivo, gráficos reales, export a PDF, multi-user.</p>
+                    <p><strong>Tech Stack</strong>: React 19, TypeScript, Django 5, DRF, PostgreSQL, Celery, Redis, Plotly</p>
+                    <p><strong>GitHub (ficticio)</strong>: github.com/awesome-devs/analytics-hub</p>
+                    <p><strong>¿Qué aprendes?</strong></p>
                     <ul>
-                        <li>Crear migraciones de BD con Prisma</li>
-                        <li>Implementar rutas dinámicas en Next.js</li>
-                        <li>Conectar frontend con API</li>
-                        <li>Manejar autenticación de usuario</li>
+                        <li><strong>Backend Python:</strong> Django REST Framework, serializers, autenticación token</li>
+                        <li><strong>Frontend Advanced:</strong> State management (Zustand/Redux), data fetching patterns, caching</li>
+                        <li><strong>Real-time:</strong> WebSocket con Django Channels, updates en vivo</li>
+                        <li><strong>Performance:</strong> Query optimization (select_related, prefetch_related), pagination</li>
+                        <li><strong>Background Jobs:</strong> Celery tasks, scheduled reports, export async</li>
                     </ul>
+                    <p><strong>Por qué aprender de este proyecto:</strong> Muestra cómo Claude Code colabora entre frontend y backend en arquitecturas modernas, mejores prácticas de performance.</p>
                 </article>
 
-                <article class="card">
-                    <h3>Comienza con un proyecto</h3>
-                    <pre><code class="language-bash"># Clona o crea tu propio proyecto
-git clone https://github.com/tu-repo/proyecto.git
-cd proyecto
+                <article class="card" style="border-left: 4px solid #ff6b6b;">
+                    <h3>Proyecto 4: Mobile App (React Native + Firebase)</h3>
+                    <p><strong>Descripción</strong>: App de notas con sync en la nube, offline-first, notificaciones push.</p>
+                    <p><strong>Tech Stack</strong>: React Native, TypeScript, Firebase (Auth, Firestore, Cloud Messaging), Redux</p>
+                    <p><strong>GitHub (ficticio)</strong>: github.com/awesome-devs/notepad-sync</p>
+                    <p><strong>¿Qué aprendes?</strong></p>
+                    <ul>
+                        <li><strong>Cross-platform:</strong> Código compartido, platform-specific UI, responsive layouts</li>
+                        <li><strong>Native APIs:</strong> Acceso a cámara, sensores, almacenamiento local</li>
+                        <li><strong>Offline-first:</strong> SQLite local, sync cuando hay conexión, conflict resolution</li>
+                        <li><strong>Push Notifications:</strong> Firebase Cloud Messaging, user preferences</li>
+                        <li><strong>Performance:</strong> Bundle size optimization, lazy loading, memory management</li>
+                    </ul>
+                    <p><strong>Por qué aprender de este proyecto:</strong> Mobile development es diferente, muestra cómo Claude Code maneja constraints y patrones específicos del ecosistema mobile.</p>
+                </article>
 
-# Abre Claude Code
+                <article class="card" style="border-left: 4px solid #ffb454;">
+                    <h3>Proyecto 5: Backend Microservice (Go + Kubernetes)</h3>
+                    <p><strong>Descripción</strong>: Payment processing service. Webhook handling, concurrency, observability completa.</p>
+                    <p><strong>Tech Stack</strong>: Go, PostgreSQL, gRPC, Stripe API, Prometheus (metrics), ELK Stack (logging)</p>
+                    <p><strong>GitHub (ficticio)</strong>: github.com/awesome-devs/payment-svc</p>
+                    <p><strong>¿Qué aprendes?</strong></p>
+                    <ul>
+                        <li><strong>Go Patterns:</strong> Goroutines, channels, error handling idiomático</li>
+                        <li><strong>Production Ready:</strong> Structured logging, metrics, tracing distribuido</li>
+                        <li><strong>Integration:</strong> Webhook security, idempotency keys, retry logic</li>
+                        <li><strong>Deployment:</strong> Docker, Kubernetes manifests, health checks</li>
+                        <li><strong>Testing:</strong> Table-driven tests, mocks, load testing</li>
+                    </ul>
+                    <p><strong>Por qué aprender de este proyecto:</strong> Muestra cómo Claude Code aborda lenguajes fuerte-tipados, arquitectura de microservicios, y sistemas de alta escala.</p>
+                </article>
+
+                <article class="card" style="background: var(--bg-surface); padding: 1.5em;">
+                    <h3>🚀 Cómo empezar con estos proyectos</h3>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code"># Opción 1: Clona y abre en Claude Code
+git clone https://github.com/awesome-devs/taskly.git
+cd taskly
 claude
 
-# Pide ayuda
-/help</code></pre>
+# Pide análisis del proyecto
+"Lee @README.md y @CLAUDE.md (si existe).
+Hazme un mapa: directorios, entry points, decisiones de arquitectura"
+
+# Opción 2: Inicia un proyecto nuevo con Claude como mentor
+mkdir my-app && cd my-app
+claude
+
+"Quiero crear una app similar a [Proyecto X].
+Dame un step-by-step: setup, primeros componentes, integración con BD"
+
+# Opción 3: Estudia código de un proyecto existente
+git clone https://github.com/awesome-devs/db-migrate-pro.git
+cd db-migrate-pro
+claude
+
+"Quiero aprender cómo funciona este CLI tool.
+Traza: cómo se parsean argumentos, validación, error handling"</code></pre>
+                    </div>
+                    <div class="info-box" style="background: linear-gradient(135deg, rgba(61, 220, 151, 0.1) 0%, rgba(61, 220, 151, 0.05) 100%); border-left: 4px solid #3ddc97; padding: 1.5em; margin-top: 1.5em; border-radius: 8px;">
+                        <strong>💡 Pro Tip:</strong> Para cada proyecto, usa <code>/init</code> para generar un <code>CLAUDE.md</code> inicial. Luego personalízalo con decisiones específicas del proyecto (naming conventions, arquitectura, tecnologías). Esto acelera todas tus futuras sesiones con Claude Code en ese proyecto.
+                    </div>
                 </article>
             </section>
 
