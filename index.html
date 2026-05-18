@@ -4796,7 +4796,7 @@ npm run db:seed      # seed de datos de desarrollo
             <!-- Sección: Branching Strategy -->
             <section class="content-section hidden" data-section="branching" data-mode="technical">
                 <h2>🌿 Branching Strategy — Ramas con Claude Code</h2>
-                <p class="section-lead">Estructura de ramas + Claude worktrees para desarrollo sin conflictos.</p>
+                <p class="section-lead">Estructura de ramas + Claude worktrees para desarrollo sin conflictos. Integración con CI/CD automatizado.</p>
 
                 <div class="info-box" style="background: linear-gradient(135deg, rgba(62, 220, 151, 0.1) 0%, rgba(62, 220, 151, 0.05) 100%); border-left: 4px solid #3ddc97; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
                     <h3 style="margin-top: 0; color: #3ddc97;">⚡ Quick Start</h3>
@@ -4807,215 +4807,1009 @@ claude --worktree feature-x
 # → Continúa sin conflictos de contexto</code></pre>
                 </div>
 
-                <h3>Patrones principales:</h3>
-                <div style="display: grid; gap: 1.5em;">
-                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
-                        <h4 style="color: #5eb8ff;">Feature Branches + Worktrees</h4>
-                        <p>Cada feature en rama + worktree aislado. Claude mantiene contexto separado, sin conflictos de historial.</p>
-                        <code style="color: #3ddc97;">claude --worktree feature-auth</code>
+                <h3>📊 Comparativa de Estrategias</h3>
+                <div style="display: grid; gap: 1.5em; margin: 1.5em 0;">
+                    <!-- TRUNK-BASED -->
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 6px solid #3ddc97; border-radius: 8px;">
+                        <h4 style="color: #3ddc97; margin-top: 0;">🎯 Trunk-Based Development</h4>
+                        <p style="margin: 0.5em 0; color: var(--text-secondary);"><strong>Cuándo usar:</strong> Equipos 2-8, releases diarias/semanales, CI/CD sólido</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em;">
+                            <code style="color: #3ddc97;">
+git checkout -b fix/issue-247<br/>
+# Max 1 día de desarrollo<br/>
+git commit -m "fix: ..."<br/>
+git push && # PR → Code review → Merge immediatamente<br/>
+git checkout master && git pull<br/>
+# ✅ Deploy automático vía CI/CD
+                            </code>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em; font-size: 0.9em;">
+                            <div style="color: #3ddc97;">✓ Menos conflictos<br/>✓ Deploy seguro<br/>✓ Feedback rápido</div>
+                            <div style="color: #ff6b6b;">✗ Requiere CI/CD confiable<br/>✗ Tests deben pasar siempre<br/>✗ Presión para merge rápido</div>
+                        </div>
                     </div>
-                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px;">
-                        <h4 style="color: #c084fc;">Long-Lived Branches + Memory Sync</h4>
-                        <p>Para refactors largos: guardaautomáticamente progreso con Memory + auto-commit.</p>
-                        <code style="color: #3ddc97;">/memory add "Refactor: API v1 → v2"</code>
+
+                    <!-- GITFLOW -->
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 6px solid #5eb8ff; border-radius: 8px;">
+                        <h4 style="color: #5eb8ff; margin-top: 0;">📊 Gitflow (Feature Branches)</h4>
+                        <p style="margin: 0.5em 0; color: var(--text-secondary);"><strong>Cuándo usar:</strong> Equipos 8-20, releases planeadas (mensuales), varias versiones en producción</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em;">
+                            <code style="color: #5eb8ff;">
+master (producción) ← releases←release/v2.0<br/>
+develop (próximo release)←feature/auth<br/>
+<br/>
+git checkout -b feature/oauth develop<br/>
+# 3-7 días de desarrollo<br/>
+git commit, git push<br/>
+# PR: feature → develop → Merge cuando feature completa<br/>
+# Release: develop → release/v2.0 → master (tagged)
+                            </code>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em; font-size: 0.9em;">
+                            <div style="color: #5eb8ff;">✓ Trabajo en paralelo<br/>✓ Release planning claro<br/>✓ Hotfix ramificado</div>
+                            <div style="color: #ff6b6b;">✗ Puede ser complejo<br/>✗ Merges frecuentes<br/>✗ Mayor admin de ramas</div>
+                        </div>
                     </div>
-                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ffb454; border-radius: 8px;">
-                        <h4 style="color: #ffb454;">Hotfix + Production Safety</h4>
-                        <p>Para emergencias: worktree + permission-mode auto. Merge rápido a main + develop.</p>
-                        <code style="color: #3ddc97;">git checkout -b hotfix/csrf</code>
+
+                    <!-- WORKTREES -->
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 6px solid #c084fc; border-radius: 8px;">
+                        <h4 style="color: #c084fc; margin-top: 0;">🔀 Git Worktrees + Claude Code</h4>
+                        <p style="margin: 0.5em 0; color: var(--text-secondary);"><strong>Cuándo usar:</strong> Multitarea simultánea, refactors largos, sin conflictos de contexto</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em;">
+                            <code style="color: #c084fc;">
+# Terminal 1: Worktree para feature/auth<br/>
+git worktree add refactor-auth feature/auth<br/>
+cd refactor-auth && claude --worktree auth<br/>
+/memory add "Auth refactor: phase 1"<br/>
+<br/>
+# Terminal 2: Worktree para feature/payment (sin conflictos)<br/>
+git worktree add feature-payment feature/payment<br/>
+cd feature-payment && claude --worktree payment<br/>
+# Contexto completamente aislado
+                            </code>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em; font-size: 0.9em;">
+                            <div style="color: #c084fc;">✓ Contexto aislado<br/>✓ Multitarea sin conflictos<br/>✓ Tests en paralelo</div>
+                            <div style="color: #ff6b6b;">✗ Requiere entender worktrees<br/>✗ Cleanup manual<br/>✗ Disco: +copia de archivos</div>
+                        </div>
                     </div>
                 </div>
 
+                <h3>🔧 Patrones principales con Claude Code:</h3>
+                <div style="display: grid; gap: 1.5em; margin: 1.5em 0;">
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
+                        <h4 style="color: #5eb8ff;">Feature Branches + Worktrees</h4>
+                        <p>Cada feature en rama + worktree aislado. Claude mantiene contexto separado, sin conflictos de historial.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 0.5em 0; font-family: var(--font-mono); font-size: 0.85em; color: #3ddc97;">
+                            <code>
+claude --worktree feature-auth<br/>
+/memory add "Auth: OAuth2 implementation"<br/>
+/checkpoint "OAuth config done"<br/>
+# → Próxima sesión retoma con: /rewind
+                            </code>
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px;">
+                        <h4 style="color: #c084fc;">Long-Lived Branches + Memory Sync</h4>
+                        <p>Para refactors largos (5+ días): guarda automáticamente progreso con Memory.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 0.5em 0; font-family: var(--font-mono); font-size: 0.85em; color: #3ddc97;">
+                            <code>
+git checkout -b refactor/database-v2<br/>
+/memory add "Phase 1: Migrate users table"<br/>
+/checkpoint "Migration tested, ready for phase 2"<br/>
+# Día 2: retomar con /rewind + /memory search
+                            </code>
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ffb454; border-radius: 8px;">
+                        <h4 style="color: #ffb454;">Hotfix + Production Safety</h4>
+                        <p>Para emergencias: worktree + permission-mode. Merge rápido a main + develop con auto-tags.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 0.5em 0; font-family: var(--font-mono); font-size: 0.85em; color: #3ddc97;">
+                            <code>
+git checkout -b hotfix/csrf-vulnerability<br/>
+claude --permission-mode allow-push<br/>
+# Fix rápido + commit<br/>
+git push && git tag hotfix/v1.2.1<br/>
+# → CI/CD deploy automático a producción
+                            </code>
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ffb454; border-radius: 8px;">
+                        <h4 style="color: #ffb454;">Release Management</h4>
+                        <p>Rama dedicada para release: estabilización, bump version, changelog, deploy coordinado.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 0.5em 0; font-family: var(--font-mono); font-size: 0.85em; color: #3ddc97;">
+                            <code>
+# Cuando develop está estable<br/>
+git checkout -b release/v2.0 develop<br/>
+# Claude solo hace: bump version, changelog, tests<br/>
+git commit -m "release: v2.0 - changelog"<br/>
+git push && # PR → Merge → Tag v2.0<br/>
+# Back-merge a master + develop
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>🔗 Integración con CI/CD</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>GitHub Actions / GitLab CI:</strong> Valida automáticamente antes de merge</p>
+                    <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3; margin: 1em 0;">
+                        <code>
+on: [pull_request]<br/>
+jobs:<br/>
+&nbsp;&nbsp;lint: <code style="color: #3ddc97;">run: npm run lint</code><br/>
+&nbsp;&nbsp;test: <code style="color: #3ddc97;">run: npm test</code><br/>
+&nbsp;&nbsp;build: <code style="color: #3ddc97;">run: npm run build</code><br/>
+&nbsp;&nbsp;security: <code style="color: #3ddc97;">run: npm audit</code><br/>
+<br/>
+# Si pasa → Auto-merge (Trunk-Based)<br/>
+# Si falla → Bloquea merge, comenta en PR
+                        </code>
+                    </div>
+                    <p style="margin: 1em 0;"><strong>Deploy automático:</strong> Después de merge a master</p>
+                    <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                        <code>
+on: push to master<br/>
+jobs:<br/>
+&nbsp;&nbsp;deploy: <code style="color: #3ddc97;">run: vercel deploy --prod</code><br/>
+&nbsp;&nbsp;smoke-tests: <code style="color: #3ddc97;">run: npm run test:e2e</code><br/>
+&nbsp;&nbsp;notify: <code style="color: #3ddc97;">post to Slack: "v1.2.3 deployed"</code>
+                        </code>
+                    </div>
+                </div>
+
+                <h3>📈 Diagrama de flujo</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; font-family: var(--font-mono); font-size: 0.8em; color: #3ddc97; line-height: 1.8;">
+                    <pre><code>Trunk-Based (simple):
+master ←← feature/x ← (1 día) ← PR ← Merge ← Deploy ✅
+
+Gitflow (complicado):
+master ← release/v2.0 ← develop ← feature/auth
+        ↓
+     (tagged)        ← Hotfix branch
+        ↓
+      v2.0 → Deploy a producción
+
+Worktrees (paralelo):
+    Worktree A: feature/auth
+    Worktree B: feature/payment   ← Sin conflictos
+    Worktree C: hotfix/critical  ← Contexto aislado
+                                  ← Merge independiente</code></pre>
+                </div>
+
+                <div class="info-banner" style="background: linear-gradient(135deg, rgba(255, 180, 84, 0.15) 0%, rgba(255, 180, 84, 0.05) 100%); border-left: 4px solid #ffb454; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
+                    <strong>💡 Recomendación:</strong> Empieza con <strong>Trunk-Based</strong> si tu equipo es < 8 personas. Es más simple y rápido. Migra a Gitflow cuando tenga 10+ personas o múltiples versiones activas en producción.
+                </div>
+
                 <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
-                    <strong>📖 Lectura completa:</strong> Ver <code>BRANCHING_STRATEGY.md</code> en el proyecto para 10 patrones detallados.
+                    <strong>📖 Lectura completa:</strong> Ver <code>BRANCHING_STRATEGY.md</code> en el proyecto para 10 patrones detallados + ejemplos reales de commits.
                 </p>
             </section>
 
             <!-- Sección: Rules & Config -->
             <section class="content-section hidden" data-section="rules" data-mode="technical">
                 <h2>📋 .rules & CLAUDE.md — Reglas Determinísticas</h2>
-                <p class="section-lead">Instrucciones que se aplican automáticamente en cada sesión.</p>
+                <p class="section-lead">Instrucciones que se aplican automáticamente en cada sesión. Configuración versionada + validación en CI/CD.</p>
 
                 <div class="info-box" style="background: linear-gradient(135deg, rgba(94, 184, 255, 0.1) 0%, rgba(94, 184, 255, 0.05) 100%); border-left: 4px solid #5eb8ff; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
                     <h3 style="margin-top: 0; color: #5eb8ff;">¿Qué son las rules?</h3>
-                    <p><strong>Rules</strong> = instrucciones que <strong>SIEMPRE</strong> se ejecutan automáticamente.</p>
-                    <p><strong>Skills</strong> = sugerencias que Claude considera aplicar.</p>
+                    <p><strong>Rules</strong> = instrucciones que <strong>SIEMPRE</strong> se ejecutan automáticamente en cada sesión de Claude Code.</p>
+                    <p><strong>Skills</strong> = sugerencias que Claude considera aplicar opcionalmente.</p>
+                    <p style="margin-bottom: 0; color: #3ddc97;"><strong>Diferencia clave:</strong> Las rules son <em>determinísticas</em> y <em>versionadas en git</em> — todo dev sigue exactamente las mismas.</p>
                 </div>
 
-                <h3>Dónde viven las rules:</h3>
+                <h3>📂 Estructura de archivos de configuración:</h3>
                 <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; font-family: var(--font-mono);">
-                    <code style="color: #e6edf3;">
+                    <code style="color: #e6edf3; line-height: 2;">
 .claude/<br/>
-├── CLAUDE.md          # Guía del proyecto (versionado)<br/>
-├── rules.md           # Reglas específicas<br/>
-├── rules.local.md     # Reglas sensibles (gitignore)<br/>
-└── settings.json      # Config + hooks
+├── <span style="color: #3ddc97;"><strong>CLAUDE.md</strong></span>              # Guía del proyecto (versionado en git)<br/>
+├── <span style="color: #3ddc97;"><strong>rules.md</strong></span>              # Reglas específicas de este proyecto<br/>
+├── <span style="color: #ffb454;"><strong>rules.local.md</strong></span>        # Reglas sensibles (gitignore: credenciales, API keys)<br/>
+├── <span style="color: #5eb8ff;"><strong>settings.json</strong></span>        # Config de permisos, hooks, features<br/>
+└── <span style="color: #c084fc;"><strong>settings.local.json</strong></span>  # Overrides locales (gitignore)
                     </code>
                 </div>
 
-                <h3>Ejemplo de rules en CLAUDE.md:</h3>
+                <h3>🎯 Ejemplo 1: Rules para Node.js/TypeScript</h3>
                 <div class="code-block" data-lang="markdown">
-                    <pre><code># PROJECT RULES
+                    <pre><code># .claude/CLAUDE.md
 
 ## Code Style
-- Use 2-space indentation
-- Prefer const over let
-- Always use 'strict' mode
+- TypeScript: strict mode siempre
+- Indentación: 2 espacios
+- Imports: ESM (no CommonJS)
+- const/let/var: prefer const, use let only if necessary
+- No var en absolutamente nada
 
-## Database
-- All queries use transactions
-- Never raw SQL (use ORM)
-- Schema changes = migration
+## Functions & Async
+- Todas las funciones async retornan Promise
+- Error handling: try/catch + logging
+- Timeouts: max 30s para API calls, 5s para DB queries
+- Retry logic: exponential backoff (1s, 2s, 4s, 8s)
 
-## Testing
-- Every function needs tests
-- Min coverage: 80%
-- Use Jest + React Testing Library</code></pre>
+## Database (PostgreSQL + Prisma)
+- Schema changes: SIEMPRE via migrations
+- Raw SQL: PROHIBIDO (usa Prisma Client)
+- Transactions: requeridas para operaciones multi-tabla
+- N+1 queries: usar include/select para evitar
+
+## Testing (Jest + Supertest)
+- Coverage mínima: 80% de líneas
+- Unit tests: cada función
+- Integration tests: cada endpoint
+- E2E tests: happy path crítico
+- Fixtures: usar factories (factory.ts)
+
+## Security
+- Env vars: NUNCA hardcodear, usar .env.example
+- Validation: zod o joi en todos los endpoints
+- SQL injection: Prisma parametriza automáticamente
+- CORS: whitelist explícito en envs
+- Rate limiting: 100 req/min para APIs public
+
+## Commits (Conventional)
+- Format: type(scope): description
+- Types: feat, fix, refactor, docs, test, perf, security
+- Scope: opcional pero recomendado
+- Example: "feat(auth): add OAuth2 flow with refresh token"</code></pre>
                 </div>
 
-                <h3>Cómo aplicar rules:</h3>
-                <ol style="padding-left: 2em; color: var(--text-secondary);">
-                    <li><strong>Manual:</strong> Escribe rules en CLAUDE.md, Claude las lee automáticamente</li>
-                    <li><strong>Hooks:</strong> Valida reglas antes de cada commit vía pre-commit hooks</li>
-                    <li><strong>CI/CD:</strong> ESLint, TypeScript, Tests — verificación automática</li>
-                </ol>
+                <h3>🎯 Ejemplo 2: Rules para Python/FastAPI</h3>
+                <div class="code-block" data-lang="markdown">
+                    <pre><code># .claude/rules.md
+
+## Code Style (Python)
+- Black formatting (88 char line length)
+- isort para imports
+- Type hints: obligatorio (mypy strict)
+- Docstrings: Google style
+- Classes: CapitalCase, functions: snake_case
+
+## FastAPI Routes
+- Validation: Pydantic models en request/response
+- Status codes: 200, 201, 400, 401, 404, 500
+- Error responses: {"detail": "msg"} standard
+- Pagination: ?skip=0&limit=100
+- Filters: ?status=active&sort=created_at
+
+## Database (SQLAlchemy + Alembic)
+- Migrations: versionadas en git (alembic/)
+- Sessions: context managers (with db.session())
+- Lazy loading: explícito (joinedload)
+- Batch size: 1000 max en operaciones bulk
+
+## Testing (pytest)
+- Structure: tests/ mirror src/
+- Fixtures: en conftest.py
+- Coverage: 85% mínimo
+- DB tests: usa transactional fixtures
+
+## Async
+- async def para I/O-bound (API calls, BD)
+- concurrent.futures para CPU-bound
+- Timeouts: asyncio.wait_for() siempre</code></pre>
+                </div>
+
+                <h3>🔐 Ejemplo 3: Rules de Seguridad (Crítico)</h3>
+                <div class="code-block" data-lang="markdown">
+                    <pre><code># .claude/rules.local.md (GITIGNORE)
+
+## Secrets & Credentials
+- API Keys: env vars solamente
+- Database passwords: rotadas cada 3 meses
+- OAuth tokens: almacenados encriptados
+- Private keys: nunca en git, usar HashiCorp Vault
+
+## Audit Log
+- Cambios en datos sensibles: log quien, cuándo, qué
+- Admin actions: requerida doble autenticación
+- Failed login: después de 5 intentos, lock cuenta
+
+## PII Handling
+- GDPR compliance: right to deletion
+- Encryption at rest: AES-256
+- Encryption in transit: TLS 1.3+
+- Data retention: 30 días máximo para logs
+
+## Webhook Security
+- Signature verification: HMAC-SHA256
+- Rate limiting: 1000 req/hour por webhook
+- Retry: máximo 3 reintentos (exponential backoff)
+- Timeout: 10 segundos</code></pre>
+                </div>
+
+                <h3>⚙️ Cómo aplicar rules automáticamente:</h3>
+                <div style="display: grid; gap: 1.5em; margin: 1.5em 0;">
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px;">
+                        <h4 style="color: #3ddc97; margin-top: 0;">Opción 1: Manual (Claude lee CLAUDE.md automáticamente)</h4>
+                        <p>Cada sesión, Claude Lee .claude/CLAUDE.md y .claude/rules.md al inicio.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                            <code>
+claude  # Inicia sesión<br/>
+# Claude automáticamente:<br/>
+# 1. Lee .claude/CLAUDE.md<br/>
+# 2. Aplica rules en cada respuesta<br/>
+# 3. Valida código antes de commit
+                            </code>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
+                        <h4 style="color: #5eb8ff; margin-top: 0;">Opción 2: Pre-commit Hooks (Validación Local)</h4>
+                        <p>Bloquea commits si violan rules antes de push.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                            <code>
+# .husky/pre-commit<br/>
+#!/bin/bash<br/>
+npm run lint  # ESLint<br/>
+npm run type-check  # TypeScript<br/>
+npm test -- --coverage  # Tests<br/>
+# Si algo falla → commit bloqueado<br/>
+<br/>
+git add .husky<br/>
+git commit -m "chore: add git hooks"
+                            </code>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ffb454; border-radius: 8px;">
+                        <h4 style="color: #ffb454; margin-top: 0;">Opción 3: CI/CD Pipeline (Validación Remota)</h4>
+                        <p>GitHub Actions / GitLab CI valida rules en cada PR.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                            <code>
+# .github/workflows/rules.yml<br/>
+on: [pull_request]<br/>
+jobs:<br/>
+&nbsp;&nbsp;lint: <code style="color: #3ddc97;">npm run lint</code><br/>
+&nbsp;&nbsp;typecheck: <code style="color: #3ddc97;">npm run type-check</code><br/>
+&nbsp;&nbsp;tests: <code style="color: #3ddc97;">npm test</code><br/>
+&nbsp;&nbsp;coverage: <code style="color: #3ddc97;">codecov</code><br/>
+&nbsp;&nbsp;security: <code style="color: #3ddc97;">npm audit</code><br/>
+<br/>
+# Si algo falla → PR bloqueado, comenta feedback
+                            </code>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px;">
+                        <h4 style="color: #c084fc; margin-top: 0;">Opción 4: Custom Hooks en settings.json</h4>
+                        <p>Ejecuta scripts de validación automáticos con cada comando de Claude.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                            <code>
+# .claude/settings.json<br/>
+{<br/>
+&nbsp;&nbsp;"hooks": {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;"before-edit": "npm run lint -- --fix",<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;"before-commit": "npm test && npm run type-check",<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;"after-merge": "npm install && npm audit"<br/>
+&nbsp;&nbsp;}<br/>
+}
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>✅ Checklist: Implementar Rules Correctamente</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <ul style="padding-left: 1.5em; color: var(--text-secondary); line-height: 2;">
+                        <li>☐ Crear <code>.claude/CLAUDE.md</code> con stack del proyecto</li>
+                        <li>☐ Crear <code>.claude/rules.md</code> con code standards</li>
+                        <li>☐ Crear <code>.claude/rules.local.md</code> para secretos (gitignore)</li>
+                        <li>☐ Configurar pre-commit hooks (husky) para validación local</li>
+                        <li>☐ Configurar GitHub Actions / CI para validación en PR</li>
+                        <li>☐ Documentar excepciones en README (ej: legacy code que no sigue rules)</li>
+                        <li>☐ Revisar rules cada sprint: ¿siguen siendo válidas?</li>
+                        <li>☐ Entrenar team: "por qué existen estas rules"</li>
+                    </ul>
+                </div>
+
+                <div class="info-banner" style="background: linear-gradient(135deg, rgba(255, 180, 84, 0.15) 0%, rgba(255, 180, 84, 0.05) 100%); border-left: 4px solid #ffb454; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
+                    <strong>💡 Pro Tip:</strong> Empieza con 5-7 rules críticas (code style, seguridad, testing). Agrega más con el tiempo. Too many rules = nadie las sigue.
+                </div>
 
                 <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
-                    <strong>📖 Lectura completa:</strong> Ver <code>RULES_CONFIG.md</code> para casos reales por lenguaje (Python, Go, Node.js, etc).
+                    <strong>📖 Lectura completa:</strong> Ver <code>RULES_CONFIG.md</code> para templates de rules por stack (Node.js, Python, Go, Rust, etc).
                 </p>
             </section>
 
             <!-- Sección: Memory Management -->
             <section class="content-section" data-section="memory" data-mode="technical">
                 <h2>💾 Memory Management — Persistencia Entre Sesiones</h2>
-                <p class="section-lead">Sistema que mantiene información sin usar historial de conversación.</p>
+                <p class="section-lead">Sistema de memoria en 3 niveles. Compactación, forks, estrategias de persistencia sin contaminar contexto.</p>
 
                 <div class="info-box" style="background: linear-gradient(135deg, rgba(192, 132, 252, 0.1) 0%, rgba(192, 132, 252, 0.05) 100%); border-left: 4px solid #c084fc; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
                     <h3 style="margin-top: 0; color: #c084fc;">3 Niveles de Memory</h3>
-                    <ul style="margin: 1em 0; padding-left: 1.5em; color: var(--text-secondary);">
-                        <li><strong>Session:</strong> Esta sesión (se pierde al cerrar)</li>
-                        <li><strong>Project:</strong> Todos los devs del proyecto (versionado en git)</li>
-                        <li><strong>Global:</strong> Todos tus proyectos (permanente)</li>
-                    </ul>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin-top: 1em;">
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px;">
+                            <strong style="color: #3ddc97;">🔵 Session</strong>
+                            <p style="font-size: 0.85em; margin: 0.5em 0 0 0;">Esta sesión (se pierde al cerrar)</p>
+                            <p style="font-size: 0.75em; color: var(--text-secondary);">Volatile, rápido acceso</p>
+                        </div>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px;">
+                            <strong style="color: #5eb8ff;">📁 Project</strong>
+                            <p style="font-size: 0.85em; margin: 0.5em 0 0 0;">Todos los devs del proyecto (versionado en git)</p>
+                            <p style="font-size: 0.75em; color: var(--text-secondary);">.claude/memory/, compartido</p>
+                        </div>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px;">
+                            <strong style="color: #c084fc;">🌍 Global</strong>
+                            <p style="font-size: 0.85em; margin: 0.5em 0 0 0;">Todos tus proyectos (permanente)</p>
+                            <p style="font-size: 0.75em; color: var(--text-secondary);">~/.claude/memory/, personal</p>
+                        </div>
+                    </div>
                 </div>
 
-                <h3>Comandos principales:</h3>
-                <div style="display: grid; gap: 1em;">
-                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97;">
+                <h3>📝 Comandos principales:</h3>
+                <div style="display: grid; gap: 1em; margin: 1.5em 0;">
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
                         <code>/memory add "Database: PostgreSQL + Prisma ORM"</code>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Agregar entrada a memoria del proyecto</p>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Agregar entrada a memoria del proyecto (versionada)</p>
                     </div>
-                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97;">
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
                         <code>/memory search "database"</code>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Buscar en memoria existente</p>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Buscar términos en memoria (busca por palabra clave)</p>
                     </div>
-                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97;">
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
                         <code>/memory list</code>
-                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Ver toda la memoria del proyecto</p>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Ver toda la memoria del proyecto (categorizada)</p>
+                    </div>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
+                        <code>/memory compact "Keep arch decisions, drop logs"</code>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Comprime memoria (remove ruido, mantiene contexto útil)</p>
+                    </div>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
+                        <code>/memory fork "Create branch for refactor"</code>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Snapshot de memoria para rama (sin contaminar main)</p>
+                    </div>
+                    <div style="background: var(--bg-surface); padding: 1em; border-radius: 8px; font-family: var(--font-mono); color: #3ddc97; border-left: 4px solid #3ddc97;">
+                        <code>/memory persist "Key learning: index on users.email"</code>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 0.5em;">Guarda entrada en memoria global (permanente, todos los proyectos)</p>
                     </div>
                 </div>
 
-                <h3>Estructura recomendada en project memory:</h3>
-                <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
-                    <code style="color: #e6edf3; line-height: 1.8;">
-memory/<br/>
-├── architecture.md        # Stack, decisiones principales<br/>
-├── api-spec.md           # Endpoints, schemas<br/>
-├── database.md           # Schema, migrations<br/>
-├── deployment.md         # Envs, CI/CD<br/>
-├── learned-lessons.md    # Bugs, soluciones, antipatterns<br/>
-└── performance.md        # Benchmarks, bottlenecks
-                    </code>
+                <h3>🎯 Estrategias de Memory Management:</h3>
+                <div style="display: grid; gap: 1.5em; margin: 1.5em 0;">
+                    <!-- COMPACTACIÓN -->
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px;">
+                        <h4 style="color: #3ddc97; margin-top: 0;">🗜️ Compactación (/compact)</h4>
+                        <p style="margin: 0.5em 0;">Cuando memoria crece (> 10KB), remueve ruido manteniendo conocimiento útil.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                            <code>
+# Día 3 de refactor, memoria tiene logs y dead ends<br/>
+/memory compact "Keep: API v1→v2 decisions. <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Drop: Failed hypothesis #1, #2, debug logs"<br/>
+<br/>
+# Resultado: 10KB → 3KB, sin perder contexto importante<br/>
+# Impacto: Más tokens para código, menos para logs
+                            </code>
+                        </div>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>Cuándo usar:</strong> Trabajos > 3 días, experiencias frecuentes de "context limit exceeded"</p>
+                    </div>
+
+                    <!-- FORKS -->
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px;">
+                        <h4 style="color: #5eb8ff; margin-top: 0;">🔀 Forks (/memory fork)</h4>
+                        <p style="margin: 0.5em 0;">Crea snapshot aislado de memoria para rama sin contaminar main.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                            <code>
+# main branch: memoria con [user auth, payments, api spec]<br/>
+<br/>
+git checkout -b feature/experimental-db<br/>
+/memory fork "experimental-db"<br/>
+# Ahora memoria tiene copia aislada de main<br/>
+# Agregamos: [DB migration notes, benchmarks]<br/>
+<br/>
+git checkout main<br/>
+/memory list  # Sigue mostrando original, sin noise de feature
+                            </code>
+                        </div>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>Cuándo usar:</strong> Ramas de larga duración, experimentos sin afectar contexto de main</p>
+                    </div>
+
+                    <!-- PERSISTENT MEMORY -->
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px;">
+                        <h4 style="color: #c084fc; margin-top: 0;">🌍 Persistent Memory (/memory persist)</h4>
+                        <p style="margin: 0.5em 0;">Guarda aprendizajes en memoria global — accesibles en todos los proyectos.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                            <code>
+# En proyecto-a, descubres patrón útil<br/>
+/memory persist "Pattern: Exponential backoff for API retries <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1s → 2s → 4s → 8s → fail. <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max retries: 4. Jitter: random(0, delay)."<br/>
+<br/>
+# En proyecto-b (diferente), semanas después<br/>
+/memory search "backoff"  # ← Encuentra la entrada persistent<br/>
+# Reutiliza patrón sin reinventar
+                            </code>
+                        </div>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>Cuándo usar:</strong> Patrones reutilizables, soluciones a problemas recurrentes, buenas prácticas aprendidas</p>
+                    </div>
+
+                    <!-- CLEAR -->
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ff6b6b; border-radius: 8px;">
+                        <h4 style="color: #ff6b6b; margin-top: 0;">🗑️ Clear (/memory clear)</h4>
+                        <p style="margin: 0.5em 0;">Borra toda la memoria del proyecto (irreversible). Úsalo antes de cambiar stack completamente.</p>
+                        <div style="background: var(--bg-surface); padding: 1em; border-radius: 6px; margin: 1em 0; font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                            <code>
+# Migrando de Node.js a Go<br/>
+/memory clear  # Borra notas sobre Node.js<br/>
+<br/>
+# WARNING: Irreversible. Hacer git commit primero si es importante.
+                            </code>
+                        </div>
+                        <p style="font-size: 0.85em; color: var(--text-secondary); margin: 1em 0;"><strong>⚠️ Uso raro:</strong> Solo cuando cambio de stack drástico</p>
+                    </div>
+                </div>
+
+                <h3>📂 Estructura recomendada en Project Memory:</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px; font-family: var(--font-mono); margin-bottom: 1em;">
+                        <code style="color: #e6edf3; line-height: 2;">
+.claude/memory/<br/>
+├── <span style="color: #3ddc97;">📋 architecture.md</span>        # Stack, decisiones principales, tech choices<br/>
+├── <span style="color: #3ddc97;">🔌 api-spec.md</span>           # Endpoints, schemas, auth, rate limits<br/>
+├── <span style="color: #3ddc97;">🗄️ database.md</span>          # Schema, migrations, índices, performance notes<br/>
+├── <span style="color: #5eb8ff;">🚀 deployment.md</span>        # Envs, CI/CD workflow, rollback procedures<br/>
+├── <span style="color: #5eb8ff;">📝 learned-lessons.md</span>   # Bugs resolvidos, antipatterns, "don't do X"<br/>
+├── <span style="color: #c084fc;">⚡ performance.md</span>       # Benchmarks, bottlenecks, optimization notes<br/>
+└── <span style="color: #c084fc;">🔒 security-notes.md</span>    # OWASP, compliance, vulnerabilities known
+                        </code>
+                    </div>
+                    <p style="margin-top: 1em; color: var(--text-secondary);">Cada archivo es <code>YAML + Markdown</code>, versionado en git, accesible para todo el equipo.</p>
+                </div>
+
+                <h3>🚨 Troubleshooting: "Context Limit Exceeded"</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Problema:</strong> "Token limit exceeded" después de 2-3 días de trabajo</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin: 1em 0;">
+                        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px;">
+                            <strong style="color: #3ddc97;">❌ Solución Mala</strong>
+                            <p style="font-size: 0.85em; margin-top: 0.5em;">Crear nueva sesión (pierdes contexto)</p>
+                        </div>
+                        <div style="background: var(--bg-elevated); padding: 1em; border-radius: 6px;">
+                            <strong style="color: #3ddc97;">✅ Solución Buena</strong>
+                            <p style="font-size: 0.85em; margin-top: 0.5em;">/compact + /fork + guardar en git</p>
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-elevated); padding: 1.5em; border-radius: 6px; margin: 1em 0;">
+                        <p style="margin-top: 0;"><strong>Paso a paso:</strong></p>
+                        <div style="font-family: var(--font-mono); font-size: 0.85em; color: #e6edf3;">
+                            <code>
+1. /memory compact "Keep decisions, drop logs"<br/>
+2. /memory list  # Verifica qué quedó<br/>
+3. /checkpoint "Compacted memory, ready for phase 2"<br/>
+4. git add .claude/memory/ && git commit -m "docs: compress memory"<br/>
+5. /clear  # Reinicia sesión con memoria comprimida<br/>
+6. Continúa con código <br/>
+<br/>
+# Resultado: 20KB → 5KB memory, ahora tienes 50% más tokens
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>📊 Comparativa: Memory vs Conversation History</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                        <tr style="border-bottom: 2px solid var(--bg-elevated);">
+                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Feature</th>
+                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Memory (/memory add)</th>
+                            <th style="text-align: left; padding: 0.75em; color: #5eb8ff;">Conversation History</th>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--bg-elevated);">
+                            <td style="padding: 0.75em;"><strong>Persistencia</strong></td>
+                            <td style="padding: 0.75em; color: #3ddc97;">✓ Entre sesiones</td>
+                            <td style="padding: 0.75em; color: #ff6b6b;">✗ Se pierde al cerrar</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--bg-elevated);">
+                            <td style="padding: 0.75em;"><strong>Tamaño</strong></td>
+                            <td style="padding: 0.75em; color: #3ddc97;">Comprimible, ~5KB-20KB</td>
+                            <td style="padding: 0.75em; color: #ff6b6b;">Crece sin límite, 100KB+</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--bg-elevated);">
+                            <td style="padding: 0.75em;"><strong>Versionado</strong></td>
+                            <td style="padding: 0.75em; color: #3ddc97;">✓ En git</td>
+                            <td style="padding: 0.75em; color: #ff6b6b;">✗ Privado</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--bg-elevated);">
+                            <td style="padding: 0.75em;"><strong>Compartido</strong></td>
+                            <td style="padding: 0.75em; color: #3ddc97;">✓ Todo el equipo</td>
+                            <td style="padding: 0.75em; color: #ff6b6b;">✗ Solo tú</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75em;"><strong>Caso de uso</strong></td>
+                            <td style="padding: 0.75em; color: #3ddc97;">Arquitectura, decisiones, patrones</td>
+                            <td style="padding: 0.75em; color: #ff6b6b;">Contexto temporal, debug actual</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-banner" style="background: linear-gradient(135deg, rgba(255, 180, 84, 0.15) 0%, rgba(255, 180, 84, 0.05) 100%); border-left: 4px solid #ffb454; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
+                    <strong>💡 Best Practice:</strong> Usa Memory para <em>lo que necesita durar</em> (decisiones, aprendizajes). Usa conversation para <em>lo temporal</em> (preguntas, debugging). Compacta cada 3 días para mantener limpio.
                 </div>
 
                 <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
-                    <strong>📖 Lectura completa:</strong> Ver <code>MEMORY_MANAGEMENT.md</code> para flujos de trabajo prácticos.
+                    <strong>📖 Lectura completa:</strong> Ver <code>MEMORY_MANAGEMENT.md</code> para flujos de trabajo prácticos con ejemplos reales.
                 </p>
             </section>
 
             <!-- Sección: Command Patterns -->
             <section class="content-section hidden" data-section="patrones" data-mode="technical">
                 <h2>🔄 Patrones de Comandos — Workflows Reutilizables</h2>
-                <p class="section-lead">10+ secuencias de comandos que resuelven problemas comunes.</p>
+                <p class="section-lead">12 secuencias de comandos que resuelven problemas comunes. Copy-paste ready, con outputs esperados.</p>
 
                 <div class="info-box" style="background: linear-gradient(135deg, rgba(255, 180, 84, 0.1) 0%, rgba(255, 180, 84, 0.05) 100%); border-left: 4px solid #ffb454; padding: 1.5em; margin: 2em 0; border-radius: 8px;">
-                    <h3 style="margin-top: 0; color: #ffb454;">Patrones incluidos:</h3>
-                    <ul style="margin: 1em 0; padding-left: 1.5em; color: var(--text-secondary);">
-                        <li>✅ Code Review en nueva sesión</li>
-                        <li>✅ Refactor largo + Memory + Checkpoints</li>
-                        <li>✅ Bug Hunt: Hypothesis-driven investigation</li>
-                        <li>✅ Performance optimization sprint</li>
-                        <li>✅ Security audit + fix</li>
-                        <li>✅ Dependency upgrade safe</li>
-                        <li>✅ Onboarding nuevo developer</li>
-                        <li>✅ Incident response (production)</li>
-                        <li>✅ Documentation sprint</li>
-                        <li>✅ Performance regression detection</li>
+                    <h3 style="margin-top: 0; color: #ffb454;">12 Patrones de Workflows</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em; font-size: 0.9em;">
+                        <div>
+                            <ul style="margin: 0; padding-left: 1.5em; color: var(--text-secondary);">
+                                <li>✅ Code Review de PR</li>
+                                <li>✅ Refactor Largo (3+ días)</li>
+                                <li>✅ Bug Hunt Sistemático</li>
+                                <li>✅ Performance Sprint</li>
+                                <li>✅ Security Audit</li>
+                                <li>✅ Dependency Upgrade Safe</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <ul style="margin: 0; padding-left: 1.5em; color: var(--text-secondary);">
+                                <li>✅ Onboarding Dev Nuevo</li>
+                                <li>✅ Incident Response</li>
+                                <li>✅ Documentation Sprint</li>
+                                <li>✅ Tests Migration</li>
+                                <li>✅ Cleanup Técnico</li>
+                                <li>✅ API Design Review</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>📋 Patrón #1: Code Review de PR (30 min)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Revisar PR#247 sin contaminar tu rama actual.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code># 1. Abre nueva sesión desde PR (no afecta tu contexto)
+claude --from-pr 247
+
+# 2. Dentro de Claude, carga archivos del PR
+/permissions  # Verifica qué archivos puedes leer
+@src/auth/login.ts
+@src/auth/utils.ts
+"¿Qué problemas ves? Enfócate en: seguridad, tests, performance"
+
+# 3. Generar reporte
+/export review-report.md
+# Guarda findings en markdown
+
+# 4. Valida estado
+/doctor  # Diagnosticar sesión
+/usage   # Ver tokens consumidos
+
+# 5. Sale sin afectar sesión anterior
+exit
+# Tu sesión anterior recupera su contexto automáticamente</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> review-report.md con 5-10 findings, categories (security, tests, perf, refactor).</p>
+                </div>
+
+                <h3>📋 Patrón #2: Refactor Largo (3-7 días)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Refactorización de componente complejo (API migration, DB schema change). Usa Memory + Checkpoints.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code>## DÍA 1: SETUP
+git checkout -b refactor/api-v2
+claude --worktree refactor-api-v2
+
+# Documenta scope
+/memory add "Refactor: API v1 → v2 migration
+- Scope: /users, /auth, /profile endpoints
+- Timeline: 3 días
+- Breaking change: response format (v1 /{id} → v2 /resource/{id})
+- DB impact: add migration for schema v2"
+
+# Primer milestone
+@src/api/v1/users.ts
+"Plan la migración a v2. Output: step-by-step plan"
+/checkpoint "Plan completo, fase 1 preparada"
+# Termina sesión
+
+## DÍA 2: RETOMAR
+claude -c  # Resume última sesión con context
+
+# Busca lo que hiciste antes
+/memory search "refactor"
+/rewind  # Ver checkpoints
+
+# Continúa con fase 1
+@src/api/v1/users.ts
+"Implementa: GET /v2/users/{id}. Usa el plan del día 1."
+# Code, test, debug
+/checkpoint "GET /v2/users done, 4 tests passing"
+
+## DÍA 3: FINALIZAR
+claude -c
+/memory search "refactor"
+
+# Completa fases restantes
+@src/api/v1/auth.ts
+"Implementa: POST /v2/auth/login"
+
+# Compacta memory antes de merge
+/memory compact "Keep: API decisions, migration plan. Remove: logs, dead ends"
+
+# Final
+git add -A
+git commit -m "refactor(api): v1 → v2 migration complete"
+git checkout develop && git merge --no-ff refactor/api-v2</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> 3-5 commits, memory comprimida (5KB), tests > 80% coverage.</p>
+                </div>
+
+                <h3>📋 Patrón #3: Bug Hunt Sistemático (2-4 horas)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #c084fc; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Investigar bug sin hipótesis clara. Usa método científico: hipótesis → test → result.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code>/memory add "BUG #247: Notifications delayed by 5-10 minutes
+- Reported: 2026-05-15
+- Severity: high
+- Frequency: 100% reproducible
+- Suspected areas: queue service, email provider, database"
+
+## HYPOTHESIS 1: Queue backlog?
+@src/queue/config.ts
+"¿Hay backlog en la queue? ¿Cuántos items pendientes?"
+
+# (Analiza output, toma decision)
+/memory add "Hypothesis 1: REJECTED - queue processing normally (avg 2s)"
+
+## HYPOTHESIS 2: External API timeout?
+@src/services/email-service.ts
+"¿SendGrid tiene timeout? ¿Hay reintentos?"
+
+/memory add "Hypothesis 2: REJECTED - SendGrid responses < 500ms"
+
+## HYPOTHESIS 3: Database lock? (DING!)
+@src/models/notification.ts
+@src/migrations/
+"¿notifications tabla tiene índices? Busca missing index en users(email)"
+
+# (Encuentras: NO INDEX en notifications.user_id!)
+/memory add "Hypothesis 3: ✅ CONFIRMED
+- Root cause: Missing index on notifications.user_id
+- Query latency: 50ms → 2s sin índice
+- Fix: Add INDEX(user_id) in migration"
+
+## FIX & VERIFY
+# Crear migration
+cat > migrations/add_notification_index.sql << EOF
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+EOF
+
+npm test  # Verifica fix
+# Deploy
+
+/checkpoint "Bug fixed: added notification index, delay gone"</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> 3-5 hipótesis testeadas, 1 raíz encontrada, fix implementado.</p>
+                </div>
+
+                <h3>📋 Patrón #4: Performance Sprint (1-2 días)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ffb454; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> App lenta. Encuentra bottleneck con data real, propón fix, valida mejora.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code">git checkout -b perf/optimize-dashboard
+claude
+
+/memory add "Performance: Dashboard loads in 3.2s, target: < 1s"
+
+## BASELINE: Medir
+@src/pages/dashboard.tsx
+"Profila: ¿cuál componente es más lento? (render time, data fetch)"
+
+# (Encuentra: API call tarda 2.1s)
+
+/memory add "Bottleneck: GET /api/dashboard returns {users, orders, stats}
+- users: 2000 items (not paginated!)
+- All fetched sequentially"
+
+## FIX: Paginar + Parallel
+@src/api/dashboard.ts
+"Refactor: paginate users (limit 50), fetch en paralelo"
+
+npm run test:perf  # Benchmark
+
+/memory add "Performance improved: 3.2s → 800ms (73% faster!)
+- Pagination: users 2000 → 50
+- Parallel: Promise.all() for 3 API calls"
+
+/checkpoint "Perf: 3.2s → 800ms, merged"
+
+git add -A && git commit -m "perf(dashboard): parallel requests + pagination"</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> Benchmark antes/después, 50%+ mejora, commits con perf: prefix.</p>
+                </div>
+
+                <h3>📋 Patrón #5: Security Audit (4-6 horas)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ff6b6b; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Revisar seguridad antes de release. OWASP Top 10, autenticación, secrets.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code">git checkout -b security/pre-release-audit
+claude
+
+/memory add "Security Audit Checklist:
+- [ ] Authentication (JWT, refresh tokens)
+- [ ] Authorization (role-based)
+- [ ] Input validation (SQL injection, XSS)
+- [ ] Secrets management (.env, API keys)
+- [ ] CORS policy
+- [ ] Rate limiting
+- [ ] HTTPS + HSTS
+- [ ] Dependency audit"
+
+## CHECK 1: Authentication
+@src/middleware/auth.ts
+"¿JWT tiene expiración? ¿Refresh token seguro? Busca vulnerabilidades."
+
+/memory add "✅ Auth: OK - JWT exp 1h, refresh 7d, secure httpOnly"
+
+## CHECK 2: Validation
+grep -r "req.body" src/
+"¿Hay validación en todos los endpoints? Busca zod/joi"
+
+/memory add "⚠️  Validation: 3/15 endpoints falta validación"
+
+## CHECK 3: Secrets
+grep -r "process.env" src/
+"¿Hay hardcoded secrets? Busca 'password', 'api_key', 'token'"
+
+/memory add "✅ Secrets: OK - usa env vars, .env.example existe"
+
+## CHECK 4: Dependencies
+npm audit
+"¿Hay vulnerabilities críticas?"
+
+npm audit fix  # Fix automático
+/checkpoint "Security: 8/8 checks done, 2 fixes, ready for release"</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> Checklist completo, vulnerabilities listadas, fixes commiteadas.</p>
+                </div>
+
+                <h3>📋 Patrón #6: Dependency Upgrade Safe (2-3 horas)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #3ddc97; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Actualizar librería crítica sin breaking changes.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code">git checkout -b deps/upgrade-prisma
+claude
+
+/memory add "Upgrade: Prisma v4 → v5
+- Current version: 4.16.2
+- Target: 5.latest
+- Risk: Breaking changes possible"
+
+# STEP 1: Check changelog
+"Lee: https://github.com/prisma/prisma/releases/tag/v5.0.0
+¿Qué breaking changes hay?"
+
+/memory add "Breaking changes:
+- Client API unchanged
+- Schema changes: @unique → @@unique
+- Migration: auto fix vía prisma migrate"
+
+# STEP 2: Upgrade
+npm install prisma@5 @prisma/client@5
+npx prisma migrate dev --name upgrade_v5
+
+# STEP 3: Test
+npm test  # Espera 100% green
+
+# STEP 4: Commit
+git add -A
+git commit -m "chore(deps): upgrade prisma 4 → 5
+
+- Updated schema syntax (@unique → @@unique)
+- All tests passing
+- Migration tested locally"
+
+# STEP 5: Code review antes de merge</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> Tests 100% green, CHANGELOG reviewed, commit con breaking changes documentados.</p>
+                </div>
+
+                <h3>📋 Patrón #7: Onboarding Dev Nuevo (30-45 min)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #5eb8ff; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Nuevo dev se incorpora. Explica stack, decisiones, flujo de trabajo.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code">claude
+
+# Carga memoria del proyecto
+/memory list
+
+# Explica a nuevo dev
+"@root Eres mentor para un nuevo dev que se incorpora hoy.
+Explica:
+1. Stack: tecnologías principales
+2. Architecture: cómo está estructurado el código
+3. Workflow: cómo hacemos PRs, deployments
+4. Quick start: cómo runear el proyecto
+5. First task: qué debería trabajar first (low-risk)"
+
+# Claude genera onboarding guide personalizado
+/export onboarding-guide.md
+
+# Nuevo dev sigue:
+# - git clone, npm install
+# - Lee onboarding-guide.md
+# - Compra task fácil (docs, tests, small fix)
+# - Hace PR, code review
+
+/memory add "New dev: María, backend engineer, joined 2026-05-17"</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> onboarding-guide.md (5-10KB), first task assigned, chat room setup.</p>
+                </div>
+
+                <h3>📋 Patrón #8: Incident Response (Production Bug)</h3>
+                <div style="background: var(--bg-elevated); padding: 1.5em; border-left: 4px solid #ff6b6b; border-radius: 8px; margin: 1.5em 0;">
+                    <p style="margin-top: 0;"><strong>Caso de uso:</strong> Producción caída. Diagnosis rápida, hotfix, communication.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code"># TRIAGE (< 5 min)
+/memory add "INCIDENT: Users cannot login (2026-05-17 14:32 UTC)
+- Severity: CRITICAL (100% affected)
+- Impact: Revenue stop
+- Started: 14:32 UTC
+- Status: INVESTIGATING"
+
+# Check logs
+@prod/logs  (o accede al observability tool)
+"¿Cuál es el error?"
+
+# Root cause encontrado: auth service crashes con JWT validation error
+
+/memory add "ROOT CAUSE: JWT validation fails after v3.2 deploy
+- Error: 'unexpected token' in signature verification
+- Hypothesis: key rotation issue"
+
+# HOTFIX (< 30 min)
+git checkout -b hotfix/jwt-validation main
+@src/middleware/auth.ts
+"Fix JWT validation: rollback key rotation or use previous key"
+
+npm test  # ✅ Tests pass
+npm run build  # ✅ Build OK
+
+# DEPLOY
+git commit -m "hotfix(auth): jwt validation - revert key rotation"
+git push
+# → CI/CD auto-deploys to prod
+
+# COMMUNICATION
+Slack: ":warning: Incident: Auth service down [14:32-14:58 UTC]
+Root: JWT validation after v3.2 deploy
+Fix: Rolled back key rotation
+Status: ✅ Resolved
+Post-mortem: TBD"
+
+# POST-MORTEM (next day)
+/checkpoint "Incident resolved. Root cause: missing validation in key rotation flow"</code></pre>
+                    </div>
+                    <p style="margin-top: 1em; padding: 1em; background: var(--bg-surface); border-radius: 6px; color: var(--text-secondary); font-size: 0.9em;"><strong>Output esperado:</strong> Hotfix deployed < 1h, communication clara, post-mortem scheduled.</p>
+                </div>
+
+                <h3>📋 Patrones #9-12: Otros (Documentation, Tests Migration, Cleanup, API Review)</h3>
+                <div style="background: var(--bg-surface); padding: 1.5em; border-radius: 8px; margin: 1.5em 0; color: var(--text-secondary);">
+                    <p style="margin: 0 0 1em 0;"><strong>Por brevedad, aquí está el outline. Ver COMMAND_PATTERNS.md para detalles completos:</strong></p>
+                    <ul style="padding-left: 1.5em; margin: 0;">
+                        <li><strong>#9 Documentation Sprint</strong> (2h): Escribe docs from code, OpenAPI, deployment guide</li>
+                        <li><strong>#10 Tests Migration</strong> (1-2d): Mocha → Jest, cambiar test runner sin perder coverage</li>
+                        <li><strong>#11 Cleanup Técnico</strong> (4-6h): Remover dead code, legacy files, tipo dead imports</li>
+                        <li><strong>#12 API Design Review</strong> (2-3h): REST endpoints, schemas, versioning, backward compatibility</li>
                     </ul>
                 </div>
 
-                <h3>Patrón #1: Code Review de PR</h3>
-                <div class="code-block" data-lang="bash">
-                    <pre><code># Retomar contexto sin contaminar rama actual
-claude --from-pr 247
-
-# Dentro de Claude:
-/permissions  # Verificar permisos
-@src/auth    # Cargar archivos del PR
-"¿Qué problemas ves en este código?"
-
-/doctor      # Diagnosticar estado
-/usage       # Tokens consumidos
-
-exit
-# Sesión anterior recupera su contexto</code></pre>
-                </div>
-
-                <h3>Patrón #2: Refactor Largo (3+ días)</h3>
-                <div class="code-block" data-lang="bash">
-                    <pre><code># Día 1: Setup
-git checkout -b refactor/api-v2
-claude --worktree refactor-api-v2
-/memory add "Refactor: API v1 → v2..."
-/checkpoint "Milestone 1: /users endpoint done"
-
-# Día 2: Retomar
-claude -c    # Resume última sesión
-/memory search "refactor"
-/rewind      # Ver checkpoints
-# Continúa desde donde dejaste
-
-# Día 3: Finalizar
-/compact "Mantén refactor, descarta logs"
-claude commit
-# Merge a develop</code></pre>
-                </div>
-
-                <h3>Patrón #3: Bug Hunt Sistemático</h3>
-                <div class="code-block" data-lang="bash">
-                    <pre><code>/memory add "BUG #247: Delayed notifications (5-10min late)"
-
-# Hypothesis 1: Queue backlog?
-@src/queue/config.js
-"¿Hay backlog?"
-/memory add "Hypothesis 1: REJECTED (queue is fine)"
-
-# Hypothesis 2: External API timeout?
-@src/services/email-service.js
-"¿SendGrid timeout?"
-/memory add "Hypothesis 2: REJECTED"
-
-# Hypothesis 3: ✅ Database lock?
-@src/models/notification.js
-"Missing index?"
-/memory add "Hypothesis 3: ✅ CONFIRMED — add index"
-
-# Fix + Verify
-# Create migration → Test → Deploy</code></pre>
+                <div class="info-banner" style="background: linear-gradient(135deg, rgba(255, 180, 84, 0.15) 0%, rgba(255, 180, 84, 0.05) 100%); border-left: 4px solid #ffb454; padding: 1.5em; margin: 1.5em 0; border-radius: 8px;">
+                    <strong>💡 Pro Tip:</strong> Cada patrón usa <code>/memory add</code> para documentar progreso. Permite retomar sesión días después sin perder contexto. También usa <code>/checkpoint</code> para guardar milestones.
                 </div>
 
                 <p style="margin-top: 2em; padding: 1em; background: var(--bg-surface); border-radius: 8px; color: var(--text-secondary);">
-                    <strong>📖 Lectura completa:</strong> Ver <code>COMMAND_PATTERNS.md</code> para todos los 10 patrones con ejemplos reales.
+                    <strong>📖 Lectura completa:</strong> Ver <code>COMMAND_PATTERNS.md</code> para los 12 patrones con ejemplos reales de outputs, timing, y mejores prácticas.
                 </p>
             </section>
 
