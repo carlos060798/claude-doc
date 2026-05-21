@@ -231,6 +231,12 @@
                 { name: 'CLAUDE.md: tu system prompt', desc: 'Estructura: stack, convenciones, comandos útiles, reglas de código.' },
                 { name: 'Mención de archivos (@)', desc: 'Técnica para inyectar contexto sin sobrecargar en cada prompt.' },
             ],
+            modules: [
+                { id: 'instalacion', title: 'Instalación', description: 'Configuración multiplataforma e instalación rápida de Claude Code.' },
+                { id: 'prompt-craft', title: 'Prompt Craft Básico', description: 'Técnicas esenciales para escribir prompts efectivos y claros.' },
+                { id: 'decision-framework', title: 'Decision Framework', description: 'Marco para tomar decisiones de diseño y arquitectura con Claude.' },
+                { id: 'cost-management', title: 'Gestión de Costos Básica', description: 'Entender tokens, optimizar contexto y controlar gastos.' },
+            ],
             caseStudy: {
                 title: '🛠️ Caso práctico: dale vida a un repo nuevo',
                 context: 'Acabas de clonar un proyecto Next.js que no conoces. Quieres entender qué hace y dejar configurado un CLAUDE.md para que las próximas sesiones sean rápidas.',
@@ -375,6 +381,12 @@
                 { name: 'MCP stdio vs SSE', desc: 'Local rápido vs remoto escalable. Manejo de errores.' },
                 { name: 'Memoria entre sesiones', desc: '/memory = persistencia de decisiones arquitectónicas.' },
                 { name: '.mcp.json declarativo', desc: 'Versionea en git. Variables de entorno para secretos.' },
+            ],
+            modules: [
+                { id: 'testing-asistido', title: 'Testing Asistido', description: 'Generar tests con Claude de forma automática y eficiente.' },
+                { id: 'gobernanza', title: 'Gobernanza y Compliance', description: 'Políticas para uso de Claude Code en equipos grandes.' },
+                { id: 'monitoreo-costos', title: 'Monitoreo de Costos', description: 'Seguimiento detallado de uso de tokens y optimización.' },
+                { id: 'incident-response', title: 'Incident Response', description: 'Automatización de respuesta a incidentes con Claude.' },
             ],
             caseStudy: {
                 title: '🛠️ Caso práctico: refactor largo sin morir en el contexto',
@@ -734,6 +746,13 @@
                 { name: 'Shell injection segura', desc: '!`comando` con allowed-tools restrictivas. Prevenir inyección.' },
                 { name: 'Hooks: automación', desc: 'PostToolUse para formatear código tras Write. Pre/Post patterns.' },
                 { name: 'Sub-agentes en paralelo', desc: 'Task para orquestar agentes independientes. Escalabilidad.' },
+            ],
+            modules: [
+                { id: 'adopcion-equipos', title: 'Adopción en Equipos', description: 'Estrategia de rollout de Claude Code en organizaciones.' },
+                { id: 'seguridad-compliance', title: 'Seguridad y Compliance', description: 'Implementación de guardrails y políticas de seguridad.' },
+                { id: 'etica', title: 'Ética en IA', description: 'Uso responsable y consideraciones éticas de Claude Code.' },
+                { id: 'observabilidad', title: 'Observabilidad', description: 'Logging, trazas distribuidas y monitoreo de sistemas.' },
+                { id: 'patrones-arquitectonicos', title: 'Patrones Arquitectónicos', description: 'Diseños probados para sistemas escalables con Claude.' },
             ],
             caseStudy: {
                 title: '🛠️ Caso práctico: tu propia /code-review',
@@ -1509,6 +1528,49 @@
                 }
             ]
         }
+    };
+
+    /* ============================================================
+       1.8 DATOS — SECCIONES PRÁCTICAS COMPLEMENTARIAS
+       Secciones que no son módulos de nivel sino complementarias:
+       laboratorios prácticos, guías avanzadas, etc.
+
+       MAPEO COMPLETO DE IDs (sin conflictos):
+       ─────────────────────────────────────────────────────────
+       NIVEL 1: instalacion, prompt-craft, decision-framework, cost-management
+       NIVEL 2: testing-asistido, gobernanza, monitoreo-costos, incident-response
+       NIVEL 3: adopcion-equipos, seguridad-compliance, etica, observabilidad, patrones-arquitectonicos
+       PRÁCTICAS: laboratorios-practicos, guias-avanzadas, casos-estudio, recursos-comunidad
+       ============================================================ */
+    const PRACTICAL_SECTIONS = {
+        'laboratorios-practicos': {
+            title: 'Laboratorios Prácticos',
+            subtitle: '4 labs progresivos: debugging, MCP, Skill+CI, GitHub Actions',
+            icon: '🧪',
+            level: 'all',
+            description: 'Laboratorios progresivos para aprender haciendo con ejemplos reales.',
+        },
+        'guias-avanzadas': {
+            title: 'Guías Avanzadas',
+            subtitle: 'Profundiza en temas específicos: Performance, Security, Optimization',
+            icon: '📚',
+            level: 'advanced',
+            description: 'Guías exhaustivas para dominar aspectos avanzados.',
+        },
+        'casos-estudio': {
+            title: 'Casos de Estudio',
+            subtitle: 'Análisis detallado de proyectos reales y decisiones de arquitectura',
+            icon: '🔍',
+            level: 'expert',
+            description: 'Aprende de casos reales de implementación en producción.',
+        },
+        'recursos-comunidad': {
+            title: 'Recursos Comunitarios',
+            subtitle: 'Links a repos, ejemplos, herramientas creadas por la comunidad',
+            icon: '🌐',
+            level: 'all',
+            description: 'Descubre recursos compartidos por otros desarrolladores.',
+        },
     };
 
     /* ============================================================
@@ -2669,6 +2731,64 @@
         outroDiv.innerHTML = caseHtml + quizHtml + missionHtml + checkpointHtml;
     }
 
+    function renderSection(sectionId) {
+        // Renderizar secciones prácticas dinámicamente
+        const metadata = PRACTICAL_SECTIONS[sectionId];
+        if (!metadata) {
+            console.warn(`[renderSection] Sección no encontrada: ${sectionId}`);
+            return;
+        }
+
+        const content = document.querySelector(`[data-section="${sectionId}"]`);
+        if (!content) {
+            console.warn(`[renderSection] Elemento data-section="${sectionId}" no existe en HTML`);
+            return;
+        }
+
+        // Mostrar la sección
+        document.querySelectorAll('[data-section]').forEach(el => el.classList.remove('active'));
+        content.classList.add('active');
+
+        // Scroll suave hacia la sección
+        setTimeout(() => {
+            content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+
+        console.log(`[renderSection] Sección renderizada: ${sectionId}`, metadata);
+    }
+
+    function validateSectionIds() {
+        // Validar que todos los data-section tengan contenido HTML en script.js o sean secciones válidas
+        const allSections = document.querySelectorAll('[data-section]');
+        const validIds = new Set();
+
+        // IDs de LESSONS_DATA
+        Object.keys(LESSONS_DATA).forEach(level => {
+            validIds.add(`nivel-${level}`);
+            if (LESSONS_DATA[level].modules) {
+                LESSONS_DATA[level].modules.forEach(m => validIds.add(m.id));
+            }
+        });
+
+        // IDs de PRACTICAL_SECTIONS
+        Object.keys(PRACTICAL_SECTIONS).forEach(key => validIds.add(key));
+
+        // Validar cada sección en HTML
+        const warnings = [];
+        allSections.forEach(el => {
+            const id = el.dataset.section;
+            if (!validIds.has(id)) {
+                warnings.push(`[validateSectionIds] Sección sin metadata: ${id}`);
+            }
+        });
+
+        if (warnings.length > 0) {
+            console.warn('Secciones sin validación:', warnings);
+        }
+
+        return warnings;
+    }
+
     function initQuiz() {
         document.addEventListener('change', (e) => {
             if (!e.target.matches('input[type="radio"]')) return;
@@ -3086,6 +3206,12 @@
         renderLesson(4);
         renderLesson(5);
         renderLesson(6);
+
+        // 1.7) Validación de secciones
+        const sectionWarnings = validateSectionIds();
+        if (sectionWarnings.length > 0) {
+            console.warn('[P6B] Advertencias de validación:', sectionWarnings);
+        }
 
         // 2) Navegación
         setupNavigation();

@@ -53,6 +53,10 @@
                         <span class="nav-icon">🧠</span> Desafíos Nivel 1</a></li>
                     <li><a href="#proyectos" class="nav-link" data-section="proyectos" data-mode="technical" data-level="1">
                         <span class="nav-icon">🚀</span> Proyectos de Ejemplo</a></li>
+                    <li><a href="#prompt-craft" class="nav-link" data-section="prompt-craft" data-mode="technical" data-level="1">
+                        <span class="nav-icon">✨</span> Prompt Craft</a></li>
+                    <li><a href="#decision-framework" class="nav-link" data-section="decision-framework" data-mode="technical" data-level="1">
+                        <span class="nav-icon">🎯</span> Decision Framework</a></li>
                 </ul>
 
                 <p class="nav-group-title">Nivel 2: Practicante</p>
@@ -67,6 +71,10 @@
                         <span class="nav-icon">🔄</span> Patrones de Comandos</a></li>
                     <li><a href="#flujos-dev" class="nav-link" data-section="flujos-dev" data-mode="technical" data-level="2">
                         <span class="nav-icon">🔄</span> Flujos Dev Reales</a></li>
+                    <li><a href="#cost-management" class="nav-link" data-section="cost-management" data-mode="technical" data-level="2">
+                        <span class="nav-icon">💰</span> Cost Management</a></li>
+                    <li><a href="#testing-asistido" class="nav-link" data-section="testing-asistido" data-mode="technical" data-level="2">
+                        <span class="nav-icon">🧪</span> Testing Asistido</a></li>
                 </ul>
 
                 <p class="nav-group-title">Nivel 3: Constructor</p>
@@ -95,6 +103,12 @@
                         <span class="nav-icon">📊</span> Observability & Debug</a></li>
                     <li><a href="#performance" class="nav-link" data-section="performance" data-mode="technical" data-level="4">
                         <span class="nav-icon">⚡</span> Performance & Optimization</a></li>
+                    <li><a href="#gobernanza" class="nav-link" data-section="gobernanza" data-mode="technical" data-level="4">
+                        <span class="nav-icon">🏛️</span> Gobernanza</a></li>
+                    <li><a href="#monitoreo-costos" class="nav-link" data-section="monitoreo-costos" data-mode="technical" data-level="4">
+                        <span class="nav-icon">📈</span> Monitoreo de Costos</a></li>
+                    <li><a href="#incident-response" class="nav-link" data-section="incident-response" data-mode="technical" data-level="4">
+                        <span class="nav-icon">🚨</span> Incident Response</a></li>
                 </ul>
 
                 <p class="nav-group-title">Nivel 5: Líder Técnico <span class="lock-icon">🔒</span></p>
@@ -109,12 +123,22 @@
                         <span class="nav-icon">⚙</span> Casos de Uso Avanzados</a></li>
                     <li><a href="#mejores-practicas" class="nav-link" data-section="mejores-practicas" data-level="5">
                         <span class="nav-icon">✦</span> Mejores Prácticas</a></li>
+                    <li><a href="#adopcion-equipos" class="nav-link" data-section="adopcion-equipos" data-mode="technical" data-level="5">
+                        <span class="nav-icon">👥</span> Adopción en Equipos</a></li>
+                    <li><a href="#seguridad-compliance" class="nav-link" data-section="seguridad-compliance" data-mode="technical" data-level="5">
+                        <span class="nav-icon">✅</span> Seguridad & Compliance</a></li>
+                    <li><a href="#etica" class="nav-link" data-section="etica" data-mode="technical" data-level="5">
+                        <span class="nav-icon">⚖️</span> Ética en IA</a></li>
                 </ul>
 
                 <p class="nav-group-title">Nivel 6: Arquitecto <span class="lock-icon">🔒</span></p>
                 <ul class="nav-list">
                     <li><a href="#nivel-6" class="nav-link" data-section="nivel-6" data-mode="technical" data-level="6">
                         <span class="nav-icon">🏛️</span> Nivel 6: Arquitecto</a></li>
+                    <li><a href="#observabilidad" class="nav-link" data-section="observabilidad" data-mode="technical" data-level="6">
+                        <span class="nav-icon">🔍</span> Observabilidad</a></li>
+                    <li><a href="#patrones-arquitectonicos" class="nav-link" data-section="patrones-arquitectonicos" data-mode="technical" data-level="6">
+                        <span class="nav-icon">🏗️</span> Patrones Arquitectónicos</a></li>
                 </ul>
 
                 <p class="nav-group-title">Evaluación & Progreso</p>
@@ -133,6 +157,8 @@
                         <span class="nav-icon">📄</span> Cheatsheet</a></li>
                     <li><a href="#terminal" class="nav-link" data-section="terminal">
                         <span class="nav-icon">▶</span> Simulador Terminal</a></li>
+                    <li><a href="#laboratorios-practicos" class="nav-link" data-section="laboratorios-practicos" data-mode="technical">
+                        <span class="nav-icon">🔬</span> Laboratorios Prácticos</a></li>
                     <li><a href="#recursos" class="nav-link" data-section="recursos">
                         <span class="nav-icon">↗</span> Enlaces Externos</a></li>
                     <li><a href="#agente-sdk" class="nav-link" data-section="agente-sdk" data-mode="technical">
@@ -12938,6 +12964,465 @@ if (useNewRefactorEngine) {
                     arquitectura con ADRs, MCP server escalable, CI/CD, observabilidad, runbooks operacionales.
                 </div>
 
+            </section>
+
+            <!-- ====== SECCIÓN: PROMPT CRAFT (Nivel 1) ====== -->
+            <section class="content-section hidden" data-section="prompt-craft" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 1 / Prompt Craft</span>
+                    <h2>✨ Prompt Craft: Estructura y Templates</h2>
+                    <p class="subtitle">Domina la estructura 3-parte de prompts, templates reutilizables y errores comunes</p>
+                </div>
+                <div class="section-intro">
+                    <p>Un buen prompt es como una receta: ingredientes claros, instrucciones precisas, y contexto. Aprende la estructura ganadora que usan los expertos.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Estructura 3-Parte</h3>
+                        <p>Sistema → Instrucción → Contexto. La fórmula detrás de prompts efectivos. Cómo aislar cada sección para máxima claridad.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Templates Reutilizables</h3>
+                        <p>Prompt template para refactoring, análisis de código, documentación. Cómo parametrizarlos para diferentes contextos.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Errores Comunes</h3>
+                        <p>Ambigüedad, contexto insuficiente, instrucciones conflictivas. Cómo identificarlos y corregirlos en 3 pasos.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Testing de Prompts</h3>
+                        <p>Cómo iterar prompts con rigor: variación de entrada, métricas de calidad, reproducibilidad.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Prompt Craft completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: DECISION FRAMEWORK (Nivel 1) ====== -->
+            <section class="content-section hidden" data-section="decision-framework" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 1 / Decision Framework</span>
+                    <h2>🎯 Decision Framework: Cuándo Usar Claude Code</h2>
+                    <p class="subtitle">Árbol de decisiones y antipatrones para elegir herramientas correctas</p>
+                </div>
+                <div class="section-intro">
+                    <p>Claude Code no es la solución para todo. Aprende a identificar problemas donde brilla y dónde no debería ser tu primera opción.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Árbol de Decisión</h3>
+                        <p>¿Es el problema acerca de código? ¿Necesitas contexto grande? ¿Multi-paso? Gráfico interactivo para navegar decisiones.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Casos Ideales</h3>
+                        <p>Refactoring, debugging complejo, investigación multi-archivo, prototipado rápido. Donde Claude brilla.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Antipatrones</h3>
+                        <p>No usar para: tareas sin contexto, configuración pura, problemas que requieren herramientas especializadas.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Trade-offs</h3>
+                        <p>Costo API, latencia, privacidad. Cómo evaluar si Claude es worth it para tu caso.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Decision Framework completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: COST MANAGEMENT (Nivel 2) ====== -->
+            <section class="content-section hidden" data-section="cost-management" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 2 / Cost Management</span>
+                    <h2>💰 Cost Management: Presupuestos y ROI</h2>
+                    <p class="subtitle">Modelos de precios, calculadora de costos, y optimización de API calls</p>
+                </div>
+                <div class="section-intro">
+                    <p>Entender costos es crítico cuando escalas. Aprende a estimar, presupuestar y optimizar tu gasto en API.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Modelos de Precios</h3>
+                        <p>Costo por input/output tokens, volumen discounts, batch processing. Comparativa Anthropic vs OpenAI vs otros.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Calculadora Interactiva</h3>
+                        <p>Estima tu costo mensual: promedio de tokens, frecuencia de llamadas, modelo elegido. Simulador de presupuesto.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Optimizaciones</h3>
+                        <p>Prompt compression, caching, batch API. Estrategias para reducir costos sin sacrificar calidad.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>ROI Tracking</h3>
+                        <p>Cómo medir el retorno: tiempo ahorrado, bugs evitados, productividad mejorada. Justificar inversión en IA.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Cost Management completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: TESTING ASISTIDO (Nivel 2) ====== -->
+            <section class="content-section hidden" data-section="testing-asistido" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 2 / Testing Asistido</span>
+                    <h2>🧪 Testing Asistido: TDD con Claude</h2>
+                    <p class="subtitle">Test-Driven Development, cobertura de código, y métricas de calidad</p>
+                </div>
+                <div class="section-intro">
+                    <p>Claude es excelente escribiendo tests y ayudando con TDD. Aprende cómo integrar testing en tu flujo de desarrollo.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>TDD con Claude</h3>
+                        <p>Red → Green → Refactor. Cómo pedir a Claude que escriba tests primero, luego código que los pase.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Cobertura de Código</h3>
+                        <p>Medir cobertura con herramientas (Jest, Coverage.py). Identificar edge cases que Claude pueda ayudarte a probar.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Métricas de Calidad</h3>
+                        <p>Cyclomatic complexity, mutation testing, static analysis. Cómo usar Claude para mejorar estas métricas.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Integración CI/CD</h3>
+                        <p>Tests automáticos en pipeline, cobertura como gate de merge, reportes visuales.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Testing Asistido completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: GOBERNANZA (Nivel 4) ====== -->
+            <section class="content-section hidden" data-section="gobernanza" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 4 / Gobernanza</span>
+                    <h2>🏛️ Gobernanza: Políticas y Controles</h2>
+                    <p class="subtitle">Managed settings, matriz RACI, y Acceptable Use Policy</p>
+                </div>
+                <div class="section-intro">
+                    <p>En equipos grandes, necesitas gobernar cómo se usa Claude Code. Aprende frameworks de gobernanza empresarial.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Managed Settings</h3>
+                        <p>Configuración centralizada: qué MCPs se permiten, rate limits, logs de auditoría. Control sin bloquear.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Matriz RACI</h3>
+                        <p>Responsable, Accountable, Consulted, Informed. Quién decide en decisiones clave de IA/ML.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Acceptable Use Policy</h3>
+                        <p>Líneas claras: qué es permitido, qué no. Privacidad, seguridad, ética. Templados para tu organización.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Auditoría y Compliance</h3>
+                        <p>Logging, retention, reportes. Cómo satisfacer requerimientos regulatorios (SOC2, GDPR, ISO).</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Gobernanza completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: MONITOREO DE COSTOS (Nivel 4) ====== -->
+            <section class="content-section hidden" data-section="monitoreo-costos" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 4 / Monitoreo de Costos</span>
+                    <h2>📈 Monitoreo de Costos: Tracking y Alertas</h2>
+                    <p class="subtitle">Herramientas de tracking, alertas presupuestarias, y análisis de tendencias</p>
+                </div>
+                <div class="section-intro">
+                    <p>Mantén el control de costos con monitoreo continuo. Detecta anomalías antes de que se disparen los gastos.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Tracking en Tiempo Real</h3>
+                        <p>Dashboard de costos: gasto diario, por proyecto, por usuario. Integraciones con Datadog, CloudWatch.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Alertas Presupuestarias</h3>
+                        <p>Set budgets, alertas al 80%/100%. Webhook integrations para Slack, email, escalation automática.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Análisis de Tendencias</h3>
+                        <p>Gráficos MoM, YoY. Identificar patrones: picos, seasonal trends, anomalías inesperadas.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Optimización Continua</h3>
+                        <p>Reportes de ROI por proyecto. Dónde invertir, dónde optimizar. Recomendaciones automáticas.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Monitoreo de Costos completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: INCIDENT RESPONSE (Nivel 4) ====== -->
+            <section class="content-section hidden" data-section="incident-response" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 4 / Incident Response</span>
+                    <h2>🚨 Incident Response: Playbooks y Post-Mortem</h2>
+                    <p class="subtitle">Respuesta a incidentes, Root Cause Analysis, y documentación de lecciones</p>
+                </div>
+                <div class="section-intro">
+                    <p>Cuando algo falla en producción, necesitas un plan. Aprende cómo responder rápido y aprender.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Playbooks de Incidentes</h3>
+                        <p>Checklist para diferentes tipos: API down, MCP failing, token limit, security breach. Paso a paso.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Root Cause Analysis (RCA)</h3>
+                        <p>5 Whys, fishbone diagrams. Cómo encontrar la causa raíz, no solo el síntoma.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Post-Mortem</h3>
+                        <p>Template blameless post-mortem. Documentar qué salió mal, qué salió bien, action items.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Prevention y Monitoring</h3>
+                        <p>Alertas tempranas, circuit breakers, graceful degradation. Cómo evitar que vuelva a pasar.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Incident Response completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: ADOPCIÓN EN EQUIPOS (Nivel 5) ====== -->
+            <section class="content-section hidden" data-section="adopcion-equipos" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Adopción en Equipos</span>
+                    <h2>👥 Adopción en Equipos: Plan de 4 Semanas</h2>
+                    <p class="subtitle">Onboarding, training, y change management para equipos completos</p>
+                </div>
+                <div class="section-intro">
+                    <p>Introducir Claude Code en un equipo es cambio organizacional. Aprende el framework probado de 4 semanas.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Semana 1: Fundamentals</h3>
+                        <p>Hands-on workshop, instalación, primeros comandos. 2-3 horas, todos en la misma página.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Semana 2: Pairing</h3>
+                        <p>Pair programming con experto. Cada dev usa Claude en su contexto real. Questions & answers en vivo.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Semana 3: Independent</h3>
+                        <p>Squad lidera un pequeño proyecto con Claude. Coaching disponible, celebra wins, documenta learnings.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Semana 4: Multiplier</h3>
+                        <p>Champions internos enseñan a otros. Build community, share templates, consolidar mejores prácticas.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Adopción en Equipos completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: SEGURIDAD & COMPLIANCE (Nivel 5) ====== -->
+            <section class="content-section hidden" data-section="seguridad-compliance" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Seguridad & Compliance</span>
+                    <h2>✅ Seguridad & Compliance: GDPR, SOC2, .claudeignore</h2>
+                    <p class="subtitle">Privacidad de datos, regulaciones, y hardening de configuración</p>
+                </div>
+                <div class="section-intro">
+                    <p>Claude procesa datos sensibles. Aprende frameworks de seguridad y compliance para entornos regulados.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>GDPR & Privacidad</h3>
+                        <p>Data processing agreements, DPIA, data minimization. Cómo Claude cumple GDPR y qué debes hacer tú.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>SOC2 & Enterprise</h3>
+                        <p>Auditoría de seguridad, logging, access controls. Prepararse para SOC2 Type II en tu organización.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>.claudeignore</h3>
+                        <p>Qué archivos excluir: .env, secrets, PII. Best practices para evitar exponer datos sensibles.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Hardening Técnico</h3>
+                        <p>Roles & permissions, network isolation, MFA, API key rotation. Checklist de seguridad operacional.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Seguridad & Compliance completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: ÉTICA EN IA (Nivel 5) ====== -->
+            <section class="content-section hidden" data-section="etica" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Ética en IA</span>
+                    <h2>⚖️ Ética en IA: Cuándo NO Usar Claude</h2>
+                    <p class="subtitle">Alucinaciones, sesgo, y límites éticos de la IA</p>
+                </div>
+                <div class="section-intro">
+                    <p>Claude es poderoso pero no infalible. Aprende dónde están los límites éticos y técnicos.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Alucinaciones</h3>
+                        <p>Qué son, cómo ocurren, cómo detectarlas. Estrategias para minimizar: retrieval, validation, human-in-loop.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Sesgo</h3>
+                        <p>Bias en training data, cómo manifiesta en outputs. Testing para sesgo, mitigation strategies.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Casos Prohibidos</h3>
+                        <p>Dónde NO usar Claude: content ilegítimo, manipulation, desinformación. Líneas claras.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Transparencia</h3>
+                        <p>Disclosure: cuándo revelar que fue asistido por IA. Best practices para responsabilidad.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Ética en IA completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: OBSERVABILIDAD (Nivel 6) ====== -->
+            <section class="content-section hidden" data-section="observabilidad" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 6 / Observabilidad</span>
+                    <h2>🔍 Observabilidad: Métricas, Logs, y Trazas</h2>
+                    <p class="subtitle">Datadog, dashboards, y distributed tracing para sistemas complejos</p>
+                </div>
+                <div class="section-intro">
+                    <p>En producción, no puedes confiar en lo que no puedes ver. Aprende observabilidad a escala.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Las 3 Pilar: Logs, Metrics, Traces</h3>
+                        <p>Qué es cada uno, cómo recopilar, dónde guardarlos. Coherencia entre los tres.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Datadog Integration</h3>
+                        <p>Setup, instrumentación, dashboards. Monitoreo específico para Claude API calls y MCP servers.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>SLOs y Alerting</h3>
+                        <p>Definir SLO (disponibilidad, latencia). Alertas inteligentes, no fatiga de alertas.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Distributed Tracing</h3>
+                        <p>Trace requests a través de MCPs, APIs, databases. Identificar cuellos de botella en sistemas distribuidos.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Observabilidad completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: PATRONES ARQUITECTÓNICOS (Nivel 6) ====== -->
+            <section class="content-section hidden" data-section="patrones-arquitectonicos" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 6 / Patrones Arquitectónicos</span>
+                    <h2>🏗️ Patrones Arquitectónicos: 5 Patrones Comprobados</h2>
+                    <p class="subtitle">Casos reales de arquitecturas escalables con Claude Code</p>
+                </div>
+                <div class="section-intro">
+                    <p>Aprende patrones que han funcionado en sistemas reales a escala. Cuándo usar cada uno.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Patrón 1: Agente Mono</h3>
+                        <p>Single Claude instance, simple. Casos: startups, equipos pequeños. Escalas hasta ~1k req/min.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Patrón 2: MCP Gateway</h3>
+                        <p>Claude + MCPs para datos/tools. Escalas mejor, separación de concerns. Casos: enterprise, multi-tenant.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Patrón 3: Multi-Agent</h3>
+                        <p>Múltiples Claude instances, coordinados. Casos: parallelization, complex reasoning. 10k+ req/min.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Patrón 4: Cache-First</h3>
+                        <p>Prompt caching + retrieval. Casos: Q&A sobre docs grandes, knowledge bases. Ahorro de costo.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Patrón 5: Async + Queue</h3>
+                        <p>Async processing con Celery/RabbitMQ. Casos: batch jobs, workloads pesadas. Desacoplamiento.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Patrones Arquitectónicos completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: LABORATORIOS PRÁCTICOS ====== -->
+            <section class="content-section hidden" data-section="laboratorios-practicos" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Recursos / Laboratorios Prácticos</span>
+                    <h2>🔬 Laboratorios Prácticos: 4 Labs Hands-On</h2>
+                    <p class="subtitle">Debugging real, MCP building, Skills creation, y GitHub automation</p>
+                </div>
+                <div class="section-intro">
+                    <p>La mejor forma de aprender es haciendo. Completa estos 4 laboratorios prácticos con guías paso a paso.</p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Lab 1: Debugging Complex Code</h3>
+                        <p>Repo deliberadamente roto. Usa Claude para aislarlo, reproducirlo, fixearlo. Prueba de maestría.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Lab 2: Building an MCP Server</h3>
+                        <p>Build MCP from scratch: protocol, tools, error handling. Test it with Claude Code. Deploy it.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Lab 3: Creating a Custom Skill</h3>
+                        <p>Diseña una skill útil para tu equipo. Estructura, testing, documentación. Haz que otros la usen.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Lab 4: GitHub Automation</h3>
+                        <p>Build CI/CD con Claude Code: auto-review PRs, generate CHANGELOG, deploy on merge. End-to-end.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Acceder a los Laboratorios Prácticos</a>
+                </div>
             </section>
 
         </main>

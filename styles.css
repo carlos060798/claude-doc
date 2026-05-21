@@ -257,6 +257,8 @@ kbd {
 .nav-link:hover {
     background: var(--bg-hover);
     color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(94, 184, 255, 0.08);
+    transform: translateY(-2px);
 }
 .nav-link.active {
     background: var(--bg-hover);
