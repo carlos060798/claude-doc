@@ -4462,3 +4462,121 @@ kbd {
         padding: 1rem;
     }
 }
+
+/* ============ MEJORA DE CONTRASTE GLOBAL ============ */
+
+/* Arreglar todos los pre/code con fondo blanco */
+pre {
+    background-color: #1a1a1a !important;
+    color: #e6edf3 !important;
+    border: 1px solid #2d3748 !important;
+    border-radius: 8px !important;
+}
+
+code {
+    background-color: rgba(94, 184, 255, 0.1) !important;
+    color: #5eb8ff !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+}
+
+/* Cards y contenedores */
+.card {
+    background: #1a1a1a !important;
+    border: 1px solid #2d3748 !important;
+    color: #e6edf3 !important;
+}
+
+.card h3 {
+    color: #5eb8ff !important;
+}
+
+.card h4 {
+    color: #ffb454 !important;
+}
+
+.card p {
+    color: #9aa7b8 !important;
+}
+
+/* Elementos de formulario */
+input, textarea, select {
+    background-color: #262626 !important;
+    color: #e6edf3 !important;
+    border: 1px solid #3a3a3a !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #7a8a9e !important;
+}
+
+/* Links */
+a {
+    color: #5eb8ff !important;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #7ec8ff !important;
+    text-decoration: underline;
+}
+
+/* Tablas */
+table {
+    background-color: #1a1a1a !important;
+    color: #e6edf3 !important;
+}
+
+table th {
+    background-color: #262626 !important;
+    color: #5eb8ff !important;
+    border-bottom: 2px solid #3a3a3a !important;
+}
+
+table td {
+    border-bottom: 1px solid #2d3748 !important;
+    color: #9aa7b8 !important;
+}
+
+table tr:hover {
+    background-color: #262626 !important;
+}
+
+/* Elementos inline code */
+span[style*="background: #"], span[style*="background:#"] {
+    background-color: rgba(94, 184, 255, 0.15) !important;
+    color: #5eb8ff !important;
+}
+
+/* Asegurar texto claro en todo */
+.card *, .content-section * {
+    color: inherit !important;
+}
+
+/* Fondo de secciones */
+section {
+    background-color: transparent !important;
+}
+
+/* Blockquotes */
+blockquote {
+    background-color: rgba(94, 184, 255, 0.1) !important;
+    border-left: 4px solid #5eb8ff !important;
+    color: #9aa7b8 !important;
+}
+
+/* Componentes de clase específica */
+.section-intro {
+    color: #9aa7b8 !important;
+}
+
+.subtopic-card {
+    background: #262626 !important;
+    border: 1px solid #2d3748 !important;
+    color: #e6edf3 !important;
+}
+
+.subtopic-card:hover {
+    background: #1f2937 !important;
+    border-color: #3a3a3a !important;
+}
