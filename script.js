@@ -1697,6 +1697,15 @@
             link.addEventListener('click', (e) => {
                 const target = link.dataset.section || link.dataset.jump;
                 if (!target) return;
+
+                // Verificar si el nivel está bloqueado
+                const level = parseInt(link.dataset.level);
+                if (level && !isLevelUnlocked(level)) {
+                    e.preventDefault();
+                    showToast(`🔒 Desbloquea el Nivel ${level - 1} para acceder a este contenido`);
+                    return;
+                }
+
                 e.preventDefault();
                 goTo(target);
             });
@@ -2089,9 +2098,10 @@
         document.addEventListener('change', (e) => {
             if (!e.target.matches('input[type="radio"]')) return;
             const card = e.target.closest('.quiz-card');
-            const level = parseInt(e.target.name.replace('q', ''));
+            const quizContainer = card.closest('.quiz-container');
+            const level = parseInt(quizContainer.dataset.level);
             const qIdx = parseInt(card.dataset.q);
-            const lesson = LESSONS_DATA[parseInt(card.closest('.quiz-container').dataset.level)];
+            const lesson = LESSONS_DATA[level];
             const q = lesson.quiz[qIdx];
             const chosen = parseInt(e.target.value);
             const feedback = card.querySelector('.quiz-feedback');
@@ -2104,7 +2114,140 @@
                 feedback.textContent = '✗ Incorrecto. ' + q.explain;
             }
             feedback.hidden = false;
+
+            // Calcular puntuación total del quiz
+            setTimeout(() => {
+                const allCards = quizContainer.querySelectorAll('.quiz-card');
+                let correct = 0;
+                allCards.forEach(c => {
+                    const checked = c.querySelector('input[type="radio"]:checked');
+                    if (!checked) return;
+                    const qIdx = parseInt(c.dataset.q);
+                    const q = lesson.quiz[qIdx];
+                    if (parseInt(checked.value) === q.correct) correct++;
+                });
+                const total = allCards.length;
+                const score = Math.round((correct / total) * 100);
+
+                // Si score >= 80%, mostrar botón de desbloqueo del siguiente nivel
+                if (score >= 80 && level < 6) {
+                    const nextLevel = level + 1;
+                    let unlockBtn = quizContainer.querySelector('[data-unlock-btn]');
+                    if (!unlockBtn) {
+                        unlockBtn = document.createElement('button');
+                        unlockBtn.className = 'unlock-level-btn';
+                        unlockBtn.dataset.unlockBtn = 'true';
+                        unlockBtn.dataset.level = nextLevel;
+                        unlockBtn.innerHTML = `🔓 Desbloquear Nivel ${nextLevel} (${score}%)`;
+                        quizContainer.parentElement.appendChild(unlockBtn);
+
+                        unlockBtn.addEventListener('click', () => {
+                            localStorage.setItem(`cc-level-${nextLevel}-unlocked`, 'true');
+                            renderNavLinks();
+                            showToast(`🔓 ¡Nivel ${nextLevel} desbloqueado!`);
+                            unlockBtn.disabled = true;
+                            unlockBtn.innerHTML = `✓ Nivel ${nextLevel} desbloqueado`;
+                        });
+                    }
+                    unlockBtn.style.display = 'block';
+                }
+            }, 100);
         });
+    }
+
+    /* ============================================================
+       8.5 SISTEMA DE DESBLOQUEO POR NIVEL
+       Lógica, UI y persistencia para controlar acceso a niveles.
+       ============================================================ */
+
+    /**
+     * Comprueba si un nivel está desbloqueado basándose en:
+     * - Nivel 1: siempre desbloqueado
+     * - Niveles 2-6: requieren completar el nivel anterior
+     */
+    function isLevelUnlocked(level) {
+        if (level === 1) return true;
+        const prevLevel = level - 1;
+        return localStorage.getItem(`cc-level-${prevLevel}-completed`) === 'true' ||
+               localStorage.getItem(`cc-level-${prevLevel}-completed`) !== null;
+    }
+
+    /**
+     * Comprueba si un nivel está completado
+     */
+    function isLevelCompleted(level) {
+        return localStorage.getItem(`cc-level-${level}-completed`) !== null;
+    }
+
+    /**
+     * Desbloquea un nivel (después de completar quiz con 80%+)
+     * y actualiza localStorage y UI
+     */
+    function unlockLevel(level) {
+        if (level > 1 && !isLevelUnlocked(level)) {
+            localStorage.setItem(`cc-level-${level}-unlocked`, 'true');
+            renderNavLinks();
+            showToast(`🔓 ¡Nivel ${level} desbloqueado!`);
+        }
+    }
+
+    /**
+     * Renderiza el estado de los links de navegación (locked/unlocked/completed)
+     */
+    function renderNavLinks() {
+        document.querySelectorAll('[data-level]').forEach(link => {
+            const level = parseInt(link.dataset.level);
+            link.classList.remove('nav-item-locked', 'nav-item-completed');
+
+            if (isLevelCompleted(level)) {
+                link.classList.add('nav-item-completed');
+                // Agregar badge ✅ si no existe
+                if (!link.querySelector('.level-complete-badge')) {
+                    const badge = document.createElement('span');
+                    badge.className = 'level-complete-badge';
+                    badge.textContent = ' ✅';
+                    link.appendChild(badge);
+                }
+            } else if (!isLevelUnlocked(level)) {
+                link.classList.add('nav-item-locked');
+                link.style.cursor = 'not-allowed';
+                link.style.opacity = '0.5';
+                // Mostrar tooltip
+                if (!link.title) {
+                    link.title = `Desbloquea Nivel ${level - 1} para acceder`;
+                }
+            } else {
+                link.style.cursor = 'pointer';
+                link.style.opacity = '1';
+            }
+        });
+    }
+
+    /**
+     * Renderiza un banner de bloqueo en las secciones si está locked
+     */
+    function renderLevelLockBanner(level) {
+        if (isLevelUnlocked(level)) return;
+
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+
+        const banner = document.createElement('div');
+        banner.className = 'level-lock-banner';
+        banner.innerHTML = `
+            <div class="lock-banner-content">
+                <div class="lock-banner-icon">🔒</div>
+                <div class="lock-banner-text">
+                    <h3>Nivel ${level} Bloqueado</h3>
+                    <p>Completa el Nivel ${level - 1} para desbloquear este contenido.</p>
+                    <p class="lock-banner-hint">Necesitas: 80%+ en el quiz + todas las secciones leídas</p>
+                </div>
+                <button class="lock-banner-btn" onclick="document.querySelector('[data-section=\\'curso\\']').click()">
+                    Ver requisitos
+                </button>
+            </div>
+        `;
+        mainContent.insertBefore(banner, mainContent.firstChild);
     }
 
     function initCheckpoints() {
@@ -2112,10 +2255,15 @@
             const btn = e.target.closest('.checkpoint-btn');
             if (!btn) return;
             const level = parseInt(btn.dataset.level);
-            localStorage.setItem(`cc-level-${level}-completed`, new Date().toISOString());
+            localStorage.setItem(`cc-level-${level}-completed`, 'true');
             btn.disabled = true;
             btn.textContent = `✓ Nivel ${level} completado (${new Date().toLocaleDateString()})`;
             updateLevelBadges();
+            renderNavLinks(); // Actualizar nav con nuevo estado
+            // Desbloquear siguiente nivel si existe
+            if (level < 6) {
+                unlockLevel(level + 1);
+            }
         });
     }
 
@@ -2366,6 +2514,9 @@
 
         // 2) Navegación
         setupNavigation();
+
+        // 2.3) Sistema de desbloqueo por nivel
+        renderNavLinks();
 
         // 2.5) Hamburguesa móvil
         setupHamburger();
