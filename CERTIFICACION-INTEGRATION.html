@@ -1,0 +1,1095 @@
+<!-- ============================================================
+     INTEGRACIÓN DE CERTIFICACIÓN ARCHITECT
+
+     Este código contiene:
+     1. Link de navegación (insertar después de Nivel 6)
+     2. Sección de contenido principal
+     3. CSS (agregar a styles.css)
+     4. JavaScript (agregar a script.js)
+
+     Instrucciones de integración:
+     - Línea 148: Agregar link de navegación
+     - Final de main: Agregar sección de certificación
+     - styles.css: Agregar bloque CSS
+     - script.js: Agregar funciones JS en setupNavigation()
+     ============================================================ -->
+
+<!-- 1. LINK DE NAVEGACIÓN (Insertar después de línea 148 en index.html)
+     Ubicación exacta: después de </ul> de Nivel 6 y antes de <p class="nav-group-title">Evaluación & Progreso</p>
+-->
+
+<p class="nav-group-title">Certificación <span class="lock-icon">🔐</span></p>
+<ul class="nav-list">
+    <li><a href="#certificacion" class="nav-link" data-section="certificacion" data-level="cert">
+        <span class="nav-icon">🏆</span> Architect Certification</a></li>
+</ul>
+
+
+<!-- 2. SECCIÓN DE CONTENIDO (Insertar antes del cierre </main>)
+     Buscar el último </section> antes de </main> y agregar esto:
+-->
+
+<!-- ====== SECCIÓN: CERTIFICACIÓN ARCHITECT ====== -->
+<section class="content-section" data-section="certificacion" data-mode="technical">
+    <div class="section-header">
+        <span class="breadcrumb">Post-Nivel 6 / Certificación</span>
+        <h2>🏆 Claude Certified Architect</h2>
+        <p class="section-lead">
+            Ruta oficial de certificación de 12 semanas. Domina 5 dominios, resuelve 6 escenarios reales
+            y obtén tu insignia de Arquitecto Certificado en Claude Code.
+        </p>
+    </div>
+
+    <!-- ESTADO DE DESBLOQUEO -->
+    <div class="cert-unlock-banner" id="cert-unlock-banner">
+        <div class="cert-unlock-content">
+            <span class="cert-lock-icon">🔐</span>
+            <div>
+                <h3>Certificación Bloqueada</h3>
+                <p id="cert-unlock-msg">Completa Nivel 6 para desbloquear la ruta de certificación</p>
+            </div>
+            <button class="cert-unlock-btn" id="cert-unlock-btn" onclick="viewCertRequirements()">
+                Ver Requisitos →
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL (oculto hasta desbloqueo) -->
+    <div class="cert-main-content" id="cert-main-content" style="display: none;">
+
+        <!-- RESUMEN EJECUTIVO -->
+        <div class="cert-hero">
+            <div class="cert-hero-stats">
+                <div class="cert-stat">
+                    <span class="cert-stat-num">12</span>
+                    <span class="cert-stat-label">Semanas</span>
+                </div>
+                <div class="cert-stat">
+                    <span class="cert-stat-num">60h</span>
+                    <span class="cert-stat-label">Estudio (1h/día)</span>
+                </div>
+                <div class="cert-stat">
+                    <span class="cert-stat-num">5</span>
+                    <span class="cert-stat-label">Dominios Técnicos</span>
+                </div>
+                <div class="cert-stat">
+                    <span class="cert-stat-num">6</span>
+                    <span class="cert-stat-label">Escenarios Reales</span>
+                </div>
+                <div class="cert-stat">
+                    <span class="cert-stat-num">50</span>
+                    <span class="cert-stat-label">Preguntas Examen</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESCRIPCIÓN -->
+        <div class="card-section">
+            <h3>📋 Qué Cubre esta Certificación</h3>
+            <p>
+                La certificación de Arquitecto de Claude Code está diseñada para profesionales que necesitan
+                diseñar, escalar y mantener sistemas con Claude en producción. Combina teoría de agentes,
+                patrones de orquestación, optimización de costos y mejores prácticas empresariales.
+            </p>
+        </div>
+
+        <!-- 5 DOMINIOS -->
+        <div class="cert-domains">
+            <h3>🎯 5 Dominios Técnicos</h3>
+            <div class="domains-grid">
+                <div class="domain-card">
+                    <div class="domain-icon">🔄</div>
+                    <h4>Agentic Loops</h4>
+                    <p>Ciclos de percepción-decisión-acción, stop reasons, halt conditions, multi-agent orchestration</p>
+                    <ul class="domain-skills">
+                        <li>Agent loop básico</li>
+                        <li>Multi-agent patterns</li>
+                        <li>Context isolation</li>
+                    </ul>
+                </div>
+
+                <div class="domain-card">
+                    <div class="domain-icon">🛠️</div>
+                    <h4>Tool Design</h4>
+                    <p>JSON-Schema, validación, composición compleja, error handling, rate limiting, circuit breaker</p>
+                    <ul class="domain-skills">
+                        <li>JSON-Schema design</li>
+                        <li>Advanced composition</li>
+                        <li>Robust error handling</li>
+                    </ul>
+                </div>
+
+                <div class="domain-card">
+                    <div class="domain-icon">⚙️</div>
+                    <h4>CI/CD Integration</h4>
+                    <p>GitHub Actions, pipelines, canary deployments, rollback automático, monitoring</p>
+                    <ul class="domain-skills">
+                        <li>Pipeline design</li>
+                        <li>Canary deployments</li>
+                        <li>Observability</li>
+                    </ul>
+                </div>
+
+                <div class="domain-card">
+                    <div class="domain-icon">✍️</div>
+                    <h4>Prompt Engineering</h4>
+                    <p>Structured outputs, multi-pass validation, quality evaluation, token optimization</p>
+                    <ul class="domain-skills">
+                        <li>Structured outputs</li>
+                        <li>Validation patterns</li>
+                        <li>Quality metrics</li>
+                    </ul>
+                </div>
+
+                <div class="domain-card">
+                    <div class="domain-icon">📊</div>
+                    <h4>Context Management</h4>
+                    <p>RAG avanzado, vector databases, embeddings, cache strategies, multinivel caching</p>
+                    <ul class="domain-skills">
+                        <li>RAG patterns</li>
+                        <li>Vector databases</li>
+                        <li>Cache optimization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIMELINE 3 FASES -->
+        <div class="cert-timeline">
+            <h3>📅 Timeline: 3 Fases de 4 Semanas</h3>
+            <div class="phases-grid">
+                <div class="phase-card phase-1">
+                    <span class="phase-badge">FASE 1</span>
+                    <h4>Fundamentos (Semanas 1-4)</h4>
+                    <p><strong>Objetivo:</strong> Domina los 5 dominios en profundidad</p>
+                    <ul>
+                        <li>Agent loop básico con stop_reason handling</li>
+                        <li>JSON-Schema validation completa</li>
+                        <li>Pipeline intro con GitHub Actions</li>
+                        <li>Prompting basics + token optimization</li>
+                        <li>Context limits + embeddings 101</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card phase-2">
+                    <span class="phase-badge">FASE 2</span>
+                    <h4>Aplicado (Semanas 5-8)</h4>
+                    <p><strong>Objetivo:</strong> Patrones avanzados y producción</p>
+                    <ul>
+                        <li>Multi-agent orchestration real</li>
+                        <li>Advanced tool composition + error handling</li>
+                        <li>Canary deployments y rollback</li>
+                        <li>Structured outputs + validation</li>
+                        <li>RAG avanzado + vector databases</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card phase-3">
+                    <span class="phase-badge">FASE 3</span>
+                    <h4>Exam Prep (Semanas 9-12)</h4>
+                    <p><strong>Objetivo:</strong> Maestría y examen final</p>
+                    <ul>
+                        <li>Domina los 6 escenarios de examen</li>
+                        <li>Identifica 18+ anti-patrones</li>
+                        <li>Production readiness checks</li>
+                        <li>3 exámenes de práctica</li>
+                        <li>Examen final: 50 preguntas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6 ESCENARIOS DE EXAMEN -->
+        <div class="cert-scenarios">
+            <h3>🎯 Los 6 Escenarios de Examen</h3>
+            <div class="scenarios-grid">
+                <div class="scenario-card">
+                    <span class="scenario-num">01</span>
+                    <h4>Atención al Cliente Escalable</h4>
+                    <p>Orquestación multi-agent, context isolation, rate limiting, circuit breaker</p>
+                    <span class="scenario-duration">90 min</span>
+                </div>
+                <div class="scenario-card">
+                    <span class="scenario-num">02</span>
+                    <h4>Pipeline Análisis Legal</h4>
+                    <p>RAG con embeddings específicos, validación multi-pass, audit trail completo</p>
+                    <span class="scenario-duration">90 min</span>
+                </div>
+                <div class="scenario-card">
+                    <span class="scenario-num">03</span>
+                    <h4>Recomendaciones Personalizadas</h4>
+                    <p>Vector DB, similarity search, context window optimization, cache strategy</p>
+                    <span class="scenario-duration">120 min</span>
+                </div>
+                <div class="scenario-card">
+                    <span class="scenario-num">04</span>
+                    <h4>Automatización RPA</h4>
+                    <p>Tool composition complejo, error handling robusto, deterministic enforcement</p>
+                    <span class="scenario-duration">120 min</span>
+                </div>
+                <div class="scenario-card">
+                    <span class="scenario-num">05</span>
+                    <h4>Monitoreo Inteligente</h4>
+                    <p>Observability, logging, cost tracking, performance profiling</p>
+                    <span class="scenario-duration">90 min</span>
+                </div>
+                <div class="scenario-card">
+                    <span class="scenario-num">06</span>
+                    <h4>Asistente de Desarrollo</h4>
+                    <p>Agent autonomy control, multi-round interactions, state management avanzado</p>
+                    <span class="scenario-duration">150 min</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTÓN ABRIR DIAGRAMA -->
+        <div class="cert-diagram-section">
+            <h3>📊 Diagrama Interactivo de Ruta</h3>
+            <p>
+                Visualiza la matriz completa de 5 dominios × 3 fases, timeline de 12 semanas,
+                habilidades clave y checklist de preparación.
+            </p>
+            <button class="cert-diagram-btn" onclick="openDiagramModal()">
+                🔓 Abrir Diagrama Interactivo
+            </button>
+        </div>
+
+        <!-- ANTI-PATRONES A EVITAR -->
+        <div class="cert-antipatterns">
+            <h3>⚠️ 18+ Anti-Patrones a Evitar</h3>
+            <div class="antipatterns-cols">
+                <div class="antipattern-group">
+                    <h4>Loops</h4>
+                    <ul>
+                        <li>❌ Sin halt conditions</li>
+                        <li>❌ Ignorar stop_reason</li>
+                        <li>❌ Context window unlimited</li>
+                    </ul>
+                </div>
+                <div class="antipattern-group">
+                    <h4>Tool Design</h4>
+                    <ul>
+                        <li>❌ JSON-Schema incompleto</li>
+                        <li>❌ Sin validación de entrada</li>
+                        <li>❌ Timeouts no configurados</li>
+                    </ul>
+                </div>
+                <div class="antipattern-group">
+                    <h4>Orquestación</h4>
+                    <ul>
+                        <li>❌ Sin circuit breaker</li>
+                        <li>❌ Context leakage</li>
+                        <li>❌ No retry logic</li>
+                    </ul>
+                </div>
+                <div class="antipattern-group">
+                    <h4>Prompting</h4>
+                    <ul>
+                        <li>❌ Prompts no validados</li>
+                        <li>❌ Sin formato estructurado</li>
+                        <li>❌ Tokens excesivos</li>
+                    </ul>
+                </div>
+                <div class="antipattern-group">
+                    <h4>Context</h4>
+                    <ul>
+                        <li>❌ Sin cache strategy</li>
+                        <li>❌ RAG sin filtrado</li>
+                        <li>❌ Embeddings outdated</li>
+                    </ul>
+                </div>
+                <div class="antipattern-group">
+                    <h4>Deployment</h4>
+                    <ul>
+                        <li>❌ Sin canary deploy</li>
+                        <li>❌ No rollback plan</li>
+                        <li>❌ Cost uncontrolled</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROGRESO Y SIGUIENTE PASO -->
+        <div class="cert-cta-section">
+            <h3>🚀 Próximo Paso</h3>
+            <p>
+                Una vez completado Nivel 6, descarga los documentos de certificación, configura tu plan de estudio
+                de 12 semanas y comienza la FASE 1 de Fundamentos.
+            </p>
+            <div class="cert-cta-group">
+                <button class="cert-cta-btn cert-cta-btn--primary" onclick="downloadCertDocuments()">
+                    📥 Descargar Documentos
+                </button>
+                <button class="cert-cta-btn cert-cta-btn--secondary" onclick="openDiagramModal()">
+                    📊 Ver Diagrama
+                </button>
+            </div>
+        </div>
+
+    </div> <!-- /cert-main-content -->
+</section>
+
+<!-- 3. MODAL PARA DIAGRAMA (Insertar antes de </body>) -->
+<div class="cert-modal" id="cert-modal" style="display: none;">
+    <div class="cert-modal-overlay" onclick="closeDiagramModal()"></div>
+    <div class="cert-modal-content">
+        <button class="cert-modal-close" onclick="closeDiagramModal()">&times;</button>
+        <div class="cert-modal-header">
+            <h2>📊 Ruta de Certificación - Claude Architect</h2>
+            <p>Matriz interactiva de 5 dominios × 3 fases + timeline de 12 semanas</p>
+        </div>
+        <div class="cert-modal-body" id="cert-modal-body">
+            <iframe id="cert-iframe"
+                    src="diagrama-certificacion-architect.html"
+                    style="width: 100%; height: 70vh; border: none; border-radius: 8px;">
+            </iframe>
+        </div>
+        <div class="cert-modal-footer">
+            <button class="cert-modal-btn" onclick="closeDiagramModal()">Cerrar</button>
+            <a href="diagrama-certificacion-architect.html" target="_blank" class="cert-modal-btn cert-modal-btn--primary">
+                Abrir en Nueva Ventana ↗
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     CSS - Agregar al final de styles.css (antes de </style>)
+     ============================================================ -->
+
+<style>
+/* VARIABLES DE COLOR PARA CERTIFICACIÓN */
+:root {
+    --cert-color-phase1: #3ddc97;
+    --cert-color-phase2: #ffb454;
+    --cert-color-phase3: #ff6b6b;
+    --cert-color-primary: #5eb8ff;
+}
+
+/* BANNER DE DESBLOQUEO */
+.cert-unlock-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, rgba(94, 184, 255, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+    border: 2px solid var(--cert-color-primary);
+    border-radius: 12px;
+    animation: pulse-border 2s ease-in-out infinite;
+}
+
+.cert-unlock-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+.cert-lock-icon {
+    font-size: 2.5rem;
+}
+
+.cert-unlock-banner h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+    color: var(--cert-color-primary);
+}
+
+.cert-unlock-banner p {
+    margin: 0;
+    color: #9aa7b8;
+    font-size: 0.95rem;
+}
+
+.cert-unlock-btn {
+    padding: 0.75rem 1.5rem;
+    background: var(--cert-color-primary);
+    color: #0d0d0d;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.cert-unlock-btn:hover {
+    background: #7acaff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(94, 184, 255, 0.3);
+}
+
+@keyframes pulse-border {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(94, 184, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(94, 184, 255, 0);
+    }
+}
+
+/* CONTENIDO PRINCIPAL */
+.cert-hero {
+    display: grid;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: #1a1a1a;
+    border-radius: 12px;
+    border-left: 4px solid var(--cert-color-primary);
+}
+
+.cert-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1.5rem;
+}
+
+.cert-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.cert-stat-num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--cert-color-primary);
+    margin-bottom: 0.5rem;
+}
+
+.cert-stat-label {
+    font-size: 0.85rem;
+    color: #9aa7b8;
+}
+
+/* DOMINIOS */
+.cert-domains {
+    margin-bottom: 3rem;
+}
+
+.cert-domains h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #e6edf3;
+}
+
+.domains-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.domain-card {
+    padding: 1.5rem;
+    background: #1a1a1a;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.domain-card:hover {
+    background: #262626;
+    border-color: var(--cert-color-primary);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(94, 184, 255, 0.15);
+}
+
+.domain-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.domain-card h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #e6edf3;
+}
+
+.domain-card p {
+    font-size: 0.9rem;
+    color: #9aa7b8;
+    margin-bottom: 1rem;
+}
+
+.domain-skills {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.domain-skills li {
+    padding: 0.35rem 0;
+    font-size: 0.85rem;
+    color: #9aa7b8;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.domain-skills li:before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: var(--cert-color-primary);
+}
+
+/* FASES */
+.cert-timeline {
+    margin-bottom: 3rem;
+}
+
+.cert-timeline h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #e6edf3;
+}
+
+.phases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.phase-card {
+    padding: 1.5rem;
+    background: #1a1a1a;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.phase-1 { border-left-color: var(--cert-color-phase1); }
+.phase-2 { border-left-color: var(--cert-color-phase2); }
+.phase-3 { border-left-color: var(--cert-color-phase3); }
+
+.phase-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+}
+
+.phase-1 .phase-badge { background: rgba(61, 220, 151, 0.2); color: var(--cert-color-phase1); }
+.phase-2 .phase-badge { background: rgba(255, 180, 84, 0.2); color: var(--cert-color-phase2); }
+.phase-3 .phase-badge { background: rgba(255, 107, 107, 0.2); color: var(--cert-color-phase3); }
+
+.phase-card h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #e6edf3;
+}
+
+.phase-card p {
+    font-size: 0.9rem;
+    color: #9aa7b8;
+    margin-bottom: 1rem;
+}
+
+.phase-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.phase-card li {
+    padding: 0.35rem 0;
+    font-size: 0.85rem;
+    color: #9aa7b8;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.phase-card li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--cert-color-phase1);
+    font-weight: 700;
+}
+
+/* ESCENARIOS */
+.cert-scenarios {
+    margin-bottom: 3rem;
+}
+
+.cert-scenarios h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #e6edf3;
+}
+
+.scenarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.scenario-card {
+    padding: 1.5rem;
+    background: #1a1a1a;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.scenario-card:hover {
+    background: #262626;
+    border-color: var(--cert-color-primary);
+    transform: translateY(-2px);
+}
+
+.scenario-num {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgba(94, 184, 255, 0.2);
+}
+
+.scenario-card h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #e6edf3;
+    font-weight: 600;
+}
+
+.scenario-card p {
+    font-size: 0.85rem;
+    color: #9aa7b8;
+    margin-bottom: 1rem;
+}
+
+.scenario-duration {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    background: rgba(94, 184, 255, 0.1);
+    border: 1px solid rgba(94, 184, 255, 0.3);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: var(--cert-color-primary);
+    font-weight: 600;
+}
+
+/* DIAGRAMA MODAL */
+.cert-diagram-section {
+    padding: 2rem;
+    background: #1a1a1a;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.cert-diagram-section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    color: #e6edf3;
+}
+
+.cert-diagram-section p {
+    color: #9aa7b8;
+    margin-bottom: 1.5rem;
+}
+
+.cert-diagram-btn {
+    padding: 0.875rem 1.75rem;
+    background: linear-gradient(135deg, var(--cert-color-primary) 0%, #5eb8ff 100%);
+    color: #0d0d0d;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cert-diagram-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(94, 184, 255, 0.4);
+}
+
+/* ANTI-PATRONES */
+.cert-antipatterns {
+    margin-bottom: 3rem;
+}
+
+.cert-antipatterns h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #e6edf3;
+}
+
+.antipatterns-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.antipattern-group {
+    padding: 1.5rem;
+    background: rgba(255, 107, 107, 0.05);
+    border: 1px solid rgba(255, 107, 107, 0.2);
+    border-radius: 8px;
+}
+
+.antipattern-group h4 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+.antipattern-group ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.antipattern-group li {
+    padding: 0.35rem 0;
+    font-size: 0.85rem;
+    color: #9aa7b8;
+}
+
+/* CTA SECTION */
+.cert-cta-section {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(94, 184, 255, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+    border: 1px solid var(--cert-color-primary);
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.cert-cta-section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    color: #e6edf3;
+}
+
+.cert-cta-section p {
+    color: #9aa7b8;
+    margin-bottom: 1.5rem;
+}
+
+.cert-cta-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cert-cta-btn {
+    padding: 0.875rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cert-cta-btn--primary {
+    background: var(--cert-color-primary);
+    color: #0d0d0d;
+}
+
+.cert-cta-btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(94, 184, 255, 0.4);
+}
+
+.cert-cta-btn--secondary {
+    background: transparent;
+    color: var(--cert-color-primary);
+    border: 1px solid var(--cert-color-primary);
+}
+
+.cert-cta-btn--secondary:hover {
+    background: rgba(94, 184, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* MODAL */
+.cert-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+}
+
+.cert-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+}
+
+.cert-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh;
+    background: #0d0d0d;
+    border: 1px solid #2d3748;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalSlide 0.3s ease;
+}
+
+@keyframes modalSlide {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.cert-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    background: #262626;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    font-size: 1.5rem;
+    color: #9aa7b8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.cert-modal-close:hover {
+    background: #3a3a3a;
+    color: #e6edf3;
+}
+
+.cert-modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #2d3748;
+}
+
+.cert-modal-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+    color: #e6edf3;
+}
+
+.cert-modal-header p {
+    margin: 0;
+    color: #9aa7b8;
+    font-size: 0.95rem;
+}
+
+.cert-modal-body {
+    flex: 1;
+    overflow: auto;
+    padding: 1.5rem;
+}
+
+.cert-modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #2d3748;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.cert-modal-btn {
+    padding: 0.75rem 1.5rem;
+    background: #262626;
+    color: #e6edf3;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cert-modal-btn:hover {
+    background: #3a3a3a;
+    border-color: #4a4a4a;
+}
+
+.cert-modal-btn--primary {
+    background: var(--cert-color-primary);
+    color: #0d0d0d;
+    border: none;
+}
+
+.cert-modal-btn--primary:hover {
+    background: #7acaff;
+}
+
+/* CARD SECTION */
+.card-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #1a1a1a;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+}
+
+.card-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #e6edf3;
+}
+
+.card-section p {
+    color: #9aa7b8;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .cert-modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .cert-unlock-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cert-unlock-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cert-unlock-btn {
+        width: 100%;
+    }
+
+    .phases-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .scenarios-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .antipatterns-cols {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cert-cta-group {
+        flex-direction: column;
+    }
+
+    .cert-cta-btn {
+        width: 100%;
+    }
+}
+</style>
+
+<!-- ============================================================
+     JAVASCRIPT - Agregar a script.js (en función setupNavigation)
+     ============================================================ -->
+
+<script>
+// FUNCIONES DE CERTIFICACIÓN (agregar a script.js)
+
+function isCertificationUnlocked() {
+    // Se desbloquea cuando Nivel 6 está completado
+    return localStorage.getItem('cc-level-6-completed') === 'true';
+}
+
+function updateCertificationUI() {
+    const banner = document.getElementById('cert-unlock-banner');
+    const mainContent = document.getElementById('cert-main-content');
+
+    if (!banner || !mainContent) return;
+
+    if (isCertificationUnlocked()) {
+        banner.style.display = 'none';
+        mainContent.style.display = 'block';
+    } else {
+        banner.style.display = 'flex';
+        mainContent.style.display = 'none';
+    }
+}
+
+function viewCertRequirements() {
+    alert('Para desbloquear la Certificación Architect, debes completar:\n\n✓ Nivel 1: Explorador\n✓ Nivel 2: Practicante\n✓ Nivel 3: Constructor\n✓ Nivel 4: Ingeniero\n✓ Nivel 5: Líder Técnico\n✓ Nivel 6: Arquitecto\n\nUna vez completado Nivel 6, la certificación se desbloqueará automáticamente.');
+}
+
+function openDiagramModal() {
+    const modal = document.getElementById('cert-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeDiagramModal() {
+    const modal = document.getElementById('cert-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+function downloadCertDocuments() {
+    alert('Los documentos de certificación estarán disponibles para descargar una vez completes Nivel 6.\n\nIncluirán:\n- Ruta de 12 semanas\n- Guía de estudio por fase\n- 6 escenarios de examen\n- Anti-patrones y best practices\n- Examen de práctica');
+}
+
+// Llamar cuando se carga la sección
+document.addEventListener('DOMContentLoaded', function() {
+    // Atrapador de clics en Certificación
+    const certLink = document.querySelector('[data-section="certificacion"]');
+    if (certLink) {
+        certLink.addEventListener('click', function(e) {
+            if (!isCertificationUnlocked()) {
+                e.preventDefault();
+                viewCertRequirements();
+            }
+        });
+    }
+
+    updateCertificationUI();
+});
+
+// Actualizar cuando se completa un nivel
+const originalUnlockLevel = window.unlockLevel;
+window.unlockLevel = function(level) {
+    if (originalUnlockLevel) {
+        originalUnlockLevel(level);
+    }
+    updateCertificationUI();
+};
+
+// Cerrar modal con ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDiagramModal();
+    }
+});
+</script>
