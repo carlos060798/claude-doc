@@ -244,35 +244,104 @@
             },
             quiz: [
                 {
-                    q: '¿Qué hace el comando /init?',
+                    q: '¿Cuál es el comando para generar un CLAUDE.md analizando automáticamente el proyecto?',
                     options: [
-                        'Reinicia la sesión actual borrando el historial.',
-                        'Genera un CLAUDE.md analizando el proyecto.',
-                        'Instala Claude Code globalmente.',
+                        '/init',
+                        '/create',
+                        '/analyze',
+                        '/setup'
                     ],
-                    correct: 1,
-                    explain: '/init analiza el repo (package.json, estructura, README) y crea un CLAUDE.md base. Para borrar historial usa /clear.',
+                    correct: 0,
+                    explain: '/init escanea package.json, README.md y la estructura del proyecto para crear una base de CLAUDE.md. Es el primer paso recomendado.'
                 },
                 {
-                    q: '¿Cuál es la forma recomendada de autenticar?',
+                    q: '¿Cuál es la sintaxis correcta para referenciar un archivo en una pregunta?',
+                    options: [
+                        'file:path/to/file',
+                        '@path/to/file',
+                        '#path/to/file',
+                        '/read path/to/file'
+                    ],
+                    correct: 1,
+                    explain: 'La sintaxis @ es nativa en Claude Code: @src/auth.ts. Soporta autocompletado y rangos como @src/auth.ts:42-80.'
+                },
+                {
+                    q: '¿Qué comando uso para ver la versión instalada de Claude Code?',
+                    options: [
+                        'claude --version',
+                        'claude -v',
+                        'claude version',
+                        'claude status'
+                    ],
+                    correct: 0,
+                    explain: 'claude --version te muestra la versión instalada. Útil para verificar que la instalación es correcta.'
+                },
+                {
+                    q: '¿Por qué es importante versionear el archivo .claude/settings.json en tu repo?',
+                    options: [
+                        'Ocupa menos espacio que guardar settings en la nube.',
+                        'Porque todo el equipo hereda la misma configuración y no hay sorpresas entre máquinas.',
+                        'Porque la autenticación requiere keys en el repo.',
+                        'Para que Git bloquee los cambios de settings.'
+                    ],
+                    correct: 1,
+                    explain: '.claude/settings.json versionado = configuración reproducible en equipo. Sin él, cada desarrollador configura diferente, causando inconsistencias.'
+                },
+                {
+                    q: 'Explica la diferencia fundamental entre /clear y /rewind:',
+                    options: [
+                        '/clear borra archivos, /rewind borra el historial de chat.',
+                        '/clear borra toda la sesión; /rewind (Esc Esc) abre checkpoints para volver atrás preservando contexto.',
+                        'Son exactamente lo mismo.',
+                        '/rewind es para git, /clear para Claude.'
+                    ],
+                    correct: 1,
+                    explain: '/clear: tab rasa, pierdes todo. /rewind: viaja en el tiempo dentro de la sesión, conservando el plan. Usa /rewind para errores recuperables.'
+                },
+                {
+                    q: '¿Cuál es la forma recomendada de autenticarse en Claude Code?',
                     options: [
                         'Pegar la API key en .claude/settings.json.',
-                        'OAuth con `claude auth login`.',
-                        'Pasar la key en cada comando con --key.',
+                        'OAuth con `claude auth login` — seguro y sin exponer secretos.',
+                        'Pasar --api-key en cada comando.',
+                        'Usar una contraseña global en ~/.bashrc.'
                     ],
                     correct: 1,
-                    explain: 'OAuth es más seguro y no deja secretos en archivos versionados.',
+                    explain: 'OAuth es seguro: nunca almacena keys en archivos versionables. Las keys expuestas = brechas de seguridad. Siempre OAuth.'
                 },
                 {
-                    q: 'Si quiero que Claude lea un archivo específico, ¿cómo se lo indico en mi prompt?',
+                    q: '¿Qué significa que Claude Code sea \'context-aware\'?',
                     options: [
-                        'Pego el contenido completo del archivo.',
-                        'Lo menciono con @ruta/al/archivo.',
-                        'Uso /read archivo.',
+                        'Que usa inteligencia artificial.',
+                        'Que recuerda archivos, decisiones previas y el historial de la sesión para responder coherentemente.',
+                        'Que puede acceder a tu navegador.',
+                        'Que lee tweets en tiempo real.'
                     ],
                     correct: 1,
-                    explain: 'La sintaxis @ es la nativa para referenciar archivos sin pegarlos.',
+                    explain: 'Context-aware = mantiene un modelo mental del proyecto. Lee @archivo, recuerda CLAUDE.md, sigue un plan. Cada respuesta está informada por TODO el contexto.'
                 },
+                {
+                    q: 'Estás en un repo nuevo. Siguiendo las mejores prácticas, ¿en qué orden ejecutarías estos comandos?',
+                    options: [
+                        '1. /init, 2. /memory add \'decisiones\', 3. @archivo específico',
+                        '1. claude --version, 2. /init, 3. leer README.md',
+                        '1. /init para generar CLAUDE.md, 2. Leer y mejorar CLAUDE.md, 3. @CLAUDE.md en prompts futuros',
+                        '1. /clear, 2. /init, 3. /memory add...'
+                    ],
+                    correct: 2,
+                    explain: '/init → CLAUDE.md generado. Luego lo editas para contexto específico. Futuras sesiones: @CLAUDE.md inyecta automáticamente el contexto del proyecto.'
+                },
+                {
+                    q: 'Tu proyecto tiene 15 archivos con tecnologías diferentes (React, Node, Docker). ¿Cómo estructurarías el CLAUDE.md para máxima utilidad?',
+                    options: [
+                        'Un listado simple de archivos.',
+                        'Stack (Node 18, React 18, Docker), scripts npm clave, convenciones de código, decisiones arquitectónicas claves y cómo se conectan los módulos.',
+                        'Solo el README.md copiado.',
+                        'Links externos sin info local.'
+                    ],
+                    correct: 1,
+                    explain: 'Buen CLAUDE.md: Stack + Scripts útiles + Convenciones + Arquitectura en alto nivel + Rutas importantes. Claude entiende TODO en 1 lectura, sin sorpresas.'
+                }
             ],
             mission: {
                 title: '🎯 Misión final del Nivel 1',
@@ -320,35 +389,115 @@
             },
             quiz: [
                 {
-                    q: '¿Cuál es la diferencia entre /compact y /memory?',
+                    q: '¿Cuál comando muestra el desglose detallado de tokens consumidos en la sesión actual?',
                     options: [
-                        'Son sinónimos, hacen lo mismo.',
-                        '/compact resume la sesión actual; /memory persiste entre sesiones.',
-                        '/memory borra contexto y /compact lo añade.',
+                        '/usage',
+                        '/context',
+                        '/stats',
+                        '/tokens'
                     ],
-                    correct: 1,
-                    explain: '/compact es para gestionar la ventana actual; /memory escribe en almacenamiento que sobrevive a /clear y a sesiones nuevas.',
+                    correct: 0,
+                    explain: '/usage te muestra tokens por sesión, modelo usado, y costos estimados. /context es más visual (porcentaje).'
                 },
                 {
-                    q: 'Cuando tu contexto pasa el 70%, lo más profesional es:',
+                    q: '¿A qué porcentaje de contexto es recomendable compactar?',
                     options: [
-                        'Cerrar la sesión y empezar de cero.',
-                        'Compactar con instrucciones explícitas sobre qué preservar.',
-                        'Ignorar la advertencia y seguir.',
+                        '50%',
+                        '70%+',
+                        '90%',
+                        'Nunca'
                     ],
                     correct: 1,
-                    explain: 'Compactar guiado preserva tu trabajo. Cerrar pierde todo el progreso conversacional.',
+                    explain: 'Al llegar a 70%+, compacta guiado. Después de 85% es demasiado tarde — el modelo tiene poco espacio para nuevas respuestas.'
                 },
                 {
-                    q: '¿Dónde debe vivir el token de un servidor MCP?',
+                    q: '¿Cuál es la diferencia CLAVE entre /compact y /memory?',
                     options: [
-                        'En `.mcp.json` versionado en git.',
-                        'En una variable de entorno referenciada con ${VAR}.',
-                        'Hardcodeado en el código del servidor.',
+                        'Son sinónimos.',
+                        '/compact = gesiona la sesión actual; /memory = persiste entre sesiones.',
+                        '/compact es automático, /memory es manual.',
+                        '/memory solo para equipos.'
                     ],
                     correct: 1,
-                    explain: 'Nunca commitees secretos. `.mcp.json` referencia variables que viven en tu shell.',
+                    explain: '/compact: resume ahora, limpia la ventana actual. /memory: guarda en archivo que sobrevive sesiones → para arquitectura, decisiones, lecciones aprendidas.'
                 },
+                {
+                    q: '¿Por qué es crítico usar variables de entorno para tokens MCP en lugar de hardcodearlos?',
+                    options: [
+                        'Es más rápido.',
+                        'Previene exponer secretos en archivos versionados (git).',
+                        'Usa menos memoria.',
+                        'No hay razón real.'
+                    ],
+                    correct: 1,
+                    explain: 'Si hardcodeas tokens → git los trackea → brecha de seguridad inmediata. Variables de entorno (${GITHUB_TOKEN}) = secretos seguros, nunca en versionado.'
+                },
+                {
+                    q: 'Después de ejecutar /compact, ¿qué sucede con el contexto previo?',
+                    options: [
+                        'Desaparece completamente.',
+                        'Se resume y comprime en el nuevo contexto, solo lo esencial.',
+                        'Se guarda automáticamente en /memory.',
+                        'Nada — /compact es solo un comando de información.'
+                    ],
+                    correct: 1,
+                    explain: '/compact resume lo importante (plan, archivos, errores resueltos) en una versión comprimida. Pierdes logs/tangentes, conservas trabajo real.'
+                },
+                {
+                    q: '¿Qué es un servidor MCP stdio vs SSE?',
+                    options: [
+                        'Tipos de herramientas (GitHub vs Slack).',
+                        'stdio = local/rápido (tu máquina). SSE = remoto/escalable (servidor Anthropic).',
+                        'Formas diferentes de autenticar.',
+                        'Versiones de Claude Code.'
+                    ],
+                    correct: 1,
+                    explain: 'stdio: `npx @mcp/server-fs` en tu máquina → rápido pero no escalable. SSE: servidor remoto → escalable pero latencia.'
+                },
+                {
+                    q: 'Llevas 2 horas migrando un módulo a TypeScript. Contexto = 75%, y necesitas 3 horas más. ¿Plan de acción?',
+                    options: [
+                        '1. /clear y reexplicar desde cero.',
+                        '1. /context para medir. 2. /compact \'plan de migración + 5 archivos migrados, descarta logs\'. 3. /memory para guardar patrón. 4. Seguir.',
+                        'Ignorar y continuar.',
+                        'Cambiar a Haiku para ahorrar tokens.'
+                    ],
+                    correct: 1,
+                    explain: 'Profesional: mide → compacta guiado (preserva plan) → guarda en memory → continúa. Garantiza 3 horas de trabajo sin perder la visión.'
+                },
+                {
+                    q: 'Tu equipo necesita MCP de GitHub (leer commits, PRs). ¿Cómo lo configuras para que funcione sin exponer tokens?',
+                    options: [
+                        '1. Poner GITHUB_TOKEN en .mcp.json. 2. Commitear.',
+                        '1. Crear .mcp.json con ${GITHUB_TOKEN}. 2. Cada dev: export GITHUB_TOKEN=xxx en su .bashrc. 3. Gitignore .mcp.json.local.',
+                        '1. Create GitHub PAT. 2. Hardcodear en .mcp.json. 3. Revisar en PR.',
+                        'No es posible sin comprometer seguridad.'
+                    ],
+                    correct: 1,
+                    explain: '.mcp.json versionado usa ${VAR}. Cada dev exporta en su shell (nunca commiteado). Seguro y reproducible.'
+                },
+                {
+                    q: 'Comparación: ¿Cuándo elegirías /compact sobre /clear?',
+                    options: [
+                        'Nunca, /clear es más limpio.',
+                        'Cuando necesitas preservar decisiones pero liberar tokens. /compact resume, /clear pierde TODO.',
+                        'Son equivalentes, usa el que prefieras.',
+                        'Solo en emergencias.'
+                    ],
+                    correct: 1,
+                    explain: '/clear: iniciar proyecto nuevo. /compact: continuación del mismo trabajo. Elegir bien = productividad 3× mayor.'
+                },
+                {
+                    q: 'Analiza este escenario: Tu .mcp.json referencia ${DB_HOST} pero algunos devs reportan \'herramienta MCP inaccesible\'. ¿Diagnóstico?',
+                    options: [
+                        'El .mcp.json está roto.',
+                        'Los devs no exportaron DB_HOST en su shell.',
+                        'Necesitan reinstalar Claude Code.',
+                        'MCP no soporta variables de entorno.'
+                    ],
+                    correct: 1,
+                    explain: 'Variables sin exportar = MCP ve \'undefined\' → falla. Solución: `export DB_HOST=localhost` en su .bashrc ANTES de abrir Claude.'
+                }
             ],
             mission: {
                 title: '🎯 Misión final del Nivel 2',
@@ -397,35 +546,159 @@
             },
             quiz: [
                 {
-                    q: '¿Qué ventaja clave tiene /fork sobre lanzar un subagente independiente?',
+                    q: '¿Qué herramienta usas para empaquetar un MCP server distribuible?',
                     options: [
-                        'El fork tiene más herramientas disponibles.',
-                        'Hereda el contexto completo con caché compartida — tokens cacheados cuestan solo 10%.',
-                        'El fork se ejecuta más rápido en el servidor de Anthropic.',
+                        'npm pack',
+                        'mcpb pack',
+                        'docker build',
+                        'git archive'
                     ],
                     correct: 1,
-                    explain: 'Con fork el contexto del padre ya está cacheado. Los tokens cacheados cuestan ~10% del precio normal — hasta 10× de reducción de costo en subagentes.',
+                    explain: 'mcpb pack empaqueta tu MCP server en .mcpb (MCP Bundle). Listo para distribuir en Smithery, mpak, MCPFinder.'
                 },
                 {
-                    q: '¿Cuál técnica de optimización tiene mayor impacto con menor esfuerzo?',
+                    q: '¿Qué comando lanzas subagentes en paralelo?',
                     options: [
-                        'Comprimir el código quitando comentarios y espacios.',
-                        'Prompt Caching con cache_control: ephemeral en el system prompt.',
-                        'Usar siempre Haiku en lugar de Sonnet u Opus.',
+                        '/thread',
+                        '/parallel',
+                        '/fork',
+                        '/spawn'
                     ],
-                    correct: 1,
-                    explain: 'Prompt Caching logra 40-50% de ahorro con solo agregar cache_control. Una hora de implementación, impacto inmediato desde la segunda llamada.',
+                    correct: 2,
+                    explain: '/fork lanza un subagente independiente. Hereda contexto cacheado del padre → 10× reducción de costo de tokens.'
                 },
                 {
-                    q: '¿Qué permission mode de settings.json es más recomendado para automatización segura?',
+                    q: '¿Cuál es la ventaja clave de /fork vs. una sesión Claude independiente?',
                     options: [
-                        'bypassPermissions — salta todas las confirmaciones.',
-                        'auto — un clasificador IA evalúa el riesgo de cada acción antes de ejecutarla.',
-                        'default — pide confirmación manual en cada operación.',
+                        'Fork es más rápido en el servidor.',
+                        'Fork hereda contexto cacheado — tokens cacheados cuestan ~10% del precio normal.',
+                        'Fork usa menos memoria.',
+                        'No hay ventaja real.'
                     ],
                     correct: 1,
-                    explain: 'auto mode (v2.1.85+) usa un clasificador IA. Más seguro que bypass y más fluido que default. Ideal para workflows CI/CD y scripts automatizados.',
+                    explain: 'Contexto del padre ya está en caché. Subagente reutiliza = costo mínimo. Session nueva = pagar full por todo.'
                 },
+                {
+                    q: '¿Qué es Prompt Caching y por qué importa a escala?',
+                    options: [
+                        'Un truco para acelerar respuestas.',
+                        'cache_control: ephemeral en system prompt → primer request = full cost, siguientes = 10% del costo.',
+                        'Solo para grandes modelos.',
+                        'No es relevante para desarrollo diario.'
+                    ],
+                    correct: 1,
+                    explain: 'Prompt caching: El system prompt (CLAUDE.md, instrucciones) se cachea 5 min. Llamadas posteriores pagan solo 10% de tokens → 40-60% ahorro.'
+                },
+                {
+                    q: 'Necesitas revisar 3 PRs en paralelo (seguridad, performance, code-style). ¿Arquitectura con /fork?',
+                    options: [
+                        'Revisar secuencialmente, sin paralelo.',
+                        '1 agente principal + 3 subagentes con /fork, cada uno especializado. Usan contexto cacheado del principal.',
+                        '3 sesiones Claude independientes.',
+                        'No es posible hacer en paralelo.'
+                    ],
+                    correct: 1,
+                    explain: 'fork = subagentes paralelos reutilizando caché. 3 reviews en ~60s con 40% menos tokens que 3 sesiones independientes.'
+                },
+                {
+                    q: 'Estás implementando prompt caching. ¿Dónde va cache_control: ephemeral?',
+                    options: [
+                        'En cada pregunta del usuario.',
+                        'En el body de cada request API.',
+                        'En el system prompt (CLAUDE.md o instrucción global).',
+                        'En .claude/settings.json global.'
+                    ],
+                    correct: 2,
+                    explain: 'cache_control: ephemeral en el system prompt. Es lo que casi nunca cambia (instrucciones base). Cambios en user prompts no invalidean caché.'
+                },
+                {
+                    q: 'Tu MCP server va a producción. ¿Configuración \'permission-mode\' correcta en settings.json?',
+                    options: [
+                        'bypassPermissions — salta todo.',
+                        'default — pide confirmación manual.',
+                        'auto — clasificador IA evalúa riesgo de cada acción antes de ejecutar.',
+                        'Depende del caso.'
+                    ],
+                    correct: 2,
+                    explain: 'auto mode (v2.1.85+): IA decide si una acción es segura. Más seguro que bypass, más fluido que default. Ideal para CI/CD y automatización.'
+                },
+                {
+                    q: 'Comparación: ¿Cuándo caching > /fork?',
+                    options: [
+                        'Caching siempre gana.',
+                        'Depende: Si mismo contexto = caching. Si contextos DIFERENTES = fork (hereda lo necesario, descarta lo demás).',
+                        'Fork siempre es mejor.',
+                        'Son incompatibles.'
+                    ],
+                    correct: 1,
+                    explain: 'Caching: Contexto IGUAL, llamadas repetidas. Fork: Contextos parcialmente DIFERENTES, paralelismo. Usar ambos = óptimo.'
+                },
+                {
+                    q: 'Tu MCP server .mcpb no aparece en Smithery. Diagnóstico de manifest.json?',
+                    options: [
+                        'manifest.json no importa.',
+                        'Falta: name, version, serverType, entrypoint. Todos OBLIGATORIOS para validación e indexing.',
+                        'Solo \'name\' es necesario.',
+                        'Smithery no valida manifests.'
+                    ],
+                    correct: 1,
+                    explain: 'manifest.json YAML/JSON: name (único), version (SemVer), serverType (stdio|sse), entrypoint (comando ejecutable). mcpb validate te muestra errores.'
+                },
+                {
+                    q: 'Analizando costos: Session sin caching vs. con caching. 100 requests, system prompt = 5000 tokens. ¿Ahorro?',
+                    options: [
+                        'Sin caching: 100 × 5000 = 500k tokens.',
+                        'Con caching: 1 × 5000 + 99 × (5000 × 0.1) = 54.5k tokens ≈ 89% ahorro.',
+                        'No hay diferencia.',
+                        'Caching empeora.'
+                    ],
+                    correct: 1,
+                    explain: 'Primer request = pago full. Llamadas 2-100 = 10% cost. Total = 1 full + 99 × 10% ≈ 10.9× menos. ROI explosivo.'
+                },
+                {
+                    q: 'Problemas en settings.json: permission-mode = auto pero algunas acciones siguen pidiendo confirmación. ¿Por qué?',
+                    options: [
+                        'Bug de auto mode.',
+                        'Acciones de alto riesgo (delete-all, payment) requieren confirmación INCLUSO en auto mode por política de seguridad.',
+                        'Necesitas versión más nueva.',
+                        'Auto mode nunca pide confirmación.'
+                    ],
+                    correct: 1,
+                    explain: 'auto mode = IA decide la mayoría. Pero acciones de máximo riesgo (irreversibles, financieras) siempre requieren humano. Diseño por seguridad.'
+                },
+                {
+                    q: 'Evalúa esta arquitectura: MCP server monolítico (100 herramientas en 1 solo proceso) vs. 5 servidores especializados. ¿Mejor?',
+                    options: [
+                        'Monolítico es más simple, gana.',
+                        'Especializados ganan: escalabilidad independiente, debugging claro, deploying seguro. Monolítico = un fallo = todo cae.',
+                        'Son equivalentes.',
+                        'Depende solo del tamaño del equipo.'
+                    ],
+                    correct: 1,
+                    explain: 'Monolítico < 20 tools: ok. > 20: refactor en servicios. Resiliencia, escalabilidad, y claridad > simplicidad inicial.'
+                },
+                {
+                    q: 'Evalúa: ¿Qué MCP server config es \'production-ready\'?',
+                    options: [
+                        'Defaults, todo funciona.',
+                        'Rate-limiting + circuit-breaker + logging + retry logic + error boundaries + monitoring.',
+                        'Solo autenticación.',
+                        'Es overkill para MVP.'
+                    ],
+                    correct: 1,
+                    explain: 'Production ≠ \'funciona\'. Requiere: rate-limits (protege de abuse), circuit-breaker (falla gracefully), logging (debug), retry (tolerancia), monitoring (alertas).'
+                },
+                {
+                    q: 'Diseña un sistema MCP de 3 agentes especializados para auditar código. ¿Arquitectura?',
+                    options: [
+                        '1 agente que hace todo (seguridad + performance + style).',
+                        'Agente 1 (seguridad: SQL injection, auth). Agente 2 (performance: algorithms, memory). Agente 3 (style: consistency, linting). Cada uno /fork en paralelo, comparten contexto cacheado.',
+                        'No es posible con 3 agentes.',
+                        'Un agente es mejor que 3.'
+                    ],
+                    correct: 1,
+                    explain: 'Especialización: cada agente = expertise claro. /fork paralelo = 10× faster. Contexto cacheado = bajo costo. Integración = mejor coverage que monolítico.'
+                }
             ],
             mission: {
                 title: '🎯 Misión final del Nivel 4',
@@ -475,35 +748,126 @@
             },
             quiz: [
                 {
-                    q: '¿Qué hace el campo `allowed-tools` en el frontmatter de un Skill?',
+                    q: '¿En qué directorio exacto debe vivir un Skill llamado \'code-review\'?',
                     options: [
-                        'Define qué modelo se usa.',
-                        'Restringe qué herramientas puede usar el Skill (principio de mínimo privilegio).',
-                        'Lista los argumentos esperados.',
+                        '.claude/skills/code-review/SKILL.md',
+                        '.skills/code-review.md',
+                        '~/.claude/code-review',
+                        '/usr/local/skills/code-review'
                     ],
-                    correct: 1,
-                    explain: 'allowed-tools limita el blast radius del Skill — un Skill que solo lee no puede sobrescribir archivos por error.',
+                    correct: 0,
+                    explain: '.claude/skills/{name}/SKILL.md es el estándar. Versionable en git, compartible con equipo.'
                 },
                 {
-                    q: 'Para inyectar argumentos en un Skill se usa:',
+                    q: '¿Cuál es el propósito del frontmatter en un SKILL.md?',
                     options: [
-                        '{{arg1}}',
-                        '$1, $2, $ARGUMENTS',
-                        '%ARG1%',
+                        'Decoración visual.',
+                        'Define metadatos: nombre, descripción (disparo automático), herramientas permitidas.',
+                        'Comentarios para desarrolladores.',
+                        'Nada importante.'
                     ],
                     correct: 1,
-                    explain: 'Sintaxis estilo shell: $1 = primer arg, $ARGUMENTS = todos juntos.',
+                    explain: 'Frontmatter YAML = identidad del Skill. name, description (auto-trigger), allowed-tools (seguridad). Sin él, Claude no reconoce el Skill.'
                 },
                 {
-                    q: '¿Cuándo dispara Claude un Skill automáticamente?',
+                    q: '¿Cómo se inyectan argumentos en un Skill?',
                     options: [
-                        'Nunca — siempre requiere /nombre.',
-                        'Cuando el prompt del usuario coincide con su `description`.',
-                        'En cada turno de conversación.',
+                        '{{$1}}, {{$2}}',
+                        '$1, $2, $ARGUMENTS (sintaxis estilo shell)',
+                        '%ARG1%, %ARG2%',
+                        'Parámetros no son posibles.'
                     ],
                     correct: 1,
-                    explain: 'Por eso la `description` del Skill es crítica: define cuándo se autoinvoca.',
+                    explain: '$1 = primer argumento, $2 = segundo, $ARGUMENTS = todos juntos. Ej: /my-skill arg1 arg2 → $1=\'arg1\', $2=\'arg2\'.'
                 },
+                {
+                    q: '¿Qué hace la restricción \'allowed-tools\' en frontmatter?',
+                    options: [
+                        'Decide qué modelo usar.',
+                        'Limita qué herramientas puede ejecutar el Skill (principio de mínimo privilegio).',
+                        'Determina archivos que puede leer.',
+                        'Es solo documentación.'
+                    ],
+                    correct: 1,
+                    explain: 'allowed-tools: [Bash(git:*), Read] = solo lee y git. Un Skill de lectura nunca puede sobrescribir por accidente.'
+                },
+                {
+                    q: 'Crea mentalmente un Skill /test-unit que ejecute `npm test` y reporte resultados. ¿Frontmatter mínimo correcto?',
+                    options: [
+                        'name: test-unit\ndescription: Ejecuta tests',
+                        'name: test-unit\ndescription: Ejecuta tests\nallowed-tools: [Bash(npm test:*)]',
+                        'name: test-unit\ndescription: Ejecuta tests\nallowed-tools: *',
+                        'Sin frontmatter, solo el comando.'
+                    ],
+                    correct: 1,
+                    explain: 'Correcto: metadatos + herramienta restringida a npm test. Evita que el Skill ejecute comandos peligrosos por accidente.'
+                },
+                {
+                    q: 'Quieres un Skill /commit-with-prefix que agregue \'feat: \' a commits. ¿Cómo inyectarías el mensaje?',
+                    options: [
+                        '/commit-with-prefix feat \'nueva feature\' → usa $1 y $2 en el Skill',
+                        'Editar el Skill cada vez.',
+                        'Es imposible con argumentos.',
+                        'No hay forma segura de hacerlo.'
+                    ],
+                    correct: 0,
+                    explain: '/commit-with-prefix feat \'nueva feature\' → SKILL.md usa $1=\'feat\', $2=\'nueva feature\', luego `git commit -m "$1: $2"`.'
+                },
+                {
+                    q: 'Necesitas que /code-review se dispare automáticamente cuando alguien dice \'revisa mi código\'. ¿Dónde está la magia?',
+                    options: [
+                        'En el cuerpo del Skill (las instrucciones).',
+                        'En el campo \'description\' del frontmatter — Claude la usa para auto-disparar.',
+                        'Necesitas un webhook externo.',
+                        'No es posible.'
+                    ],
+                    correct: 1,
+                    explain: 'description: \'Revisa código en busca de bugs\' → Claude reconoce \'revisa mi código\' y dispara /code-review automáticamente.'
+                },
+                {
+                    q: 'Comparación: ¿Cuándo usarías un Skill vs. simplemente pedir ayuda sin /nombre?',
+                    options: [
+                        'Siempre Skill.',
+                        'Skill: tarea repetitiva + checklist fijo. Sin /: exploración, preguntas ad-hoc.',
+                        'Sin diferencia.',
+                        'Skills son obsoletos.'
+                    ],
+                    correct: 1,
+                    explain: 'Skill /code-review: checklist consistente, reutilizable, versionable. Pregunta ad-hoc: uno-off, sin estructura.'
+                },
+                {
+                    q: 'Analiza este Skill: allowed-tools: * (todas las herramientas). ¿Problema de seguridad?',
+                    options: [
+                        'No, es flexible.',
+                        'Sí — el Skill podría ejecutar rm -rf /, cambiar credenciales, etc. Viola mínimo privilegio.',
+                        'Solo en producción.',
+                        'Es necesario para funcionalidad.'
+                    ],
+                    correct: 1,
+                    explain: 'allowed-tools: * = Skill puede hacer CUALQUIER COSA. Riesgo extremo. Restricción mínima: [Bash(git:*), Read], solo lo necesario.'
+                },
+                {
+                    q: 'Tu Skill /lint usa !`npm run lint`. El equipo reporta \'Permission denied\' aunque tienen Node. Diagnóstico?',
+                    options: [
+                        'npm no está en PATH.',
+                        'El Skill no incluye Bash(npm:*) en allowed-tools, así Claude bloquea la ejecución por seguridad.',
+                        'Error de instalación de Node.',
+                        'El Skill está buggeado.'
+                    ],
+                    correct: 1,
+                    explain: '!`comando` requiere permisos. Sin Bash(npm:*) en allowed-tools, claudeAPI rechaza. Solución: añadir allowed-tools: [Bash(npm run lint:*)].'
+                },
+                {
+                    q: 'Evalúa esta estrategia: Un Skill /everything que hace 15 tareas diferentes (lint, test, build, deploy). ¿Buena idea?',
+                    options: [
+                        'Excelente, todo en uno.',
+                        'Mala — viola Single Responsibility. 15 Skills independientes es mejor: /lint, /test, /build, /deploy. Compone con otros.',
+                        'Neutral.',
+                        'Depende del equipo.'
+                    ],
+                    correct: 1,
+                    explain: 'Un Skill = una responsabilidad. /everything es imposible de debuggear, hard de mantener, confunde a nuevos usuarios. Refactor en /lint, /test, etc.'
+                }
             ],
             mission: {
                 title: '🎯 Misión final del Nivel 3',
@@ -553,55 +917,126 @@
             },
             quiz: [
                 {
-                    q: '¿Cuál es el primer paso para adoptar Claude Code en un equipo de 15 devs?',
+                    q: '¿Por qué es crítico el \'piloto\' antes del rollout empresa-wide de Claude Code?',
                     options: [
-                        'Implementación inmediata para todos.',
-                        'Piloto con 3-5 early adopters de distintos roles.',
-                        'Mandatorio en sprint siguiente.',
+                        'No tiene importancia real.',
+                        'Genera momentum + feedback valioso de early adopters + identifica blockers antes de inversión grande.',
+                        'Solo es tradición.',
+                        'Es un lujo para equipos grandes.'
                     ],
                     correct: 1,
-                    explain: 'Los pilotos generan momentum, feedback valioso y ven fast wins antes del rollout.',
+                    explain: 'Piloto (3-5 devs distintos roles) = fast feedback, momentum interno, casos de éxito reales. Sin piloto = rollout fallido.'
                 },
                 {
-                    q: '¿Qué métrica es más importante para justificar inversión en Claude Code?',
+                    q: 'Planificas rollout a equipo de 20 devs en 6 semanas. ¿Fases?',
+                    options: [
+                        'Semana 1: todos. Listo.',
+                        'S1: 3 early adopters. S2-3: video curriculum (5 min c/u). S4-6: rollout gradual 5-10/semana + office hours.',
+                        'S1-6: solo lectura, sin uso real.',
+                        'Es imposible en 6 semanas.'
+                    ],
+                    correct: 1,
+                    explain: 'Piloto → learning → gradual rollout = Change Management 101. Velocidad = riesgo. Gradualidad = adopción >80%.'
+                },
+                {
+                    q: '¿Qué métrica comunicas a ejecutivos para justificar inversión en Claude Code?',
                     options: [
                         'Tokens consumidos por semana.',
-                        'Mejora en velocity (PRs merged/dev/mes) vs. baseline.',
+                        'Mejora en velocity (PRs merged/dev/mes) + bugs prevenidos + time-to-market. Comparar pre vs. post.',
                         'Número de usuarios activos.',
+                        'Cualquier métrica técnica.'
                     ],
                     correct: 1,
-                    explain: 'El ROI sale de velocity, bugs evitados, time-to-market. Los tokens son costo, no beneficio.',
+                    explain: 'Ejecutivos entienden negocio: velocidad, calidad, tiempo. No tokens. Data = (PRs/dev/mes before 8 → after 12) = 50% mejora → ROI justificado.'
                 },
                 {
-                    q: '¿Qué es más crítico en configuración enterprise?',
+                    q: 'Analizando adopción lenta: Equipo grande pero solo 3 devs usan Claude. ¿Diagnóstico probable?',
                     options: [
-                        'Tener el modelo más potente (Opus).',
-                        'OIDC/SSO + audit logs + compliance settings.',
-                        'El color del dashboard.',
+                        'Claude Code no es bueno.',
+                        'Falta onboarding estructurado por rol. Algunos roles (QA, frontend) no ven valor sin programa específico.',
+                        'El equipo es resistente al cambio.',
+                        'Necesita más marketing.'
                     ],
                     correct: 1,
-                    explain: 'Enterprise requiere identidad centralizada, compliance y auditabilidad. La potencia del modelo es secundaria.',
+                    explain: 'SRE ≠ Frontend. Frontend curriculum diferente que Backend. Sin programas por rol = confusión. Con curricula específicas = 60%+ adopción.'
                 },
                 {
-                    q: '¿Cómo se mide éxito en onboarding de equipos?',
+                    q: 'Comparación: Onboarding self-service (docs) vs. structured (facilitador + sesiones en vivo). ¿Impacto en adopción?',
                     options: [
-                        'Todos pasaron el quiz.',
-                        '>70% usando Claude Code en tareas diarias + NPS >7.',
-                        'Documentación leída.',
+                        'Self-service es suficiente.',
+                        'Self-service = 20-30% adopción. Structured = 70-80%. Facilitador responde Q&A, unblocks frustración temprana.',
+                        'No hay diferencia.',
+                        'Structured es más caro, no vale.'
                     ],
                     correct: 1,
-                    explain: 'El éxito es uso consistente y satisfacción. Quiz es solo comprobación, no métrica.',
+                    explain: 'Humano > documentos. Sesiones en vivo = confianza, connections, momentum. ROI de 1 facilitador es +50% adopción = worth it.'
                 },
                 {
-                    q: '¿Qué debes comunicar a ejecutivos sobre Claude Code?',
+                    q: 'Midiendo ROI: Baseline = 8 PRs/dev/mes. Post-Claude = 12 PRs/dev/mes. 20 devs. Costo Claude = $10k/mes. Beneficio?',
                     options: [
-                        'Detalles técnicos del MCP.',
-                        'Ahorro de tiempo, reducción de bugs, velocidad de market-to-shipping.',
-                        'Que es lo más moderno.',
+                        'Neutro, no hay ROI.',
+                        'Positivo: 80 PRs/mes extra = velocidad 50% mayor. Salarios = ~$30k/dev/mes. Valor generado ≈ $40k/mes > costo $10k. ROI = 4:1.',
+                        'Negativo, muy caro.',
+                        'No se puede medir.'
                     ],
                     correct: 1,
-                    explain: 'Ejecutivos entienden negocio, no tecnología. Habla de impact: tiempo, calidad, revenue.',
+                    explain: 'Simple math: dev costs >> Claude costs. Cualquier mejora en velocity (20%+) es instant ROI positivo. Esto es executive language.'
                 },
+                {
+                    q: 'Evalúa: ¿Cuál es el error más común en adopción enterprise?',
+                    options: [
+                        'Usar Claude Code sin herramientas.',
+                        'Ignorar change management. Implementación sin piloto + feedback = rechazo del equipo. Luego dicen \'no funciona\'.',
+                        'Elegir el modelo incorrecto.',
+                        'Usando demasiada automatización.'
+                    ],
+                    correct: 1,
+                    explain: 'Adopción falla si ignoras PERSONAS. Tecnología es fácil. Cambio humano = hard. Piloto, feedback, gradualidad = éxito.'
+                },
+                {
+                    q: 'Evalúa este plan de onboarding: 1 video de 2 horas + todos practican solos. ¿Suficiente?',
+                    options: [
+                        'Sí, es completo.',
+                        'No — 2 horas es demasiado denso. Mejor: 5-10 min videos (micro-learning) + live Q&A + hands-on labs. Retención 3× mejor.',
+                        'Necesita más videos.',
+                        'Los videos no importan.'
+                    ],
+                    correct: 1,
+                    explain: 'Attention span = 10 min MAX. Después se pierde. 2h video = abandono. 5 × 10min videos + Q&A + labs = 70% completion vs 20% con megavideo.'
+                },
+                {
+                    q: 'Ante resistencia (\'no tengo tiempo para Claude\'). Mejor argumento?',
+                    options: [
+                        '\'Es muy fácil, prueba\'.',
+                        '\'Esto no es más trabajo, es menos. Boilerplate, tests, docs — Claude lo hace automáticamente. Ganamos 5h/semana/dev.\'',
+                        '\'Todos deben usarlo.\'',
+                        '\'Mira este demo\'.'
+                    ],
+                    correct: 1,
+                    explain: 'Resistencia = miedo de sobrecarga. Reframing: \'menos trabajo\' > \'más herramientas\'. Data = 5h/semana ahorradas = 2 devs extra. Sin duda.'
+                },
+                {
+                    q: 'Diseña un programa de certificación interna para Claude Code (4 niveles). ¿Estructura?',
+                    options: [
+                        'Un único examen final.',
+                        'L1: Fundamentos (test small). L2: Avanzado (quiz 12q). L3: Experto (caso práctico vivo). L4: Líder (diseña proyecto). Badges + carrera clara.',
+                        'Solo documentación.',
+                        'No es necesario.'
+                    ],
+                    correct: 1,
+                    explain: 'Certificación = incentivo + estatus + carrera clara. L1→L4 progression = devs motivados a profundizar. Excelente para retención y culture.'
+                },
+                {
+                    q: 'Diseña métricas de adopción de Claude Code para reportar a C-level. ¿Cuáles incluir?',
+                    options: [
+                        'Cantidad de tokens consumidos.',
+                        'Velocity (PRs/dev/mes before/after). Bugs caught (reducción %). Review time (mejora %). Adoption rate (% activos). Satisfaction (NPS).',
+                        'Solo número de usuarios.',
+                        'No se puede medir adopción.'
+                    ],
+                    correct: 1,
+                    explain: 'C-level entiende: Velocity ↑ = business value. Bugs ↓ = quality. Time ↓ = efficiency. NPS = satisfaction. 4 metrics = full story.'
+                }
             ],
             mission: {
                 title: '🎯 Misión final del Nivel 5',
@@ -656,85 +1091,225 @@
             },
             quiz: [
                 {
-                    q: '¿Cuándo es monolítico mejor que multi-agente?',
+                    q: '¿Cuál es la pregunta fundamental que debe responder un ADR (Architecture Decision Record)?',
                     options: [
-                        'Nunca, los multi-agente siempre ganan.',
-                        '<1k req/min, <50ms latencia requerida, equipo pequeño (<10). Más simple.',
-                        'Solo en legacy systems.',
+                        '¿Cómo lo implemento?',
+                        '¿POR QUÉ elegimos esta arquitectura? ¿Qué alternativas consideramos? ¿Qué trade-offs aceptamos?',
+                        '¿Qué tecnología es más moderna?',
+                        '¿Cuál es la forma de hacer esto?'
                     ],
                     correct: 1,
-                    explain: 'La complejidad distribuida solo vale si necesitas escalabilidad. Mantén simple mientras puedas.',
+                    explain: 'ADR captura la HISTORIA: decisión, opciones consideradas, trade-offs aceptados, rationale. Crucial para onboarding y evitar re-debatir.'
                 },
                 {
-                    q: 'Compara monolítico vs multi-agente para sistema de 50k req/min:',
+                    q: 'Necesitas elegir entre monolítico (simple, <1k req/min) vs. multi-agente (escalable, complejo). Qué preguntas formularias primero?',
                     options: [
-                        'Monolítico: más simple, menos operacional, pero difícil escalar independientemente.',
-                        'Multi-agente: escalable, observable, pero operación distribuida y debugging más complejo.',
-                        'Ambas con trade-offs; depende del caso.',
-                    ],
-                    correct: 2,
-                    explain: 'No hay ganador absoluto. Multi-agente gana en escalabilidad; monolítico en simplicidad. Documenta en ADR.',
-                },
-                {
-                    q: '¿Qué es más crítico para 50k req/min?',
-                    options: [
-                        'CPU más rápido.',
-                        'Caching en capas + circuit breakers + rate limiting.',
-                        'Usar el modelo más potente (Opus).',
+                        '\'¿Cuál es más moderno?\'',
+                        '\'¿Cuánto tráfico esperamos?\' \'¿Cuáles son nuestros SLOs (latencia p99, uptime)?\' \'¿Tamaño del equipo y expertise?\'',
+                        '\'¿Cuál es más rápido para MVP?\'',
+                        'Usar monolítico siempre.'
                     ],
                     correct: 1,
-                    explain: 'A escala, caching evita 99% del tráfico. Opus ayuda poco sin arquitectura defensiva.',
+                    explain: 'Decisión arquitectónica = contexto. Tráfico bajo (<1k) → monolítico gana. Alto (50k+) → multi-agente gana. SLOs dictan la decisión.'
                 },
                 {
-                    q: '¿Qué documenta un ADR que una especificación NO?',
+                    q: 'Diseñando para 50k req/min con <100ms p99 latencia. ¿Capas defensivas?',
                     options: [
-                        'Cómo implementar (código, detalles técnicos).',
-                        'Por qué se eligió, qué opciones se consideraron, qué trade-offs se aceptaron.',
-                        'Dónde guardar el archivo.',
+                        'Solo código rápido.',
+                        'L1: Load balancer + rate limiting. L2: Cache en capas (Redis, local). L3: Circuit breaker. L4: Async/queue para tareas lentas.',
+                        'Un servidor potente.',
+                        'No son necesarias si el código es rápido.'
                     ],
                     correct: 1,
-                    explain: 'ADR = Story de la decisión. Crucial para onboarding futuro y evitar re-debatir.',
+                    explain: 'A 50k req/min, arquitectura defensiva > código rápido. Rate limiting previene cascada. Caching evita 99% de requests. Circuit breaker = resilience.'
                 },
                 {
-                    q: '¿Qué es OpenTelemetry?',
+                    q: 'Análisis: Monolítico vs. multi-agente para 50k req/min. Ventajas y trade-offs.',
                     options: [
-                        'Un modelo de IA.',
-                        'Standard para trazas distribuidas, logs y métricas. Te deja switch entre backends.',
-                        'Un framework de frontend.',
+                        'Monolítico es siempre mejor.',
+                        'Monolítico: simple, debugging fácil, PERO escala vertical (límite), un fallo = crash. Multi-agente: escalable horizontal, resiliente, PERO operación distribuida compleja.',
+                        'Multi-agente siempre gana.',
+                        'Son exactamente lo mismo.'
                     ],
                     correct: 1,
-                    explain: 'OTel te libera de vendor lock: escribe una vez, envía a Datadog, Jaeger, o lo que quieras.',
+                    explain: 'No hay ganador. Elegir basado en requisitos: Tráfico bajo/prototipo = monolítico. Alto/producción = multi-agente. Documentar en ADR.'
                 },
                 {
-                    q: '¿A qué edad típica un developer está listo para Nivel 6?',
+                    q: 'Comparativa: MCP server monolítico (100 tools en 1) vs. 5 especializados. Análisis para 50k req/min.',
                     options: [
-                        '0-2 años (junior).',
-                        '5-8 años con experiencia en prod, outages y scaling.',
-                        'Cualquier edad si es autodidacta.',
+                        'Monolítico es más fácil.',
+                        'Monolítico: un fallo = todo cae, scaling global. Especializados: fallos aislados, escalado independiente por tool. A 50k, especializados ganan.',
+                        'No hay diferencia.',
+                        'Especializados son overkill.'
                     ],
                     correct: 1,
-                    explain: 'Nivel 6 asume experiencia en debugging distribuido, war stories, intuición de trade-offs.',
+                    explain: 'Load: algunos tools (auth) = alta. Otros (logging) = baja. Monolítico = escala TODO. Especializados = escala cada uno por separado. Eficiencia.'
                 },
                 {
-                    q: '¿Cuál es la ventaja de usar Claude Code en diseño arquitectónico?',
+                    q: 'Diagnóstico: Sistema en producción a 50k req/min, p99 latencia = 200ms (SLO = 100ms). ¿Primer paso?',
                     options: [
-                        'Genera código rápido.',
-                        'Te ayuda a pensar en patterns, documentar ADRs, y genera boilerplate escalable.',
-                        'Elimina la necesidad de arquitectos humanos.',
+                        'Cambiar a un modelo más potente.',
+                        'Medir traces distribuidas para identificar dónde se pierde tiempo. Probablemente: database, externa API, o falta de caching.',
+                        'Aumentar recursos (CPU/RAM).',
+                        'Refactorizar todo el código.'
                     ],
                     correct: 1,
-                    explain: 'Claude amplifica tu pensamiento arquitectónico. No lo reemplaza, pero acelera implementación.',
+                    explain: 'Observabilidad primero. Traces distribuidas → bottleneck claro. 80/20: probablemente 1-2 spots consumen 80% del tiempo. Fix esos primero.'
                 },
                 {
-                    q: '¿Qué observabilidad es esencial para multi-agente a 50k req/min?',
+                    q: 'Análisis: OpenTelemetry vs. Datadog-specific SDK. ¿Cuál para enterprise?',
                     options: [
-                        'Logs centralizados.',
-                        'Trazas distribuidas + métricas SLO (latencia p99, error rate) + alerting reactivo.',
+                        'Datadog SDK — más features.',
+                        'OpenTelemetry — vendor-agnostic. Escribes una vez, envías a Datadog/Jaeger/CloudWatch/etc. No lock-in.',
+                        'Son lo mismo.',
+                        'Datadog es obligatorio.'
+                    ],
+                    correct: 1,
+                    explain: 'OTel = freedom. Switch providers sin reescribir. Enterprise ama opciones. Datadog SDK = lock-in. OTel = portabilidad.'
+                },
+                {
+                    q: 'Caso: Migración monolítico → multi-agente. ¿Riesgo de rollout?',
+                    options: [
+                        'Bajo, es fácil.',
+                        'Alto — sistema distribuido es operacionalmente más complejo. Solución: canary rollout (5%→25%→50%→100%) + observabilidad fuerte + runbooks.',
+                        'No hay riesgo.',
+                        'Es imposible migrar.'
+                    ],
+                    correct: 1,
+                    explain: 'Distributed ≠ simple. Canary rollout = riesgo bajo. 5% tráfico a multi-agente, monitorear, luego expand. Rollback es fácil si falla.'
+                },
+                {
+                    q: 'Problema: MCP server A depende de B. B falla → cascade. ¿Solución arquitectónica?',
+                    options: [
+                        'Esperar a que B se repare.',
+                        'Circuit breaker en A: detecta B caído, devuelve error rápido o fallback. Evita timeout cascada.',
+                        'Aumentar timeouts.',
+                        'Hacer ambos monolíticos.'
+                    ],
+                    correct: 1,
+                    explain: 'Circuit breaker = falla rápido. Sin él: timeout espera (30s) × 50k req/min = desastre. Con breaker: fail immediate → retries → recover fast.'
+                },
+                {
+                    q: 'Evaluación: ¿Cuál es el mayor riesgo de arquitectura monolítica en producción a 50k req/min?',
+                    options: [
+                        'Lentitud.',
+                        'Un bug pequeño causa crash global. Sin aislamiento, fallo = downtime. Multi-agente = fallo acotado.',
+                        'Falta de features.',
+                        'Difícil de entender.'
+                    ],
+                    correct: 1,
+                    explain: 'Monolítico = caja única. Crack en una sección = colapso total. A 50k req/min, downtime = $10k/min en revenue lost. Riesgo inaceptable.'
+                },
+                {
+                    q: 'Evaluación: ¿Qué aspecto de observabilidad es crítico para multi-agente?',
+                    options: [
+                        'Logs centralizados solamente.',
+                        'Trazas distribuidas (request flows) + métricas SLO (latencia p99, error rate) + alerting reactivo. Sin trazas, imposible debuggear.',
                         'Dashboard bonito.',
+                        'Logs básicos son suficientes.'
                     ],
                     correct: 1,
-                    explain: 'Tracas distribuidas te muestran dónde se pierde tiempo. Métricas te dicen si estás cumpliendo SLOs.',
+                    explain: 'Trazas distribuidas = visibilidad del flujo. Sin ellas: request lento, ¿dónde? Imposible saber. Con trazas: \'Auth 50ms, DB 100ms, Cache miss aquí\'.'
                 },
+                {
+                    q: 'Evaluación de trade-off: Caching agresivo vs. Consistencia de datos. ¿Estrategia?',
+                    options: [
+                        'Máximo caching, aceptar inconsistencia.',
+                        'Depends on use case: datos críticos (payments) = consistencia > velocidad. Analytics = velocidad > consistencia. Documentar en ADR.',
+                        'Nunca cachear datos dinámicos.',
+                        'La inconsistencia es un bug.'
+                    ],
+                    correct: 1,
+                    explain: 'Cada sistema tiene tolerance de staleness. Carrito de compras = baja (minutos). Analytics = alta (horas). Estrategia debe ser explícita.'
+                },
+                {
+                    q: 'Evaluación: ¿Cuál es el \'verdadero\' costo de un multi-agente system?',
+                    options: [
+                        'Hardware más caro.',
+                        'Operacional: debugging más complejo, observabilidad necesaria, runbooks para 10+ failure modes. Si no tienes ops maduros, monolítico es más barato.',
+                        'Siempre más caro.',
+                        'Sin costo diferencial.'
+                    ],
+                    correct: 1,
+                    explain: 'Multi-agente requiere ops maduros (observabilidad, runbooks, oncall). Sin eso, es un dolor. Con eso, es estándar. Evalúa tu madurez.'
+                },
+                {
+                    q: 'Evaluación: ¿Cuándo una arquitectura es \'buena\'?',
+                    options: [
+                        'Cuando usa la tecnología más moderna.',
+                        'Cuando cumple SLOs, es maintainable por tu equipo, y puede escalar sin rediseño por 3-5 años.',
+                        'Cuando es la más simple.',
+                        'Cuando es la más rápida.'
+                    ],
+                    correct: 1,
+                    explain: 'Buena arquitectura = requisitos → trade-offs explícitos → documentados → implementados → escalables. No es sobre elegancia, es sobre fit.'
+                },
+                {
+                    q: 'Diseña un ADR completo para elegir monolítico vs. multi-agente. ¿Secciones?',
+                    options: [
+                        'Solo la decisión final.',
+                        '1. Contexto (requisitos, restricciones). 2. Opciones (monolítico, multi-agente, event-sourcing). 3. Análisis de cada opción. 4. Decisión + Rationale. 5. Consecuencias (positivas y negativas).',
+                        'Links a documentación.',
+                        'No se puede documentar decisión.'
+                    ],
+                    correct: 1,
+                    explain: 'ADR fuerte: contexto + opciones + análisis + rationale + consecuencias. Permite futuros devs entender POR QUÉ se eligió. No es capricho.'
+                },
+                {
+                    q: 'Diseña una estrategia de caching en capas para 50k req/min. ¿Arquitectura?',
+                    options: [
+                        'Una cache global.',
+                        'L1: Local (in-process, 100ms TTL, no network). L2: Redis (10s TTL, shared). L3: Database (source of truth). Evita cache stampedes con locks.',
+                        'Solo cache remoto.',
+                        'No es necesario cachear.'
+                    ],
+                    correct: 1,
+                    explain: 'Capas = eficiencia: L1 evita 80% de requests. L2 sirve lo que L1 perdió. L3 es último recurso. A 50k, esto es diferencia entre 100ms y 1s latencia.'
+                },
+                {
+                    q: 'Diseña un sistema de observabilidad completo. Componentes?',
+                    options: [
+                        'Logs solamente.',
+                        'Trazas distribuidas (Jaeger) + Métricas (Prometheus) + Logs (ELK). Alert manager. Dashboard Grafana. Runbooks en repo.',
+                        'Un monitoring tool general.',
+                        'Observabilidad es overkill.'
+                    ],
+                    correct: 1,
+                    explain: 'Las tres pilares: trazas (flujo), métricas (salud), logs (detalle). Sin una = ciego. Con tres = visibilidad total para debug y optimization.'
+                },
+                {
+                    q: 'Diseña un circuit breaker pattern para evitar cascadas. ¿Lógica?',
+                    options: [
+                        'Esperar siempre.',
+                        'Estados: CLOSED (normal) → OPEN (service down, fail fast) → HALF_OPEN (probar recovery). Threshold (5 fallos = OPEN). Timeout reset (60s).',
+                        'No es necesario.',
+                        'Retry siempre.'
+                    ],
+                    correct: 1,
+                    explain: 'Circuit breaker = automático + resilente. 5 fallos → bloquea requests (no causa cascada). Después de timeout, intenta recovery (HALF_OPEN).'
+                },
+                {
+                    q: 'Diseña un plan de disaster recovery para multi-agente system. ¿Pasos?',
+                    options: [
+                        'Sin plan.',
+                        '1. RTO/RPO claros (ej: 15min recovery, 1h data loss). 2. Backups automatizados. 3. Failover automático. 4. Runbooks probados cada mes. 5. Alerts para degradación.',
+                        'Esperar a que fallen.',
+                        'No es posible disaster recovery.'
+                    ],
+                    correct: 1,
+                    explain: 'DR = proactivo. Sin plan = surprise disaster. Con plan = controllable. RTO/RPO definen \'aceptable\'. Runbooks = crew sabe qué hacer.'
+                },
+                {
+                    q: 'Diseña roles de ingeniería para team que gestiona sistema multi-agente a 50k req/min. ¿Especialidades?',
+                    options: [
+                        'Un role genérico.',
+                        'Backend (agent development). DevOps (observability, deployment). SRE (incident response, scaling). Architect (ADRs, design reviews). On-call rotation.',
+                        'Todos hacen todo.',
+                        'Roles no importan.'
+                    ],
+                    correct: 1,
+                    explain: 'Especialización en equipo = ownership claro. Backend = features. DevOps = infrastructure. SRE = reliability. Arquitecto = decisiones. On-call = support 24/7.'
+                }
             ],
             mission: {
                 title: '🎯 Capstone: Sistema Arquitectónico Completo',
