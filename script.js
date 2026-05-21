@@ -522,6 +522,238 @@
                 ],
             },
         },
+
+        5: {
+            title: 'Nivel 5: Líder Técnico',
+            objectives: [
+                'Diseñar estrategias de adopción de Claude Code en equipos de 10+ developers.',
+                'Configurar entornos enterprise: OIDC, SSO, audit logs, sandbox policies.',
+                'Crear programas de onboarding para desarrolladores en diferentes roles.',
+                'Implementar guardrails de seguridad y compliance (HIPAA, SOC2, GDPR).',
+                'Medir ROI: tiempo ahorrado, bugs prevenidos, velocidad de shipping.',
+            ],
+            tools: ['Settings Enterprise', 'OIDC', 'Audit Logs', 'Managed Settings', 'Usage Analytics'],
+            subtopics: [
+                { name: 'Estrategia de adopción', desc: 'Fases: Piloto → Rollout → Scaling. Resistencia y cambio organizacional.' },
+                { name: 'Configuración enterprise', desc: 'OIDC, SSO, managed settings, rate limiting, workspace rules.' },
+                { name: 'Onboarding para equipos', desc: 'Módulos por rol: frontend, backend, DevOps, QA. Certificaciones internas.' },
+                { name: 'Seguridad y compliance', desc: 'Audit logs, data residency, API key rotation, breach response.' },
+                { name: 'Métricas y ROI', desc: 'Baseline: código entregado/mes. Medir mejora, costos evitados.' },
+            ],
+            caseStudy: {
+                title: '🛠️ Caso práctico: rolling out Claude Code en un equipo de 20 devs',
+                context: 'Tu empresa quiere adoptarlo. No todos están convencidos. Necesitas un plan que minimice fricción.',
+                steps: [
+                    { cmd: 'Semana 1: Piloto con 3 "early adopters" de distintos roles.', what: 'Aprenden rápido y devuelven feedback.' },
+                    { cmd: 'Semana 2-3: Crear currículum en video (5 min cada lección) — accesible para no-técnicos.', what: 'Reduce barrera de entrada.' },
+                    { cmd: 'Semana 4: Rollout gradual (5-10 devs/semana) + horario de "office hours" para Q&A.', what: 'Support strukturado evita frustración.' },
+                    { cmd: 'Mes 2: Metrics: commits/dev, review time, bugs caught. Comparar pre vs. post.', what: 'Data que convence a la C-suite.' },
+                ],
+                expected: 'Adopción >80% en 6 semanas. ROI positivo medible (30%+ mejora en velocity).',
+            },
+            quiz: [
+                {
+                    q: '¿Cuál es el primer paso para adoptar Claude Code en un equipo de 15 devs?',
+                    options: [
+                        'Implementación inmediata para todos.',
+                        'Piloto con 3-5 early adopters de distintos roles.',
+                        'Mandatorio en sprint siguiente.',
+                    ],
+                    correct: 1,
+                    explain: 'Los pilotos generan momentum, feedback valioso y ven fast wins antes del rollout.',
+                },
+                {
+                    q: '¿Qué métrica es más importante para justificar inversión en Claude Code?',
+                    options: [
+                        'Tokens consumidos por semana.',
+                        'Mejora en velocity (PRs merged/dev/mes) vs. baseline.',
+                        'Número de usuarios activos.',
+                    ],
+                    correct: 1,
+                    explain: 'El ROI sale de velocity, bugs evitados, time-to-market. Los tokens son costo, no beneficio.',
+                },
+                {
+                    q: '¿Qué es más crítico en configuración enterprise?',
+                    options: [
+                        'Tener el modelo más potente (Opus).',
+                        'OIDC/SSO + audit logs + compliance settings.',
+                        'El color del dashboard.',
+                    ],
+                    correct: 1,
+                    explain: 'Enterprise requiere identidad centralizada, compliance y auditabilidad. La potencia del modelo es secundaria.',
+                },
+                {
+                    q: '¿Cómo se mide éxito en onboarding de equipos?',
+                    options: [
+                        'Todos pasaron el quiz.',
+                        '>70% usando Claude Code en tareas diarias + NPS >7.',
+                        'Documentación leída.',
+                    ],
+                    correct: 1,
+                    explain: 'El éxito es uso consistente y satisfacción. Quiz es solo comprobación, no métrica.',
+                },
+                {
+                    q: '¿Qué debes comunicar a ejecutivos sobre Claude Code?',
+                    options: [
+                        'Detalles técnicos del MCP.',
+                        'Ahorro de tiempo, reducción de bugs, velocidad de market-to-shipping.',
+                        'Que es lo más moderno.',
+                    ],
+                    correct: 1,
+                    explain: 'Ejecutivos entienden negocio, no tecnología. Habla de impact: tiempo, calidad, revenue.',
+                },
+            ],
+            mission: {
+                title: '🎯 Misión final del Nivel 5',
+                goal: 'Diseñar un plan de adopción de 4 semanas para tu equipo con métricas.',
+                steps: [
+                    'Identifica 3 early adopters en roles clave (frontend/backend/devops).',
+                    'Crea un deck de 1 página: antes/después de Claude Code con métricas claras.',
+                    'Define rollout phases y recursos de onboarding por rol.',
+                    'Configura baseline: commits/dev, review time, bugs por sprint (mes anterior).',
+                    'Mide al final: comparar y documentar ROI.',
+                ],
+                success: 'Plan en document compartible, métricas basales establecidas, early adopters lanzados.',
+                troubleshooting: [
+                    '**Resistencia a cambio** → enfócate en "menos trabajo tedioso", no en "nueva herramienta".',
+                    '**Métricas confusas** → usa solo 3: velocity (commits/dev/mes), review time, bugs encontrados.',
+                ],
+            },
+        },
+
+        6: {
+            title: 'Nivel 6: Arquitecto',
+            objectives: [
+                'Diseñar sistemas tolerantes a fallos usando Claude Code como generador de código.',
+                'Construir MCP servers complejos: multi-tenant, escalables, con observabilidad.',
+                'Optimizar para 50k req/min: caché distribuido, horizontal scaling, circuit breakers.',
+                'Implementar observabilidad end-to-end: OpenTelemetry, distributes traces, custom metrics.',
+                'Estudiar casos reales de Fortune 500 y arquitecturas ganadores.',
+                'Documentar decisiones arquitectónicas con ADRs (Architecture Decision Records).',
+                'Preparación para certificación de Anthropic (si aplica).',
+            ],
+            tools: ['System Design', 'ADR', 'OpenTelemetry', 'Distributed Tracing', 'MCP Multi-Tenant', 'Load Testing'],
+            subtopics: [
+                { name: 'Patrones arquitectónicos', desc: 'Monolítico vs. multi-agente. Async/await patterns. Event sourcing.' },
+                { name: 'MCP servers complejos', desc: 'Multi-tenant, rate limiting, circuit breakers, cache strategies.' },
+                { name: 'Performance a escala', desc: '50k req/min: caching, horizontal scaling, database optimization.' },
+                { name: 'Observabilidad', desc: 'OpenTelemetry, traces distribuidos, custom metrics, alerting.' },
+                { name: 'Casos Fortune 500', desc: 'Cómo Databricks, Stripe, Notion usan Claude Code en producción.' },
+                { name: 'ADRs', desc: 'Documentar por qué, qué trade-offs, quién tomó la decisión.' },
+                { name: 'Certificación', desc: 'Preparación: temas, labs prácticos, assessment final.' },
+            ],
+            caseStudy: {
+                title: '🛠️ Caso práctico: diseñar un sistema para 50k req/min',
+                context: 'Necesitas migrar de monolítico a multi-agente. Debe soportar 50k req/min con <100ms p99 latencia.',
+                steps: [
+                    { cmd: 'Día 1: ADR — monolítico vs. multi-agente vs. event-sourcing. Justificar elegida.', what: 'Decisión documentada, trazable.' },
+                    { cmd: 'Día 2: Diseñar MCP servers: 3 agentes especializados, caches Redis, circuit breaker.', what: 'Arquitectura defensiva.' },
+                    { cmd: 'Día 3: Implementar OpenTelemetry + logs distribuidos. Medir baseline.', what: 'Observabilidad real.' },
+                    { cmd: 'Día 4: Load testing con k6/locust a 50k req/min. Sintonizar caches y rate limits.', what: 'Validación práctica.' },
+                    { cmd: 'Día 5: Documentar en ADR: trade-offs, costos, plan de rollout.', what: 'Legado arquitectónico.' },
+                ],
+                expected: 'Sistema soportando 50k req/min en <100ms p99. ADR documentado. Observabilidad completa.',
+            },
+            quiz: [
+                {
+                    q: '¿Cuándo es monolítico mejor que multi-agente?',
+                    options: [
+                        'Nunca, los multi-agente siempre ganan.',
+                        '<1k req/min, <50ms latencia requerida, equipo pequeño (<10). Más simple.',
+                        'Solo en legacy systems.',
+                    ],
+                    correct: 1,
+                    explain: 'La complejidad distribuida solo vale si necesitas escalabilidad. Mantén simple mientras puedas.',
+                },
+                {
+                    q: 'Compara monolítico vs multi-agente para sistema de 50k req/min:',
+                    options: [
+                        'Monolítico: más simple, menos operacional, pero difícil escalar independientemente.',
+                        'Multi-agente: escalable, observable, pero operación distribuida y debugging más complejo.',
+                        'Ambas con trade-offs; depende del caso.',
+                    ],
+                    correct: 2,
+                    explain: 'No hay ganador absoluto. Multi-agente gana en escalabilidad; monolítico en simplicidad. Documenta en ADR.',
+                },
+                {
+                    q: '¿Qué es más crítico para 50k req/min?',
+                    options: [
+                        'CPU más rápido.',
+                        'Caching en capas + circuit breakers + rate limiting.',
+                        'Usar el modelo más potente (Opus).',
+                    ],
+                    correct: 1,
+                    explain: 'A escala, caching evita 99% del tráfico. Opus ayuda poco sin arquitectura defensiva.',
+                },
+                {
+                    q: '¿Qué documenta un ADR que una especificación NO?',
+                    options: [
+                        'Cómo implementar (código, detalles técnicos).',
+                        'Por qué se eligió, qué opciones se consideraron, qué trade-offs se aceptaron.',
+                        'Dónde guardar el archivo.',
+                    ],
+                    correct: 1,
+                    explain: 'ADR = Story de la decisión. Crucial para onboarding futuro y evitar re-debatir.',
+                },
+                {
+                    q: '¿Qué es OpenTelemetry?',
+                    options: [
+                        'Un modelo de IA.',
+                        'Standard para trazas distribuidas, logs y métricas. Te deja switch entre backends.',
+                        'Un framework de frontend.',
+                    ],
+                    correct: 1,
+                    explain: 'OTel te libera de vendor lock: escribe una vez, envía a Datadog, Jaeger, o lo que quieras.',
+                },
+                {
+                    q: '¿A qué edad típica un developer está listo para Nivel 6?',
+                    options: [
+                        '0-2 años (junior).',
+                        '5-8 años con experiencia en prod, outages y scaling.',
+                        'Cualquier edad si es autodidacta.',
+                    ],
+                    correct: 1,
+                    explain: 'Nivel 6 asume experiencia en debugging distribuido, war stories, intuición de trade-offs.',
+                },
+                {
+                    q: '¿Cuál es la ventaja de usar Claude Code en diseño arquitectónico?',
+                    options: [
+                        'Genera código rápido.',
+                        'Te ayuda a pensar en patterns, documentar ADRs, y genera boilerplate escalable.',
+                        'Elimina la necesidad de arquitectos humanos.',
+                    ],
+                    correct: 1,
+                    explain: 'Claude amplifica tu pensamiento arquitectónico. No lo reemplaza, pero acelera implementación.',
+                },
+                {
+                    q: '¿Qué observabilidad es esencial para multi-agente a 50k req/min?',
+                    options: [
+                        'Logs centralizados.',
+                        'Trazas distribuidas + métricas SLO (latencia p99, error rate) + alerting reactivo.',
+                        'Dashboard bonito.',
+                    ],
+                    correct: 1,
+                    explain: 'Tracas distribuidas te muestran dónde se pierde tiempo. Métricas te dicen si estás cumpliendo SLOs.',
+                },
+            ],
+            mission: {
+                title: '🎯 Capstone: Sistema Arquitectónico Completo',
+                goal: 'Diseñar, implementar y documentar un sistema escalable con MCP, CI/CD y ADRs.',
+                steps: [
+                    'Semana 1: Define requisitos. Escribe 2-3 ADRs (arquitectura, db, deploy). Justifica cada decisión.',
+                    'Semana 2: Implementa MCP server(s). Incluye caching, rate limiting, error handling.',
+                    'Semana 3: Configura CI/CD (GitHub Actions, deployment stages). Load test a 10k+ req/min.',
+                    'Semana 4: Observabilidad: OpenTelemetry + dashboards Grafana/Datadog. Definir SLOs.',
+                    'Semana 5: Documentación. README de arquitectura, ADRs públicos, runbooks operacionales.',
+                    'Final: Presenta a audiencia técnica (equipo/comunidad). Q&A sobre trade-offs y scaling.',
+                ],
+                success: 'Sistema funcionando, scalable, observable, documentado. ADRs que explican el "por qué".',
+                troubleshooting: [
+                    '**No sé por dónde empezar** → plantea 3 preguntas: (1) ¿Cuánto tráfico? (2) ¿Qué SLOs? (3) ¿Equipo de cuántos?',
+                    '**El sistema es demasiado complejo** → simplifica. Monolítico con async beats multi-agente mal pensado.',
+                ],
+            },
+        },
     };
 
     /* ============================================================
@@ -2121,12 +2353,16 @@
         renderCommandsTable('commands-table-nivel-2', 2);
         renderCommandsTable('commands-table-nivel-3', 3);
         renderCommandsTable('commands-table-nivel-4', 4);
+        renderCommandsTable('commands-table-nivel-5', 5);
+        renderCommandsTable('commands-table-nivel-6', 6);
 
         // 1.5) Lecciones didácticas
         renderLesson(1);
         renderLesson(2);
         renderLesson(3);
         renderLesson(4);
+        renderLesson(5);
+        renderLesson(6);
 
         // 2) Navegación
         setupNavigation();

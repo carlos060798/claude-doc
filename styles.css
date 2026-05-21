@@ -54,6 +54,8 @@
     --level-2: #5eb8ff;  /* azul */
     --level-3: #d084fc;  /* púrpura suave */
     --level-4: #ff7a59;  /* orange Claude */
+    --level-5: #ec4899;  /* rosa fuerte */
+    --level-6: #dc2626;  /* rojo fuerte */
 
     /* Tipografía — NEON TERMINAL MINIMALIST */
     --font-display: 'IBM Plex Sans', system-ui, sans-serif;
@@ -265,6 +267,22 @@ kbd {
 }
 .nav-link.active .nav-icon { color: var(--accent); }
 
+.nav-link.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.nav-item-empty {
+    font-style: italic;
+}
+
+.lock-icon {
+    display: inline-block;
+    margin-left: var(--sp-1);
+    font-size: 0.75rem;
+}
+
 .nav-icon {
     display: inline-grid; place-items: center;
     width: 20px; height: 20px;
@@ -280,10 +298,12 @@ kbd {
     font-weight: 700;
     color: white;
 }
-.nav-badge.nivel-1 { background: var(--level-1); color: #062618; }
-.nav-badge.nivel-2 { background: var(--level-2); color: #052236; }
-.nav-badge.nivel-3 { background: var(--level-3); color: #2a0a4a; }
-.nav-badge.nivel-4 { background: var(--level-4); color: #1a0a00; }
+.nav-badge.nivel-1 { background: var(--level-1); color: white; }
+.nav-badge.nivel-2 { background: var(--level-2); color: white; }
+.nav-badge.nivel-3 { background: var(--level-3); color: white; }
+.nav-badge.nivel-4 { background: var(--level-4); color: white; }
+.nav-badge.nivel-5 { background: var(--level-5); color: white; }
+.nav-badge.nivel-6 { background: var(--level-6); color: white; }
 
 .sidebar-footer {
     margin-top: auto;
@@ -617,6 +637,8 @@ kbd {
 .level-tag--2 { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; }
 .level-tag--3 { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; }
 .level-tag--4 { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); color: white; }
+.level-tag--5 { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; }
+.level-tag--6 { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; }
 
 .block-title {
     font-size: 1.35rem;
@@ -752,6 +774,8 @@ kbd {
 .path-card--2::before { background: var(--level-2); }
 .path-card--3::before { background: var(--level-3); }
 .path-card--4::before { background: var(--level-4); }
+.path-card--5::before { background: var(--level-5); }
+.path-card--6::before { background: var(--level-6); }
 
 .path-card:hover {
     transform: translateY(-6px);
@@ -1287,7 +1311,7 @@ kbd {
     border-left: 3px solid var(--level-2);
 }
 .subtopic-card strong {
-    color: #00ff88;
+    color: var(--level-1);
     display: block;
     margin-bottom: var(--sp-1);
 }
@@ -1301,7 +1325,7 @@ kbd {
     display: inline-block;
     background: var(--bg-elevated);
     border: 1px solid var(--border-default);
-    color: #00ff88;
+    color: var(--level-1);
     font-family: var(--font-mono);
     font-size: 0.8rem;
     padding: var(--sp-1) var(--sp-3);
@@ -1331,7 +1355,7 @@ kbd {
     padding: var(--sp-2);
     border-radius: var(--radius-sm);
     margin: var(--sp-2) 0;
-    color: #00ff88;
+    color: var(--level-1);
 }
 
 .quiz-container {
@@ -1421,7 +1445,7 @@ kbd {
     color: var(--text-primary);
 }
 .mission-troubleshooting summary:hover {
-    color: #00ff88;
+    color: var(--level-1);
 }
 .mission-troubleshooting ul {
     margin: var(--sp-2) 0 0 var(--sp-4);
@@ -1807,7 +1831,7 @@ kbd {
 .roadmap-tag--easy { background: rgba(61, 220, 151, 0.15); color: var(--level-1); }
 .roadmap-tag--medium { background: rgba(94, 184, 255, 0.15); color: var(--level-2); }
 .roadmap-tag--hard { background: rgba(192, 132, 252, 0.15); color: var(--level-3); }
-.roadmap-tag--expert { background: rgba(255, 122, 89, 0.15); color: #00ff88; }
+.roadmap-tag--expert { background: rgba(255, 122, 89, 0.15); color: var(--level-4); }
 .roadmap-time {
     font-size: 0.75rem;
     color: var(--text-muted);
@@ -1936,7 +1960,7 @@ kbd {
 .challenge-stat-num {
     font-size: 2rem;
     font-weight: 800;
-    color: #00ff88;
+    color: var(--level-1);
     font-family: var(--font-mono);
     line-height: 1;
 }
