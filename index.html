@@ -129,6 +129,10 @@
                         <span class="nav-icon">✅</span> Seguridad & Compliance</a></li>
                     <li><a href="#etica" class="nav-link" data-section="etica" data-mode="technical" data-level="5">
                         <span class="nav-icon">⚖️</span> Ética en IA</a></li>
+                    <li><a href="#troubleshooting" class="nav-link" data-section="troubleshooting" data-mode="technical" data-level="5">
+                        <span class="nav-icon">🔧</span> Troubleshooting Masterclass</a></li>
+                    <li><a href="#cost-forecasting" class="nav-link" data-section="cost-forecasting" data-mode="technical" data-level="5">
+                        <span class="nav-icon">💰</span> Cost Forecasting & Ops</a></li>
                 </ul>
 
                 <p class="nav-group-title">Nivel 6: Arquitecto <span class="lock-icon">🔒</span></p>
@@ -139,6 +143,8 @@
                         <span class="nav-icon">🔍</span> Observabilidad</a></li>
                     <li><a href="#patrones-arquitectonicos" class="nav-link" data-section="patrones-arquitectonicos" data-mode="technical" data-level="6">
                         <span class="nav-icon">🏗️</span> Patrones Arquitectónicos</a></li>
+                    <li><a href="#enterprise-playbook" class="nav-link" data-section="enterprise-playbook" data-mode="technical" data-level="6">
+                        <span class="nav-icon">🏢</span> Enterprise Playbook</a></li>
                 </ul>
 
                 <p class="nav-group-title">Evaluación & Progreso</p>
@@ -187,6 +193,7 @@
             <div class="sidebar-footer">
                 <span class="status-dot"></span>
                 <span class="status-text">Documentación oficial · v2.x</span>
+                <button id="toggle-sidebar" class="toggle-sidebar-btn" aria-label="Toggle sidebar" title="Colapsar/expandir">◀</button>
             </div>
         </aside>
 
@@ -347,6 +354,39 @@
                 <h3 class="block-title">🗺️ El Roadmap Completo</h3>
                 <p>Cada módulo construye sobre el anterior. Te recomendamos seguir el orden, pero puedes saltar a cualquier parte si ya dominas los fundamentos.</p>
 
+                <!-- PROGRESO VISUAL: Timeline Interactivo -->
+                <div class="progress-timeline">
+                    <div class="timeline-container">
+                        <div class="timeline-track"></div>
+                        <div class="timeline-nodes">
+                            <div class="timeline-node" data-level="1" title="Explorador">
+                                <div class="timeline-dot" style="background: var(--level-1);">①</div>
+                                <span class="timeline-label">Setup</span>
+                            </div>
+                            <div class="timeline-node" data-level="2" title="Practicante">
+                                <div class="timeline-dot" style="background: var(--level-2);">②</div>
+                                <span class="timeline-label">Workflow</span>
+                            </div>
+                            <div class="timeline-node" data-level="3" title="Constructor">
+                                <div class="timeline-dot" style="background: var(--level-3);">③</div>
+                                <span class="timeline-label">Maestría</span>
+                            </div>
+                            <div class="timeline-node" data-level="4" title="Ingeniero">
+                                <div class="timeline-dot" style="background: var(--level-4);">④</div>
+                                <span class="timeline-label">Técnico</span>
+                            </div>
+                            <div class="timeline-node" data-level="5" title="Líder Técnico">
+                                <div class="timeline-dot" style="background: var(--level-5);">⑤</div>
+                                <span class="timeline-label">Líder</span>
+                            </div>
+                            <div class="timeline-node" data-level="6" title="Arquitecto Experto">
+                                <div class="timeline-dot" style="background: var(--level-6);">⑥</div>
+                                <span class="timeline-label">Experto</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="roadmap">
                     <!-- MÓDULO 1 -->
                     <div class="roadmap-module" data-module="1">
@@ -501,26 +541,34 @@
 
                 <h3 class="block-title">📚 Cómo aprovechar este curso</h3>
                 <div class="course-tips-grid">
-                    <div class="course-tip-card">
-                        <div class="course-tip-icon">🛠️</div>
-                        <h4>Aprende haciendo</h4>
-                        <p>Cada módulo tiene un proyecto real. Abre tu terminal en un repo de verdad y ejecuta los comandos mientras lees.</p>
-                    </div>
-                    <div class="course-tip-card">
-                        <div class="course-tip-icon">🧠</div>
-                        <h4>Resuelve los desafíos</h4>
-                        <p>Los <a href="#desafios" data-jump="desafios">desafíos interactivos</a> validan tu comprensión. Si fallas, revisa la sección y vuelve a intentar.</p>
-                    </div>
-                    <div class="course-tip-card">
-                        <div class="course-tip-icon">📌</div>
-                        <h4>Marca tu progreso</h4>
-                        <p>Al final de cada nivel, pulsa "Marcar completado". Tu progreso se guarda localmente y se refleja en el dashboard.</p>
-                    </div>
-                    <div class="course-tip-card">
-                        <div class="course-tip-icon">🔄</div>
-                        <h4>Vuelve a las cheat sheets</h4>
-                        <p>Las <a href="#cheatsheet" data-jump="cheatsheet">cheat sheets</a> son tu referencia rápida. Imprímelas o ténlas abiertas mientras trabajas.</p>
-                    </div>
+                    <details class="course-tip-card card-expandible">
+                        <summary>
+                            <div class="course-tip-icon">🛠️</div>
+                            <h4>Aprende haciendo</h4>
+                        </summary>
+                        <p>Cada módulo tiene un proyecto real. Abre tu terminal en un repo de verdad y ejecuta los comandos mientras lees. La mejor forma de aprender es mediante la práctica activa.</p>
+                    </details>
+                    <details class="course-tip-card card-expandible">
+                        <summary>
+                            <div class="course-tip-icon">🧠</div>
+                            <h4>Resuelve los desafíos</h4>
+                        </summary>
+                        <p>Los <a href="#desafios" data-jump="desafios">desafíos interactivos</a> validan tu comprensión. Si fallas, revisa la sección y vuelve a intentar. Cada desafío representa un problema real que enfrentarás.</p>
+                    </details>
+                    <details class="course-tip-card card-expandible">
+                        <summary>
+                            <div class="course-tip-icon">📌</div>
+                            <h4>Marca tu progreso</h4>
+                        </summary>
+                        <p>Al final de cada nivel, pulsa "Marcar completado". Tu progreso se guarda localmente y se refleja en el dashboard. Mantén la consistencia: 1 nivel por día es ideal.</p>
+                    </details>
+                    <details class="course-tip-card card-expandible">
+                        <summary>
+                            <div class="course-tip-icon">🔄</div>
+                            <h4>Vuelve a las cheat sheets</h4>
+                        </summary>
+                        <p>Las <a href="#cheatsheet" data-jump="cheatsheet">cheat sheets</a> son tu referencia rápida. Imprímelas o ténlas abiertas mientras trabajas. Son el puente entre teoría y práctica.</p>
+                    </details>
                 </div>
 
                 <div class="info-banner info-banner--tip">
@@ -13425,6 +13473,108 @@ if (useNewRefactorEngine) {
                 </div>
             </section>
 
+            <!-- ====== SECCIÓN: TROUBLESHOOTING MASTERCLASS (L5.6) ====== -->
+            <section class="content-section hidden" data-section="troubleshooting" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Troubleshooting</span>
+                    <h2>🔧 Troubleshooting Masterclass</h2>
+                    <p class="subtitle">De "¿qué salió mal?" a "lo sé en 5 minutos"</p>
+                </div>
+                <div class="section-intro">
+                    <p>Aprende a diagnosticar y resolver problemas complejos en minutos, no horas. Cubre token leaks, hook failures, MCP issues, agent slowness, y cost explosions.</p>
+                </div>
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Token Leak Diagnostics</h3>
+                        <p>Detectar, debuggear y prevenir fugas de tokens. Casos reales y árboles de decisión.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Hook Failures & Timeouts</h3>
+                        <p>Debugging JSON I/O, timeout causes, post-mortems. Runbooks para recuperación rápida.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>MCP Connection Issues</h3>
+                        <p>Pool exhaustion, stdio deadlock, version mismatch. Diagnóstico profesional.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>10 Runbooks Rápidos</h3>
+                        <p>Escenarios comunes con soluciones verificadas. Checklist copy-paste listos.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Troubleshooting completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: COST FORECASTING & OPERATIONS (L5.7) ====== -->
+            <section class="content-section hidden" data-section="cost-forecasting" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Cost Operations</span>
+                    <h2>💰 Cost Forecasting & Operations</h2>
+                    <p class="subtitle">De "cuesta mucho" a "presupuesto validado"</p>
+                </div>
+                <div class="section-intro">
+                    <p>Domina cost modeling, forecasting con 90% accuracy, budget allocation, y optimización. Ahorra 50-70% sin sacrificar calidad.</p>
+                </div>
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>Cost Modeling 101</h3>
+                        <p>Fórmula simple, 5 levers de control, costo/min por modelo. Todos los números que necesitas.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Forecasting Methodology</h3>
+                        <p>3-step: baseline → optimize → validate. Predice costos con 90% accuracy real.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>8 Optimization Techniques</h3>
+                        <p>Caching (40%), Batch API (15%), Compression (25%), y más. 70% ahorro combinado.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Production Monitoring & ROI</h3>
+                        <p>Dashboards, alertas, log parsing. Análisis ROI para decisiones de inversión.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Cost Forecasting completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: ENTERPRISE PLAYBOOK (L6.2) ====== -->
+            <section class="content-section hidden" data-section="enterprise-playbook" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 6 / Enterprise</span>
+                    <h2>🏢 Enterprise Playbook</h2>
+                    <p class="subtitle">Cómo llevar Claude Code a 200+ developers</p>
+                </div>
+                <div class="section-intro">
+                    <p>Playbook ejecutable: adoption roadmap (4 semanas), security gating, decision matrices, post-mortems reales, scaling patterns, governance.</p>
+                </div>
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <h3>4-Week Adoption Roadmap</h3>
+                        <p>Semana 1-4 estructuradas: Awareness → Hands-on → Integration → Production. Entregables verificables.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Security & Compliance Gating</h3>
+                        <p>Risk matrix, sandbox architecture, audit logging. Casos: Banco Fortune 500 aprobado.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Decision Matrices (4 críticas)</h3>
+                        <p>MCP vs Skill vs Direct, Fork vs Task vs Team, Model selection, Caching strategy.</p>
+                    </div>
+                    <div class="subtopic-card">
+                        <h3>Real Post-Mortems & Governance</h3>
+                        <p>3 incidentes Fortune 500, team structure (Champions, Maintainers), 8-metric dashboard, policies.</p>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="#" class="btn btn-primary">Leer módulo Enterprise Playbook completo</a>
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -13535,6 +13685,121 @@ if (useNewRefactorEngine) {
                     }
                 }
             });
+        });
+
+        // ========== SIDEBAR COLLAPSE + GAMIFICATION ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.getElementById('toggle-sidebar');
+            const sidebarState = localStorage.getItem('sidebar-collapsed') === 'true';
+
+            if (sidebarState && sidebar) sidebar.classList.add('collapsed');
+
+            toggleBtn?.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isMobile = window.innerWidth < 768;
+
+                if (isMobile) {
+                    // En móvil: toggle entre open/closed (overlay)
+                    sidebar.classList.toggle('open');
+                    // Cerrar sidebar al hacer click en un link
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.addEventListener('click', () => {
+                            sidebar.classList.remove('open');
+                        });
+                    });
+                } else {
+                    // En desktop: toggle entre collapsed/expanded
+                    sidebar.classList.toggle('collapsed');
+                    localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+                }
+            });
+
+            // ========== SIDEBAR HOVER BEHAVIOR (Desktop) ==========
+            // Expande el sidebar al pasar el mouse y lo mantiene expandido
+            // mientras el usuario está interactuando con él
+            if (sidebar) {
+                let hoverTimeout;
+
+                sidebar.addEventListener('mouseenter', () => {
+                    if (sidebar.classList.contains('collapsed')) {
+                        clearTimeout(hoverTimeout);
+                        sidebar.classList.add('hovered');
+                    }
+                });
+
+                sidebar.addEventListener('mouseleave', () => {
+                    if (sidebar.classList.contains('collapsed')) {
+                        // Pequeño delay para evitar parpadeos al mover el mouse rápidamente
+                        hoverTimeout = setTimeout(() => {
+                            sidebar.classList.remove('hovered');
+                        }, 100);
+                    }
+                });
+            }
+
+            // Confetti animation
+            function createConfetti(x, y) {
+                const colors = ['#ff7a59', '#5eb8ff', '#d084fc', '#3ddc97', '#ffb454'];
+                for (let i = 0; i < 12; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'confetti-particle';
+                    particle.textContent = ['🎉', '⭐', '✨', '🚀'][Math.floor(Math.random() * 4)];
+                    particle.style.left = x + 'px';
+                    particle.style.top = y + 'px';
+                    particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.fontSize = (Math.random() * 1.5 + 1) + 'em';
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 800);
+                }
+            }
+
+            // Progress tracking
+            window.completeLevel = (level) => {
+                localStorage.setItem(`level-${level}-completed`, 'true');
+                const link = document.querySelector(`.nav-link[data-level="${level}"]`);
+                if (link) {
+                    link.classList.add('unlocked');
+                    createConfetti(link.offsetLeft + 50, link.offsetTop + 20);
+                }
+                alert(`✅ Nivel ${level} completado! 🎉`);
+            };
+
+            // ========== TIMELINE INTERACTIVITY ==========
+            const timelineNodes = document.querySelectorAll('.timeline-node');
+            timelineNodes.forEach(node => {
+                node.addEventListener('click', () => {
+                    const level = node.getAttribute('data-level');
+                    const levelNav = document.querySelector(`[data-level="${level}"].nav-link`);
+                    if (levelNav) {
+                        levelNav.click();
+                        node.classList.add('active');
+                        // Actualizar estilos de nodos
+                        timelineNodes.forEach(n => n.classList.remove('active'));
+                        node.classList.add('active');
+                    }
+                });
+
+                node.addEventListener('mouseenter', () => {
+                    node.style.transform = 'scale(1.15)';
+                });
+
+                node.addEventListener('mouseleave', () => {
+                    node.style.transform = 'scale(1)';
+                });
+            });
+
+            // Actualizar timeline cuando se completa un nivel
+            window.updateTimeline = (level) => {
+                const node = document.querySelector(`.timeline-node[data-level="${level}"]`);
+                if (node) {
+                    const dot = node.querySelector('.timeline-dot');
+                    if (dot) {
+                        dot.innerHTML = '✅';
+                        dot.style.boxShadow = `0 0 0 4px var(--bg-surface), 0 0 20px ${dot.style.background}`;
+                    }
+                }
+            };
         });
     </script>
 </body>
