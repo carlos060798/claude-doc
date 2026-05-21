@@ -188,12 +188,17 @@
                     <li><a href="#glosario" class="nav-link hidden" data-section="glosario" data-mode="accessible">
                         <span class="nav-icon">📚</span> Glosario</a></li>
                 </ul>
+
+                <p class="nav-group-title">Certificación <span class="lock-icon">🔐</span></p>
+                <ul class="nav-list">
+                    <li><a href="#certificacion" class="nav-link" data-section="certificacion" data-level="cert">
+                        <span class="nav-icon">🏆</span> Architect Certification</a></li>
+                </ul>
             </nav>
 
             <div class="sidebar-footer">
                 <span class="status-dot"></span>
                 <span class="status-text">Documentación oficial · v2.x</span>
-                <button id="toggle-sidebar" class="toggle-sidebar-btn" aria-label="Toggle sidebar" title="Colapsar/expandir">◀</button>
             </div>
         </aside>
 
@@ -13575,6 +13580,252 @@ if (useNewRefactorEngine) {
                 </div>
             </section>
 
+            <!-- ====== SECCIÓN: CERTIFICACIÓN ARCHITECT ====== -->
+            <section data-section="certificacion" class="content-section nivel-cert">
+                <div class="section-header">
+                    <h2>🏆 Certificación Architect — Especialización Oficial</h2>
+                    <p class="section-subtitle">12 semanas · 5 dominios · 6 escenarios reales · 50 preguntas examen</p>
+                </div>
+
+                <!-- Banner de desbloqueo -->
+                <div id="cert-unlock-banner" class="cert-unlock-banner">
+                    <div class="banner-content">
+                        <span class="banner-icon">🔒</span>
+                        <div>
+                            <h3>Desbloquea la Certificación</h3>
+                            <p>Completa <strong>Nivel 6 - Arquitectura Avanzada</strong> para acceder a la ruta de certificación oficial.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="scrollToLevel(6)">Ver Requisitos</button>
+                </div>
+
+                <!-- Contenido principal (visible cuando L6 completado) -->
+                <div id="cert-content" class="cert-content" style="display: none;">
+
+                    <!-- Hero Stats -->
+                    <div class="cert-hero-stats">
+                        <div class="stat-card">
+                            <span class="stat-number">12</span>
+                            <span class="stat-label">Semanas</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">60h</span>
+                            <span class="stat-label">Estudio</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">5</span>
+                            <span class="stat-label">Dominios</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">6</span>
+                            <span class="stat-label">Escenarios</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">50</span>
+                            <span class="stat-label">Preguntas</span>
+                        </div>
+                    </div>
+
+                    <!-- Los 5 Dominios -->
+                    <div class="section-title">📚 Los 5 Dominios Técnicos</div>
+                    <div class="domains-grid">
+                        <div class="domain-card">
+                            <h4>🔄 Agentic Loops</h4>
+                            <p class="domain-desc">Ciclos de percepción-decisión-acción, halt conditions, orquestación multi-agent</p>
+                            <div class="skills-list">
+                                <span class="skill-badge">stop_reason logic</span>
+                                <span class="skill-badge">halt conditions</span>
+                                <span class="skill-badge">multi-agent</span>
+                            </div>
+                        </div>
+                        <div class="domain-card">
+                            <h4>🛠️ Tool Design</h4>
+                            <p class="domain-desc">JSON-Schema avanzado, validación en capas, rate limiting, circuit breaker</p>
+                            <div class="skills-list">
+                                <span class="skill-badge">JSON-Schema</span>
+                                <span class="skill-badge">Validación</span>
+                                <span class="skill-badge">Resilience</span>
+                            </div>
+                        </div>
+                        <div class="domain-card">
+                            <h4>⚙️ CI/CD Integration</h4>
+                            <p class="domain-desc">Canary deployments, prompt validation, rollback automático, cost tracking</p>
+                            <div class="skills-list">
+                                <span class="skill-badge">GitHub Actions</span>
+                                <span class="skill-badge">Canary Deploy</span>
+                                <span class="skill-badge">Cost Tracking</span>
+                            </div>
+                        </div>
+                        <div class="domain-card">
+                            <h4>✍️ Prompt Engineering</h4>
+                            <p class="domain-desc">Structured outputs, multi-pass validation, quality evaluation, token optimization</p>
+                            <div class="skills-list">
+                                <span class="skill-badge">Structured Output</span>
+                                <span class="skill-badge">Validation</span>
+                                <span class="skill-badge">Optimization</span>
+                            </div>
+                        </div>
+                        <div class="domain-card">
+                            <h4>📊 Context Management</h4>
+                            <p class="domain-desc">Vector DB, RAG, caching multinivel, provenance, privacidad de datos</p>
+                            <div class="skills-list">
+                                <span class="skill-badge">Vector DB</span>
+                                <span class="skill-badge">RAG</span>
+                                <span class="skill-badge">Caching</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3 Fases -->
+                    <div class="section-title">📅 Ruta de 3 Fases (12 Semanas)</div>
+                    <div class="phases-timeline">
+                        <div class="phase-card fase-1">
+                            <h4>Fase 1: Fundamentos</h4>
+                            <p class="phase-duration">Semanas 1-4</p>
+                            <ul class="phase-topics">
+                                <li>Agent loop básico</li>
+                                <li>JSON-Schema validation</li>
+                                <li>CI/CD introduction</li>
+                                <li>Context basics</li>
+                            </ul>
+                        </div>
+                        <div class="phase-card fase-2">
+                            <h4>Fase 2: Aplicado</h4>
+                            <p class="phase-duration">Semanas 5-8</p>
+                            <ul class="phase-topics">
+                                <li>Multi-agent orchestration</li>
+                                <li>Advanced tool design</li>
+                                <li>CI/CD pipelines</li>
+                                <li>RAG & Vector DB</li>
+                            </ul>
+                        </div>
+                        <div class="phase-card fase-3">
+                            <h4>Fase 3: Exam Prep</h4>
+                            <p class="phase-duration">Semanas 9-12</p>
+                            <ul class="phase-topics">
+                                <li>Resolver 6 escenarios</li>
+                                <li>3 exámenes simulados</li>
+                                <li>Anti-patrones</li>
+                                <li>Exam final (50 q)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 6 Escenarios -->
+                    <div class="section-title">🎯 Los 6 Escenarios de Examen</div>
+                    <div class="scenarios-grid">
+                        <div class="scenario-card">
+                            <span class="scenario-number">1️⃣</span>
+                            <h4>Atención al Cliente Escalable</h4>
+                            <p class="scenario-desc">Orquestación multi-agent, aislamiento de contexto, rate limiting</p>
+                            <span class="scenario-duration">90 min</span>
+                        </div>
+                        <div class="scenario-card">
+                            <span class="scenario-number">2️⃣</span>
+                            <h4>Pipeline Análisis Legal</h4>
+                            <p class="scenario-desc">RAG especializado, multi-pass validation, audit trail</p>
+                            <span class="scenario-duration">90 min</span>
+                        </div>
+                        <div class="scenario-card">
+                            <span class="scenario-number">3️⃣</span>
+                            <h4>Recomendaciones Personalizado</h4>
+                            <p class="scenario-desc">Vector DB, caching multinivel, privacidad de datos</p>
+                            <span class="scenario-duration">120 min</span>
+                        </div>
+                        <div class="scenario-card">
+                            <span class="scenario-number">4️⃣</span>
+                            <h4>Automatización RPA</h4>
+                            <p class="scenario-desc">Tool composition complejo, error handling, halt conditions</p>
+                            <span class="scenario-duration">120 min</span>
+                        </div>
+                        <div class="scenario-card">
+                            <span class="scenario-number">5️⃣</span>
+                            <h4>Monitoreo Inteligente</h4>
+                            <p class="scenario-desc">Observabilidad, cost tracking, performance profiling</p>
+                            <span class="scenario-duration">90 min</span>
+                        </div>
+                        <div class="scenario-card">
+                            <span class="scenario-number">6️⃣</span>
+                            <h4>Asistente de Desarrollo</h4>
+                            <p class="scenario-desc">Multi-agent specialization, autonomy control, state management</p>
+                            <span class="scenario-duration">150 min</span>
+                        </div>
+                    </div>
+
+                    <!-- Anti-patrones -->
+                    <div class="section-title">⚠️ 18+ Anti-patrones a Evitar</div>
+                    <div class="antipatterns-grid">
+                        <div class="antipattern-card rojo">
+                            <h5>Loops</h5>
+                            <ul>
+                                <li>❌ Infinite loops sin halt</li>
+                                <li>❌ Ignorar stop_reason</li>
+                                <li>❌ Sin timeout</li>
+                            </ul>
+                        </div>
+                        <div class="antipattern-card rojo">
+                            <h5>Tool Design</h5>
+                            <ul>
+                                <li>❌ JSON-Schema incompleto</li>
+                                <li>❌ Sin validación</li>
+                                <li>❌ Descripción confusa</li>
+                            </ul>
+                        </div>
+                        <div class="antipattern-card rojo">
+                            <h5>Orquestación</h5>
+                            <ul>
+                                <li>❌ Sin circuit breaker</li>
+                                <li>❌ Context leakage</li>
+                                <li>❌ No retry logic</li>
+                            </ul>
+                        </div>
+                        <div class="antipattern-card rojo">
+                            <h5>Prompting</h5>
+                            <ul>
+                                <li>❌ Sin validación</li>
+                                <li>❌ Sin structured output</li>
+                                <li>❌ Tokens excesivos</li>
+                            </ul>
+                        </div>
+                        <div class="antipattern-card rojo">
+                            <h5>Context</h5>
+                            <ul>
+                                <li>❌ Sin cache strategy</li>
+                                <li>❌ RAG sin filtrado</li>
+                                <li>❌ PII en logs</li>
+                            </ul>
+                        </div>
+                        <div class="antipattern-card rojo">
+                            <h5>Deployment</h5>
+                            <ul>
+                                <li>❌ Sin canary deploy</li>
+                                <li>❌ No rollback plan</li>
+                                <li>❌ Cost uncontrolled</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- CTA Final -->
+                    <div class="section-cta">
+                        <button class="btn btn-primary" onclick="openCertDiagram()">
+                            📊 Abrir Diagrama Interactivo Completo
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadCertDocuments()">
+                            📥 Descargar Documentación (PDF + Markdown)
+                        </button>
+                    </div>
+
+                    <div class="cert-info-box">
+                        <p><strong>⏱️ Dedicación:</strong> 1 hora/día durante 12 semanas (60 horas totales)</p>
+                        <p><strong>🎯 Objetivo:</strong> Pasar el examen final con 70%+ para obtener certificación oficial</p>
+                        <p><strong>📚 Documentación:</strong> 4 archivos Markdown + Diagrama interactivo + 6 ejemplos de código</p>
+                        <p><strong>✨ Beneficio:</strong> Badge oficial + Comunidad de arquitectos + Acceso a recursos exclusivos</p>
+                    </div>
+
+                </div>
+
+            </section>
+
         </main>
     </div>
 
@@ -13689,55 +13940,6 @@ if (useNewRefactorEngine) {
 
         // ========== SIDEBAR COLLAPSE + GAMIFICATION ==========
         document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.querySelector('.sidebar');
-            const toggleBtn = document.getElementById('toggle-sidebar');
-            const sidebarState = localStorage.getItem('sidebar-collapsed') === 'true';
-
-            if (sidebarState && sidebar) sidebar.classList.add('collapsed');
-
-            toggleBtn?.addEventListener('click', (e) => {
-                e.preventDefault();
-                const isMobile = window.innerWidth < 768;
-
-                if (isMobile) {
-                    // En móvil: toggle entre open/closed (overlay)
-                    sidebar.classList.toggle('open');
-                    // Cerrar sidebar al hacer click en un link
-                    document.querySelectorAll('.nav-link').forEach(link => {
-                        link.addEventListener('click', () => {
-                            sidebar.classList.remove('open');
-                        });
-                    });
-                } else {
-                    // En desktop: toggle entre collapsed/expanded
-                    sidebar.classList.toggle('collapsed');
-                    localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
-                }
-            });
-
-            // ========== SIDEBAR HOVER BEHAVIOR (Desktop) ==========
-            // Expande el sidebar al pasar el mouse y lo mantiene expandido
-            // mientras el usuario está interactuando con él
-            if (sidebar) {
-                let hoverTimeout;
-
-                sidebar.addEventListener('mouseenter', () => {
-                    if (sidebar.classList.contains('collapsed')) {
-                        clearTimeout(hoverTimeout);
-                        sidebar.classList.add('hovered');
-                    }
-                });
-
-                sidebar.addEventListener('mouseleave', () => {
-                    if (sidebar.classList.contains('collapsed')) {
-                        // Pequeño delay para evitar parpadeos al mover el mouse rápidamente
-                        hoverTimeout = setTimeout(() => {
-                            sidebar.classList.remove('hovered');
-                        }, 100);
-                    }
-                });
-            }
-
             // Confetti animation
             function createConfetti(x, y) {
                 const colors = ['#ff7a59', '#5eb8ff', '#d084fc', '#3ddc97', '#ffb454'];
@@ -13800,7 +14002,105 @@ if (useNewRefactorEngine) {
                     }
                 }
             };
+
+            // ========== CERTIFICACIÓN ARCHITECT ==========
+            function isCertificationUnlocked() {
+                return localStorage.getItem('cc-level-6-completed') === 'true';
+            }
+
+            function updateCertificationUI() {
+                const unlockBanner = document.getElementById('cert-unlock-banner');
+                const certContent = document.getElementById('cert-content');
+                const certLink = document.querySelector('[data-level="cert"]');
+
+                if (isCertificationUnlocked()) {
+                    if (unlockBanner) unlockBanner.style.display = 'none';
+                    if (certContent) certContent.style.display = 'block';
+                    if (certLink) {
+                        certLink.classList.remove('nav-item-locked');
+                        certLink.classList.add('unlocked');
+                    }
+                } else {
+                    if (unlockBanner) unlockBanner.style.display = 'flex';
+                    if (certContent) certContent.style.display = 'none';
+                    if (certLink) {
+                        certLink.classList.add('nav-item-locked');
+                        certLink.onclick = (e) => {
+                            e.preventDefault();
+                            scrollToLevel(6);
+                        };
+                    }
+                }
+            }
+
+            function openCertDiagram() {
+                const modal = document.getElementById('cert-modal');
+                if (modal) {
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            function closeCertModal() {
+                const modal = document.getElementById('cert-modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+
+            function downloadCertDocuments() {
+                alert('📥 Documentos de certificación disponibles en:\nC:\\Users\\usuario\\.claude\\curso-claude-code\\');
+            }
+
+            function scrollToLevel(level) {
+                const section = document.querySelector(`[data-level="${level}"].nav-link`);
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                    section.click();
+                }
+            }
+
+            // Inicializar certificación UI
+            updateCertificationUI();
+
+            // Listener para cambios en nivel 6
+            const originalSetItem = Storage.prototype.setItem;
+            Storage.prototype.setItem = function(key, value) {
+                originalSetItem.apply(this, arguments);
+                if (key === 'cc-level-6-completed') {
+                    updateCertificationUI();
+                }
+            };
+
+            // Modal controls
+            const certModal = document.getElementById('cert-modal');
+            if (certModal) {
+                certModal.addEventListener('click', (e) => {
+                    if (e.target === certModal) {
+                        closeCertModal();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') closeCertModal();
+                });
+            }
         });
     </script>
+
+    <!-- Modal para diagrama de certificación -->
+    <div id="cert-modal" class="cert-modal">
+        <div class="cert-modal-content">
+            <div class="cert-modal-header">
+                <h3>📊 Diagrama Interactivo - Certificación Architect</h3>
+                <button class="cert-modal-close" onclick="closeCertModal()">✕</button>
+            </div>
+            <div class="cert-modal-body">
+                <iframe src="diagrama-certificacion-architect.html"></iframe>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

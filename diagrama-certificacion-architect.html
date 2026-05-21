@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruta de Certificación - Claude Certified Architect</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0d0d0d;
+            color: #e6edf3;
+            font-family: 'Inter', system-ui, sans-serif;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #5eb8ff; }
+        .subtitle { color: #9aa7b8; font-size: 1.1rem; margin-bottom: 2rem; }
+
+        /* Grid de 5 dominios × 3 fases */
+        .matriz {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .header-fila {
+            display: grid;
+            grid-template-columns: 150px repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .label-fase {
+            padding: 1rem;
+            background: #1a1a1a;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #ff7a59;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dominio-header {
+            padding: 1rem;
+            background: #262626;
+            border: 2px solid #5eb8ff;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #5eb8ff;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .fila-dominio {
+            display: grid;
+            grid-template-columns: 150px repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .fase-label {
+            padding: 1rem;
+            background: #1f2937;
+            border: 2px solid #ff7a59;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #ff7a59;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .celda {
+            padding: 1.5rem;
+            background: #1a1a1a;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .celda:hover {
+            background: #262626;
+            border-color: #5eb8ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(94, 184, 255, 0.15);
+        }
+
+        .celda.fase-1 { border-left: 4px solid #3ddc97; }
+        .celda.fase-2 { border-left: 4px solid #ffb454; }
+        .celda.fase-3 { border-left: 4px solid #ff6b6b; }
+
+        .celda-titulo {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .celda-contenido {
+            font-size: 0.85rem;
+            color: #9aa7b8;
+            line-height: 1.4;
+        }
+
+        .barra-progreso {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #262626;
+            border-radius: 12px;
+            border: 1px solid #3a3a3a;
+        }
+
+        .progreso-titulo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #5eb8ff;
+        }
+
+        .semanas-timeline {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .semana {
+            aspect-ratio: 1;
+            background: #1a1a1a;
+            border: 1px solid #2d3748;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .semana.fase-1 { background: rgba(61, 220, 151, 0.15); border-color: #3ddc97; color: #3ddc97; }
+        .semana.fase-2 { background: rgba(255, 180, 84, 0.15); border-color: #ffb454; color: #ffb454; }
+        .semana.fase-3 { background: rgba(255, 107, 107, 0.15); border-color: #ff6b6b; color: #ff6b6b; }
+
+        .semana:hover { transform: scale(1.1); }
+
+        .leyenda {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #1a1a1a;
+            border-radius: 8px;
+        }
+
+        .item-leyenda {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .color-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .columna-resumen {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card-resumen {
+            padding: 2rem;
+            background: #262626;
+            border-left: 4px solid;
+            border-radius: 8px;
+        }
+
+        .card-resumen h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .card-resumen ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card-resumen li {
+            padding: 0.5rem 0;
+            color: #9aa7b8;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .card-resumen li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: inherit;
+        }
+
+        .card-resumen.verde { border-left-color: #3ddc97; }
+        .card-resumen.naranja { border-left-color: #ffb454; }
+        .card-resumen.rojo { border-left-color: #ff6b6b; }
+        .card-resumen.azul { border-left-color: #5eb8ff; }
+
+        .estadisticas {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            padding: 1.5rem;
+            background: #1a1a1a;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-valor {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #5eb8ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #9aa7b8;
+            font-size: 0.9rem;
+        }
+
+        .seccion {
+            margin-bottom: 4rem;
+        }
+
+        .seccion-titulo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #ff7a59;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #2d3748;
+        }
+
+        .codigo-sample {
+            background: #0d0d0d;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+        }
+
+        .codigo-sample code {
+            color: #5eb8ff;
+            line-height: 1.6;
+        }
+
+        .checkmark { color: #3ddc97; }
+        .pending { color: #ffb454; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Ruta de Certificación - Claude Certified Architect</h1>
+        <p class="subtitle">Plan de 12 semanas · 1 hora/día · 5 Dominios · 6 Escenarios</p>
+
+        <!-- MATRIZ 5×3 -->
+        <div class="seccion">
+            <h2 class="seccion-titulo">Matriz de Dominios × Fases</h2>
+
+            <!-- Headers de dominios -->
+            <div class="header-fila">
+                <div></div>
+                <div class="dominio-header">🔄 Agentic Loops</div>
+                <div class="dominio-header">🛠️ Tool Design</div>
+                <div class="dominio-header">⚙️ CI/CD Integration</div>
+                <div class="dominio-header">✍️ Prompt Engineering</div>
+                <div class="dominio-header">📊 Context Management</div>
+            </div>
+
+            <!-- Fase 1: Foundations (Semanas 1-4) -->
+            <div class="fila-dominio">
+                <div class="fase-label">FASE 1<br>Fundamentos<br>(Sem 1-4)</div>
+
+                <div class="celda fase-1">
+                    <div class="celda-titulo">Agent Loop Básico</div>
+                    <div class="celda-contenido">
+                        • Ciclo percepción-decisión-acción<br>
+                        • Stop reasons (tool_use/end_turn)<br>
+                        • Halt conditions
+                    </div>
+                </div>
+
+                <div class="celda fase-1">
+                    <div class="celda-titulo">JSON-Schema</div>
+                    <div class="celda-contenido">
+                        • Definición de herramientas<br>
+                        • Validación básica<br>
+                        • Composición simple
+                    </div>
+                </div>
+
+                <div class="celda fase-1">
+                    <div class="celda-titulo">Pipeline Intro</div>
+                    <div class="celda-contenido">
+                        • GitHub Actions básico<br>
+                        • Validación de prompts<br>
+                        • Deploy simple
+                    </div>
+                </div>
+
+                <div class="celda fase-1">
+                    <div class="celda-titulo">Prompting Basics</div>
+                    <div class="celda-contenido">
+                        • Zero-shot vs Few-shot<br>
+                        • Chain of Thought<br>
+                        • Token optimization
+                    </div>
+                </div>
+
+                <div class="celda fase-1">
+                    <div class="celda-titulo">Context Basics</div>
+                    <div class="celda-contenido">
+                        • Límites de contexto<br>
+                        • Embeddings 101<br>
+                        • Caching introducción
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fase 2: Applied (Semanas 5-8) -->
+            <div class="fila-dominio">
+                <div class="fase-label">FASE 2<br>Aplicado<br>(Sem 5-8)</div>
+
+                <div class="celda fase-2">
+                    <div class="celda-titulo">Multi-Agent Orchestration</div>
+                    <div class="celda-contenido">
+                        • Hub-and-spoke pattern<br>
+                        • Agent communication<br>
+                        • Load balancing
+                    </div>
+                </div>
+
+                <div class="celda fase-2">
+                    <div class="celda-titulo">Advanced Tool Design</div>
+                    <div class="celda-contenido">
+                        • Rate limiting<br>
+                        • Circuit breaker<br>
+                        • Error handling robusto
+                    </div>
+                </div>
+
+                <div class="celda fase-2">
+                    <div class="celda-titulo">Advanced Pipelines</div>
+                    <div class="celda-contenido">
+                        • Canary deployments<br>
+                        • Rollback automático<br>
+                        • Monitoring integrado
+                    </div>
+                </div>
+
+                <div class="celda fase-2">
+                    <div class="celda-titulo">Advanced Prompting</div>
+                    <div class="celda-contenido">
+                        • Structured outputs<br>
+                        • Multi-pass validation<br>
+                        • Quality evaluation
+                    </div>
+                </div>
+
+                <div class="celda fase-2">
+                    <div class="celda-titulo">RAG & Vector DB</div>
+                    <div class="celda-contenido">
+                        • Embeddings avanzado<br>
+                        • Vector search<br>
+                        • Cache multinivel
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fase 3: Exam Prep (Semanas 9-12) -->
+            <div class="fila-dominio">
+                <div class="fase-label">FASE 3<br>Exam Prep<br>(Sem 9-12)</div>
+
+                <div class="celda fase-3">
+                    <div class="celda-titulo">Scenario Mastery</div>
+                    <div class="celda-contenido">
+                        • 6 escenarios de examen<br>
+                        • Decision trees<br>
+                        • Trade-off analysis
+                    </div>
+                </div>
+
+                <div class="celda fase-3">
+                    <div class="celda-titulo">Tool Integration Tests</div>
+                    <div class="celda-contenido">
+                        • End-to-end testing<br>
+                        • Edge cases<br>
+                        • Failure scenarios
+                    </div>
+                </div>
+
+                <div class="celda fase-3">
+                    <div class="celda-titulo">Production Readiness</div>
+                    <div class="celda-contenido">
+                        • SLA compliance<br>
+                        • Disaster recovery<br>
+                        • Cost optimization
+                    </div>
+                </div>
+
+                <div class="celda fase-3">
+                    <div class="celda-titulo">Exam Drills</div>
+                    <div class="celda-contenido">
+                        • 50-question format<br>
+                        • 3 practice exams<br>
+                        • Time management
+                    </div>
+                </div>
+
+                <div class="celda fase-3">
+                    <div class="celda-titulo">Retrospectives</div>
+                    <div class="celda-contenido">
+                        • Post-mortems reales<br>
+                        • Lessons learned<br>
+                        • Best practices
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIMELINE 12 SEMANAS -->
+        <div class="barra-progreso">
+            <div class="progreso-titulo">📅 Timeline de 12 Semanas</div>
+            <div class="semanas-timeline">
+                <div class="semana fase-1">S1</div>
+                <div class="semana fase-1">S2</div>
+                <div class="semana fase-1">S3</div>
+                <div class="semana fase-1">S4</div>
+                <div class="semana fase-2">S5</div>
+                <div class="semana fase-2">S6</div>
+                <div class="semana fase-2">S7</div>
+                <div class="semana fase-2">S8</div>
+                <div class="semana fase-3">S9</div>
+                <div class="semana fase-3">S10</div>
+                <div class="semana fase-3">S11</div>
+                <div class="semana fase-3">S12</div>
+            </div>
+
+            <div class="leyenda">
+                <div class="item-leyenda">
+                    <div class="color-box" style="background: rgba(61, 220, 151, 0.3);"></div>
+                    <span><strong>Fase 1:</strong> Fundamentos (Semanas 1-4)</span>
+                </div>
+                <div class="item-leyenda">
+                    <div class="color-box" style="background: rgba(255, 180, 84, 0.3);"></div>
+                    <span><strong>Fase 2:</strong> Aplicado (Semanas 5-8)</span>
+                </div>
+                <div class="item-leyenda">
+                    <div class="color-box" style="background: rgba(255, 107, 107, 0.3);"></div>
+                    <span><strong>Fase 3:</strong> Exam Prep (Semanas 9-12)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESTADÍSTICAS CLAVE -->
+        <div class="seccion">
+            <h2 class="seccion-titulo">📊 Estadísticas de Certificación</h2>
+            <div class="estadisticas">
+                <div class="stat">
+                    <div class="stat-valor">12</div>
+                    <div class="stat-label">Semanas de Estudio</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-valor">60h</div>
+                    <div class="stat-label">Total (1h/día)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-valor">50</div>
+                    <div class="stat-label">Preguntas en Examen</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-valor">6</div>
+                    <div class="stat-label">Escenarios Reales</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6 ESCENARIOS DE EXAMEN -->
+        <div class="seccion">
+            <h2 class="seccion-titulo">🎯 Los 6 Escenarios de Examen</h2>
+            <div class="columna-resumen">
+                <div class="card-resumen azul">
+                    <h3>1️⃣ Atención al Cliente Escalable</h3>
+                    <ul>
+                        <li>Orquestación multi-agent</li>
+                        <li>Context isolation por cliente</li>
+                        <li>Rate limiting y circuit breaker</li>
+                        <li>Duración: 90 min</li>
+                    </ul>
+                </div>
+                <div class="card-resumen azul">
+                    <h3>2️⃣ Pipeline Análisis Legal</h3>
+                    <ul>
+                        <li>RAG con embeddings específicos</li>
+                        <li>Validación multi-pass</li>
+                        <li>Audit trail completo</li>
+                        <li>Duración: 90 min</li>
+                    </ul>
+                </div>
+                <div class="card-resumen azul">
+                    <h3>3️⃣ Recomendaciones Personalizado</h3>
+                    <ul>
+                        <li>Vector DB y similarity search</li>
+                        <li>Context window optimization</li>
+                        <li>Cache strategy design</li>
+                        <li>Duración: 120 min</li>
+                    </ul>
+                </div>
+                <div class="card-resumen azul">
+                    <h3>4️⃣ Automatización RPA</h3>
+                    <ul>
+                        <li>Tool composition complejo</li>
+                        <li>Error handling robusto</li>
+                        <li>Deterministic enforcement</li>
+                        <li>Duración: 120 min</li>
+                    </ul>
+                </div>
+                <div class="card-resumen azul">
+                    <h3>5️⃣ Monitoreo Inteligente</h3>
+                    <ul>
+                        <li>Observability y logging</li>
+                        <li>Cost tracking por request</li>
+                        <li>Performance profiling</li>
+                        <li>Duración: 90 min</li>
+                    </ul>
+                </div>
+                <div class="card-resumen azul">
+                    <h3>6️⃣ Asistente de Desarrollo</h3>
+                    <ul>
+                        <li>Agent autonomy control</li>
+                        <li>Multi-round interactions</li>
+                        <li>State management avanzado</li>
+                        <li>Duración: 150 min</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANTI-PATRONES A EVITAR -->
+        <div class="seccion">
+            <h2 class="seccion-titulo">⚠️ 18+ Anti-Patrones Arquitectónicos</h2>
+            <div class="columna-resumen">
+                <div class="card-resumen rojo">
+                    <h3>Errores Comunes en Loops</h3>
+                    <ul>
+                        <li><span class="pending">❌</span> Sin halt conditions (loops infinitos)</li>
+                        <li><span class="pending">❌</span> Ignorar stop_reason</li>
+                        <li><span class="pending">❌</span> Context window unlimited</li>
+                    </ul>
+                </div>
+                <div class="card-resumen rojo">
+                    <h3>Errores en Tool Design</h3>
+                    <ul>
+                        <li><span class="pending">❌</span> JSON-Schema incompleto</li>
+                        <li><span class="pending">❌</span> Sin validación de entrada</li>
+                        <li><span class="pending">❌</span> Timeouts no configurados</li>
+                    </ul>
+                </div>
+                <div class="card-resumen rojo">
+                    <h3>Errores en Orquestación</h3>
+                    <ul>
+                        <li><span class="pending">❌</span> Sin circuit breaker</li>
+                        <li><span class="pending">❌</span> Context leakage entre agents</li>
+                        <li><span class="pending">❌</span> No retry logic</li>
+                    </ul>
+                </div>
+                <div class="card-resumen rojo">
+                    <h3>Errores en Prompting</h3>
+                    <ul>
+                        <li><span class="pending">❌</span> Prompts no validados</li>
+                        <li><span class="pending">❌</span> Sin formato estructurado</li>
+                        <li><span class="pending">❌</span> Tokens excesivos</li>
+                    </ul>
+                </div>
+                <div class="card-resumen rojo">
+                    <h3>Errores en Context Mgmt</h3>
+                    <ul>
+                        <li><span class="pending">❌</span> Sin cache strategy</li>
+                        <li><span class="pending">❌</span> RAG sin filtrado</li>
+                        <li><span class="pending">❌</span> Embeddings outdated</li>
+                    </ul>
+                </div>
+                <div class="card-resumen rojo">
+                    <h3>Errores de Deployment</h3>
+                    <ul>
+                        <li><span class="pending">❌</span> Sin canary deploy</li>
+                        <li><span class="pending">❌</span> No rollback plan</li>
+                        <li><span class="pending">❌</span> Cost uncontrolled</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- HABILIDADES CLAVE POR FASE -->
+        <div class="seccion">
+            <h2 class="seccion-titulo">💡 Habilidades Clave por Fase</h2>
+            <div class="columna-resumen">
+                <div class="card-resumen verde">
+                    <h3>✅ Fase 1: Fundamentos</h3>
+                    <ul>
+                        <li><span class="checkmark">✔️</span> Agent loop básico (Python)</li>
+                        <li><span class="checkmark">✔️</span> JSON-Schema validation</li>
+                        <li><span class="checkmark">✔️</span> Stop reason handling</li>
+                        <li><span class="checkmark">✔️</span> Basic prompt optimization</li>
+                        <li><span class="checkmark">✔️</span> Context limit awareness</li>
+                    </ul>
+                </div>
+                <div class="card-resumen naranja">
+                    <h3>✅ Fase 2: Aplicado</h3>
+                    <ul>
+                        <li><span class="checkmark">✔️</span> Multi-agent orchestration</li>
+                        <li><span class="checkmark">✔️</span> Advanced tool composition</li>
+                        <li><span class="checkmark">✔️</span> CI/CD pipelines (GitHub Actions)</li>
+                        <li><span class="checkmark">✔️</span> Structured output validation</li>
+                        <li><span class="checkmark">✔️</span> Vector DB integration</li>
+                    </ul>
+                </div>
+                <div class="card-resumen rojo">
+                    <h3>✅ Fase 3: Examen</h3>
+                    <ul>
+                        <li><span class="checkmark">✔️</span> Resolver 6 escenarios</li>
+                        <li><span class="checkmark">✔️</span> Identificar anti-patrones</li>
+                        <li><span class="checkmark">✔️</span> Architecture trade-offs</li>
+                        <li><span class="checkmark">✔️</span> Production readiness checks</li>
+                        <li><span class="checkmark">✔️</span> 50-question exam (70%+ score)</li>
+                    </ul>
+                </div>
+                <div class="card-resumen azul">
+                    <h3>🎓 Maestría Final</h3>
+                    <ul>
+                        <li><span class="checkmark">✔️</span> Diseñar sistemas con agentes</li>
+                        <li><span class="checkmark">✔️</span> Escalar a producción</li>
+                        <li><span class="checkmark">✔️</span> Optimizar costos</li>
+                        <li><span class="checkmark">✔️</span> Troubleshoot rápido</li>
+                        <li><span class="checkmark">✔️</span> Certified Architect ✨</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CÓDIGO EJEMPLO RÁPIDO -->
+        <div class="seccion">
+            <h2 class="seccion-titulo">💻 Ejemplo de Código: Agent Loop Básico</h2>
+            <div class="codigo-sample">
+                <code>
+# Claude Certified Architect - Agent Loop Pattern
+import anthropic
+import json
+
+client = anthropic.Anthropic()
+
+def run_agent_loop(task: str, max_iterations: int = 10):
+    """
+    Agent loop básico con halt conditions
+    Demuestra: stop_reason handling, tool use, context awareness
+    """
+    messages = [
+        {"role": "user", "content": task}
+    ]
+
+    tools = [
+        {
+            "name": "search_knowledge_base",
+            "description": "Buscar en base de conocimiento",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"},
+                    "limit": {"type": "integer"}
+                },
+                "required": ["query"]
+            }
+        }
+    ]
+
+    iteration = 0
+    while iteration < max_iterations:
+        iteration += 1
+
+        # Call Claude with agentic behavior enabled
+        response = client.messages.create(
+            model="claude-opus-4-7",
+            max_tokens=2048,
+            tools=tools,
+            messages=messages
+        )
+
+        # Check halt condition: stop_reason
+        if response.stop_reason == "end_turn":
+            print("✅ Agent completed task")
+            return response.content[-1].text
+
+        elif response.stop_reason == "tool_use":
+            # Process tool calls
+            tool_results = []
+            for content in response.content:
+                if hasattr(content, 'type') and content.type == "tool_use":
+                    print(f"🔧 Tool call: {content.name}")
+                    # Execute tool (simulated)
+                    result = f"Result for {content.name}"
+                    tool_results.append({
+                        "type": "tool_result",
+                        "tool_use_id": content.id,
+                        "content": result
+                    })
+
+            # Add assistant response and tool results to messages
+            messages.append({"role": "assistant", "content": response.content})
+            messages.append({"role": "user", "content": tool_results})
+
+        else:
+            print(f"⚠️ Unexpected stop_reason: {response.stop_reason}")
+            break
+
+    print("❌ Max iterations reached - potential infinite loop")
+    return None
+
+# Ejemplo de uso
+if __name__ == "__main__":
+    result = run_agent_loop(
+        "Analiza estos datos y proporciona un resumen ejecutivo"
+    )
+    print(f"Resultado final: {result}")
+                </code>
+            </div>
+        </div>
+
+        <!-- CHECKLIST FINAL -->
+        <div class="seccion">
+            <h2 class="seccion-titulo">✨ Checklist para Pasar la Certificación</h2>
+            <div class="columna-resumen">
+                <div class="card-resumen verde">
+                    <h3>Semanas 1-4: Fundamentos</h3>
+                    <ul>
+                        <li><span class="checkmark">✓</span> Completar Semana 1 (Agentic loops)</li>
+                        <li><span class="checkmark">✓</span> Completar Semana 2 (Tool design)</li>
+                        <li><span class="checkmark">✓</span> Completar Semana 3 (CI/CD intro)</li>
+                        <li><span class="checkmark">✓</span> Completar Semana 4 (Context basics)</li>
+                        <li><span class="checkmark">✓</span> Checkpoint 1: Quiz 20 preguntas</li>
+                    </ul>
+                </div>
+                <div class="card-resumen naranja">
+                    <h3>Semanas 5-8: Aplicado</h3>
+                    <ul>
+                        <li><span class="checkmark">✓</span> Multi-agent orchestration</li>
+                        <li><span class="checkmark">✓</span> Advanced tool composition</li>
+                        <li><span class="checkmark">✓</span> CI/CD avanzado</li>
+                        <li><span class="checkmark">✓</span> RAG + Vector DB</li>
+                        <li><span class="checkmark">✓</span> Checkpoint 2: Ejercicio práctico</li>
+                    </ul>
+                </div>
+                <div class="card-resumen rojo">
+                    <h3>Semanas 9-12: Exam</h3>
+                    <ul>
+                        <li><span class="checkmark">✓</span> Resolver 6 escenarios</li>
+                        <li><span class="checkmark">✓</span> Identificar anti-patrones</li>
+                        <li><span class="checkmark">✓</span> 3 exámenes de práctica</li>
+                        <li><span class="checkmark">✓</span> Score 70%+ en simulados</li>
+                        <li><span class="checkmark">✓</span> Exam final: 50 preguntas</li>
+                    </ul>
+                </div>
+                <div class="card-resumen azul">
+                    <h3>🎓 Después del Examen</h3>
+                    <ul>
+                        <li><span class="checkmark">✓</span> Score ≥ 70% = CERTIFICADO</li>
+                        <li><span class="checkmark">✓</span> Badge digital publicable</li>
+                        <li><span class="checkmark">✓</span> Reconocimiento oficial</li>
+                        <li><span class="checkmark">✓</span> Acceso a recursos exclusivos</li>
+                        <li><span class="checkmark">✓</span> Comunidad de arquitectos</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="margin-top: 4rem; padding: 2rem; background: #1a1a1a; border-radius: 8px; text-align: center; color: #9aa7b8;">
+            <p style="margin-bottom: 1rem;">Documentación oficial: <strong>Claude Certified Architect</strong></p>
+            <p style="font-size: 0.9rem;">Preparación completada con agentes de contenido · Formación integral · Código listo para usar</p>
+            <p style="font-size: 0.85rem; margin-top: 1rem; color: #7a8a9e;">📚 Revisa los documentos generados para estudio profundo · 💻 Practica con ejemplos de código · 🎯 Resuelve los 6 escenarios</p>
+        </div>
+    </div>
+</body>
+</html>
