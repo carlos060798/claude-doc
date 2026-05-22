@@ -1,0 +1,305 @@
+{
+  "p9_quizzes": {
+    "agent_sdk": [
+      {
+        "id": "sdk_q1",
+        "question": "¿Cuál es la diferencia principal entre Agent SDK y Claude API directamente?",
+        "level": "L3-Understand",
+        "options": [
+          {
+            "text": "Agent SDK es solo para Python, API es para cualquier lenguaje",
+            "correct": false
+          },
+          {
+            "text": "Agent SDK maneja loops automáticos, API requiere que hagas el loop manualmente",
+            "correct": true
+          },
+          {
+            "text": "Agent SDK cuesta más pero es más barato en volumen",
+            "correct": false
+          },
+          {
+            "text": "No hay diferencia, son nombres diferentes del mismo producto",
+            "correct": false
+          }
+        ],
+        "explanation": "Agent SDK abstrae el ciclo percepción-decisión-acción (manejo de stop_reason, tool_use, etc), mientras que con Claude API debes implementar esto manualmente."
+      },
+      {
+        "id": "sdk_q2",
+        "question": "¿Qué significa stop_reason='tool_use' en la respuesta?",
+        "level": "L3-Understand",
+        "options": [
+          {
+            "text": "Hubo un error en la llamada a la herramienta",
+            "correct": false
+          },
+          {
+            "text": "El agente quiere usar una herramienta, debes procesar la llamada",
+            "correct": true
+          },
+          {
+            "text": "El agente terminó y tiene respuesta final",
+            "correct": false
+          },
+          {
+            "text": "No hay herramientas disponibles",
+            "correct": false
+          }
+        ],
+        "explanation": "stop_reason='tool_use' indica que el modelo quiere llamar a una herramienta. Debes ejecutarla y enviar resultados de vuelta en el siguiente mensaje."
+      },
+      {
+        "id": "sdk_q3",
+        "question": "¿Cuándo es mejor usar Agent SDK en lugar de Claude Code?",
+        "level": "L3-Apply",
+        "options": [
+          {
+            "text": "Cuando necesitas UI visual con resultados",
+            "correct": false
+          },
+          {
+            "text": "Para automatización no interactiva, multi-step, con control total del flujo",
+            "correct": true
+          },
+          {
+            "text": "Solo cuando necesitas Python, no TypeScript",
+            "correct": false
+          },
+          {
+            "text": "Siempre, es mejor en todos los casos",
+            "correct": false
+          }
+        ],
+        "explanation": "Agent SDK brilla en automatización servidor-lado, orquestación compleja y producción. Claude Code es mejor para prototipado rápido con UI."
+      },
+      {
+        "id": "sdk_q4",
+        "question": "¿Qué overhead de tokens agrega típicamente Agent SDK vs Claude API?",
+        "level": "L2-Remember",
+        "options": [
+          {
+            "text": "0% - exactamente lo mismo",
+            "correct": false
+          },
+          {
+            "text": "1-3% por metadatos y definiciones de herramientas",
+            "correct": true
+          },
+          {
+            "text": "10-20% por seguridad adicional",
+            "correct": false
+          },
+          {
+            "text": "50% más caro",
+            "correct": false
+          }
+        ],
+        "explanation": "El overhead es mínimo (<3%), principalmente por las definiciones de herramientas en JSON-Schema. El cost no es la razón para elegir Agent SDK."
+      }
+    ],
+    "adaptive_thinking": [
+      {
+        "id": "think_q1",
+        "question": "¿Cuál es la diferencia entre Adaptive Thinking y MAX_THINKING_TOKENS (deprecated)?",
+        "level": "L3-Understand",
+        "options": [
+          {
+            "text": "Son exactamente lo mismo, solo diferente nombre",
+            "correct": false
+          },
+          {
+            "text": "Adaptive es automático y ajusta el presupuesto; MAX_THINKING requiere que especifiques el presupuesto",
+            "correct": true
+          },
+          {
+            "text": "MAX_THINKING es mejor porque es más controlado",
+            "correct": false
+          },
+          {
+            "text": "Adaptive es más caro y siempre mejor",
+            "correct": false
+          }
+        ],
+        "explanation": "Adaptive Thinking (mayo 2026) detecta complejidad automáticamente y ajusta tokens. MAX_THINKING era fijo. Adaptive es más eficiente."
+      },
+      {
+        "id": "think_q2",
+        "question": "¿Cuándo es realmente justificable usar Adaptive Thinking?",
+        "level": "L3-Analyze",
+        "options": [
+          {
+            "text": "Siempre, es mejor en todos los casos",
+            "correct": false
+          },
+          {
+            "text": "Cuando ROI > 10x (mejora de calidad > 4x costo)",
+            "correct": true
+          },
+          {
+            "text": "Solo para tareas de matemáticas",
+            "correct": false
+          },
+          {
+            "text": "Nunca, es demasiado caro",
+            "correct": false
+          }
+        ],
+        "explanation": "Usar la matriz de decisión del módulo. ROI típico es 10-25000x para debugging, arquitectura y code generation. No vale para FAQs o tareas simples."
+      },
+      {
+        "id": "think_q3",
+        "question": "¿Cuál es la sobrecarga de latencia típica de Adaptive Thinking?",
+        "level": "L2-Remember",
+        "options": [
+          {
+            "text": "<5ms, imperceptible",
+            "correct": false
+          },
+          {
+            "text": "200-500ms para problemas complejos",
+            "correct": true
+          },
+          {
+            "text": "2+ segundos siempre",
+            "correct": false
+          },
+          {
+            "text": "No hay sobrecarga, costo cero",
+            "correct": false
+          }
+        ],
+        "explanation": "Adaptive añade pensamiento profundo, que toma 200-500ms. Pero la mejora en calidad (10-30%) es proporcional, especialmente para problemas difíciles."
+      }
+    ],
+    "batch_api": [
+      {
+        "id": "batch_q1",
+        "question": "¿Cuál es el descuento que ofrece Batch API?",
+        "level": "L2-Remember",
+        "options": [
+          {
+            "text": "25% más barato",
+            "correct": false
+          },
+          {
+            "text": "50% más barato en costo de tokens",
+            "correct": true
+          },
+          {
+            "text": "75% más barato",
+            "correct": false
+          },
+          {
+            "text": "Mismo precio, pero más rápido",
+            "correct": false
+          }
+        ],
+        "explanation": "Batch API ofrece exactamente 50% de descuento: $7.50/M input (vs $15/M) y $37.50/M output (vs $75/M)."
+      },
+      {
+        "id": "batch_q2",
+        "question": "¿Cuánto tiempo esperas resultados en Batch API?",
+        "level": "L2-Remember",
+        "options": [
+          {
+            "text": "1-2 horas garantizado",
+            "correct": false
+          },
+          {
+            "text": "4-24 horas (sin garantía SLA)",
+            "correct": true
+          },
+          {
+            "text": "24-48 horas",
+            "correct": false
+          },
+          {
+            "text": "En tiempo real, igual que API normal",
+            "correct": false
+          }
+        ],
+        "explanation": "Batch API procesa en 4-24 horas. Si necesitas <1 hora, usa Real-time API. Si puedes esperar overnight, usa Batch y ahorra 50%."
+      },
+      {
+        "id": "batch_q3",
+        "question": "¿Cuál es el tamaño mínimo viable para Batch API?",
+        "level": "L3-Apply",
+        "options": [
+          {
+            "text": "1 request (cualquier cantidad)",
+            "correct": false
+          },
+          {
+            "text": "100+ requests (ROI favorable después del costo de implementación)",
+            "correct": true
+          },
+          {
+            "text": "1,000+ requests",
+            "correct": false
+          },
+          {
+            "text": "1M+ requests",
+            "correct": false
+          }
+        ],
+        "explanation": "Break-even es ~100 requests. Debajo eso, overhead de setup no vale la pena. Con 100+, el 50% descuento justifica el trabajo."
+      },
+      {
+        "id": "batch_q4",
+        "question": "¿Qué formato usan las solicitudes en Batch API?",
+        "level": "L2-Remember",
+        "options": [
+          {
+            "text": "CSV (valores separados por comas)",
+            "correct": false
+          },
+          {
+            "text": "JSONL (JSON Lines - un objeto JSON por línea)",
+            "correct": true
+          },
+          {
+            "text": "XML",
+            "correct": false
+          },
+          {
+            "text": "Protocol Buffers",
+            "correct": false
+          }
+        ],
+        "explanation": "JSONL format: un JSON completo por línea. Ejemplo: {\"custom_id\":\"req-1\",\"params\":{...}} + newline + siguiente request."
+      }
+    ]
+  },
+  "p9_labs": {
+    "labs": [
+      {
+        "id": "lab_p9_1",
+        "title": "Lab 1: Build Your First Multi-Tool Agent (Agent SDK)",
+        "description": "Create a working TypeScript agent that can classify documents and search documentation. Implement stop_reason handling and tool calling loop.",
+        "difficulty": "Intermediate (L3)",
+        "duration": "60 minutes",
+        "skills": ["Agent SDK", "TypeScript", "Tool Use Loop", "JSON-Schema"],
+        "deliverable": "agent-classifier.ts (100+ lines, executable)"
+      },
+      {
+        "id": "lab_p9_2",
+        "title": "Lab 2: ROI Calculator - When is Adaptive Thinking Worth It?",
+        "description": "Build a cost-benefit analyzer. Input: task type, quality gain %, budget. Output: should you use adaptive thinking? Include 5 real case studies.",
+        "difficulty": "Intermediate (L3)",
+        "duration": "45 minutes",
+        "skills": ["Cost Analysis", "Decision Trees", "ROI Calculation"],
+        "deliverable": "roi-calculator.py (80+ lines with examples)"
+      },
+      {
+        "id": "lab_p9_3",
+        "title": "Lab 3: Batch API Pipeline - Process 1000 Documents",
+        "description": "Create a complete batch workflow: prepare JSONL, submit batch, poll for completion, parse results. Process 1000 mock documents through document classifier.",
+        "difficulty": "Advanced (L4)",
+        "duration": "90 minutes",
+        "skills": ["Batch API", "CLI", "JSONL Format", "Polling/Monitoring"],
+        "deliverable": "batch-pipeline.py (150+ lines, production-ready)"
+      }
+    ]
+  }
+}

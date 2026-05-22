@@ -189,6 +189,16 @@
                         <span class="nav-icon">📚</span> Glosario</a></li>
                 </ul>
 
+                <p class="nav-group-title">P9: Advanced Features</p>
+                <ul class="nav-list">
+                    <li><a href="#agent-sdk-practical" class="nav-link" data-section="agent-sdk-practical" data-mode="technical">
+                        <span class="nav-icon">🤖</span> Agent SDK Practical</a></li>
+                    <li><a href="#adaptive-thinking" class="nav-link" data-section="adaptive-thinking" data-mode="technical">
+                        <span class="nav-icon">💭</span> Adaptive Thinking</a></li>
+                    <li><a href="#batch-api-guide" class="nav-link" data-section="batch-api-guide" data-mode="technical">
+                        <span class="nav-icon">📦</span> Batch API Deep-Dive</a></li>
+                </ul>
+
                 <p class="nav-group-title">Certificación <span class="lock-icon">🔐</span></p>
                 <ul class="nav-list">
                     <li><a href="#certificacion" class="nav-link" data-section="certificacion" data-level="cert">
@@ -13577,6 +13587,147 @@ if (useNewRefactorEngine) {
 
                 <div class="section-cta">
                     <a href="#" class="btn btn-primary">Leer módulo Enterprise Playbook completo</a>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: AGENT SDK PRACTICAL ====== -->
+            <section class="content-section" data-section="agent-sdk-practical" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">P9 Advanced / Agent SDK</span>
+                    <h2>🤖 Agent SDK Practical Guide: Building Autonomous Agents</h2>
+                    <p class="section-lead">
+                        Learn when to use Agent SDK vs Claude Code vs Claude API. Build 3 working agents
+                        with TypeScript and Python. Master multi-tool reasoning and cost-benefit analysis.
+                    </p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <span class="topic-icon">📊</span>
+                        <h4>Decision Matrix</h4>
+                        <p>Compare Agent SDK, Claude Code, and Claude API. Know when to pick each for your use case.</p>
+                        <span class="card-tag">Level 3-4</span>
+                    </div>
+                    <div class="subtopic-card">
+                        <span class="topic-icon">🔧</span>
+                        <h4>Setup & Installation</h4>
+                        <p>Install Agent SDK via npm and pip. Configure API keys, create first agent in 5 minutes.</p>
+                        <span class="card-tag">Hands-on</span>
+                    </div>
+                    <div class="subtopic-card">
+                        <span class="topic-icon">⚙️</span>
+                        <h4>Multi-Tool Agent Loop</h4>
+                        <p>Implement the core pattern: handle stop_reason, process tool_use, accumulate messages.</p>
+                        <span class="card-tag">Core Pattern</span>
+                    </div>
+                    <div class="subtopic-card">
+                        <span class="topic-icon">💾</span>
+                        <h4>Stateful Agents</h4>
+                        <p>Build agents with memory and context. Track reasoning chain, manage state across turns.</p>
+                        <span class="card-tag">Advanced</span>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="C:\\Users\\usuario\\.claude\\curso-claude-code\\agent-sdk-practical.md" class="btn btn-primary" target="_blank">
+                        📖 Read Full Guide (1000+ lines)</a>
+                    <p style="margin-top: 12px; font-size: 0.9em; color: var(--text-muted);">
+                        Includes 3 working examples, benchmarks, production checklist, and decision trees.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: ADAPTIVE THINKING ====== -->
+            <section class="content-section" data-section="adaptive-thinking" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">P9 Advanced / Reasoning</span>
+                    <h2>💭 Advanced Reasoning: Adaptive Thinking Deep-Dive</h2>
+                    <p class="section-lead">
+                        Master the new reasoning capability introduced in May 2026. Learn when adaptive thinking
+                        is worth 4x the cost. Includes real benchmarks, ROI analysis, and 3 case studies.
+                    </p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <span class="topic-icon">🧠</span>
+                        <h4>What is Adaptive Thinking?</h4>
+                        <p>Dynamic reasoning budget based on problem complexity. 50-500ms latency overhead for 10-30% quality gain.</p>
+                        <span class="card-tag">May 2026 Feature</span>
+                    </div>
+                    <div class="subtopic-card">
+                        <span class="topic-icon">📊</span>
+                        <h4>Cost-Benefit Analysis</h4>
+                        <p>Should you enable it? ROI calculator shows when 4x cost is justified for better output quality.</p>
+                        <span class="card-tag">Decision Tree</span>
+                    </div>
+                    <div class="subtopic-card">
+                        <span class="topic-icon">📈</span>
+                        <h4>Real Benchmarks</h4>
+                        <p>Actual latency (+200-500ms), token usage (+2-4x), and quality improvements from production systems.</p>
+                        <span class="card-tag">Data-Driven</span>
+                    </div>
+                    <div class="subtopic-card">
+                        <span class="topic-icon">🎯</span>
+                        <h4>3 Production Case Studies</h4>
+                        <p>Debugging crisis (22K ROI), architecture decisions ($200K saved), code generation (25K ROI).</p>
+                        <span class="card-tag">Real Cases</span>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="C:\\Users\\usuario\\.claude\\curso-claude-code\\adaptive-thinking-guide.md" class="btn btn-primary" target="_blank">
+                        📖 Read Full Guide (800+ lines)</a>
+                    <p style="margin-top: 12px; font-size: 0.9em; color: var(--text-muted);">
+                        Learn internals, decision matrix, when to use vs MAX_THINKING_TOKENS, and implementation.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ====== SECCIÓN: BATCH API ====== -->
+            <section class="content-section" data-section="batch-api-guide" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">P9 Advanced / Cost Optimization</span>
+                    <h2>📦 Batch API Deep-Dive: 50% Cost Savings at Scale</h2>
+                    <p class="section-lead">
+                        Process 100-1M requests with 50% discount. Learn when batch API is worth it.
+                        Includes CLI workflows, 3 real case studies (doc classification, reports, ETL), and ROI calculator.
+                    </p>
+                </div>
+
+                <div class="topic-grid">
+                    <div class="subtopic-card">
+                        <span class="topic-icon">💰</span>
+                        <h4>50% Cost Savings</h4>
+                        <p>Batch API costs 50% less than real-time for non-urgent requests. Trade latency (4-24h) for cost.</p>
+                        <span class="card-tag">Cost Optimization</span>
+                    </div>
+                    <div class="subtopic-card">
+                        <span class="topic-icon">🔄</span>
+                        <h4>JSONL Format & CLI</h4>
+                        <p>Submit batches with claude batch submit. JSONL format (one request per line). Retrieve results when ready.</p>
+                        <span class="card-tag">Hands-on</span>
+                    </div>
+                    <div class="subtopic-card">
+                        <span class="topic-icon">🎯</span>
+                        <h4>Decision Tree</h4>
+                        <p>Batch vs real-time? Decision matrix for 10+ scenarios. Break-even at 100+ requests.</p>
+                        <span class="card-tag">Decision Tool</span>
+                    </div>
+                    <div class="subtopic-card">
+                        <span class="topic-icon">📊</span>
+                        <h4>3 Real Case Studies</h4>
+                        <p>Doc classification ($9.4K savings/yr), weekly reports ($625/mo savings), data ETL (100K rows).</p>
+                        <span class="card-tag">Real Workflows</span>
+                    </div>
+                </div>
+
+                <div class="section-cta">
+                    <a href="C:\\Users\\usuario\\.claude\\curso-claude-code\\batch-api-guide.md" class="btn btn-primary" target="_blank">
+                        📖 Read Full Guide (1200+ lines)</a>
+                    <p style="margin-top: 12px; font-size: 0.9em; color: var(--text-muted);">
+                        ROI calculator, Airflow DAG example, production monitoring setup, and break-even analysis.
+                    </p>
                 </div>
             </section>
 
