@@ -4580,3 +4580,162 @@ blockquote {
     background: #1f2937 !important;
     border-color: #3a3a3a !important;
 }
+
+/* ============================================================
+   P9: RUTA DE APRENDIZAJE — NUEVOS COMPONENTES
+   ============================================================ */
+
+/* Nav link destacado para Plan de Estudio */
+.nav-link-featured {
+    background: linear-gradient(135deg, rgba(94, 184, 255, 0.12), rgba(100, 220, 180, 0.08)) !important;
+    border: 1px solid rgba(94, 184, 255, 0.25) !important;
+    border-radius: 8px !important;
+    color: #5eb8ff !important;
+    font-weight: 600 !important;
+    margin: 2px 0 !important;
+    padding: 8px 12px !important;
+}
+.nav-link-featured:hover {
+    background: linear-gradient(135deg, rgba(94, 184, 255, 0.22), rgba(100, 220, 180, 0.15)) !important;
+    border-color: rgba(94, 184, 255, 0.5) !important;
+}
+
+/* Sección featured del Plan de Estudio */
+.p9-featured {
+    border: 2px solid rgba(94, 184, 255, 0.25) !important;
+    background: linear-gradient(180deg, rgba(94, 184, 255, 0.04) 0%, transparent 100%) !important;
+    border-radius: 16px !important;
+}
+
+/* Módulos P9 con borde izquierdo de acento */
+.p9-module {
+    border-left: 3px solid rgba(94, 184, 255, 0.35) !important;
+    padding-left: 24px !important;
+}
+
+/* Timeline de ruta de aprendizaje */
+.learning-path-timeline {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 20px 0;
+    margin: 24px 0;
+    flex-wrap: wrap;
+}
+
+.path-stage {
+    flex: 1;
+    min-width: 160px;
+    background: #1a1f2e;
+    border: 1px solid #2d3748;
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+}
+
+.path-stage-1 { border-top: 3px solid #64dcb4; }
+.path-stage-2 { border-top: 3px solid #5eb8ff; }
+.path-stage-3 { border-top: 3px solid #f5a623; }
+.path-stage-4 { border-top: 3px solid #e96c6c; }
+.path-stage-cert { border-top: 3px solid #ffd700; background: linear-gradient(135deg, #1a1f2e, #1f1a0e); }
+
+.stage-badge {
+    display: inline-block;
+    font-size: 0.7em;
+    font-weight: 700;
+    color: #9aa7b8;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+}
+
+.path-stage h3 {
+    font-size: 0.95em;
+    font-weight: 700;
+    color: #e6edf3;
+    margin: 0 0 8px;
+}
+
+.path-stage p {
+    font-size: 0.82em;
+    color: #9aa7b8;
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+
+.stage-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.stage-topic {
+    background: rgba(94, 184, 255, 0.1);
+    border: 1px solid rgba(94, 184, 255, 0.2);
+    border-radius: 4px;
+    color: #5eb8ff;
+    font-size: 0.72em;
+    padding: 2px 7px;
+}
+
+.path-arrow {
+    color: #4a5568;
+    font-size: 1.4em;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+/* Goals list en módulos P9 */
+.p9-learning-goals {
+    background: rgba(100, 220, 180, 0.05);
+    border: 1px solid rgba(100, 220, 180, 0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0 24px;
+}
+
+.p9-learning-goals h4 {
+    color: #64dcb4;
+    font-size: 0.9em;
+    font-weight: 700;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.goals-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.goals-list li {
+    color: #c9d5e0;
+    font-size: 0.88em;
+    line-height: 1.6;
+    padding: 2px 0;
+}
+
+.goals-list code {
+    background: rgba(94, 184, 255, 0.12);
+    border-radius: 4px;
+    color: #5eb8ff;
+    font-size: 0.9em;
+    padding: 1px 5px;
+}
+
+/* Responsive para timeline */
+@media (max-width: 900px) {
+    .learning-path-timeline {
+        flex-direction: column;
+    }
+    .path-arrow {
+        transform: rotate(90deg);
+        align-self: center;
+    }
+    .path-stage {
+        min-width: unset;
+        width: 100%;
+    }
+}
