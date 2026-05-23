@@ -13873,29 +13873,376 @@ if (useNewRefactorEngine) {
                     <p class="subtitle">De "¿qué salió mal?" a "lo sé en 5 minutos"</p>
                 </div>
                 <div class="section-intro">
-                    <p>Aprende a diagnosticar y resolver problemas complejos en minutos, no horas. Cubre token leaks, hook failures, MCP issues, agent slowness, y cost explosions.</p>
+                    <p>Cuando Claude Code falla en producción, el tiempo es crítico. Este módulo te enseña a diagnosticar <strong>cinco categorías de fallo común</strong> en menos de 5 minutos usando un árbol de decisión estructurado.</p>
                 </div>
-                <div class="topic-grid">
-                    <div class="subtopic-card">
-                        <h3>Token Leak Diagnostics</h3>
-                        <p>Detectar, debuggear y prevenir fugas de tokens. Casos reales y árboles de decisión.</p>
+
+                <!-- 5 SÍNTOMAS COMUNES + DIAGNOSIS -->
+                <div class="topic-section" style="border-left: 4px solid #ff6b6b; padding: 20px; background: rgba(255, 107, 107, 0.05); margin: 20px 0; border-radius: 4px;">
+                    <h3>5 Síntomas de Alerta Roja</h3>
+                    <ul>
+                        <li><strong>Token leak</strong>: Contexto crece ilimitadamente (P99 latency, OOM en 2-3 horas)</li>
+                        <li><strong>Hook failures</strong>: JSON inválido, timeouts, handshake errors</li>
+                        <li><strong>MCP connection issues</strong>: Stdio buffer deadlock, pool exhaustion</li>
+                        <li><strong>Agent slowness</strong>: P50 = 200ms, P99 = 5s (varianza 25×)</li>
+                        <li><strong>Cost explosion</strong>: Presupuesto diario se duplica en 24h</li>
+                    </ul>
+                </div>
+
+                <div class="topic-section" style="border-left: 4px solid #4ecdc4; padding: 20px; background: rgba(78, 205, 196, 0.05); margin: 20px 0; border-radius: 4px;">
+                    <h3>Diagnosis en 5 Pasos</h3>
+                    <ol style="padding-left: 20px;">
+                        <li><strong>Paso 1:</strong> ¿Cuándo comenzó? (timeline)</li>
+                        <li><strong>Paso 2:</strong> ¿Qué métrica cambió? (logs, CPU)</li>
+                        <li><strong>Paso 3:</strong> ¿Qué sistemas afecta? (scope)</li>
+                        <li><strong>Paso 4:</strong> ¿Qué cambió 24h antes? (commits)</li>
+                        <li><strong>Paso 5:</strong> ¿Cómo validamos fix? (antes/después)</li>
+                    </ol>
+                </div>
+
+                <!-- 1. TOKEN LEAK DIAGNOSTICS -->
+                <div class="topic-section" style="border-left: 4px solid #a78bfa; padding: 20px; background: rgba(167, 139, 250, 0.05); margin: 20px 0; border-radius: 4px;">
+                    <h3>1️⃣ Token Leak Diagnostics</h3>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Detectar Fuga de Tokens</h4>
+                        <pre><code>grep "usage.input_tokens" production.log | awk '{sum += $NF} END {print "Avg:", sum/NR}'
+
+# Esperado: 2,500–5,000 tokens
+# Leak: 15,000+ tokens</code></pre>
                     </div>
-                    <div class="subtopic-card">
-                        <h3>Hook Failures & Timeouts</h3>
-                        <p>Debugging JSON I/O, timeout causes, post-mortems. Runbooks para recuperación rápida.</p>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Caso Real: Histórico de conversación sin límite</h4>
+                        <p><strong>❌ ANTES</strong></p>
+                        <pre><code>async function processMessage(msg) {
+  const history = await db.getConversationHistory(userId); // NO LIMIT
+  return claude.messages.create({
+    model: "claude-opus",
+    messages: [...history, { role: "user", content: msg }],
+  });
+}
+// Día 1: 2,500 tokens avg
+// Día 3: 25,000 tokens avg (10× costo)</code></pre>
+
+                        <p><strong>✅ DESPUÉS</strong></p>
+                        <pre><code>async function processMessage(msg) {
+  const history = await db.getConversationHistory(userId, { limit: 20 });
+  return claude.messages.create({
+    model: "claude-opus",
+    messages: [...history, { role: "user", content: msg }],
+  });
+}
+// Resultado: 2,500–3,000 tokens consistently</code></pre>
                     </div>
-                    <div class="subtopic-card">
-                        <h3>MCP Connection Issues</h3>
-                        <p>Pool exhaustion, stdio deadlock, version mismatch. Diagnóstico profesional.</p>
-                    </div>
-                    <div class="subtopic-card">
-                        <h3>10 Runbooks Rápidos</h3>
-                        <p>Escenarios comunes con soluciones verificadas. Checklist copy-paste listos.</p>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Árbol de Decisión: Token Leak</h4>
+                        <pre><code>¿Token leak detectado?
+├─ SÍ: ¿Cambió contexto en últimas 48h?
+│  ├─ SÍ → Revisar memory section en CLAUDE.md
+│  │  └─ Buscar: Variable no se limpia entre requests
+│  │
+│  └─ NO: ¿Cambió prompts o system message?
+│     └─ Buscar: Prompt nuevo con 10× tokens
+│
+└─ NO: Es carga normal</code></pre>
                     </div>
                 </div>
 
+                <!-- 2. HOOK FAILURES -->
+                <div class="topic-section" style="border-left: 4px solid #f59e0b; padding: 20px; background: rgba(245, 158, 11, 0.05); margin: 20px 0; border-radius: 4px;">
+                    <h3>2️⃣ Hook Failures: JSON Input/Output</h3>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Causa #1: JSON Malformado</h4>
+                        <p><strong>❌ ANTES: Caracteres sin escape</strong></p>
+                        <pre><code>const payload = {
+  message: "User said: \"It's working!\"",  // ← Comillas sin escape
+  multiline: "First line
+Second line"  // ← Newline literal
+};
+const json_str = JSON.stringify(payload);
+// Resultado: INVÁLIDO</code></pre>
+
+                        <p><strong>✅ DESPUÉS</strong></p>
+                        <pre><code>const payload = {
+  message: "User said: \"It's working!\"",
+  multiline: "First line\nSecond line"
+};
+JSON.parse(JSON.stringify(payload));  // ← Validar antes de enviar</code></pre>
+                    </div>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Causa #2: Timeout en Handler</h4>
+                        <p><strong>❌ ANTES: Sin async</strong></p>
+                        <pre><code>@app.post("/hook/process")
+def handle_hook():
+    result = claude.messages.create(...)  # ← Bloquea 30s
+    return result</code></pre>
+
+                        <p><strong>✅ DESPUÉS: Con queuing</strong></p>
+                        <pre><code>@app.post("/hook/process")
+def handle_hook():
+    executor.submit(process_async, data)  # ← No bloquea
+    return {"status": "queued"}</code></pre>
+                    </div>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Post-Mortem: Hook Failure (2 Horas Debug)</h4>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="background: #f0f0f0;">
+                                <td style="border: 1px solid #ddd; padding: 10px;"><strong>Hora 10:15</strong></td>
+                                <td style="border: 1px solid #ddd; padding: 10px;">50% de hooks falla con "Invalid JSON"</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 10px;"><strong>Hora 10:20</strong></td>
+                                <td style="border: 1px solid #ddd; padding: 10px;">Revisar último commit → "Add streaming response" hace 90 min</td>
+                            </tr>
+                            <tr style="background: #f0f0f0;">
+                                <td style="border: 1px solid #ddd; padding: 10px;"><strong>Hora 10:45</strong></td>
+                                <td style="border: 1px solid #ddd; padding: 10px;">Problema encontrado → Stream genera múltiples eventos, no 1 JSON</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 10px;"><strong>Hora 11:00</strong></td>
+                                <td style="border: 1px solid #ddd; padding: 10px;">Fix implementado → Consumir stream completo antes de retornar</td>
+                            </tr>
+                            <tr style="background: #f0f0f0;">
+                                <td style="border: 1px solid #ddd; padding: 10px;"><strong>Hora 11:15</strong></td>
+                                <td style="border: 1px solid #ddd; padding: 10px;">Validado → ✅ 200 OK con JSON válido</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. MCP CONNECTION ISSUES -->
+                <div class="topic-section" style="border-left: 4px solid #8b5cf6; padding: 20px; background: rgba(139, 92, 246, 0.05); margin: 20px 0; border-radius: 4px;">
+                    <h3>3️⃣ MCP Connection Issues</h3>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Síntoma #1: Pool Exhaustion</h4>
+                        <p><strong>❌ ANTES: Sin cierre de conexión</strong></p>
+                        <pre><code>class MCPClient:
+    def send_request(self, payload):
+        conn = self.pool.acquire()
+        self.connections.append(conn)  # ← NUNCA se libera
+        return conn.send(payload)
+
+# Resultado: 1000 requests → 1000 conexiones → OVERFLOW</code></pre>
+
+                        <p><strong>✅ DESPUÉS</strong></p>
+                        <pre><code>def send_request(self, payload):
+    with self.pool.acquire() as conn:  # ← Auto-close
+        return conn.send(payload)</code></pre>
+                    </div>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Síntoma #2: Stdio Deadlock</h4>
+                        <p><strong>❌ ANTES: Buffer lleno, sin lectura</strong></p>
+                        <pre><code>proc.stdin.write(b"LARGE_PAYLOAD")  # ← Buffer lleno
+# proc.stdout.read() nunca se ejecuta → DEADLOCK</code></pre>
+
+                        <p><strong>✅ DESPUÉS: Non-blocking I/O</strong></p>
+                        <pre><code>def send_request(self, payload, timeout=5):
+    self.proc.stdin.write(payload.encode() + b"\n")
+    self.proc.stdin.flush()
+
+    start = time.time()
+    while time.time() - start < timeout:
+        if self.last_response:
+            return self.last_response
+        time.sleep(0.01)
+
+    raise TimeoutError()</code></pre>
+                    </div>
+                </div>
+
+                <!-- 4. AGENT SLOWNESS -->
+                <div class="topic-section" style="border-left: 4px solid #ec4899; padding: 20px; background: rgba(236, 72, 153, 0.05); margin: 20px 0; border-radius: 4px;">
+                    <h3>4️⃣ Agent Slowness: P50 vs P99</h3>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Medir Real</h4>
+                        <pre><code>grep "request_duration_ms" production.log | awk '{
+  data[NR] = $NF
+}
+END {
+  n = NR
+  p50 = data[int(n * 0.50)]
+  p99 = data[int(n * 0.99)]
+  print "P50:", p50, "ms"
+  print "P99:", p99, "ms"
+}'
+
+# Output:
+# P50: 180 ms
+# P99: 4200 ms (23× más lento)</code></pre>
+                    </div>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Causa: Cache Misses</h4>
+                        <p><strong>❌ ANTES: Sin caché</strong></p>
+                        <pre><code>async def process_user_request(user_id):
+    user_data = await db.get_user(user_id)  # ← 2s si cold
+    result = await claude.messages.create(...)  # ← 1.2s
+    return result  # Total: 3.2s
+
+# Latencias: Hit 1 = 3.2s, Hit 2 (warm) = 1.2s
+# P50 = 1.2s, P99 = 3.2s</code></pre>
+
+                        <p><strong>✅ DESPUÉS: Con caché 5 minutos</strong></p>
+                        <pre><code>class CachedUserData:
+    async def get_user(self, user_id):
+        if self.is_cached(user_id):
+            return self.cache[user_id]  # ← 1ms
+        data = await db.get_user(user_id)  # ← 2s (raro)
+        self.cache[user_id] = data
+        return data
+
+# Resultado: P50 = 1.2s, P99 = 1.2s (predecible)</code></pre>
+                    </div>
+                </div>
+
+                <!-- 5. COST EXPLOSION -->
+                <div class="topic-section" style="border-left: 4px solid #06b6d4; padding: 20px; background: rgba(6, 182, 212, 0.05); margin: 20px 0; border-radius: 4px;">
+                    <h3>5️⃣ Cost Explosion</h3>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Checklist 3 Minutos</h4>
+                        <pre><code>Gasto ayer: $X
+Gasto hoy: $2X
+
+□ ¿Deploy en últimas 24h? (revisar commit)
+□ ¿Cambió volumen requests? (medir traffic)
+□ ¿Cambió modelo (Opus → Sonnet)? (calcular delta)
+□ ¿Se habilitó caché? (¿por qué no?)
+□ ¿Loop infinito de retries? (detectar)</code></pre>
+                    </div>
+
+                    <div class="subsection" style="background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                        <h4>Caso: $10K → $3K/mes (72% Ahorro)</h4>
+                        <p><strong>❌ ANTES: Sin optimizaciones</strong></p>
+                        <pre><code>async def recommend_products(user_id):
+    # Sin caché: Claude Opus para cada user
+    recommendations = await claude.messages.create(
+        model="claude-opus",  # $15/1M tokens
+        messages=[{"role": "user", "content": f"User {user_id} prefs"}]
+    )
+    return recommendations
+
+# Costo: 100K requests × 5,000 tokens × $0.003/1K = $1,500/día = $45K/mes</code></pre>
+
+                        <p><strong>✅ DESPUÉS: 3 optimizaciones</strong></p>
+                        <pre><code># 1. Batch API: -50% costo
+# 2. Compression: 5,000 → 800 tokens
+# 3. Model downgrade: Opus → Sonnet (-80%)
+
+def batch_recommendations(user_ids):
+    requests = [
+        {
+            "custom_id": f"user-{uid}",
+            "params": {
+                "model": "claude-sonnet",  # $3/1M tokens
+                "messages": [...]
+            }
+        }
+        for uid in user_ids
+    ]
+    return client.batches.create(requests=requests)
+
+# Costo nuevo: 100K × 800 × $0.003 × 0.5 (batch) = $120/día = $3.6K/mes
+# Reducción: 72% ($45K → $3.6K) ✅</code></pre>
+                    </div>
+                </div>
+
+                <!-- 6. RUNBOOKS -->
+                <div class="topic-section" style="border-left: 4px solid #10b981; padding: 20px; background: rgba(16, 185, 129, 0.05); margin: 20px 0; border-radius: 4px;">
+                    <h3>6️⃣ Runbooks Rápidos: 10 Escenarios</h3>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                        <tr style="background: #f0f0f0;">
+                            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><strong>Síntoma</strong></th>
+                            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><strong>Check</strong></th>
+                            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><strong>Fix</strong></th>
+                            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><strong>Tiempo</strong></th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Latency sube gradualmente</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Token count? CPU >80%?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Sliding window, escalar</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">15 min</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td style="border: 1px solid #ddd; padding: 10px;">Hook 504 timeout</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">¿Handler bloquea?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Async queue, max 25s</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">10 min</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px;">JSON parse error</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">¿JSON válido?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Validar con json.loads()</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">5 min</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td style="border: 1px solid #ddd; padding: 10px;">MCP refused</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">¿Server arriba? ¿Puerto?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Restart, netstat</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">3 min</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Costo 2× en 24h</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">¿Deploy? ¿Modelo?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Rollback, circuit breaker</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">5 min</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td style="border: 1px solid #ddd; padding: 10px;">Agent retry loop</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">¿Sin max retries?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Set max_retries=3</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">3 min</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Memory leak</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">¿Context crece?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Implementar TTL</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">10 min</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td style="border: 1px solid #ddd; padding: 10px;">Context exceeded</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">¿Input > limit?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Batch pequeños, compression</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">8 min</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Rate limit hit</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">¿QPM alto?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Queue, exponential backoff</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">5 min</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td style="border: 1px solid #ddd; padding: 10px;">Respuestas inconsistentes</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">¿Temperature sin fijar?</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">temperature=0</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">3 min</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 7. CHECKLIST POST-INCIDENT -->
+                <div class="topic-section" style="border-left: 4px solid #f97316; padding: 20px; background: rgba(249, 115, 22, 0.05); margin: 20px 0; border-radius: 4px;">
+                    <h3>7️⃣ Checklist Post-Incident</h3>
+                    <pre><code>□ Timeline: ¿Cuándo comenzó exactamente?
+□ Impact: ¿Cuántos users afectados? ¿Duración?
+□ Root cause: ¿Qué cambió hace 24-48h?
+□ Fix: ¿Qué se hizo?
+□ Validation: ¿Cómo se verificó?
+□ Prevention: ¿Qué alertas agregar?
+□ Documentation: ¿Actualizar runbook?
+
+Resultado: Wiki "Common Issues" para futuros on-call</code></pre>
+                </div>
+
                 <div class="section-cta">
-                    <a href="troubleshooting.md" class="btn btn-primary">📖 Leer módulo completo</a>
+                    <a href="#" class="btn btn-primary">✅ Módulo Completado</a>
                 </div>
             </section>
 
@@ -13907,30 +14254,296 @@ if (useNewRefactorEngine) {
                     <p class="subtitle">De "cuesta mucho" a "presupuesto validado"</p>
                 </div>
                 <div class="section-intro">
-                    <p>Domina cost modeling, forecasting con 90% accuracy, budget allocation, y optimización. Ahorra 50-70% sin sacrificar calidad.</p>
+                    <p><strong>Domina cost modeling, forecasting con 90% accuracy, budget allocation y optimización.</strong> Este módulo te enseña a reducir costos 50-70% sin sacrificar calidad, presupuestar por equipo y monitorear en producción como una empresa. Tiempo estimado: 90-120 minutos. Requisito: L5.1-5.5, L4.5 (Token Optimization).</p>
                 </div>
-                <div class="topic-grid">
-                    <div class="subtopic-card">
-                        <h3>Cost Modeling 101</h3>
-                        <p>Fórmula simple, 5 levers de control, costo/min por modelo. Todos los números que necesitas.</p>
+
+                <!-- SECCIÓN 1: COST MODELING -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-5); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">📐 Sección 1: Cost Modeling 101</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">La fórmula base es simple. Hay 5 levers de control. Y números reales para cada modelo.</p>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin: var(--sp-6) 0;">
+                        <strong style="display: block; margin-bottom: var(--sp-4); color: var(--level-5);">Fórmula Base (Total Cost)</strong>
+                        <pre style="background: var(--bg-base); color: var(--text-primary); padding: var(--sp-4); overflow-x: auto; border-radius: var(--radius); font-size: 0.85em;"><code>Total Cost =
+  (Input Tokens × $0.003) +           // Input rate
+  (Cache Write × $0.00375) +           // 25% surcharge
+  (Cache Read × $0.0003) +             // 90% descuento
+  (Output Tokens × $0.012)             // Output 4× más caro</code></pre>
                     </div>
-                    <div class="subtopic-card">
-                        <h3>Forecasting Methodology</h3>
-                        <p>3-step: baseline → optimize → validate. Predice costos con 90% accuracy real.</p>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin-bottom: var(--sp-6);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-3);">Ejemplo Real: Summarizar 100 páginas</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6);">
+                            <li><strong>Request 1 (with cache setup):</strong> 50K input × $0.003 = $0.15 + Cache write $0.1875 + 500 output × $0.012 = $0.006 → <strong>Total: $0.3435</strong></li>
+                            <li><strong>Request 2-5 (reuse cache):</strong> 50K read (cached) × $0.0003 = $0.015 + 500 output × $0.012 = $0.006 → <strong>Total: $0.021 cada (90% discount!)</strong></li>
+                            <li><strong>Savings:</strong> 5 requests sin caché = $1.725 | Con caché = $0.405 → <strong>77% ahorro</strong></li>
+                        </ul>
                     </div>
-                    <div class="subtopic-card">
-                        <h3>8 Optimization Techniques</h3>
-                        <p>Caching (40%), Batch API (15%), Compression (25%), y más. 70% ahorro combinado.</p>
-                    </div>
-                    <div class="subtopic-card">
-                        <h3>Production Monitoring & ROI</h3>
-                        <p>Dashboards, alertas, log parsing. Análisis ROI para decisiones de inversión.</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); margin: var(--sp-6) 0;">
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-5);">5 Levers de Control</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0; font-size: 0.9em;">
+                                <li><strong>Model Selection</strong>: 5-10× (Opus→Sonnet)</li>
+                                <li><strong>Caching</strong>: 40-50% savings</li>
+                                <li><strong>Batch API</strong>: 15-25% discount</li>
+                                <li><strong>Context Compression</strong>: 25-35% reduction</li>
+                                <li><strong>Agent Reuse</strong>: 20-30% savings</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-5);">Costo/Min por Modelo</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0; font-size: 0.85em;">
+                                <li><strong>Opus 4.7:</strong> $0.18/min (cached)</li>
+                                <li><strong>Sonnet 4.6:</strong> $0.048/min</li>
+                                <li><strong>Haiku 4.5:</strong> $0.0048/min</li>
+                                <li><strong>Groq:</strong> $0.002/min (ultra-cheap)</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <div class="section-cta">
-                    <a href="cost-forecasting.md" class="btn btn-primary">📖 Leer módulo completo</a>
+                <!-- SECCIÓN 2: FORECASTING METHODOLOGY -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-5); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">📊 Sección 2: Forecasting Methodology (3 Pasos)</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">Baseline → Optimize → Validate. Predice costos con 90% accuracy.</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: var(--sp-6); margin: var(--sp-6) 0;">
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">Paso 1: Baseline (Medir Actual)</strong>
+                            <p style="color: var(--text-secondary); font-size: 0.9em; margin: 0 0 var(--sp-3) 0;">Obtén últimos 7 días: input_tokens, output_tokens, cache_reads. Calcula costo total.</p>
+                            <pre style="background: var(--bg-base); color: var(--text-primary); padding: var(--sp-3); overflow-x: auto; border-radius: var(--radius); font-size: 0.8em;"><code>curl api.anthropic.com/v1/usage?period=last_7_days
+INPUT_COST=$INPUT_TOKENS × 0.003 / 1000
+OUTPUT_COST=$OUTPUT_TOKENS × 0.012 / 1000
+TOTAL = INPUT_COST + OUTPUT_COST + CACHE_SAVINGS</code></pre>
+                        </div>
+
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">Paso 2: Optimize (Aplicar Técnicas)</strong>
+                            <p style="color: var(--text-secondary); font-size: 0.9em; margin: 0 0 var(--sp-3) 0;">Aplica 3-4 técnicas clave y mide reducción esperada:</p>
+                            <ul style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6); font-size: 0.9em;">
+                                <li>Cache (enable): -40%</li>
+                                <li>Batch API: -15%</li>
+                                <li>Haiku para tareas simples: -20%</li>
+                                <li>Context compression: -30%</li>
+                                <li><strong>COMBINED: 50-72% reduction</strong></li>
+                            </ul>
+                        </div>
+
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">Paso 3: Validate (Verificar Forecast 2 semanas después)</strong>
+                            <p style="color: var(--text-secondary); font-size: 0.9em; margin: 0 0 var(--sp-3) 0;">Compara predicción vs realidad. Target: error &lt;10%.</p>
+                            <pre style="background: var(--bg-base); color: var(--text-primary); padding: var(--sp-3); overflow-x: auto; border-radius: var(--radius); font-size: 0.8em;"><code>ERROR_PCT = abs((ACTUAL - FORECAST) / FORECAST) × 100
+If &lt; 10% → Forecast válido ✅
+If &gt; 10% → Ajusta assumptions</code></pre>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin-top: var(--sp-6);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-3);">Caso Real: Predicción 90% Accuracy</strong>
+                        <ul style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6);">
+                            <li><strong>Baseline:</strong> $40K/mes (promedio de 4 semanas)</li>
+                            <li><strong>Optimizaciones aplicadas:</strong> -60% (caching + batch + compression)</li>
+                            <li><strong>Forecast:</strong> $16K/mes ± 10% = $14.4K-$17.6K</li>
+                            <li><strong>Actual Mes 1:</strong> $14.2K ✅ (-64% vs baseline)</li>
+                            <li><strong>Actual Mes 2:</strong> $15.8K ✅ (-60% vs baseline)</li>
+                            <li><strong>Accuracy:</strong> (15.8-16)/16 = -1.25% → <strong>EXCELLENT</strong></li>
+                        </ul>
+                    </div>
                 </div>
+
+                <!-- SECCIÓN 3: ROI ANALYSIS -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-5); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">💹 Sección 3: ROI Analysis — "¿Vale la Pena?"</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">Fórmula simple para decidir si usar Claude para una tarea.</p>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin: var(--sp-6) 0;">
+                        <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">ROI Formula</strong>
+                        <pre style="background: var(--bg-base); color: var(--text-primary); padding: var(--sp-4); overflow-x: auto; border-radius: var(--radius);"><code>ROI = (Time Saved Hours × Hourly Rate - Claude Cost) / Claude Cost</code></pre>
+                        <p style="color: var(--text-secondary); font-size: 0.9em; margin-top: var(--sp-3);">Ejemplo: Code review (2h manual → 0.5h con Claude)<br/>
+                        Time saved: 1.5h × $50/h = $75 value<br/>
+                        Claude cost: $0.15<br/>
+                        <strong>ROI = ($75 - $0.15) / $0.15 = 499x return</strong></p>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin-bottom: var(--sp-6);">
+                        <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">5 Casos: ROI por Use Case</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6); font-size: 0.9em;">
+                            <li><strong>Code Review</strong>: 2h → 0.5h | 1.5h saved | $0.15 cost → <strong>500× ROI</strong> ✅</li>
+                            <li><strong>Documentation</strong>: 4h → 1h | 3h saved | $0.30 cost → <strong>500× ROI</strong> ✅</li>
+                            <li><strong>Testing/QA</strong>: 6h → 1h | 5h saved | $0.80 cost → <strong>312× ROI</strong> ✅</li>
+                            <li><strong>Architecture Design</strong>: 8h → 4h | 4h saved | $0.50 cost → <strong>400× ROI</strong> ✅</li>
+                            <li><strong>Debugging</strong>: 3h → 1h | 2h saved | $0.20 cost → <strong>500× ROI</strong> ✅</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--bg-base); padding: var(--sp-6); border-radius: var(--radius);">
+                        <strong style="color: var(--primary);">Key Insight:</strong>
+                        <p style="color: var(--text-secondary); margin: var(--sp-2) 0;">Si una tarea toma >30 minutos y es manual, el ROI es siempre 100x+. La pregunta no es "¿vale la pena?", es "¿por qué no lo hago ya?"</p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 4: OPTIMIZATION TECHNIQUES -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-5); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">⚙️ Sección 4: 8 Cost Optimization Techniques</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">Técnicas priorizadas por effort vs impact. Recomendación: aplicar 3-4 top para 40-70% ahorro total.</p>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin: var(--sp-6) 0;">
+                        <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">🟢 LOW EFFORT / HIGH IMPACT (Do First)</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6);">
+                            <li><strong>Enable Caching:</strong> 5min config = 40% savings. Marcar system prompt con cache_control.</li>
+                            <li><strong>Model Downgrade:</strong> Opus→Sonnet = 5× cheaper. Sonnet→Haiku = 10× cheaper.</li>
+                            <li><strong>Batch API:</strong> 1h refactor = 15-20% savings. 80 requests → 1 batch call.</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin-bottom: var(--sp-6);">
+                        <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">🟡 MEDIUM EFFORT / HIGH IMPACT (Do Next)</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6);">
+                            <li><strong>Context Compression:</strong> 4h work = 25% savings. Extraer estructura, comprimir descripciones.</li>
+                            <li><strong>Agent Reuse:</strong> 2h architecture = 20% savings. Reutilizar contexto entre requests.</li>
+                            <li><strong>Prompt Optimization:</strong> 3h tuning = 15% savings. Eliminar verbosity innecesaria.</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                        <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">🔴 HIGH EFFORT / UNCERTAIN (Do Later)</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6);">
+                            <li><strong>Custom MCP:</strong> 20h dev = 5% marginal gain. Solo si MCP público no existe.</li>
+                            <li><strong>Vendor Switch:</strong> 40h integration = uncertain ROI. Groq solo para tasks triviales.</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--bg-base); padding: var(--sp-6); border-radius: var(--radius); margin-top: var(--sp-6);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-3);">Aplicación Real: Combinando 5 Técnicas = 71% Total</strong>
+                        <pre style="background: var(--bg-elevated); color: var(--text-secondary); padding: var(--sp-4); overflow-x: auto; border-radius: var(--radius); font-size: 0.85em;"><code>Baseline: $3,780/mes
+1. Enable caching (40%):        $3,780 × 0.60 = $2,268
+2. Opus→Sonnet (60% on 50%):    $2,268 × 0.80 = $1,814
+3. Batch API (15%):             $1,814 × 0.85 = $1,542
+4. Context compression (20%):   $1,542 × 0.80 = $1,234
+5. Agent reuse + tuning (10%):  $1,234 × 0.90 = $1,110
+
+FINAL: $3,780 → $1,110 = 71% TOTAL SAVINGS
+Annual: ($3,780 - $1,110) × 12 = $32,040/year saved ✅</code></pre>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 5: BUDGET ALLOCATION & GOVERNANCE -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-5); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">💼 Sección 5: Budget Allocation &amp; Governance</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">Cómo dividir presupuesto entre equipos y detectar anomalías.</p>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin: var(--sp-6) 0;">
+                        <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">30/40/30 Rule para $120K/año</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6); font-size: 0.9em;">
+                            <li><strong>30% R&amp;D ($36K):</strong> Nuevos features, MCP development, experimentation</li>
+                            <li><strong>40% Production ($48K):</strong> Code review, documentation, testing (mission-critical)</li>
+                            <li><strong>30% Learning ($36K):</strong> Team training, POCs, hackathons</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin-bottom: var(--sp-6);">
+                        <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">Breakdown por Equipo (20 engineers)</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6); font-size: 0.9em;">
+                            <li><strong>Platform (4):</strong> $24K (20%) - MCP servers, performance</li>
+                            <li><strong>Product (10):</strong> $48K (40%) - Feature dev, design</li>
+                            <li><strong>QA (3):</strong> $18K (15%) - Test automation</li>
+                            <li><strong>Data (2):</strong> $18K (15%) - Analytics, pipelines</li>
+                            <li><strong>Reserve (central):</strong> $12K (10%) - Overhead, spikes</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--bg-base); padding: var(--sp-6); border-radius: var(--radius);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-3);">Alertas &amp; Escalation Policy</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6); font-size: 0.85em;">
+                            <li><strong>70% spent:</strong> Email team lead con optimization suggestions</li>
+                            <li><strong>85% spent:</strong> Freeze non-production requests, escalate to CFO</li>
+                            <li><strong>95% spent:</strong> Block all usage except critical, CEO notified</li>
+                            <li><strong>Anomaly:</strong> Alert if daily cost > 2× historical average</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 6: PRODUCTION MONITORING -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-5); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">📈 Sección 6: Production Cost Monitoring</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">5 métricas clave para tu dashboard. Alertas automáticas si costo/request dispara.</p>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin: var(--sp-6) 0;">
+                        <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">5 Dashboard Metrics</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6); font-size: 0.9em;">
+                            <li><strong>Daily Cost Trend:</strong> Target $120-150/day. Alert if > 2× historical avg.</li>
+                            <li><strong>Cost per Request:</strong> Target $0.08-0.12. Alert if > $0.20.</li>
+                            <li><strong>Cache Hit Rate:</strong> Target >60%. Alert if < 40%.</li>
+                            <li><strong>Cost by Team:</strong> Within ±10% of allocation. Alert if any team > 150% of budget.</li>
+                            <li><strong>Model Distribution:</strong> Opus 20%, Sonnet 50%, Haiku 30%. Alert if Opus > 40%.</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--bg-base); padding: var(--sp-6); border-radius: var(--radius);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-3);">Detección de Spikes</strong>
+                        <p style="color: var(--text-secondary); font-size: 0.9em; margin-top: var(--sp-2);">Si cost/request sube > 50% histórico → automáticamente notificar Slack. Posibles causas: Model switcheado a Opus, Cache deshabilitado, Loop de reintentos.</p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 7: VENDOR COMPARISON -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-5); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">🔄 Sección 7: Vendor Comparison &amp; Alternatives</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">Cuándo quedarse con Claude, cuándo cambiar a Groq, OpenAI o self-hosted.</p>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius); margin: var(--sp-6) 0;">
+                        <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">Pricing Comparison</strong>
+                        <ul style="color: var(--text-secondary); margin: var(--sp-2) 0; padding-left: var(--sp-6); font-size: 0.85em;">
+                            <li><strong>Anthropic Opus:</strong> $0.003/$0.012 | 500ms | 95% quality → Complex reasoning</li>
+                            <li><strong>Anthropic Sonnet:</strong> $0.0008/$0.0024 | 200ms | 85% quality → Balanced choice</li>
+                            <li><strong>Anthropic Haiku:</strong> $0.00008/$0.00024 | 50ms | 70% quality → Simple tasks</li>
+                            <li><strong>Groq LLaMA:</strong> $0.00005/$0.00015 | 20ms | 72% quality → Ultra-fast, cheap</li>
+                            <li><strong>OpenAI GPT-4:</strong> $0.001/$0.003 | 800ms | 92% quality → GPT ecosystem</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--bg-base); padding: var(--sp-6); border-radius: var(--radius); margin-bottom: var(--sp-6);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-3);">Decisión: Hybrid Strategy (Claude + Groq)</strong>
+                        <p style="color: var(--text-secondary); font-size: 0.9em;">Route requests inteligentemente: Groq para clasificación (60% requests, $0.0001 cost), Sonnet para code review (30%, $0.001), Opus para reasoning (10%, $0.015). Result: $186/month vs $300 (all Opus) = 38% savings.</p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 8: CHECKLIST & PRÓXIMOS PASOS -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-5); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">✅ Checklist: Implementa Hoy</h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); margin: var(--sp-6) 0;">
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">Semana 1 (Baseline)</strong>
+                            <ul style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6); font-size: 0.9em;">
+                                <li>☐ Medir costo actual (último 30 días)</li>
+                                <li>☐ Documentar baseline en spreadsheet</li>
+                                <li>☐ Identificar top 3 use cases por costo</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-5); display: block; margin-bottom: var(--sp-3);">Semana 2-4 (Optimize)</strong>
+                            <ul style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6); font-size: 0.9em;">
+                                <li>☐ Enable caching en production</li>
+                                <li>☐ Migrar 50% requests Opus→Sonnet</li>
+                                <li>☐ Implementar Batch API</li>
+                                <li>☐ Setup cost alerts en Slack</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-base); padding: var(--sp-6); border-radius: var(--radius); margin-top: var(--sp-6);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-3);">5 Ideas Clave del Módulo</strong>
+                        <ol style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6);">
+                            <li><strong>Cost modeling</strong> = Simple formula + 5 levers = control completo</li>
+                            <li><strong>Forecasting</strong> = 3-step baseline/optimize/validate = 90% accuracy</li>
+                            <li><strong>Optimization</strong> = 5-8 técnicas combinadas = 70% savings realista</li>
+                            <li><strong>ROI</strong> = Casi todos los usos >100x return (hazlo)</li>
+                            <li><strong>Governance</strong> = Budget allocation + alerts = predictable spend</li>
+                        </ol>
+                    </div>
+                </div>
+
             </section>
 
             <!-- ====== SECCIÓN: ENTERPRISE PLAYBOOK (L6.2) ====== -->
@@ -13943,26 +14556,455 @@ if (useNewRefactorEngine) {
                 <div class="section-intro">
                     <p>Playbook ejecutable: adoption roadmap (4 semanas), security gating, decision matrices, post-mortems reales, scaling patterns, governance.</p>
                 </div>
-                <div class="topic-grid">
-                    <div class="subtopic-card">
-                        <h3>4-Week Adoption Roadmap</h3>
-                        <p>Semana 1-4 estructuradas: Awareness → Hands-on → Integration → Production. Entregables verificables.</p>
-                    </div>
-                    <div class="subtopic-card">
-                        <h3>Security & Compliance Gating</h3>
-                        <p>Risk matrix, sandbox architecture, audit logging. Casos: Banco Fortune 500 aprobado.</p>
-                    </div>
-                    <div class="subtopic-card">
-                        <h3>Decision Matrices (4 críticas)</h3>
-                        <p>MCP vs Skill vs Direct, Fork vs Task vs Team, Model selection, Caching strategy.</p>
-                    </div>
-                    <div class="subtopic-card">
-                        <h3>Real Post-Mortems & Governance</h3>
-                        <p>3 incidentes Fortune 500, team structure (Champions, Maintainers), 8-metric dashboard, policies.</p>
+
+                <!-- 1️⃣ INTRODUCTION: 4 CASOS FORTUNE 500 -->
+                <div style="margin: var(--sp-8) 0; padding: var(--sp-6); background: var(--bg-overlay); border-radius: var(--radius);">
+                    <h3 style="color: var(--accent); margin-bottom: var(--sp-4);">📊 4 Casos de Éxito Fortune 500</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.95em;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--accent);">
+                                    <th style="padding: var(--sp-3); text-align: left;">Empresa</th>
+                                    <th style="padding: var(--sp-3); text-align: left;">Team</th>
+                                    <th style="padding: var(--sp-3); text-align: left;">Weeks</th>
+                                    <th style="padding: var(--sp-3); text-align: left;">Result</th>
+                                    <th style="padding: var(--sp-3); text-align: left;">Métrica</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);"><strong>GitButler</strong></td>
+                                    <td style="padding: var(--sp-3);">5 devs</td>
+                                    <td style="padding: var(--sp-3);">4</td>
+                                    <td style="padding: var(--sp-3);">60% time savings</td>
+                                    <td style="padding: var(--sp-3);">Code review</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);"><strong>SaaS</strong></td>
+                                    <td style="padding: var(--sp-3);">30 devs</td>
+                                    <td style="padding: var(--sp-3);">8</td>
+                                    <td style="padding: var(--sp-3);">87.5% task increase</td>
+                                    <td style="padding: var(--sp-3);">Velocity +50%</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);"><strong>Fintech</strong></td>
+                                    <td style="padding: var(--sp-3);">50 devs</td>
+                                    <td style="padding: var(--sp-3);">12</td>
+                                    <td style="padding: var(--sp-3);">$240K ROI/año</td>
+                                    <td style="padding: var(--sp-3);">Compliance ✅</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: var(--sp-3);"><strong>Enterprise</strong></td>
+                                    <td style="padding: var(--sp-3);">200+ devs</td>
+                                    <td style="padding: var(--sp-3);">24</td>
+                                    <td style="padding: var(--sp-3);">Enterprise ready</td>
+                                    <td style="padding: var(--sp-3);">Security + gov</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div class="section-cta">
+                <!-- 2️⃣ ADOPTION ROADMAP: 4 SEMANAS -->
+                <div style="margin: var(--sp-8) 0;">
+                    <h3 style="color: var(--accent); border-left: 4px solid var(--accent); padding-left: var(--sp-4); margin-bottom: var(--sp-6);">1️⃣ Adoption Roadmap: 4 Semanas</h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6);">
+                        <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); border-left: 3px solid var(--accent-secondary);">
+                            <h4 style="margin-bottom: var(--sp-3); color: var(--accent);">📅 Semana 1: Awareness</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.95em; line-height: 1.8;">
+                                <li>🔔 Monday: Exec meeting + demo (60 min → 10 min)</li>
+                                <li>🍽️ Wednesday: Lunch & Learn (all engineers)</li>
+                                <li>💬 Friday: Slack channel #claude-code-pilots</li>
+                            </ul>
+                            <p style="margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px solid var(--border-color); font-size: 0.9em; color: var(--text-secondary);"><strong>Entregables:</strong> Exec sponsor, budget, 80%+ attendance</p>
+                        </div>
+
+                        <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); border-left: 3px solid var(--accent-secondary);">
+                            <h4 style="margin-bottom: var(--sp-3); color: var(--accent);">🚀 Semana 2: Hands-On</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.95em; line-height: 1.8;">
+                                <li>💻 Lab 1: Write a Skill (5 min)</li>
+                                <li>🔗 Lab 2: Build MCP server (30 min)</li>
+                                <li>🤖 Lab 3: Agent SDK (45 min)</li>
+                                <li>💰 Lab 4: Cost optimization (60 min)</li>
+                            </ul>
+                            <p style="margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px solid var(--border-color); font-size: 0.9em; color: var(--text-secondary);"><strong>Entregables:</strong> >50% engineers complete ≥1 lab</p>
+                        </div>
+
+                        <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); border-left: 3px solid var(--accent-secondary);">
+                            <h4 style="margin-bottom: var(--sp-3); color: var(--accent);">🔧 Semana 3: Integration</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.95em; line-height: 1.8;">
+                                <li>🎯 Team A: Code Review Automation</li>
+                                <li>📝 Team B: Documentation Generation</li>
+                            </ul>
+                            <p style="margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px solid var(--border-color); font-size: 0.9em; color: var(--text-secondary);"><strong>Entregables:</strong> Before/after metrics, NPS ≥7</p>
+                        </div>
+
+                        <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); border-left: 3px solid var(--accent-secondary);">
+                            <h4 style="margin-bottom: var(--sp-3); color: var(--accent);">📈 Semana 4: Scale</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.95em; line-height: 1.8;">
+                                <li>▶️ Monday: Training video released</li>
+                                <li>🔐 Tuesday: Access enabled (OAuth/SSO)</li>
+                                <li>✅ Friday: Retrospective & feedback</li>
+                            </ul>
+                            <p style="margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px solid var(--border-color); font-size: 0.9em; color: var(--text-secondary);"><strong>Entregables:</strong> >80% activated, <10 P1 issues</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3️⃣ SECURITY & COMPLIANCE -->
+                <div style="margin: var(--sp-8) 0;">
+                    <h3 style="color: var(--accent); border-left: 4px solid var(--accent); padding-left: var(--sp-4); margin-bottom: var(--sp-6);">2️⃣ Security & Compliance Gating</h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); margin-bottom: var(--sp-6);">
+                        <div style="padding: var(--sp-5); background: rgba(220,20,60,0.1); border-radius: var(--radius); border-left: 3px solid crimson;">
+                            <h4 style="margin-bottom: var(--sp-3);">❌ What NOT to Allow</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.95em; line-height: 2;">
+                                <li>🔴 PII (SSN, credentials, tokens)</li>
+                                <li>🔴 Database credentials</li>
+                                <li>🔴 Vendor lock-in (closed models)</li>
+                                <li>🔴 Agents without max_iterations</li>
+                            </ul>
+                        </div>
+
+                        <div style="padding: var(--sp-5); background: rgba(34,139,34,0.1); border-radius: var(--radius); border-left: 3px solid forestgreen;">
+                            <h4 style="margin-bottom: var(--sp-3);">✅ Sandbox Architecture</h4>
+                            <pre style="background: var(--bg-code); padding: var(--sp-4); border-radius: var(--radius); font-size: 0.85em; overflow-x: auto;"><code>Organization:
+├─ Team A (isolated MCP)
+├─ Team B (GitHub API only)
+└─ Audit logging (centralized)</code></pre>
+                        </div>
+                    </div>
+
+                    <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius);">
+                        <h4 style="margin-bottom: var(--sp-3);">📋 Audit Logging</h4>
+                        <pre style="background: var(--bg-code); padding: var(--sp-4); border-radius: var(--radius); font-size: 0.85em; overflow-x: auto;"><code>{
+  "timestamp": "2026-05-22T10:30:45Z",
+  "user_id": "emp_12345",
+  "action": "messages.create",
+  "cost": "$0.0087",
+  "status": "success"
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- 4️⃣ DECISION MATRICES -->
+                <div style="margin: var(--sp-8) 0;">
+                    <h3 style="color: var(--accent); border-left: 4px solid var(--accent); padding-left: var(--sp-4); margin-bottom: var(--sp-6);">3️⃣ Decision Matrices</h3>
+
+                    <h4 style="margin: var(--sp-4) 0;">MCP vs Skill vs Direct</h4>
+                    <div style="overflow-x: auto; margin-bottom: var(--sp-6);">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead>
+                                <tr style="background: var(--bg-overlay); border-bottom: 2px solid var(--accent);">
+                                    <th style="padding: var(--sp-3); text-align: left;">Scenario</th>
+                                    <th style="padding: var(--sp-3); text-align: center;">MCP</th>
+                                    <th style="padding: var(--sp-3); text-align: center;">Skill</th>
+                                    <th style="padding: var(--sp-3); text-align: center;">Direct</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);">Reuse multiple teams</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">✅</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">❌</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">❌</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);">Complex orchestration</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">✅</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">⚠️</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">❌</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);"><5 min to build</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">❌</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">✅</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: var(--sp-3);">Sensitive data</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">✅</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">❌</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">❌</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 style="margin: var(--sp-4) 0;">Fork vs Task vs Team</h4>
+                    <div style="overflow-x: auto; margin-bottom: var(--sp-6);">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead>
+                                <tr style="background: var(--bg-overlay); border-bottom: 2px solid var(--accent);">
+                                    <th style="padding: var(--sp-3); text-align: left;">Scenario</th>
+                                    <th style="padding: var(--sp-3); text-align: center;">Fork</th>
+                                    <th style="padding: var(--sp-3); text-align: center;">Task</th>
+                                    <th style="padding: var(--sp-3); text-align: center;">Team</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);">Temporary spike (1-2w)</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">✅</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">⚠️</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">❌</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);">Ongoing (>5h/week)</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">❌</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">✅</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: var(--sp-3);">Long-term core feature</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">❌</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">⚠️</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">✅</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 style="margin: var(--sp-4) 0;">Model Selection</h4>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead>
+                                <tr style="background: var(--bg-overlay); border-bottom: 2px solid var(--accent);">
+                                    <th style="padding: var(--sp-3); text-align: left;">Use Case</th>
+                                    <th style="padding: var(--sp-3); text-align: center;">Model</th>
+                                    <th style="padding: var(--sp-3); text-align: center;">P99 Latency</th>
+                                    <th style="padding: var(--sp-3); text-align: center;">Accuracy</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);">Code review (async)</td>
+                                    <td style="padding: var(--sp-3); text-align: center;"><code>Sonnet</code></td>
+                                    <td style="padding: var(--sp-3); text-align: center;"><5s</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">85%+</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: var(--sp-3);">PR description</td>
+                                    <td style="padding: var(--sp-3); text-align: center;"><code>Haiku</code></td>
+                                    <td style="padding: var(--sp-3); text-align: center;"><1s</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">70%+</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: var(--sp-3);">Complex reasoning</td>
+                                    <td style="padding: var(--sp-3); text-align: center;"><code>Opus</code></td>
+                                    <td style="padding: var(--sp-3); text-align: center;"><2s</td>
+                                    <td style="padding: var(--sp-3); text-align: center;">95%+</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5️⃣ REAL POST-MORTEMS -->
+                <div style="margin: var(--sp-8) 0;">
+                    <h3 style="color: var(--accent); border-left: 4px solid var(--accent); padding-left: var(--sp-4); margin-bottom: var(--sp-6);">4️⃣ Real Post-Mortems (3 Incidents)</h3>
+
+                    <div style="display: grid; gap: var(--sp-6);">
+                        <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); border-left: 3px solid var(--accent);">
+                            <h4 style="margin-bottom: var(--sp-3);">🚨 Incident 1: Security Leak (500K Tokens)</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4);">
+                                <div>
+                                    <p style="color: var(--text-secondary); margin-bottom: var(--sp-2);"><strong>Timeline:</strong></p>
+                                    <ul style="list-style: none; padding: 0; font-size: 0.9em; line-height: 1.8;">
+                                        <li><span style="background: var(--accent); padding: 0 6px; border-radius: 3px; color: white; font-weight: bold;">0h</span> Automated PII detection</li>
+                                        <li><span style="background: var(--accent); padding: 0 6px; border-radius: 3px; color: white; font-weight: bold;">1h</span> Root cause identified</li>
+                                        <li><span style="background: var(--accent); padding: 0 6px; border-radius: 3px; color: white; font-weight: bold;">3h</span> Token revoked, logs scrubbed</li>
+                                        <li><span style="background: var(--accent); padding: 0 6px; border-radius: 3px; color: white; font-weight: bold;">6h</span> PII filter added</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p style="color: var(--text-secondary); margin-bottom: var(--sp-2);"><strong>Prevention:</strong></p>
+                                    <p style="font-size: 0.95em; line-height: 1.6;">Code review hook to catch secrets.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); border-left: 3px solid var(--accent);">
+                            <h4 style="margin-bottom: var(--sp-3);">💰 Incident 2: Cost Explosion</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4);">
+                                <div>
+                                    <p style="color: var(--text-secondary); margin-bottom: var(--sp-2);"><strong>Impact:</strong></p>
+                                    <ul style="list-style: none; padding: 0; font-size: 0.9em; line-height: 1.8;">
+                                        <li><span style="background: var(--accent); padding: 0 6px; border-radius: 3px; color: white; font-weight: bold;">D1-4</span> $500 → $1,600/day</li>
+                                        <li><strong>Cause:</strong> max_retries=10</li>
+                                        <li><strong>Math:</strong> $9.5K/day</li>
+                                        <li><span style="background: var(--accent); padding: 0 6px; border-radius: 3px; color: white; font-weight: bold;">24m</span> Fixed</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p style="color: var(--text-secondary); margin-bottom: var(--sp-2);"><strong>Prevention:</strong></p>
+                                    <p style="font-size: 0.95em; line-height: 1.6;">Alert on cost > 10× baseline. Weekly reviews.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); border-left: 3px solid var(--accent);">
+                            <h4 style="margin-bottom: var(--sp-3);">📉 Incident 3: Adoption Stall (20% → 75%)</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4);">
+                                <div>
+                                    <p style="color: var(--text-secondary); margin-bottom: var(--sp-2);"><strong>Solution:</strong></p>
+                                    <ul style="list-style: none; padding: 0; font-size: 0.9em; line-height: 1.8;">
+                                        <li>✅ Adoption engineer (1 FTE)</li>
+                                        <li>✅ 10 Claude Champions</li>
+                                        <li>✅ Weekly office hours</li>
+                                        <li>✅ 1:1 onboarding</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p style="color: var(--text-secondary); margin-bottom: var(--sp-2);"><strong>Result:</strong></p>
+                                    <p style="font-size: 0.95em; line-height: 1.6;"><strong>Month 6: 75%</strong> adoption rate achieved.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6️⃣ SCALING PATTERNS -->
+                <div style="margin: var(--sp-8) 0;">
+                    <h3 style="color: var(--accent); border-left: 4px solid var(--accent); padding-left: var(--sp-4); margin-bottom: var(--sp-6);">5️⃣ Scaling Patterns (100+ Developers)</h3>
+
+                    <h4 style="margin: var(--sp-4) 0;">Infrastructure Architecture</h4>
+                    <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); margin-bottom: var(--sp-6);">
+                        <pre style="background: var(--bg-code); padding: var(--sp-4); border-radius: var(--radius); font-size: 0.85em; overflow-x: auto;"><code>API Gateway → Load Balancer → 4 Instances
+Capacity: 200-400 req/sec, 50 concurrent
+Cost: $8.5K/month (200 devs = $42.50/dev)</code></pre>
+                    </div>
+
+                    <h4 style="margin: var(--sp-4) 0;">Circuit Breaker Pattern</h4>
+                    <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); margin-bottom: var(--sp-6);">
+                        <pre style="background: var(--bg-code); padding: var(--sp-4); border-radius: var(--radius); font-size: 0.85em; overflow-x: auto;"><code>Try Opus → Fallback Sonnet → Use Cache
+(Graceful degradation, no errors)</code></pre>
+                    </div>
+
+                    <h4 style="margin: var(--sp-4) 0;">Load Test Results (10× Normal)</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp-4);">
+                        <div style="padding: var(--sp-4); background: var(--bg-overlay); border-radius: var(--radius); text-align: center;">
+                            <div style="font-size: 2em; color: var(--accent); font-weight: bold; margin-bottom: var(--sp-2);">150</div>
+                            <p style="color: var(--text-secondary);">Normal<br/>req/min</p>
+                        </div>
+                        <div style="padding: var(--sp-4); background: var(--bg-overlay); border-radius: var(--radius); text-align: center;">
+                            <div style="font-size: 2em; color: var(--accent); font-weight: bold; margin-bottom: var(--sp-2);">1,500</div>
+                            <p style="color: var(--text-secondary);">Peak<br/>req/min</p>
+                        </div>
+                        <div style="padding: var(--sp-4); background: var(--bg-overlay); border-radius: var(--radius); text-align: center;">
+                            <div style="font-size: 2em; color: var(--accent); font-weight: bold; margin-bottom: var(--sp-2);">1.2s</div>
+                            <p style="color: var(--text-secondary);">P99 Latency</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: var(--sp-4); padding: var(--sp-4); background: var(--bg-overlay); border-radius: var(--radius); font-size: 0.95em;"><strong>Solution:</strong> Auto-scale 2 → 8 instances. Zero downtime.</p>
+                </div>
+
+                <!-- 7️⃣ TEAM STRUCTURE -->
+                <div style="margin: var(--sp-8) 0;">
+                    <h3 style="color: var(--accent); border-left: 4px solid var(--accent); padding-left: var(--sp-4); margin-bottom: var(--sp-6);">6️⃣ Team Structure (200 Developers)</h3>
+
+                    <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius);">
+                        <pre style="background: var(--bg-code); padding: var(--sp-4); border-radius: var(--radius); font-size: 0.9em; overflow-x: auto;"><code>Executive Sponsor ..................... 1
+Adoption Lead (FTE) ................... 1
+MCP Maintainers ...................... 2
+Claude Champions (1 per 20 devs) .... 10
+Cost Analyst (0.5 FTE) ............... 0.5
+On-Call Support (rotating) ........... 2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total: ~17 people (9% of team)</code></pre>
+                    </div>
+                </div>
+
+                <!-- 8️⃣ METRICS & SUCCESS CRITERIA -->
+                <div style="margin: var(--sp-8) 0;">
+                    <h3 style="color: var(--accent); border-left: 4px solid var(--accent); padding-left: var(--sp-4); margin-bottom: var(--sp-6);">7️⃣ Metrics & Success Criteria</h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); margin-bottom: var(--sp-6);">
+                        <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius);">
+                            <h4 style="margin-bottom: var(--sp-3); color: var(--accent);">📊 Adoption Rate</h4>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: var(--sp-3);">Target: <strong>80% by month 6</strong></p>
+                            <pre style="background: var(--bg-code); padding: var(--sp-3); border-radius: var(--radius); font-size: 0.85em;"><code>W1: 5%   W4: 25%
+W8: 50%  W16: 75%
+W24: 85% (stable)</code></pre>
+                        </div>
+
+                        <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius);">
+                            <h4 style="margin-bottom: var(--sp-3); color: var(--accent);">⏱️ Productivity Gain</h4>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: var(--sp-3);">Target: <strong>8h/month saved</strong></p>
+                            <p style="font-size: 0.95em; line-height: 1.6;"><strong>200 × 8h × $100/h</strong><br/>= <strong>$1.68M/year</strong></p>
+                        </div>
+                    </div>
+
+                    <div style="padding: var(--sp-5); background: rgba(34,139,34,0.1); border-radius: var(--radius); border-left: 3px solid forestgreen;">
+                        <h4 style="margin-bottom: var(--sp-4); color: var(--accent);">💚 ROI (Annual)</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4);">
+                            <div>
+                                <p style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: var(--sp-2);"><strong>Benefits:</strong></p>
+                                <ul style="list-style: none; padding: 0; font-size: 0.95em; line-height: 1.8;">
+                                    <li>$1.68M (productivity)</li>
+                                    <li>$800K (velocity)</li>
+                                    <li>$700K (quality)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: var(--sp-2);"><strong>Costs:</strong></p>
+                                <p style="font-size: 1.1em; font-weight: bold;">$2M/year</p>
+                            </div>
+                        </div>
+                        <hr style="border: none; border-top: 1px solid var(--border-color); margin: var(--sp-4) 0;">
+                        <p style="font-size: 0.95em; line-height: 1.6;"><strong>ROI:</strong> 59% return ✅ | <strong>Breakeven:</strong> Month 8</p>
+                    </div>
+                </div>
+
+                <!-- 9️⃣ GOVERNANCE FRAMEWORK -->
+                <div style="margin: var(--sp-8) 0;">
+                    <h3 style="color: var(--accent); border-left: 4px solid var(--accent); padding-left: var(--sp-4); margin-bottom: var(--sp-6);">8️⃣ Governance Framework</h3>
+
+                    <div style="padding: var(--sp-5); background: var(--bg-overlay); border-radius: var(--radius); margin-bottom: var(--sp-6);">
+                        <h4 style="margin-bottom: var(--sp-3);">📋 Policies</h4>
+                        <pre style="background: var(--bg-code); padding: var(--sp-4); border-radius: var(--radius); font-size: 0.85em; overflow-x: auto;"><code>{
+  "model_selection": "Default Sonnet",
+  "pii_protection": "Block SSN, credentials, tokens",
+  "team_budget": "Hard limit/month",
+  "audit_logging": "All requests, 90-day retention"
+}</code></pre>
+                    </div>
+
+                    <h4 style="margin-bottom: var(--sp-3);">🔄 Feedback Loops</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp-4);">
+                        <div style="padding: var(--sp-4); background: var(--bg-overlay); border-radius: var(--radius);">
+                            <p style="font-weight: bold; color: var(--accent); margin-bottom: var(--sp-2);">📊 Monthly</p>
+                            <p style="font-size: 0.9em; line-height: 1.6;">Metrics, incidents, feature requests</p>
+                        </div>
+                        <div style="padding: var(--sp-4); background: var(--bg-overlay); border-radius: var(--radius);">
+                            <p style="font-weight: bold; color: var(--accent); margin-bottom: var(--sp-2);">📈 Quarterly</p>
+                            <p style="font-size: 0.9em; line-height: 1.6;">Roadmap, onboarding, vendors</p>
+                        </div>
+                        <div style="padding: var(--sp-4); background: var(--bg-overlay); border-radius: var(--radius);">
+                            <p style="font-weight: bold; color: var(--accent); margin-bottom: var(--sp-2);">🎯 Annual</p>
+                            <p style="font-size: 0.9em; line-height: 1.6;">Budget, headcount, vision</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESUMEN & CTA -->
+                <div style="margin: var(--sp-8) 0; padding: var(--sp-6); background: rgba(255,193,7,0.1); border-radius: var(--radius); border-left: 4px solid var(--accent);">
+                    <h3 style="color: var(--accent); margin-bottom: var(--sp-4);">✅ Ya dominas Enterprise Playbook</h3>
+                    <ul style="list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); font-size: 0.95em;">
+                        <li>✅ 4-week adoption roadmap</li>
+                        <li>✅ Security & compliance gating</li>
+                        <li>✅ Decision matrices (3)</li>
+                        <li>✅ Post-mortems (3 incidents)</li>
+                        <li>✅ Scaling patterns</li>
+                        <li>✅ Team structure & roles</li>
+                        <li>✅ Metrics & KPIs</li>
+                        <li>✅ Governance framework</li>
+                    </ul>
+                    <p style="margin-top: var(--sp-4); font-size: 1.05em; font-weight: bold; color: var(--accent);">🎓 Ready para 200+ developers ✅</p>
+                </div>
+
+                <div class="section-cta" style="margin-top: var(--sp-8);">
                     <a href="enterprise-playbook.md" class="btn btn-primary">📖 Leer módulo completo</a>
                 </div>
             </section>
