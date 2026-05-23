@@ -5144,3 +5144,1056 @@ blockquote {
         font-size: var(--fs-base);
     }
 }
+
+/* ===== MODULE STYLES (Integración de módulos L5-L6) ===== */
+
+/* =========================================================================
+   MODULE SECTIONS CSS — Estilos profesionales para módulos integrados
+
+   Basado en tokens de diseño de styles.css
+   Compatible con dark mode y responsive design
+
+   SECCIONES:
+   1. Module sections — Contenedores principales
+   2. Tipografía jerárquica (h2, h3, párrafos)
+   3. Tablas de datos y comparación
+   4. Code blocks (ya existe en styles.css, referencias para contexto)
+   5. Cajas destacadas (note, example, warning)
+   6. Listas personalizadas
+   7. Animaciones y transiciones
+   8. Responsive (mobile, tablet, desktop)
+   ========================================================================= */
+
+/* ============================================================================
+   1. MODULE SECTIONS — Contenedores principales
+   ============================================================================ */
+
+.module-section {
+    margin: var(--sp-12) 0;
+    padding: var(--sp-8);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    animation: fadeIn 0.4s ease-out;
+}
+
+.module-section:first-child {
+    margin-top: 0;
+}
+
+.module-section.with-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: var(--sp-8);
+    align-items: start;
+}
+
+.module-section__content {
+    min-width: 0;
+}
+
+.module-section__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+}
+
+/* Secciones anidadas */
+.module-section .module-section {
+    margin: var(--sp-8) 0;
+    padding: var(--sp-6);
+    background: var(--bg-overlay);
+    border-color: var(--border-subtle);
+}
+
+/* ============================================================================
+   2. TIPOGRAFÍA JERÁRQUICA
+   ============================================================================ */
+
+.module-title,
+.module-section h2 {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--sp-4) 0;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+}
+
+.module-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 24px;
+    background: var(--accent);
+    margin-right: var(--sp-3);
+    border-radius: 2px;
+    vertical-align: middle;
+}
+
+.section-subtitle,
+.module-section h3 {
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: var(--sp-8) 0 var(--sp-3) 0;
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--border-subtle);
+    line-height: 1.4;
+}
+
+.module-section h4 {
+    font-size: var(--fs-base);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: var(--sp-6) 0 var(--sp-2) 0;
+}
+
+.module-section h5 {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: var(--sp-5) 0 var(--sp-1) 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Párrafos */
+.module-section p,
+.module-paragraph {
+    font-size: var(--fs-base);
+    line-height: 1.7;
+    color: var(--text-primary);
+    margin: var(--sp-4) 0;
+    word-break: break-word;
+}
+
+.module-paragraph.lead {
+    font-size: var(--fs-lg);
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin: var(--sp-6) 0;
+}
+
+.module-paragraph.small {
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+    margin: var(--sp-3) 0;
+}
+
+/* Enlaces dentro de módulos */
+.module-section a {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all var(--transition-fast);
+    font-weight: 500;
+}
+
+.module-section a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* Énfasis */
+.module-section strong {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.module-section em {
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+/* ============================================================================
+   3. TABLAS DE DATOS Y COMPARACIÓN
+   ============================================================================ */
+
+.data-table,
+.comparison-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--sp-8) 0;
+    background: var(--bg-base);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.data-table thead,
+.comparison-matrix thead {
+    background: var(--bg-elevated);
+    border-bottom: 2px solid var(--border-default);
+}
+
+.data-table th,
+.comparison-matrix th {
+    padding: var(--sp-4);
+    text-align: left;
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.data-table td,
+.comparison-matrix td {
+    padding: var(--sp-4);
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: var(--fs-sm);
+}
+
+/* Filas alternas para mejor legibilidad */
+.data-table tbody tr:nth-child(even),
+.comparison-matrix tbody tr:nth-child(even) {
+    background: rgba(255, 122, 89, 0.02);
+}
+
+.data-table tbody tr:hover,
+.comparison-matrix tbody tr:hover {
+    background: rgba(255, 122, 89, 0.05);
+}
+
+/* Celdas especiales */
+.data-table td.highlight,
+.comparison-matrix td.highlight {
+    background: rgba(94, 184, 255, 0.08);
+    border-left: 3px solid var(--primary);
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.data-table td.success,
+.comparison-matrix td.success {
+    color: var(--success);
+    font-weight: 500;
+}
+
+.data-table td.warning,
+.comparison-matrix td.warning {
+    color: var(--warning);
+    font-weight: 500;
+}
+
+.data-table td.danger,
+.comparison-matrix td.danger {
+    color: var(--danger);
+    font-weight: 500;
+}
+
+/* Badges en tablas */
+.table-badge {
+    display: inline-block;
+    padding: var(--sp-1) var(--sp-3);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.table-badge.primary {
+    background: rgba(94, 184, 255, 0.12);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.table-badge.success {
+    background: rgba(61, 220, 151, 0.12);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.table-badge.warning {
+    background: rgba(255, 180, 84, 0.12);
+    border-color: var(--warning);
+    color: var(--warning);
+}
+
+.table-badge.danger {
+    background: rgba(255, 107, 107, 0.12);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+/* Scroll responsivo para tablas grandes */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin: var(--sp-8) 0;
+    border-radius: var(--radius);
+}
+
+/* ============================================================================
+   4. CAJAS DESTACADAS (NOTE, EXAMPLE, WARNING, TIP)
+   ============================================================================ */
+
+.note-box,
+.example-box,
+.warning-box,
+.tip-box,
+.info-box {
+    margin: var(--sp-6) 0;
+    padding: var(--sp-6);
+    border-left: 4px solid;
+    border-radius: var(--radius);
+    background: var(--bg-overlay);
+    animation: slideInLeft 0.3s ease-out;
+}
+
+/* NOTE — Información neutra */
+.note-box {
+    border-left-color: var(--primary);
+    background: rgba(94, 184, 255, 0.08);
+}
+
+.note-box::before {
+    content: '📌 Nota';
+    display: block;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-sm);
+}
+
+/* EXAMPLE — Casos prácticos */
+.example-box {
+    border-left-color: var(--accent-cyan);
+    background: rgba(94, 184, 255, 0.08);
+}
+
+.example-box::before {
+    content: '💡 Ejemplo';
+    display: block;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-sm);
+}
+
+/* WARNING — Advertencias */
+.warning-box {
+    border-left-color: var(--warning);
+    background: rgba(255, 180, 84, 0.08);
+}
+
+.warning-box::before {
+    content: '⚠️ Advertencia';
+    display: block;
+    font-weight: 600;
+    color: var(--warning);
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-sm);
+}
+
+/* TIP — Consejos */
+.tip-box {
+    border-left-color: var(--accent);
+    background: rgba(255, 122, 89, 0.08);
+}
+
+.tip-box::before {
+    content: '✨ Consejo';
+    display: block;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-sm);
+}
+
+/* INFO — Información importante */
+.info-box {
+    border-left-color: var(--accent-magenta);
+    background: rgba(208, 132, 252, 0.08);
+}
+
+.info-box::before {
+    content: 'ℹ️ Información';
+    display: block;
+    font-weight: 600;
+    color: var(--accent-magenta);
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-sm);
+}
+
+/* Contenido dentro de cajas */
+.note-box p,
+.example-box p,
+.warning-box p,
+.tip-box p,
+.info-box p {
+    margin: var(--sp-2) 0;
+    color: var(--text-primary);
+    font-size: var(--fs-base);
+    line-height: 1.6;
+}
+
+.note-box code,
+.example-box code,
+.warning-box code,
+.tip-box code,
+.info-box code {
+    background: rgba(0, 0, 0, 0.3);
+    padding: var(--sp-1) var(--sp-2);
+    border-radius: 2px;
+    color: var(--accent-cyan);
+}
+
+/* ============================================================================
+   5. LISTAS PERSONALIZADAS
+   ============================================================================ */
+
+/* Listas ordenadas y desordenadas */
+.module-section ul,
+.module-section ol {
+    margin: var(--sp-4) 0 var(--sp-4) var(--sp-6);
+    color: var(--text-primary);
+}
+
+.module-section li {
+    margin: var(--sp-2) 0;
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
+.module-section ul li::marker {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.module-section ol li::marker {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Listas sin estilo */
+.list-unstyled {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.list-unstyled li {
+    margin: var(--sp-3) 0;
+    padding-left: 0;
+}
+
+/* Listas con iconos */
+.list-with-icons li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    margin: var(--sp-3) 0;
+}
+
+.list-with-icons li::before {
+    content: '→';
+    flex-shrink: 0;
+    color: var(--accent);
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+/* Listas de características */
+.feature-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--sp-6);
+    margin: var(--sp-8) 0;
+}
+
+.feature-list li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    list-style: none;
+    margin: 0;
+    transition: all var(--transition);
+}
+
+.feature-list li:hover {
+    border-color: var(--accent);
+    background: rgba(255, 122, 89, 0.05);
+    transform: translateY(-2px);
+}
+
+.feature-list li::before {
+    content: '✓';
+    color: var(--success);
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* Lista de pasos */
+.steps-list {
+    counter-reset: step-counter;
+    list-style: none;
+    margin: var(--sp-8) 0;
+    padding: 0;
+}
+
+.steps-list li {
+    counter-increment: step-counter;
+    display: flex;
+    gap: var(--sp-6);
+    margin: var(--sp-6) 0;
+    padding-left: 0;
+    position: relative;
+}
+
+.steps-list li::before {
+    content: counter(step-counter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--accent) 0%, #ff5e3a 100%);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: var(--fs-base);
+}
+
+.steps-list li::after {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    width: 2px;
+    height: calc(100% + 24px);
+    background: var(--border-default);
+}
+
+.steps-list li:last-child::after {
+    display: none;
+}
+
+/* ============================================================================
+   6. BLOQUES DE CÓDIGO (referencia a styles.css + extensiones)
+   ============================================================================ */
+
+.code-block {
+    /* Estilos ya definidos en styles.css */
+    /* Añadimos aquí extensiones para inline content */
+}
+
+.code-block.expandable {
+    cursor: pointer;
+}
+
+.code-block.expandable::after {
+    content: attr(data-lang);
+    position: absolute;
+    top: var(--sp-2);
+    right: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--bg-overlay);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Inline code */
+.module-section code:not(.code-block code) {
+    background: var(--bg-elevated);
+    color: var(--accent-cyan);
+    padding: var(--sp-1) var(--sp-2);
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+}
+
+/* ============================================================================
+   7. GRID Y LAYOUT HELPERS
+   ============================================================================ */
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-6);
+    margin: var(--sp-8) 0;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-6);
+    margin: var(--sp-8) 0;
+}
+
+.grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--sp-6);
+    margin: var(--sp-8) 0;
+}
+
+.grid-item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--sp-5);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    transition: all var(--transition);
+}
+
+.grid-item:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(255, 122, 89, 0.1);
+}
+
+/* ============================================================================
+   8. ANIMACIONES Y TRANSICIONES
+   ============================================================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Skeleton loading */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--bg-elevated) 25%,
+        var(--bg-overlay) 50%,
+        var(--bg-elevated) 75%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}
+
+/* ============================================================================
+   9. ELEMENTOS EXPANDIBLES
+   ============================================================================ */
+
+.collapsible-section {
+    margin: var(--sp-6) 0;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.collapsible-section summary {
+    padding: var(--sp-4) var(--sp-6);
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    user-select: none;
+    transition: background var(--transition-fast);
+    list-style: none;
+}
+
+.collapsible-section summary::-webkit-details-marker {
+    display: none;
+}
+
+.collapsible-section summary::before {
+    content: '▶';
+    display: inline-block;
+    transition: transform var(--transition-fast);
+    font-size: 0.8em;
+    color: var(--accent);
+}
+
+.collapsible-section[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.collapsible-section summary:hover {
+    background: var(--bg-overlay);
+}
+
+.collapsible-section-content {
+    padding: var(--sp-6);
+    border-top: 1px solid var(--border-subtle);
+    animation: slideInLeft 0.25s ease-out;
+}
+
+/* ============================================================================
+   10. BADGES Y TAGS
+   ============================================================================ */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-1) var(--sp-3);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.badge.primary {
+    background: rgba(94, 184, 255, 0.12);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.badge.success {
+    background: rgba(61, 220, 151, 0.12);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.badge.warning {
+    background: rgba(255, 180, 84, 0.12);
+    border-color: var(--warning);
+    color: var(--warning);
+}
+
+.badge.danger {
+    background: rgba(255, 107, 107, 0.12);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.badge.accent {
+    background: rgba(255, 122, 89, 0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ============================================================================
+   11. RESPONSIVE DESIGN
+   ============================================================================ */
+
+/* Tablet (768px) */
+@media (max-width: 768px) {
+    .module-section {
+        padding: var(--sp-5);
+        margin: var(--sp-8) 0;
+    }
+
+    .module-section.with-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .module-section__sidebar {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .module-title,
+    .module-section h2 {
+        font-size: var(--fs-xl);
+    }
+
+    .section-subtitle,
+    .module-section h3 {
+        font-size: var(--fs-base);
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .data-table,
+    .comparison-matrix {
+        font-size: var(--fs-sm);
+    }
+
+    .data-table th,
+    .comparison-matrix th,
+    .data-table td,
+    .comparison-matrix td {
+        padding: var(--sp-3);
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .steps-list li {
+        gap: var(--sp-4);
+    }
+
+    .steps-list li::before {
+        width: 32px;
+        height: 32px;
+        font-size: var(--fs-sm);
+    }
+
+    .feature-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile (375px) */
+@media (max-width: 375px) {
+    .module-section {
+        padding: var(--sp-4);
+        margin: var(--sp-6) 0;
+        border-radius: var(--radius);
+    }
+
+    .module-title,
+    .module-section h2 {
+        font-size: var(--fs-lg);
+        margin-bottom: var(--sp-3);
+    }
+
+    .module-title::before {
+        width: 3px;
+        height: 18px;
+        margin-right: var(--sp-2);
+    }
+
+    .section-subtitle,
+    .module-section h3 {
+        font-size: var(--fs-base);
+        margin-top: var(--sp-5);
+        margin-bottom: var(--sp-2);
+    }
+
+    .module-section p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        margin: var(--sp-3) 0;
+    }
+
+    .note-box,
+    .example-box,
+    .warning-box,
+    .tip-box,
+    .info-box {
+        padding: var(--sp-4);
+        margin: var(--sp-4) 0;
+    }
+
+    .data-table,
+    .comparison-matrix {
+        font-size: 0.75rem;
+        margin: var(--sp-6) 0;
+    }
+
+    .data-table th,
+    .comparison-matrix th,
+    .data-table td,
+    .comparison-matrix td {
+        padding: var(--sp-2);
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-auto {
+        grid-template-columns: 1fr;
+        gap: var(--sp-4);
+        margin: var(--sp-6) 0;
+    }
+
+    .feature-list li {
+        padding: var(--sp-4);
+    }
+
+    .steps-list li {
+        gap: var(--sp-3);
+        margin: var(--sp-4) 0;
+    }
+
+    .steps-list li::before {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .steps-list li::after {
+        left: 13px;
+    }
+
+    .code-block {
+        margin: var(--sp-4) 0;
+        border-radius: var(--radius);
+    }
+
+    .code-block pre {
+        padding: var(--sp-3);
+        font-size: 0.8rem;
+    }
+
+    .code-block pre code {
+        font-size: 0.8rem;
+        line-height: 1.5;
+    }
+
+    .module-section ul,
+    .module-section ol {
+        margin: var(--sp-3) 0 var(--sp-3) var(--sp-4);
+    }
+
+    .module-section li {
+        margin: var(--sp-1) 0;
+        font-size: var(--fs-sm);
+    }
+}
+
+/* ============================================================================
+   12. DARK MODE ENHANCEMENTS
+   ============================================================================ */
+
+/* Estos estilos ya usan CSS variables, el dark mode está
+   integrado en :root de styles.css. Aquí solo enfatizamos
+   algunos comportamientos específicos para módulos. */
+
+.module-section {
+    color-scheme: dark light;
+}
+
+/* Aumento de contraste para accesibilidad en cajas destacadas */
+@media (prefers-contrast: more) {
+    .note-box,
+    .example-box,
+    .warning-box,
+    .tip-box,
+    .info-box {
+        border-left-width: 6px;
+    }
+
+    .module-section a {
+        text-decoration: underline;
+    }
+
+    .module-section strong {
+        text-decoration: underline;
+    }
+}
+
+/* Reducir animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+    .module-section,
+    .note-box,
+    .example-box,
+    .warning-box,
+    .tip-box,
+    .info-box,
+    .grid-item,
+    .feature-list li,
+    .collapsible-section-content {
+        animation: none;
+        transition: none;
+    }
+
+    .module-section a {
+        transition: none;
+    }
+}
+
+/* ============================================================================
+   13. PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    .module-section {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        box-shadow: none;
+        border-color: #ccc;
+    }
+
+    .collapsible-section[open] .collapsible-section-content {
+        display: block;
+    }
+
+    .note-box,
+    .example-box,
+    .warning-box,
+    .tip-box,
+    .info-box {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .module-section a {
+        text-decoration: underline;
+    }
+
+    .code-block {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+}
