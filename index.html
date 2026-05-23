@@ -7932,195 +7932,323 @@ $ claude
                     <p class="section-lead">Múltiples formas de instalar Claude Code según tu sistema operativo y preferencias.</p>
                 </div>
 
-                <article class="card">
-                    <h3>Requisitos previos (Todos los sistemas)</h3>
-                    <ul>
-                        <li><strong>Node.js</strong> 18+ (lts/hydrogen o superior)</li>
-                        <li><strong>npm</strong> 9+ o <strong>yarn</strong> 4+ (incluido con Node)</li>
-                        <li><strong>Cuenta Anthropic</strong>: Acceso a Claude API (free o paid)</li>
-                        <li><strong>Sistema operativo</strong>: macOS, Linux, Windows (WSL2), o Docker</li>
-                        <li><strong>Conexión a internet</strong>: Para descargar dependencias y auth</li>
-                    </ul>
-                    <p style="margin-top: 12px;"><strong>Verifica Node.js:</strong></p>
-                    <pre><code class="language-bash">node --version   # v18.0.0 o superior
-npm --version    # 9.0.0 o superior</code></pre>
-                </article>
-
-                <article class="card">
-                    <h3>Instalación vía npm (Recomendado para la mayoría)</h3>
-                    <p>La forma más simple y mantenida. Funciona en macOS, Linux, WSL y Windows.</p>
-                    <pre><code class="language-bash"># 1. Instalar globalmente
-npm install -g @anthropic-ai/claude-code
-
-# 2. Verificar instalación
-claude --version
-# Output esperado: 1.x.x
-
-# 3. Iniciar sesión
-claude auth login
-# Abre navegador → Autentica con Anthropic → Vuelve a terminal</code></pre>
-                    <p style="margin-top: 12px;"><strong>¿Qué pasa después del login?</strong></p>
-                    <ul>
-                        <li>Claude Code genera <code>~/.anthropic/token.json</code> (NO compartas este archivo)</li>
-                        <li>Token se guarda de forma segura en tu máquina</li>
-                        <li>Ya puedes usar <code>claude</code> en cualquier proyecto</li>
-                    </ul>
-                </article>
-
-                <article class="card">
-                    <h3>Instalación en Windows (WSL2 recomendado)</h3>
-                    <h4>Opción A: WSL2 (Recomendado)</h4>
-                    <pre><code class="language-bash"># Abre WSL terminal
-wsl
-
-# Dentro de WSL (Ubuntu/Debian)
-sudo apt update && sudo apt install -y nodejs npm
-
-# Verifica versión
-node --version
-
-# Instala Claude Code
-npm install -g @anthropic-ai/claude-code
-claude auth login</code></pre>
-                    <h4>Opción B: Windows PowerShell (Nativo)</h4>
-                    <pre><code class="language-powershell"># En PowerShell como admin
-npm install -g @anthropic-ai/claude-code
-
-# Verifica
-claude --version
-
-# Inicia sesión
-claude auth login</code></pre>
-                    <div class="info-banner" style="background-color: #f0f7ff; border-left: 4px solid #0084ff; padding: 12px; margin-top: 12px; border-radius: 4px;">
-                        <strong>💡 WSL vs PowerShell:</strong> WSL2 ofrece mejor compatibilidad con bash scripts y herramientas POSIX. Si planeas usar git, Docker o scripts bash, elige WSL.
+                <!-- REQUISITOS EN CARDS -->
+                <div class="install-requirements">
+                    <h3 style="margin-bottom: var(--sp-6); font-size: var(--fs-lg);">✓ Requisitos previos (Todos los sistemas)</h3>
+                    <div class="requirements-grid">
+                        <div class="requirement-card">
+                            <div class="requirement-icon">🟢</div>
+                            <h4>Node.js 18+</h4>
+                            <p>LTS hydrogen o superior</p>
+                            <code>node --version</code>
+                        </div>
+                        <div class="requirement-card">
+                            <div class="requirement-icon">📦</div>
+                            <h4>npm 9+ o yarn 4+</h4>
+                            <p>Incluido con Node</p>
+                            <code>npm --version</code>
+                        </div>
+                        <div class="requirement-card">
+                            <div class="requirement-icon">🔑</div>
+                            <h4>Cuenta Anthropic</h4>
+                            <p>API key (free o paid)</p>
+                            <code>claude auth login</code>
+                        </div>
+                        <div class="requirement-card">
+                            <div class="requirement-icon">💻</div>
+                            <h4>Sistema Operativo</h4>
+                            <p>macOS, Linux, Windows (WSL2), o Docker</p>
+                        </div>
                     </div>
-                </article>
+                </div>
 
-                <article class="card">
-                    <h3>Instalación con Docker (Para máxima portabilidad)</h3>
-                    <p>Si quieres evitar instalar Node.js o prefieres un entorno aislado:</p>
-                    <pre><code class="language-dockerfile"># Dockerfile
-FROM node:20-alpine
+                <!-- MÉTODO DE INSTALACIÓN SELECCIONADOR -->
+                <div class="install-methods">
+                    <h3 style="margin-bottom: var(--sp-6); font-size: var(--fs-lg);">📥 Elige tu método de instalación</h3>
+                    <div class="install-tabs">
+                        <input type="radio" id="tab-npm" name="install-tab" value="npm" checked>
+                        <input type="radio" id="tab-windows" name="install-tab" value="windows">
+                        <input type="radio" id="tab-docker" name="install-tab" value="docker">
+                        <input type="radio" id="tab-source" name="install-tab" value="source">
+                        <input type="radio" id="tab-alternative" name="install-tab" value="alternative">
+
+                        <div class="install-tab-buttons">
+                            <label for="tab-npm" class="install-tab-button">npm (Recomendado)</label>
+                            <label for="tab-windows" class="install-tab-button">Windows</label>
+                            <label for="tab-docker" class="install-tab-button">Docker</label>
+                            <label for="tab-source" class="install-tab-button">Fuente</label>
+                            <label for="tab-alternative" class="install-tab-button">Alternativas</label>
+                        </div>
+
+                        <!-- TAB: NPM -->
+                        <div class="install-tab-content" id="content-npm">
+                            <div class="step-container">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <h4>Instala globalmente</h4>
+                                        <pre><code class="language-bash">npm install -g @anthropic-ai/claude-code</code></pre>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <h4>Verifica la instalación</h4>
+                                        <pre><code class="language-bash">claude --version
+# Output esperado: 1.x.x</code></pre>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <h4>Inicia sesión con tu cuenta</h4>
+                                        <pre><code class="language-bash">claude auth login
+# Se abre navegador → Autentica → Vuelve a terminal</code></pre>
+                                    </div>
+                                </div>
+                                <div class="info-banner" style="background: rgba(61, 220, 151, 0.15); border-left: 4px solid #3ddc97; margin-top: var(--sp-6);">
+                                    <strong>✅ ¿Funcionó?</strong> Si <code>claude --version</code> funciona, ¡estás listo para empezar!
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB: WINDOWS -->
+                        <div class="install-tab-content" id="content-windows">
+                            <div class="windows-options">
+                                <div class="windows-option">
+                                    <h4>🔵 Opción A: WSL2 (Recomendado)</h4>
+                                    <p>Mejor compatibilidad con bash, git y herramientas POSIX.</p>
+                                    <div class="step-container compact">
+                                        <div class="step">
+                                            <div class="step-number">1</div>
+                                            <div class="step-content">
+                                                <pre><code class="language-bash">wsl
+# Abre terminal WSL (Ubuntu/Debian)</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="step">
+                                            <div class="step-number">2</div>
+                                            <div class="step-content">
+                                                <pre><code class="language-bash">sudo apt update && sudo apt install -y nodejs npm
+node --version</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="step">
+                                            <div class="step-number">3</div>
+                                            <div class="step-content">
+                                                <pre><code class="language-bash">npm install -g @anthropic-ai/claude-code
+claude auth login</code></pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="windows-option">
+                                    <h4>🟡 Opción B: PowerShell Nativo</h4>
+                                    <p>Directamente en Windows sin WSL. Requiere Node.js instalado.</p>
+                                    <div class="step-container compact">
+                                        <div class="step">
+                                            <div class="step-number">1</div>
+                                            <div class="step-content">
+                                                <pre><code class="language-powershell"># Abre PowerShell como Admin
+npm install -g @anthropic-ai/claude-code</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="step">
+                                            <div class="step-number">2</div>
+                                            <div class="step-content">
+                                                <pre><code class="language-powershell">claude --version
+claude auth login</code></pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB: DOCKER -->
+                        <div class="install-tab-content" id="content-docker">
+                            <p style="margin-bottom: var(--sp-6);">Instala Claude Code en un contenedor Docker. Ideal para máxima portabilidad y aislamiento.</p>
+                            <div class="step-container">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <h4>Crea un Dockerfile</h4>
+                                        <pre><code class="language-dockerfile">FROM node:20-alpine
 
 RUN npm install -g @anthropic-ai/claude-code
 
 WORKDIR /workspace
-
 ENTRYPOINT ["claude"]</code></pre>
-                    <pre><code class="language-bash"># Build la imagen
-docker build -t claude-code .
-
-# Ejecuta Claude Code
-docker run -it --rm \
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <h4>Build la imagen</h4>
+                                        <pre><code class="language-bash">docker build -t claude-code .</code></pre>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <h4>Ejecuta Claude Code</h4>
+                                        <pre><code class="language-bash">docker run -it --rm \
   -v ~/.anthropic:/root/.anthropic \
   -v $(pwd):/workspace \
   claude-code</code></pre>
-                    <p style="margin-top: 12px;"><strong>Ventajas:</strong> Aislamiento total, sin conflictos de versiones, fácil de compartir con el equipo.</p>
-                </article>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-banner" style="background: rgba(94, 184, 255, 0.15); border-left: 4px solid #5eb8ff; margin-top: var(--sp-6);">
+                                <strong>💡 Ventajas:</strong> Aislamiento total, sin conflictos de versiones, fácil de compartir con equipos.
+                            </div>
+                        </div>
 
-                <article class="card">
-                    <h3>Instalación desde source (Desarrollo)</h3>
-                    <p>Si quieres contribuir o usar la versión más reciente en desarrollo:</p>
-                    <pre><code class="language-bash"># Clona el repositorio
-git clone https://github.com/anthropics/claude-code.git
-cd claude-code
-
-# Instala dependencias
-npm install
-
-# Link global (para usarlo como `claude` en terminal)
-npm link
-
-# Verifica
+                        <!-- TAB: FUENTE -->
+                        <div class="install-tab-content" id="content-source">
+                            <p style="margin-bottom: var(--sp-6);">Para desarrolladores que quieren contribuir o usar la versión más reciente en desarrollo.</p>
+                            <div class="step-container">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <h4>Clona el repositorio</h4>
+                                        <pre><code class="language-bash">git clone https://github.com/anthropics/claude-code.git
+cd claude-code</code></pre>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <h4>Instala dependencias</h4>
+                                        <pre><code class="language-bash">npm install</code></pre>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <h4>Link global y verifica</h4>
+                                        <pre><code class="language-bash">npm link
 claude --version</code></pre>
-                    <p style="margin-top: 12px;">Esto instala la versión de desarrollo. Los cambios en el repo se reflejan automáticamente en el comando <code>claude</code>.</p>
-                </article>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-banner" style="background: rgba(255, 122, 89, 0.15); border-left: 4px solid #ff7a59; margin-top: var(--sp-6);">
+                                <strong>⚡ Nota:</strong> Los cambios en el repo se reflejan automáticamente en el comando <code>claude</code>.
+                            </div>
+                        </div>
 
-                <article class="card">
-                    <h3>Validación: ¿Funcionó la instalación?</h3>
-                    <pre><code class="language-bash"># Test 1: Comando disponible
-which claude        # Debe mostrar ruta (/usr/local/bin/claude o similar)
+                        <!-- TAB: ALTERNATIVAS -->
+                        <div class="install-tab-content" id="content-alternative">
+                            <p style="margin-bottom: var(--sp-6);">Otros gestores y métodos de instalación según tu entorno.</p>
+                            <div class="alternatives-list">
+                                <div class="alternative-item">
+                                    <h4>🍎 macOS con Homebrew</h4>
+                                    <pre><code class="language-bash">brew install anthropic/tap/claude-code
+claude auth login</code></pre>
+                                </div>
+                                <div class="alternative-item">
+                                    <h4>🪟 Windows con Chocolatey</h4>
+                                    <pre><code class="language-bash">choco install claude-code
+claude auth login</code></pre>
+                                </div>
+                                <div class="alternative-item">
+                                    <h4>📦 Windows con Scoop</h4>
+                                    <pre><code class="language-bash">scoop install claude-code
+claude auth login</code></pre>
+                                </div>
+                                <div class="alternative-item">
+                                    <h4>🐍 Python developers con conda</h4>
+                                    <pre><code class="language-bash">conda install -c anthropic claude-code
+claude auth login</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-# Test 2: Versión instalada
-claude --version    # Debe mostrar 1.x.x
-
-# Test 3: Auth funciona
-claude auth status  # Debe mostrar "Authenticated" y tu email
-
-# Test 4: Abre un proyecto
-cd ~/mi-proyecto
+                <!-- VALIDACIÓN Y TROUBLESHOOTING -->
+                <article class="card" style="margin-top: var(--sp-10);">
+                    <h3>✓ Validación: ¿Funcionó la instalación?</h3>
+                    <div class="step-container">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Verifica que el comando existe</h4>
+                                <pre><code class="language-bash">which claude
+# Debe mostrar: /usr/local/bin/claude</code></pre>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Verifica la versión</h4>
+                                <pre><code class="language-bash">claude --version
+# Debe mostrar: 1.x.x</code></pre>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Verifica autenticación</h4>
+                                <pre><code class="language-bash">claude auth status
+# Debe mostrar: "Authenticated" + tu email</code></pre>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Prueba en un proyecto</h4>
+                                <pre><code class="language-bash">cd ~/mi-proyecto
 claude
-# Debe mostrar prompt de Claude Code listo para comandos</code></pre>
-                    <p style="margin-top: 12px;"><strong>✅ Si ves el prompt de Claude Code, ¡estás listo!</strong></p>
+# Debe mostrar el prompt de Claude Code</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-banner" style="background: rgba(61, 220, 151, 0.15); border-left: 4px solid #3ddc97; margin-top: var(--sp-6);">
+                        <strong>✅ ¡Éxito!</strong> Si completaste todos los tests, ¡Claude Code está listo para usar!
+                    </div>
                 </article>
 
+                <!-- TROUBLESHOOTING -->
                 <article class="card">
-                    <h3>Troubleshooting: Errores comunes</h3>
-                    <h4>❌ "command not found: claude"</h4>
-                    <p><strong>Causa:</strong> npm global bin no está en PATH.</p>
-                    <pre><code class="language-bash"># Encuentra dónde npm instala globales
+                    <h3>❌ Troubleshooting: Errores comunes</h3>
+                    <div class="troubleshooting-list">
+                        <div class="troubleshooting-item">
+                            <h4>❌ "command not found: claude"</h4>
+                            <p><strong>Causa:</strong> npm global bin no está en PATH.</p>
+                            <pre><code class="language-bash"># Encuentra dónde npm instala globales
 npm config get prefix
-# Debería devolver /usr/local o similar
 
-# Agrega a tu .bashrc o .zshrc
+# Agrega a ~/.bashrc o ~/.zshrc
 export PATH="/usr/local/bin:$PATH"
 
 # Recarga shell
 source ~/.bashrc</code></pre>
-                    <h4>❌ "npm ERR! code EACCES (Permission denied)"</h4>
-                    <p><strong>Causa:</strong> npm requiere permisos de admin.</p>
-                    <pre><code class="language-bash"># Opción A: Usa sudo (simple pero no recomendado)
-sudo npm install -g @anthropic-ai/claude-code
-
-# Opción B: Cambia permisos npm (recomendado)
+                        </div>
+                        <div class="troubleshooting-item">
+                            <h4>❌ "npm ERR! code EACCES (Permission denied)"</h4>
+                            <p><strong>Causa:</strong> npm requiere permisos de admin.</p>
+                            <pre><code class="language-bash"># Opción A: Cambia permisos npm (recomendado)
 mkdir ~/.npm-global
 npm config set prefix '~/.npm-global'
 export PATH="~/.npm-global/bin:$PATH"
 npm install -g @anthropic-ai/claude-code</code></pre>
-                    <h4>❌ "Auth token expired" o "Not authenticated"</h4>
-                    <p><strong>Solución:</strong> Re-autentica.</p>
-                    <pre><code class="language-bash"># Elimina token anterior
-rm ~/.anthropic/token.json
-
-# Inicia sesión nuevamente
+                        </div>
+                        <div class="troubleshooting-item">
+                            <h4>❌ "Auth token expired" o "Not authenticated"</h4>
+                            <p><strong>Solución:</strong> Re-autentica con una cuenta válida.</p>
+                            <pre><code class="language-bash">rm ~/.anthropic/token.json
 claude auth login</code></pre>
-                    <h4>❌ "Error: Cannot find module 'anthropic'" (en Windows)</h4>
-                    <p><strong>Causa:</strong> Instalación incompleta o antivirus bloqueó descarga.</p>
-                    <pre><code class="language-bash"># Limpia instalación
-npm uninstall -g @anthropic-ai/claude-code
+                        </div>
+                        <div class="troubleshooting-item">
+                            <h4>❌ "Error: Cannot find module 'anthropic'" (Windows)</h4>
+                            <p><strong>Causa:</strong> Instalación incompleta o antivirus bloqueó descarga.</p>
+                            <pre><code class="language-bash">npm uninstall -g @anthropic-ai/claude-code
 npm cache clean --force
 npm install -g @anthropic-ai/claude-code</code></pre>
-                </article>
-
-                <article class="card">
-                    <h3>Alternativas de instalación</h3>
-                    <h4>🐧 macOS (con Homebrew)</h4>
-                    <pre><code class="language-bash">brew install anthropic/tap/claude-code
-claude auth login</code></pre>
-                    <h4>🪟 Windows (con Chocolatey o Scoop)</h4>
-                    <pre><code class="language-bash"># Opción Chocolatey
-choco install claude-code
-
-# Opción Scoop
-scoop install claude-code
-
-# Después
-claude auth login</code></pre>
-                    <h4>📦 Via conda (Python developers)</h4>
-                    <pre><code class="language-bash">conda install -c anthropic claude-code
-claude auth login</code></pre>
-                </article>
-
-                <article class="card">
-                    <h3>Próximos pasos después de instalar</h3>
-                    <p>Una vez que <code>claude --version</code> funciona:</p>
-                    <ol style="padding-left: 20px;">
-                        <li><strong>Navega a tu proyecto:</strong> <code>cd ~/tu-proyecto</code></li>
-                        <li><strong>Abre Claude Code:</strong> <code>claude</code></li>
-                        <li><strong>Crea CLAUDE.md:</strong> <code>/init</code></li>
-                        <li><strong>Pide ayuda:</strong> <code>/help</code></li>
-                        <li><strong>Empieza con un comando:</strong> <code>Refactoriza mi código para mejorar performance</code></li>
-                    </ol>
+                        </div>
+                    </div>
                 </article>
             </section>
 
