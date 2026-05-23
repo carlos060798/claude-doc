@@ -15552,6 +15552,894 @@ W24: 85% (stable)</code></pre>
 
             </section>
 
+            <!-- ════════════════════════════════════════════════════════════════
+                 NIVEL 5: MÓDULOS ESPECIALIZADOS
+                 ════════════════════════════════════════════════════════════════ -->
+
+            <!-- L5.1: ÉTICA Y LIMITACIONES -->
+            <section class="content-section" data-section="nivel-5-etica-limitaciones" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Ética & Limitaciones</span>
+                    <h2>🤔 Ética & Limitaciones</h2>
+                    <p class="section-lead">Cuándo NO usar IA. Sesgo y alucinaciones. Responsabilidad. Marco de decisión ética. Casos extremos.</p>
+                </div>
+
+                <h3 class="block-title">1. Cuándo NO Usar IA</h3>
+                <p>Claude Code es poderoso pero no omnisciente. Algunos contextos son off-limits:</p>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Contexto</th><th>Por qué NO</th><th>Alternativa</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Vida/Muerte</strong></td><td>Error podría ser fatal</td><td>Humano experto certificado</td></tr>
+                        <tr><td><strong>Decisión legal</strong></td><td>Responsabilidad legal</td><td>Abogado calificado</td></tr>
+                        <tr><td><strong>Diagnóstico médico</strong></td><td>Licencia médica requerida</td><td>Médico, no IA</td></tr>
+                        <tr><td><strong>Seguridad crítica</strong></td><td>No hay margen de error</td><td>Human security specialist</td></tr>
+                        <tr><td><strong>Datos muy sensibles</strong></td><td>Riesgo exposición</td><td>On-premise, no cloud</td></tr>
+                        <tr><td><strong>Decisión estratégica</strong></td><td>Requiere visión humana</td><td>Liderazgo, junta directiva</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 class="block-title">2. Alucinaciones: Qué son y cómo mitigar</h3>
+                <p><strong>Alucinación:</strong> Claude genera código/información confiando que es correcto, pero es parcialmente o totalmente falso.</p>
+                <div class="code-block" data-lang="text">
+                    <pre><code>Ejemplo:
+P: "¿Cómo usar librería X?"
+R: "Usa await X.doMagic()" ← INVENTADO si X.doMagic no existe</code></pre>
+                </div>
+
+                <h4>Tasas de alucinación reales:</h4>
+                <ul class="bullet-list">
+                    <li>Código simple (&lt; 50 líneas): 1-3% alucinaciones</li>
+                    <li>Código complejo (&gt; 200 líneas): 5-10% alucinaciones</li>
+                    <li>APIs/Librerías (no estándar): 10-20% alucinaciones</li>
+                    <li>Arquitectura (nunca vista): 15-30% alucinaciones</li>
+                </ul>
+
+                <h4>5 técnicas de mitigación:</h4>
+                <ol class="numbered-list">
+                    <li><strong>Test inmediatamente:</strong> Valida el código antes de producción</li>
+                    <li><strong>Verificar imports/APIs:</strong> Comprueba que existan en documentación</li>
+                    <li><strong>Pedir explicación de fuente:</strong> ¿De dónde sacó esa información?</li>
+                    <li><strong>Comparar con múltiples modelos:</strong> Si Sonnet ≠ Opus, hay riesgo</li>
+                    <li><strong>Document assumptions:</strong> Listar y verificar cada suposición</li>
+                </ol>
+
+                <h3 class="block-title">3. Sesgo Algorítmico</h3>
+                <p>Existen 3 tipos principales de sesgo en IA:</p>
+                <div class="highlight-box">💡 <strong>Sesgo 1: Entrenamiento (data bias)</strong> — Si training data tiene sesgo histórico, el modelo aprende sesgo. Ejemplo: 80% hombres en roles técnicos → modelo genera código con nombres/ejemplos varones-sesgados.</div>
+                <div class="highlight-box">💡 <strong>Sesgo 2: Selección (selection bias)</strong> — Si solo usas Claude para ciertos tipos de tareas, introduces sesgo en qué problemas te parecen "fácil resolver".</div>
+                <div class="highlight-box">💡 <strong>Sesgo 3: Representación (representation bias)</strong> — Si código generado solo representa un idioma/cultura, es menos accesible a otros mercados.</div>
+
+                <p><strong>Checklist: Detectar sesgo</strong></p>
+                <ul class="bullet-list">
+                    <li>¿Ejemplos incluyen nombres diversos?</li>
+                    <li>¿Ejemplos incluyen culturas diversas?</li>
+                    <li>¿Suposiciones implícitas sobre usuarios?</li>
+                    <li>¿Lenguaje inclusivo (no genérico-masculino)?</li>
+                    <li>¿Accesibilidad considerada?</li>
+                    <li>¿Casos extremos probados?</li>
+                </ul>
+
+                <h3 class="block-title">4. Marco de Decisión Ética</h3>
+                <p>5 preguntas antes de usar Claude Code:</p>
+                <ol class="numbered-list">
+                    <li><strong>¿Está aprobado por mi organización?</strong> → Si NO, obtén aprobación primero</li>
+                    <li><strong>¿Puedo verificar el resultado?</strong> → Si NO, aumenta verificación manual</li>
+                    <li><strong>¿Hay riesgo de sesgos?</strong> → Si SÍ, agrega diversidad a prompt</li>
+                    <li><strong>¿Requiere responsabilidad 100% traza?</strong> → Si SÍ, requiere humano (no uses IA)</li>
+                    <li><strong>¿Es moral y legal?</strong> → Si NO, no hagas (fraud, hacking, etc)</li>
+                </ol>
+
+                <div class="warning-box">⚠️ <strong>NUNCA USES Claude Code para:</strong> Life/death decisions, diagnósticos médicos, decisiones legales críticas, datos super-sensibles (passwords, PII).</div>
+
+                <h3 class="block-title">5. Referencia Rápida</h3>
+                <p><strong>SENSIBLE? SÍ → NUNCA ENVIES A CLAUDE CODE</strong></p>
+                <ul class="bullet-list">
+                    <li>Passwords, API keys, tokens</li>
+                    <li>PII (nombres, emails, addresses)</li>
+                    <li>Payment data</li>
+                    <li>Medical records</li>
+                </ul>
+
+                <p><strong>SEGURO? → PUEDES ENVIAR (con cuidado)</strong></p>
+                <ul class="bullet-list">
+                    <li>Código sanitizado</li>
+                    <li>Logs sin PII</li>
+                    <li>Architecure, algoritmos</li>
+                    <li>Mock data</li>
+                </ul>
+            </section>
+
+            <!-- L5.2: ADOPCIÓN EN EQUIPOS -->
+            <section class="content-section" data-section="nivel-5-adopcion-equipos" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Adopción en Equipos</span>
+                    <h2>👥 Adopción en Equipos</h2>
+                    <p class="section-lead">Plan 4 semanas. Material onboarding. Métricas de éxito. Comunicación stakeholders. Change management.</p>
+                </div>
+
+                <h3 class="block-title">Plan de Adopción 4 Semanas</h3>
+
+                <h4>Semana 1: Educación y Setup</h4>
+                <p><strong>Día 1: Kick-off (30 min)</strong></p>
+                <ul class="bullet-list">
+                    <li>📅 Reunión: Equipo completo</li>
+                    <li>🎯 Objetivo: Entender qué es Claude Code, por qué lo usamos</li>
+                    <li>1. Intro 10 min: "¿Qué es Claude Code?"</li>
+                    <li>2. Demo 10 min: Code review automático (live)</li>
+                    <li>3. Q&A 10 min</li>
+                </ul>
+
+                <p><strong>Días 2-3: Training (2h cada uno)</strong></p>
+                <ul class="bullet-list">
+                    <li><strong>Sesión A: Fundamentos (2h)</strong> — Prompt Craft, Decision Framework, Live coding, Q&A</li>
+                    <li><strong>Sesión B: Práctico (2h)</strong> — Setup local, Tarea 1 (code review), Tarea 2 (testing), Shared learnings</li>
+                </ul>
+
+                <p><strong>Entregables Semana 1:</strong></p>
+                <ul class="bullet-list">
+                    <li>✅ Todos con cuenta + acceso configurado</li>
+                    <li>✅ 80% del equipo completó training</li>
+                    <li>✅ 50% completó labs prácticos</li>
+                    <li>✅ Issues/feedback documentado</li>
+                </ul>
+
+                <h4>Semana 2: Integración en Flujos</h4>
+                <p><strong>Objetivo: Claude Code en workflow real</strong></p>
+                <ul class="bullet-list">
+                    <li><strong>Días 6-7: Code Review Asistido</strong> — 100% PRs con análisis de Claude, Tech lead revisa</li>
+                    <li><strong>Días 8-9: Testing en Features</strong> — Coverage >= 80%, Tests pasan en CI</li>
+                    <li><strong>Día 10: Retro Semana 2</strong> — ¿Qué funcionó? ¿Qué no? Ajustes</li>
+                </ul>
+
+                <p><strong>Entregables Semana 2:</strong></p>
+                <ul class="bullet-list">
+                    <li>✅ 100% PRs con análisis</li>
+                    <li>✅ 70%+ adoption rate</li>
+                    <li>✅ Retroalimentación > 7/10</li>
+                    <li>✅ Blockers identificados + plan</li>
+                </ul>
+
+                <h4>Semana 3: Escalado y Optimización</h4>
+                <ul class="bullet-list">
+                    <li><strong>Días 11-12: Casos de Uso Avanzados</strong> — Sesión optativa (refactor, debugging, MCP custom)</li>
+                    <li><strong>Días 13-14: Métricas y Reporting</strong> — Reporte para stakeholders</li>
+                    <li><strong>Día 15: Optimización</strong> — Cambios en política, templates, scripts</li>
+                </ul>
+
+                <p><strong>Entregables Semana 3:</strong></p>
+                <ul class="bullet-list">
+                    <li>✅ Reporte a stakeholders</li>
+                    <li>✅ 85%+ adoption rate</li>
+                    <li>✅ Optimizaciones implementadas</li>
+                    <li>✅ Dashboard visible</li>
+                </ul>
+
+                <h4>Semana 4: Institucionalización</h4>
+                <ul class="bullet-list">
+                    <li><strong>Días 16-17: Documentación</strong> — Wiki interno (best practices, templates, FAQ, videos)</li>
+                    <li><strong>Días 18-19: Roles y Ownership</strong> — Claude Champion, Mentoring Mentor, Policy Owner</li>
+                    <li><strong>Día 20: Cierre y Próximos Pasos</strong> — Reunión cierre, Plan de mejora continua</li>
+                </ul>
+
+                <p><strong>Entregables Semana 4:</strong></p>
+                <ul class="bullet-list">
+                    <li>✅ Wiki completado</li>
+                    <li>✅ Roles asignados</li>
+                    <li>✅ Plan de mantenimiento</li>
+                    <li>✅ 90%+ adoption rate</li>
+                </ul>
+
+                <h3 class="block-title">Métricas de Éxito</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Pilar</th><th>Métrica</th><th>Target</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Adoption</strong></td><td>% equipo usando Claude Code</td><td>50% → 70% → 85% → 90%</td></tr>
+                        <tr><td><strong>Productividad</strong></td><td>Horas ahorradas estimado</td><td>40h ahorrados/mes total</td></tr>
+                        <tr><td><strong>Calidad</strong></td><td>Bugs encontrados, Test coverage</td><td>75% → 85% coverage</td></tr>
+                        <tr><td><strong>Satisfacción</strong></td><td>NPS (Net Promoter Score)</td><td>> 50</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 class="block-title">Change Management: Gestionar Resistencia</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Objeción</th><th>Respuesta</th><th>Acción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>"No confío en IA"</td><td>Código siempre revisado por humano</td><td>Demo: ver review en vivo</td></tr>
+                        <tr><td>"Es otro tool que aprender"</td><td>3 comandos, manual 1 página</td><td>Hands-on sesión</td></tr>
+                        <tr><td>"¿Y si genera código malo?"</td><td>80% acierto, requiere validación</td><td>Tests + code review</td></tr>
+                        <tr><td>"¿Privacidad de código?"</td><td>Datos privados, encriptado</td><td>Leer terms juntos</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- L5.3: TROUBLESHOOTING MASTERCLASS -->
+            <section class="content-section" data-section="nivel-5-troubleshooting" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Troubleshooting</span>
+                    <h2>🔧 Troubleshooting Masterclass</h2>
+                    <p class="section-lead">De "¿Qué salió mal?" a "Lo sé en 5 minutos". 5 síntomas comunes. Diagnosis en 5 pasos.</p>
+                </div>
+
+                <h3 class="block-title">5 Síntomas Comunes & Diagnosis en 5 Pasos</h3>
+                <ol class="numbered-list">
+                    <li><strong>Contexto crece 50%+ sin razón</strong> → Token leak</li>
+                    <li><strong>Hook devuelve JSON malformado o timeout</strong> → Hook failure</li>
+                    <li><strong>MCP se desconecta aleatoriamente</strong> → Connection pool exhaustion</li>
+                    <li><strong>Requests lentos (P99 > 10s)</strong> → Agent slowness + cache miss</li>
+                    <li><strong>Gasto se duplicó en una semana</strong> → Cost explosion + infinite loop</li>
+                </ol>
+
+                <p><strong>Diagnosis Universal en 5 Pasos:</strong></p>
+                <ol class="numbered-list">
+                    <li>Recopilar logs últimas 24h (API + MCP + Agent)</li>
+                    <li>Aislar variable (cuándo empezó → buscar cambio reciente)</li>
+                    <li>Reproducir en staging (confirmar es real, no aleatoria)</li>
+                    <li>Medir (memory profile, token count, latency P50/P99)</li>
+                    <li>Hipótesis + Fix + Deploy</li>
+                </ol>
+
+                <p><strong>Tiempo promedio:</strong> 5-30 min (cuando tienes herramientas adecuadas).</p>
+
+                <h3 class="block-title">Sección 1: Token Leak Diagnostics</h3>
+                <p><strong>Síntomas de Token Leak:</strong></p>
+                <ul class="bullet-list">
+                    <li>Modelo recibe contexto de 100k tokens cuando esperabas 20k</li>
+                    <li>Latency crece sin cambios en el código</li>
+                    <li>Costo por request sube semana a semana, pero queries sin cambios</li>
+                    <li>Memory del agente crece linealmente</li>
+                </ul>
+
+                <p><strong>Causa 1: Unclosed Quotes</strong></p>
+                <div class="code-block" data-lang="javascript">
+                    <pre><code>// BROKEN: Cada request agrega fragmento "abierto"
+const buildContext = (systemPrompt, userInput) => {
+  return `${systemPrompt}
+User said: "${userInput}  // FALTA CERRAR COMILLA
+`;
+};
+
+// FIX:
+const buildContext = (systemPrompt, userInput) => {
+  return `${systemPrompt}
+User said: "${userInput}"
+`;
+};</code></pre>
+                </div>
+
+                <p><strong>Causa 2: Infinite Context Accumulation</strong></p>
+                <div class="code-block" data-lang="javascript">
+                    <pre><code>// BROKEN: Guardar response + volver a incluir
+const agent = {
+  memory: [],
+  async run(input) {
+    const context = this.memory.join('\n'); // Acumula todo
+    const response = await claude.messages.create({
+      system: `${BASE_SYSTEM}\n${context}`, // Contexto entero cada vez
+      messages: [{ role: 'user', content: input }]
+    });
+    this.memory.push(response.content);
+    return response;
+  }
+};
+
+// FIX: Window deslizante
+const agent = {
+  memory: [],
+  async run(input) {
+    const recentMemory = this.memory.slice(-10); // Últimas 5 interacciones
+    const context = recentMemory.join('\n');
+    const response = await claude.messages.create({
+      system: `${BASE_SYSTEM}\n${context}`,
+      messages: [{ role: 'user', content: input }]
+    });
+    this.memory.push(`User: ${input}`);
+    this.memory.push(`Assistant: ${response.content}`);
+    return response;
+  }
+};</code></pre>
+                </div>
+
+                <h3 class="block-title">Sección 2: Hook Failures & Timeouts</h3>
+                <p><strong>Síntoma: Hook returns `null` o JSON malformado</strong></p>
+                <div class="code-block" data-lang="javascript">
+                    <pre><code>// BROKEN: Hook no valida output
+module.exports = async (input) => {
+  const parsed = JSON.parse(input);
+  const result = {
+    status: 'ok',
+    data: await fetchData(parsed.id)
+  };
+  return result; // Devuelve objeto JS, no JSON
+};
+
+// FIX:
+module.exports = async (input) => {
+  const parsed = JSON.parse(input);
+  const result = {
+    status: 'ok',
+    data: await fetchData(parsed.id)
+  };
+  return JSON.stringify(result);
+};</code></pre>
+                </div>
+
+                <h3 class="block-title">Runbooks Rápidos (Tabla)</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Síntoma</th><th>Root Cause</th><th>Diagnóstico</th><th>Fix</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Agent null</td><td>Hook undefined</td><td>echo '{}' | node hook.js</td><td>JSON.stringify()</td></tr>
+                        <tr><td>Timeout 504</td><td>Hook lento</td><td>time node hook.js</td><td>Aumentar timeout</td></tr>
+                        <tr><td>Pool exhausted</td><td>Muchas conexiones</td><td>lsof | grep TCP</td><td>Pool + acquire</td></tr>
+                        <tr><td>Contexto crece</td><td>Memoria acumula</td><td>console.log(context.length)</td><td>Slicing window</td></tr>
+                        <tr><td>P99 > 10s</td><td>Cache miss</td><td>curl -D headers | grep cache</td><td>System prompt estático</td></tr>
+                        <tr><td>Costo +50%</td><td>Retry loop</td><td>Revisar deploy</td><td>Deshabilitar retry</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- L5.4: COST FORECASTING & OPERATIONS -->
+            <section class="content-section" data-section="nivel-5-cost-forecasting" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Cost Forecasting</span>
+                    <h2>💰 Cost Forecasting & Operations</h2>
+                    <p class="section-lead">De "cuesta mucho" a "presupuesto validado". De $10k/mes a $3k/mes = Ahorros 70%</p>
+                </div>
+
+                <h3 class="block-title">Cost Modeling 101</h3>
+                <p><strong>Fórmula Simple (Opus, Sonnet, Haiku):</strong></p>
+                <div class="code-block" data-lang="text">
+                    <pre><code>Total Cost = (input_tokens × $0.003)
+           + (cache_write × $0.00375)
+           + (cache_read × $0.0003)
+           + (output_tokens × $0.015)</code></pre>
+                </div>
+
+                <p><strong>Desglose para Sonnet-4.5 (May 2026):</strong></p>
+                <ul class="bullet-list">
+                    <li>Input: $3 per 1M tokens</li>
+                    <li>Cache write: $3.75 per 1M tokens (one-time)</li>
+                    <li>Cache read: $0.30 per 1M tokens (fast + cheap)</li>
+                    <li>Output: $15 per 1M tokens</li>
+                </ul>
+
+                <p><strong>Ejemplo real:</strong></p>
+                <ul class="bullet-list">
+                    <li>Input: 5,000 tokens → $0.015</li>
+                    <li>Cache write: 2,000 tokens → $0.0075</li>
+                    <li>Output: 500 tokens → $0.0075</li>
+                    <li><strong>Total: $0.030 per request</strong></li>
+                </ul>
+
+                <h3 class="block-title">5 Palancas de Costo</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Palanca</th><th>Ahorros</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Model Choice</strong></td><td>3x variación</td><td>Opus: $15/$45, Sonnet: $3/$15, Haiku: $0.80/$4</td></tr>
+                        <tr><td><strong>Caching</strong></td><td>40-60%</td><td>First call: pay write cost, Subsequent: 90% descuento</td></tr>
+                        <tr><td><strong>Batch Size</strong></td><td>20-30%</td><td>Batch API: 50% descuento (trade-off: 24h latencia)</td></tr>
+                        <tr><td><strong>Context Compression</strong></td><td>25-35%</td><td>Eliminar redundancia, resumen en lugar de full transcript</td></tr>
+                        <tr><td><strong>Agent Reuse</strong></td><td>10-20%</td><td>Reutilizar instance vs crear nueva cada request</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 class="block-title">ROI Analysis</h3>
+                <p><strong>Formula: ROI = (Time Saved - Cost) / Cost × 100</strong></p>
+
+                <p><strong>Caso 1: Code Review Automation</strong></p>
+                <ul class="bullet-list">
+                    <li>Contexto: 50 PRs/día, 30 min c/u = 25 horas/día</li>
+                    <li>Claude: Revisar PR en 2 min (automated)</li>
+                    <li>Cost: $0.50/PR = $25/día</li>
+                    <li>Time saved: 25 horas × $50/hora = $1,250/día</li>
+                    <li><strong>ROI: 4,900%</strong></li>
+                </ul>
+
+                <p><strong>Caso 2: Test Case Generation</strong></p>
+                <ul class="bullet-list">
+                    <li>Contexto: Escribir test = 30 min, 100 tests/sprint</li>
+                    <li>Claude: Generar test scaffold en 2 min + edit 8 min = 10 min total</li>
+                    <li>Cost: $0.80/test = $80/sprint</li>
+                    <li>Time saved: 100 × (0.5 - 0.17) = 33 horas × $80 = $2,640/sprint</li>
+                    <li><strong>ROI: 3,200%</strong></li>
+                </ul>
+
+                <h3 class="block-title">Cost Optimization Playbook: 8 Técnicas</h3>
+                <ol class="numbered-list">
+                    <li><strong>Caching (40% ahorro):</strong> Cache system prompt, reutilizar 3+ veces</li>
+                    <li><strong>Batch API (20% ahorro + 24h latencia):</strong> Para analytics, reporting</li>
+                    <li><strong>Context Compression (25% ahorro):</strong> Extracto clave, no full history</li>
+                    <li><strong>Model Downgrade (30% ahorro):</strong> Haiku para summarization, Sonnet para balance</li>
+                    <li><strong>Agent Pooling (10-20% ahorro):</strong> Reutilizar instancia, no crear nueva</li>
+                    <li><strong>Error Budgeting:</strong> Evitar infinite retries</li>
+                    <li><strong>Token Limiting:</strong> Max tokens per request</li>
+                    <li><strong>Request Deduplication:</strong> No enviar 2 veces la misma request</li>
+                </ol>
+
+                <h3 class="block-title">Caso Real: 70% Ahorro</h3>
+                <ul class="bullet-list">
+                    <li><strong>Initial:</strong> $10,000/mes, Cost/request: $0.10</li>
+                    <li><strong>Caching:</strong> $10k → $6.5k (-35%)</li>
+                    <li><strong>Model downgrade (Opus → Sonnet):</strong> $6.5k → $5.2k (-20%)</li>
+                    <li><strong>Batch API for analytics:</strong> $5.2k → $4.5k (-15%)</li>
+                    <li><strong>Context compression:</strong> $4.5k → $3.8k (-16%)</li>
+                    <li><strong>Agent pooling:</strong> $3.8k → $3.0k (-21%)</li>
+                    <li><strong>Final: $3,000/mes = 70% savings</strong></li>
+                </ul>
+
+                <h3 class="block-title">Production Monitoring</h3>
+                <p><strong>3 Métricas Clave:</strong></p>
+                <ol class="numbered-list">
+                    <li><strong>Cost per Request:</strong> Alert if > baseline × 1.5</li>
+                    <li><strong>Cost per Feature:</strong> Shows which features are expensive</li>
+                    <li><strong>Cost per User:</strong> Benchmark: $0.10-$1.00 per user per month (SaaS típico)</li>
+                </ol>
+
+                <div class="warning-box">⚠️ <strong>Alert 1: Cost spike > 20% day-over-day</strong> → Investigar inmediatamente</div>
+                <div class="warning-box">⚠️ <strong>Alert 2: Error rate > 5%</strong> → Deshabilitar retries, page oncall</div>
+                <div class="warning-box">⚠️ <strong>Alert 3: Slow P99 > baseline × 3</strong> → Check cache hit rate, profile CPU/memory</div>
+            </section>
+
+            <!-- L5.5: SEGURIDAD & COMPLIANCE -->
+            <section class="content-section" data-section="nivel-5-seguridad-compliance" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 5 / Seguridad & Compliance</span>
+                    <h2>🔐 Seguridad & Compliance</h2>
+                    <p class="section-lead">GDPR implications. Data residency. SOC2 checklist. .claudeignore avanzado. Patrones de seguridad.</p>
+                </div>
+
+                <h3 class="block-title">1. GDPR Implications</h3>
+                <p><strong>Aplicable a ti si:</strong></p>
+                <ul class="bullet-list">
+                    <li>✓ Procesas datos de EU ciudadanos</li>
+                    <li>✓ Tienes empleados en EU</li>
+                    <li>✓ Clientes en EU</li>
+                    <li>✓ Servidores en EU</li>
+                </ul>
+
+                <p><strong>Restricciones con Claude Code:</strong></p>
+                <div class="highlight-box">✅ <strong>ALLOWED:</strong> Código sanitizado (sin PII), Arquitectura/algoritmos, Análisis anónimo, Testing de lógica</div>
+                <div class="warning-box">❌ <strong>FORBIDDEN:</strong> Nombres de usuarios EU, Emails/teléfonos/direcciones, Datos médicos/financieros, Biometría</div>
+
+                <h3 class="block-title">2. Data Residency</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Región</th><th>Requerimiento</th><th>Solución</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>EU (GDPR)</strong></td><td>Datos EU → EU servers</td><td>Usar EU endpoint si disponible</td></tr>
+                        <tr><td><strong>HIPAA (US)</strong></td><td>Datos médicos protegidos</td><td>NO usar IA pública; usar on-premise</td></tr>
+                        <tr><td><strong>CCPA (CA)</strong></td><td>Derechos de consumidor</td><td>DPA con Anthropic requerido</td></tr>
+                        <tr><td><strong>UK (DPA 2018)</strong></td><td>Post-GDPR UK</td><td>Similar a GDPR</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 class="block-title">3. Patrones Seguros de Uso</h3>
+                <p><strong>Patrón 1: Sanitización de entrada</strong></p>
+                <div class="code-block" data-lang="javascript">
+                    <pre><code>// safe.js ✅
+function reviewUserCode(githubPR) {
+  const code = fetchPRContent(githubPR);
+
+  // Sanitizar antes de enviar
+  const sanitized = sanitizeSecrets(code, {
+    patterns: [
+      /api[_-]?key[\s:=]+['"]{0,1}[\w\-]{20,}['"]?/gi,
+      /password[\s:=]+['"]{0,1}[\w\-]{8,}['"]?/gi,
+      /https:\/\/[^\s]+@/g  // URLs con credenciales
+    ],
+    replacement: '***REDACTED***'
+  });
+
+  claude.review(sanitized);
+}</code></pre>
+                </div>
+
+                <p><strong>Patrón 2: Output validation</strong></p>
+                <div class="code-block" data-lang="javascript">
+                    <pre><code>// Validar que Claude no alucinó credenciales
+function validateClaudeOutput(suggestion) {
+  const forbidden = [
+    /password/i,
+    /api.?key/i,
+    /secret/i,
+    /token/i,
+    /(https?):\/\/\w+:\w+@/,  // URLs with creds
+  ];
+
+  forbidden.forEach(pattern => {
+    if (pattern.test(suggestion)) {
+      throw new Error('Claude suggested sensitive data! Manual review required.');
+    }
+  });
+
+  return suggestion;  // Safe
+}</code></pre>
+                </div>
+
+                <h3 class="block-title">4. .claudeignore Avanzado</h3>
+                <p><strong>Estructura jerárquica:</strong></p>
+                <div class="code-block" data-lang="yaml">
+                    <pre><code># Nivel 1: Secretos absolutos
+.env
+.env.local
+secrets/
+*.pem
+*.key
+
+# Nivel 2: Datos sensibles
+data/
+pii/
+user_data/
+config/production.json
+
+# Nivel 3: Archivos grandes
+node_modules/
+dist/
+build/
+
+# PATRONES AVANZADOS:
+# Excepto: todas las .md EXCEPTO CHANGELOG
+*.md
+!CHANGELOG.md
+
+# Todas las keys EXCEPTO public keys
+**/api-key*
+!**/public-key*</code></pre>
+                </div>
+
+                <h3 class="block-title">5. Compliance Checklist por Framework</h3>
+                <p><strong>GDPR:</strong></p>
+                <ul class="bullet-list">
+                    <li>[ ] DPA con Anthropic firmado</li>
+                    <li>[ ] EU endpoint configurado</li>
+                    <li>[ ] Retention policy: 30 días max</li>
+                    <li>[ ] Right to be forgotten implementado</li>
+                </ul>
+
+                <p><strong>SOC2:</strong></p>
+                <ul class="bullet-list">
+                    <li>[ ] Access control policy documentado</li>
+                    <li>[ ] API key rotation cada 90 días</li>
+                    <li>[ ] Monitoring y alertas activos</li>
+                    <li>[ ] Incident response plan</li>
+                </ul>
+
+                <p><strong>PCI DSS (si datos de pago):</strong></p>
+                <ul class="bullet-list">
+                    <li>[ ] NUNCA enviar payment data a IA</li>
+                    <li>[ ] Tokens: OK (no números de tarjeta)</li>
+                    <li>[ ] Encryption requerida</li>
+                </ul>
+            </section>
+
+            <!-- ════════════════════════════════════════════════════════════════
+                 NIVEL 6: ARQUITECTURA & ENTERPRISE
+                 ════════════════════════════════════════════════════════════════ -->
+
+            <!-- L6.1: OBSERVABILIDAD -->
+            <section class="content-section" data-section="nivel-6-observabilidad" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 6 / Observabilidad</span>
+                    <h2>📊 Observabilidad</h2>
+                    <p class="section-lead">Métricas clave (tokens, latencia, error rate). Logging estructurado. Integración Datadog/Grafana. Dashboards y alertas.</p>
+                </div>
+
+                <h3 class="block-title">1. Métricas "Cuatro Dorados"</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Métrica</th><th>Unidad</th><th>Objetivo</th><th>Alerta</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Latency</strong> (P50, P95, P99)</td><td>ms</td><td>&lt;2000ms (P95)</td><td>&gt;3000ms</td></tr>
+                        <tr><td><strong>Traffic</strong> (tokens/min)</td><td>tokens/s</td><td>&lt;10K/s por dev</td><td>&gt;50K/s</td></tr>
+                        <tr><td><strong>Errors</strong> (rate)</td><td>%</td><td>&lt;1%</td><td>&gt;5%</td></tr>
+                        <tr><td><strong>Saturation</strong> (queue depth)</td><td>requests</td><td>&lt;100 in flight</td><td>&gt;200 in flight</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 class="block-title">2. Logging Estructurado (JSON)</h3>
+                <p><strong>Formato recomendado:</strong></p>
+                <div class="code-block" data-lang="javascript">
+                    <pre><code>const logger = {
+  logRequest(request) {
+    console.log(JSON.stringify({
+      timestamp: new Date().toISOString(),
+      level: "INFO",
+      event: "claude_code_request",
+
+      // Identificadores
+      request_id: request.id,
+      user_id: request.user_id,
+      team_id: request.team_id,
+
+      // Entrada
+      model: request.model,
+      task_type: request.task_type,
+      input_tokens: request.input_tokens,
+
+      // Contexto
+      source: request.source,  // "cli", "api", "ide"
+      version: request.version
+    }));
+  }
+};</code></pre>
+                </div>
+
+                <h3 class="block-title">3. Niveles de Logs</h3>
+                <ul class="bullet-list">
+                    <li><strong>DEBUG:</strong> Desarrollo solo (request payload, token breakdown, cache hits)</li>
+                    <li><strong>INFO:</strong> Producción normal (request iniciado, completado, cambios en state)</li>
+                    <li><strong>WARN:</strong> Anomalías (latencia > 5000ms, costo inesperado, queue > 100)</li>
+                    <li><strong>ERROR:</strong> Problemas (request falló, error no recuperable, validación falló)</li>
+                    <li><strong>CRITICAL:</strong> Emergencia (sistema down, pérdida de datos, violación seguridad)</li>
+                </ul>
+
+                <h3 class="block-title">4. Reglas de Alerta (Datadog)</h3>
+                <div class="highlight-box">🔔 <strong>Alert 1: High Latency</strong> — P95 latency > 3000ms, Duration 5 min, Recipients: #alerts-claude-code</div>
+                <div class="highlight-box">🔔 <strong>Alert 2: Error Rate Spike</strong> — > 5% requests error, Baseline último 1h, Urgency: HIGH</div>
+                <div class="highlight-box">🔔 <strong>Alert 3: Budget Exceeded</strong> — team cost > budget × 1.1, Frequency: Daily 9am, Urgency: MEDIUM</div>
+                <div class="highlight-box">🔔 <strong>Alert 4: Rate Limiting</strong> — 429 responses > 10/min, Recipients: #ops</div>
+
+                <h3 class="block-title">5. SLO y Error Budget</h3>
+                <p><strong>Definir SLOs:</strong></p>
+                <ul class="bullet-list">
+                    <li>Availability: 99.9% (43 min downtime/mes)</li>
+                    <li>Latency P50 < 500ms, P95 < 2000ms, P99 < 5000ms</li>
+                    <li>Error rate: < 1%</li>
+                    <li>Cost per token: baseline (no increase > 5%)</li>
+                </ul>
+
+                <p><strong>Error budget (99.9% SLO):</strong></p>
+                <ul class="bullet-list">
+                    <li>Mensual (30 días): Budget = 43.2 min downtime</li>
+                    <li>Si < 10 min restante: freeze nuevas features</li>
+                    <li>Si < 5 min: solo hotfixes críticos</li>
+                    <li>Si negativo: revisión post-mortem requerida</li>
+                </ul>
+            </section>
+
+            <!-- L6.2: PATRONES ARQUITECTÓNICOS -->
+            <section class="content-section" data-section="nivel-6-patrones-arquitectonicos" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 6 / Patrones Arquitectónicos</span>
+                    <h2>🏗️ Patrones Arquitectónicos</h2>
+                    <p class="section-lead">5 patrones con agentes IA. Pros/cons de cada uno. Decision matrix. Diagramas conceptuales.</p>
+                </div>
+
+                <h3 class="block-title">5 Patrones Arquitectónicos</h3>
+
+                <h4>Patrón 1: Agent Orquestador (Orquestación Central)</h4>
+                <p>Un agente Claude Code central coordina múltiples subtareas en secuencia o paralelo.</p>
+                <p><strong>Caso real:</strong> Code review automático con análisis de seguridad + performance en paralelo, luego reporte consolidado.</p>
+                <ul class="bullet-list">
+                    <li>✓ Fácil de entender/debuggear</li>
+                    <li>✓ Flujo determinístico</li>
+                    <li>✓ Fácil manejar errores</li>
+                    <li>❌ Puede ser verboso</li>
+                    <li>❌ Lento si secuencial</li>
+                </ul>
+                <p><strong>Usar cuando:</strong> Workflows predefinidos, code review automático, pipelines CI/CD asistidas.</p>
+
+                <h4>Patrón 2: Agent Agentico (Reasoning Loop)</h4>
+                <p>Claude Code "piensa" iterativamente sin script predefinido. Usa reasoning y toma decisiones en vivo.</p>
+                <p><strong>Caso real:</strong> Debugging autónomo donde Claude decide si analizar, probar fix, investigar docs, o escalar.</p>
+                <ul class="bullet-list">
+                    <li>✓ Adapta a problemas nuevos</li>
+                    <li>✓ Razonamiento dinámico</li>
+                    <li>✓ Genera soluciones creativas</li>
+                    <li>❌ Impredecible</li>
+                    <li>❌ Puede iterar infinito</li>
+                    <li>❌ Variable cost</li>
+                </ul>
+                <p><strong>Usar cuando:</strong> Debugging complejo, investigación abierta, problemas inesperados.</p>
+
+                <h4>Patrón 3: Multi-Agent Competitivo</h4>
+                <p>Múltiples agents solucionan el problema en paralelo. Se eligen las mejores soluciones.</p>
+                <p><strong>Caso real:</strong> Optimización de algoritmo con 3 agentes (refactor-clean, optimize-speed, reduce-memory) en paralelo, elegir mejor.</p>
+                <ul class="bullet-list">
+                    <li>✓ Explora múltiples enfoques</li>
+                    <li>✓ Elige la mejor solución</li>
+                    <li>✓ Divergencia de ideas</li>
+                    <li>❌ 3-5× más costo</li>
+                    <li>❌ Tiempo total = max(agent)</li>
+                </ul>
+                <p><strong>Usar cuando:</strong> Decisiones arquitectónicas críticas, optimizaciones donde costo importa, mejora continua.</p>
+
+                <h4>Patrón 4: Agent + Humano (Human-in-the-Loop)</h4>
+                <p>Claude Code genera opciones, humano valida y elige. Feedback continuo.</p>
+                <p><strong>Caso real:</strong> Diseño de arquitectura en 3 rondas, usuario elige mejor opción cada ronda, Claude refina.</p>
+                <ul class="bullet-list">
+                    <li>✓ Validación humana</li>
+                    <li>✓ Control total</li>
+                    <li>✓ Feedback iterativo</li>
+                    <li>❌ Requiere experto</li>
+                    <li>❌ Más lento (humano loop)</li>
+                </ul>
+                <p><strong>Usar cuando:</strong> Decisiones críticas de negocio, proyectos nuevos, aprendizaje/mentoring.</p>
+
+                <h4>Patrón 5: Agent Jerárquico (Multi-Level)</h4>
+                <p>Agentes especializados en capas. Manager coordina, workers ejecutan.</p>
+                <p><strong>Caso real:</strong> Desarrollo full-stack con Backend Team (API, Database), Frontend Team (UI, Styles), DevOps Team (Docker, CI/CD).</p>
+                <ul class="bullet-list">
+                    <li>✓ Maneja 50+ subtareas</li>
+                    <li>✓ Agentes especializados</li>
+                    <li>✓ Máxima concurrencia</li>
+                    <li>❌ Complejidad elevada</li>
+                    <li>❌ Debugging difícil</li>
+                </ul>
+                <p><strong>Usar cuando:</strong> Proyectos grandes (50+ ficheros), múltiples dominios (BE, FE, infra), automatización máxima.</p>
+
+                <h3 class="block-title">Matriz de Decisión</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Patrón</th><th>Tamaño Problema</th><th>Latencia</th><th>Costo</th><th>Confiabilidad</th><th>Mejor para</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Orquestador</strong></td><td>Pequeño-mediano</td><td>Bajo</td><td>Bajo</td><td>Alta</td><td>Workflows definidos</td></tr>
+                        <tr><td><strong>Agentico</strong></td><td>Pequeño</td><td>Alto</td><td>Variabel</td><td>Media</td><td>Debugging, investigación</td></tr>
+                        <tr><td><strong>Competitivo</strong></td><td>Mediano</td><td>Alto</td><td>Muy alto</td><td>Alta</td><td>Decisiones críticas</td></tr>
+                        <tr><td><strong>Human-in-Loop</strong></td><td>Cualquiera</td><td>Muy alto</td><td>Medio</td><td>Muy alta</td><td>Aprendizaje, validación</td></tr>
+                        <tr><td><strong>Jerárquico</strong></td><td>Muy grande</td><td>Medio</td><td>Alto</td><td>Alta</td><td>Full-stack, escalable</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 class="block-title">Combo Recomendado: Orquestador + Human-in-Loop</h3>
+                <p>Fase 1: Orquestador automático → Fase 2: Human-in-Loop si crítico → Fase 3: Aplicar cambios</p>
+            </section>
+
+            <!-- L6.3: ENTERPRISE PLAYBOOK -->
+            <section class="content-section" data-section="nivel-6-enterprise-playbook" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 6 / Enterprise Playbook</span>
+                    <h2>🚀 Enterprise Playbook</h2>
+                    <p class="section-lead">Cómo llevar Claude Code a 200+ developers de forma escalable. 4 casos Fortune 500. Roadmap, governance, post-mortems.</p>
+                </div>
+
+                <h3 class="block-title">4 Casos Fortune 500</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Caso</th><th>Team Size</th><th>Adoption</th><th>Time Saved</th><th>ROI</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>GitButler</strong></td><td>60 developers</td><td>60%</td><td>20h/dev/mes</td><td>4.2x Año 1</td></tr>
+                        <tr><td><strong>Fintech SaaS</strong></td><td>200 developers</td><td>87.5%</td><td>40% faster</td><td>$240K/año</td></tr>
+                        <tr><td><strong>Media Platform</strong></td><td>150 developers</td><td>72%</td><td>-50% QA turnaround</td><td>-35% bugs</td></tr>
+                        <tr><td><strong>Healthcare SaaS</strong></td><td>120 developers</td><td>81%</td><td>-30% cost/feature</td><td>Governance OK</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Patrón común:</strong> 60-85% adoption en 3 meses, con governance adecuada.</p>
+
+                <h3 class="block-title">Adoption Roadmap (4 Semanas)</h3>
+
+                <h4>Week 1: Awareness</h4>
+                <p><strong>Goal:</strong> "Todos saben que existe y por qué"</p>
+                <ul class="bullet-list">
+                    <li><strong>Lunch-and-learn (1h, all hands):</strong> Demo 5 min, Q&A 10 min, "No es magic, es fuerza bruta"</li>
+                    <li><strong>Demo videos (5 min each):</strong> "Code review en 2 min", "Test generation en 5 min", "Bug diagnosis en 10 min"</li>
+                    <li><strong>FAQ Wiki:</strong> ¿Es seguro? ¿Cuánto cuesta? ¿Datos sensibles?</li>
+                </ul>
+                <p><strong>Success metric:</strong> >70% team says "Entiendo qué es"</p>
+
+                <h4>Week 2: Hands-On</h4>
+                <p><strong>Goal:</strong> "Probé, funciona, siento confianza"</p>
+                <ul class="bullet-list">
+                    <li><strong>3 MCP Labs:</strong> Build custom MCP (API data), (database queries), (internal tool)</li>
+                    <li><strong>2 Skill Labs:</strong> Automation workflow, Analysis + reporting</li>
+                </ul>
+                <p><strong>Success metric:</strong> 80%+ dicen "Puedo usarlo"</p>
+
+                <h4>Week 3: Integration (Pilot Teams)</h4>
+                <p><strong>Goal:</strong> "Pilotea en 2 teams reales"</p>
+                <ul class="bullet-list">
+                    <li><strong>Team A (Backend):</strong> Code review automation + testing, $1,000/mes budget</li>
+                    <li><strong>Team B (Data):</strong> Data analysis + dashboards, $800/mes budget</li>
+                </ul>
+                <p><strong>Success metric:</strong> >80% pilot dicen "Esto mejora mi trabajo"</p>
+
+                <h4>Week 4: Scale</h4>
+                <p><strong>Goal:</strong> "Deploy a 50+ developers, governance en place"</p>
+                <ul class="bullet-list">
+                    <li><strong>Comunicación:</strong> CEO message, training completada, governance document</li>
+                    <li><strong>Governance:</strong> Security policy, cost allocation, audit logging</li>
+                    <li><strong>Support:</strong> Claude Champions (1 per 20 devs), Slack channel, office hours</li>
+                </ul>
+                <p><strong>Success metric:</strong> 60%+ teams usando actively en primer mes</p>
+
+                <h3 class="block-title">Security & Compliance Gating</h3>
+                <p><strong>Critical Risks (BLOCK):</strong></p>
+                <ol class="numbered-list">
+                    <li><strong>Secret exfiltration:</strong> Mitigation = Redaction middleware, log filtering</li>
+                    <li><strong>PII exposure:</strong> Mitigation = PII detection before sending</li>
+                    <li><strong>Vendor lock-in:</strong> Mitigation = Abstract model layer, support multiple models</li>
+                </ol>
+
+                <p><strong>Sandbox Architecture:</strong></p>
+                <ul class="bullet-list">
+                    <li>Developer machine → [Isolated MCP per team] → Claude API → [Audit logging] → Response + redaction filter</li>
+                    <li>Benefits: Teams can't see each other's MCPs, Central audit logging, Redaction applied</li>
+                </ul>
+
+                <h3 class="block-title">KPIs & Success Criteria</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>KPI</th><th>Métrica</th><th>Month 1</th><th>Month 3</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Adoption</strong></td><td>% teams using</td><td>20%</td><td>85%+</td></tr>
+                        <tr><td><strong>Efficiency</strong></td><td>Time saved/dev/month</td><td>5h</td><td>20h</td></tr>
+                        <tr><td><strong>Quality</strong></td><td>Bug reduction</td><td>-15%</td><td>-33%</td></tr>
+                        <tr><td><strong>Cost</strong></td><td>ROI</td><td>1.5x</td><td>3.3x</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 class="block-title">Team Structure & Roles</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Role</th><th>Count</th><th>Hours/week</th><th>Skills</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Claude Champions</strong></td><td>N/20</td><td>5-10</td><td>Dev + Teaching</td></tr>
+                        <tr><td><strong>MCP Maintainers</strong></td><td>1-2</td><td>20-40</td><td>Backend + Security</td></tr>
+                        <tr><td><strong>Cost Analyst</strong></td><td>0.5-1</td><td>10-20</td><td>Finance + Data</td></tr>
+                        <tr><td><strong>Adoption Lead</strong></td><td>1</td><td>40</td><td>Product + Change</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 class="block-title">3 Incidentes Post-Mortem Reales</h3>
+
+                <h4>Incident 1: Security Leak (500K tokens via npm)</h4>
+                <p><strong>Date:</strong> January 15, 2025 | <strong>Duration:</strong> 6 hours</p>
+                <ul class="bullet-list">
+                    <li>Hour 0-1: DETECTION — Abnormal API token usage, /root/.env exposed</li>
+                    <li>Hour 1-3: ISOLATION — Revoke keys, deploy secret rotation, disable MCP</li>
+                    <li>Hour 3-6: REMEDIATION — Redaction middleware, PII detection, rotate all credentials</li>
+                </ul>
+                <p><strong>Root cause:</strong> console.log(process.env) captured in npm logs</p>
+                <p><strong>Prevention:</strong> Secret redaction middleware, PII detection, automatic credential rotation, audit logging</p>
+
+                <h4>Incident 2: Cost Explosion (2x budget in 1 week)</h4>
+                <p><strong>Date:</strong> February 3, 2025 | <strong>Duration:</strong> 4 days</p>
+                <ul class="bullet-list">
+                    <li>Feb 3 2pm: Alert — Cost > 50% budget</li>
+                    <li>Feb 3 3pm: Investigation — Requests increased 10x</li>
+                    <li>Feb 3 4pm: Found — Agent retry loop (10 retries each fail)</li>
+                    <li>Feb 3 5pm: Fix — Disable retry, deploy</li>
+                </ul>
+                <p><strong>Root cause:</strong> Aggressive retry with exponential backoff, even for permanent errors</p>
+                <p><strong>Prevention:</strong> Cost alerting (> 25% daily increase), Max tokens limit, Distinguish transient vs permanent errors, Circuit breaker</p>
+
+                <h4>Incident 3: Adoption Stall (20% adoption after 3 months)</h4>
+                <p><strong>Date:</strong> March 1, 2025 | <strong>Duration:</strong> 2 weeks</p>
+                <ul class="bullet-list">
+                    <li>Week 6: Investigation → DevOps team skeptical, no time, concerned reliability</li>
+                    <li>Week 7-8: Dedicated adoption engineer + weekly office hours</li>
+                    <li>Week 12: Adoption at 85%</li>
+                </ul>
+                <p><strong>Root cause:</strong> Training one-shot, no ongoing support, DevOps not bought in, wrong champions</p>
+                <p><strong>Fix:</strong> Dedicated adoption engineer, weekly office hours, pair with DevOps, pick influential champions</p>
+
+                <h3 class="block-title">Scaling to 100+ Developers</h3>
+                <p><strong>Architecture:</strong> Load Balancer → API Gateway → [Claude Instances] → [MCP Cluster, Cache, Audit Logs]</p>
+                <p><strong>Capacity Planning:</strong></p>
+                <ul class="bullet-list">
+                    <li>Per Claude Instance: 200-400 req/sec, 100-200 concurrent, 4-8GB memory</li>
+                    <li>For 100 developers: ~500 req/sec, 2-3 instances needed</li>
+                    <li>For 200+ developers: ~1000 req/sec, 4-6 instances needed</li>
+                </ul>
+
+                <p><strong>High Availability:</strong> Circuit breaker, Graceful degradation, Cached responses</p>
+            </section>
+
         </main>
     </div>
 
