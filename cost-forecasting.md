@@ -1,838 +1,587 @@
-# Nivel 5.7: Cost Forecasting & Operations
-
-> 💰 **De "cuesta mucho" a "presupuesto validado"**  
-> Aprende a forecasting, presupuestar y optimizar costos como empresa.
+﻿# L5.7: Cost Forecasting & Operations
+## De "cuesta mucho" a "presupuesto validado"
 
 ---
 
-## INTRODUCCIÓN
+## Introducción: De $10k/mes a $3k/mes = Ahorros 70%
 
-**Qué cubriremos:**
-- ✅ Cost modeling: Cómo calcular realmente
-- ✅ Forecasting methodology: Predecir con 90% accuracy
-- ✅ Budget allocation across teams
-- ✅ ROI analysis: "¿Vale la pena?"
-- ✅ 8 técnicas de optimización (40-70% ahorro)
-- ✅ Production monitoring y alertas
-- ✅ Comparación de vendors (Claude vs Groq vs OpenAI)
+El costo no es destino. Es una variable que controlas.
 
-**Tiempo estimado**: 90-120 minutos  
-**Requisito previo**: L5.1-5.5, L4.5 (Token Optimization)  
-**Dificultad**: Experto (Bloom 5-6)  
-**Outcome**: Reducir costos 50-70% con presupuesto predecible
+En este módulo aprenderás:
+- Modelar costos con precisión (fórmula simple)
+- Forecasting 90% accuracy
+- Dividir presupuesto entre teams
+- Calcular ROI operacional
+- 8 técnicas de optimización
+- Monitoreo en producción
+
+**Meta**: Presupuesto validado, ROI claro, costo predecible.
 
 ---
 
-## SECCIÓN 1: Cost Modeling 101
+## Sección 1: Cost Modeling 101
 
-### Fórmula Base (Simple)
+### Fórmula Simple (Opus, Sonnet, Haiku)
 
 ```
-Total Cost = 
-  (Input Tokens × $0.003) +           // Standard input rate
-  (Cache Write Tokens × $0.00375) +   // 25% surcharge para crear caché
-  (Cache Read Tokens × $0.0003) +     // 90% descuento vs input
-  (Output Tokens × $0.012)            // Output 4× más caro que input
+Total Cost = (input_tokens × $0.003) 
+           + (cache_write × $0.00375) 
+           + (cache_read × $0.0003)
+           + (output_tokens × $0.015)
 ```
 
-**Ejemplo Real:**
-```
-Request: "Summarize these 100 pages of code"
-├─ Input: 50,000 tokens (100 páginas)
-│  Cost: 50,000 × $0.003 = $0.15
-├─ Cache Write: 50,000 × $0.00375 = $0.1875 (primera vez)
-├─ Output: 500 tokens (summary)
-│  Cost: 500 × $0.012 = $0.006
-├─ Total Req 1: $0.3435 (with cache setup)
-│
-├─ Req 2 (same doc, within 5min):
-│  Cache Read: 50,000 × $0.0003 = $0.015
-│  Output: 500 × $0.012 = $0.006
-│  Total Req 2: $0.021 (90% discount!)
-│
-├─ Savings per cached req: $0.3435 - $0.021 = $0.3225 (94% savings)
-└─ ROI: 5 requests → $1.72 - $0.55 = $1.17 saved
+**Desglose para Sonnet-4.5** (precios May 2026):
+- Input: $3 per 1M tokens
+- Cache write: $3.75 per 1M tokens (one-time)
+- Cache read: $0.30 per 1M tokens (fast + cheap)
+- Output: $15 per 1M tokens
 
-INSIGHT: Caching primer request = setup, siguiente 4+ requests = bonanza
+**Ejemplo real:**
+```
+Request:
+- Input: 5,000 tokens → $0.015
+- Cache write: 2,000 tokens → $0.0075
+- Output: 500 tokens → $0.0075
+Total: $0.030 per request
 ```
 
-### 5 Levers (Control Points)
+### 5 Palancas de Costo
 
-| Lever | Impact | Effort | Example |
-|-------|--------|--------|---------|
-| **Model Selection** | 5-10× | Trivial (1 line config) | Opus→Sonnet: 5× menos caro |
-| **Caching** | 40-50% | Bajo (enable + restructure prompts) | Reutilizar 100 summaries = 94% ahorro |
-| **Batch API** | 15-25% | Medio (queue + async) | 1000 requests batch = 20% descuento |
-| **Context Compression** | 25-35% | Medio (algorithm) | Remove boilerplate = 30% token reduction |
-| **Agent Reuse** | 20-30% | Bajo (architecture) | Reutilizar agente ctx entre requests |
+**Palanca 1: Model Choice** (3x variación)
+- Opus: $15/$45 in/out (máxima calidad)
+- Sonnet: $3/$15 in/out (mejor ratio)
+- Haiku: $0.80/$4 in/out (economía)
 
-### Tabla: Costo/Min por Modelo (Escenarios Reales)
+**Palanca 2: Caching** (40-60% ahorros)
+- First call: Pagar write cost
+- Subsequent: Descuento 90% (read cost)
+- Break-even: 3 requests
 
-| Modelo | Input Cost | Output Cost | Latency | Use Case | Cost/Min Typical |
-|--------|-----------|------------|---------|----------|-----------------|
-| **Opus 4.7** | $0.003/1k | $0.012/1k | 500ms | Complex reasoning | $0.18/min (cached) |
-| **Sonnet 4.6** | $0.0008/1k | $0.0024/1k | 200ms | Code review | $0.048/min |
-| **Haiku 4.5** | $0.00008/1k | $0.00024/1k | 50ms | Classification | $0.0048/min |
-| **Groq (LLaMA)** | $0.00005/1k | $0.00015/1k | 20ms | Simple tasks | $0.002/min |
+**Palanca 3: Batch Size** (20-30% ahorros)
+- Batch API: 50% descuento
+- Trade-off: 24h latencia
 
-**Cuando usar cada uno:**
-```
-¿Costo es prioritario?
-├─ SÍ (80% de casos)
-│  └─ Haiku + Groq para tareas simples (99% quality)
-│     Opus solo para reasoning crítico
-└─ NO (20% de casos)
-   └─ Opus para todas (coste ignorado)
+**Palanca 4: Context Compression** (25-35% ahorros)
+- Eliminar contexto redundante
+- Resumen ejecutivo en lugar de full transcript
 
-¿Latencia <100ms required?
-├─ SÍ
-│  └─ Haiku (50ms) o Groq (20ms)
-└─ NO
-   └─ Sonnet (balance óptimo)
-```
+**Palanca 5: Agent Reuse** (10-20% ahorros)
+- Reutilizar agent instance (memoria caché)
+- vs creating new agent cada request
+
+### Tabla: Costo/minuto por Modelo (Escenarios Reales)
+
+| Escenario | Opus | Sonnet | Haiku | Nota |
+|-----------|------|--------|-------|------|
+| Summarization (10k tokens) | $0.30 | $0.06 | $0.015 | Haiku ideal |
+| Code review (50k tokens) | $1.50 | $0.30 | $0.075 | Sonnet balance |
+| Research (200k tokens) | $6.00 | $1.20 | $0.30 | Costo puede escalar |
+| Cached (repeat 3x) | $0.25 | $0.05 | $0.012 | Con cache hit |
+| Batch (50 requests) | $3.00 | $0.60 | $0.15 | Con 50% descuento |
 
 ---
 
-## SECCIÓN 2: Forecasting Methodology
+## Sección 2: Forecasting Methodology
 
-### 3-Step Process: Baseline → Optimize → Validate
+### 3-Paso: Baseline → Optimize → Validate
 
-**Paso 1: Baseline (Medir actual)**
+**Paso 1: Baseline**
+```
+Recopilar datos últimos 30 días:
+- Total requests: 100,000
+- Avg tokens/request: 5,000 input
+- Avg output: 500 tokens
+- Error rate: 2% (reintentos)
 
-```bash
-#!/bin/bash
-# forecast-baseline.sh
-
-API_KEY=$ANTHROPIC_API_KEY
-
-# Obtener últimos 7 días de uso
-curl -s "https://api.anthropic.com/v1/usage?period=last_7_days" \
-  -H "Authorization: Bearer $API_KEY" > usage.json
-
-# Extraer métricas clave
-INPUT_TOKENS=$(jq '.periods[].input_tokens | add' usage.json)
-OUTPUT_TOKENS=$(jq '.periods[].output_tokens | add' usage.json)
-CACHE_READS=$(jq '.periods[].cache_read_tokens | add' usage.json)
-
-# Calcular costo actual
-INPUT_COST=$(echo "scale=2; $INPUT_TOKENS * 0.003 / 1000" | bc)
-OUTPUT_COST=$(echo "scale=2; $OUTPUT_TOKENS * 0.012 / 1000" | bc)
-CACHE_COST=$(echo "scale=2; $CACHE_READS * 0.0003 / 1000" | bc)
-
-TOTAL_COST=$(echo "$INPUT_COST + $OUTPUT_COST + $CACHE_COST" | bc)
-
-echo "=== BASELINE (Last 7 days) ==="
-echo "Input tokens: $INPUT_TOKENS"
-echo "Input cost: \$$INPUT_COST"
-echo "Output cost: \$$OUTPUT_COST"
-echo "Cache savings: -\$$CACHE_COST"
-echo "TOTAL: \$$TOTAL_COST"
-echo "Daily average: \$$(echo "scale=2; $TOTAL_COST / 7" | bc)"
+Cálculo:
+(100,000 × 5,000 × $0.003) + (100,000 × 500 × $0.015) = $2,250
 ```
 
-**Paso 2: Optimize (Aplicar técnicas)**
-
-```spreadsheet
-FORECAST TEMPLATE (Copy-Paste en Excel)
-
-| Técnica | Current | After | Reduction | Impact |
-|---------|---------|-------|-----------|--------|
-| Cache (enable) | 100% | 60% | -40% | ★★★★★ |
-| Batch API | 100% | 85% | -15% | ★★★☆☆ |
-| Haiku for simple | 100% | 80% | -20% | ★★★★☆ |
-| Context compress | 100% | 70% | -30% | ★★★★☆ |
-| Agent reuse | 100% | 85% | -15% | ★★☆☆☆ |
-| ----------- | -------- | -------- | -------- | -------- |
-| COMBINED | $10,000 | $2,800 | -72% | ✅ |
-| Monthly savings | N/A | $7,200 | Año: $86.4K | 🎉 |
+**Paso 2: Optimize**
+```
+Aplicar 5 mejoras:
+- Caching: -40% → $1,350
+- Batch API: -20% → $1,080
+- Haiku para simple: -30% → $756
+- Context compression: -15% → $642
+- Agent pooling: -10% → $578
 ```
 
-**Paso 3: Validate (Verificar forecast)**
-
-```bash
-# Comparar predicción vs realidad después 2 semanas
-
-FORECAST=$10000  # Predijimos $10k/mes
-ACTUAL=$(curl -s "https://api.anthropic.com/v1/usage?period=last_14_days" \
-  -H "Authorization: Bearer $KEY" | jq '.total_cost')
-
-ERROR_PCT=$(echo "scale=1; (($ACTUAL - $FORECAST) / $FORECAST) * 100" | bc)
-
-if [ "${ERROR_PCT#-}" -lt 10 ]; then
-  echo "✅ Forecast accuracy: 90%+"
-else
-  echo "⚠️  Forecast miss: $ERROR_PCT% (adjust assumptions)"
-fi
+**Paso 3: Validate**
+```
+Predecir próximo mes:
+Forecast: $578 × 1.1 (growth buffer) = $636
+Real (posterior): $612
+Accuracy: 96.2%
 ```
 
-### Caso Real: Predicción 90% Accuracy
+### Herramienta: Spreadsheet Template (Copy-Paste Ready)
 
+**Columnas:**
+- A: Métrica (requests, tokens, error_rate)
+- B: Baseline (valores día 1)
+- C: Forecast (predicción)
+- D: Actual (real después)
+- E: Variance (%)
+
+**Fórmulas:**
 ```
-Histórico:
-├─ Semana 1: $10K
-├─ Semana 2: $9.8K
-├─ Semana 3: $10.2K
-├─ Semana 4: $9.9K
-└─ Promedio: $10K/semana → $40K/mes
-
-Forecast (aplicando 60% optimización):
-├─ Baseline: $40K
-├─ Optimizaciones: -$24K (60% reduction)
-├─ Predicción: $16K
-└─ Incertidumbre: ±10% = $14.4K-$17.6K
-
-Real después 2 meses:
-├─ Mes 1 (después optimización): $14.2K (✅ -64% vs baseline)
-├─ Mes 2: $15.8K (✅ -60% vs baseline)
-└─ Accuracy: (15.8 - 16) / 16 = -1.25% ✅ EXCELLENT
-
-LECCIÓN: Forecast methodology funciona si asumptions son realistas
+C (Forecast) = B × Growth_Rate × Cost_Per_Request
+E (Variance) = (D - C) / C
 ```
+
+### Histórico: Predijimos $8k, Real $7.2k (90% Accuracy)
+
+**Enero:**
+- Forecast: $8,000
+- Real: $7,200
+- Variance: -10%
+- Causas: Menos traffic, mejor cache
+
+**Febrero:**
+- Forecast: $7,200 × 1.05 = $7,560
+- Real: $7,480
+- Variance: -1.05%
+- Accuracy: 98.9%
 
 ---
 
-## SECCIÓN 3: Budget Allocation Across Teams
+## Sección 3: Budget Allocation Across Teams
 
-### Dividir Presupuesto (30/40/30 Rule)
+### Cómo Dividir Presupuesto
 
-```
-Total Annual Budget: $120,000
-├─ 30% R&D / Exploration ($36K)
-│  └─ Nuevos features, MCP development, experimentation
-├─ 40% Production / Stable ($48K)
-│  └─ Code review, documentation, testing (mission-critical)
-└─ 30% Experimentation / Learning ($36K)
-   └─ Team training, proof-of-concepts, hackathons
+Asignación típica por equipo (% del total budget):
+- **R&D**: 30% (experimentation, nuevas features)
+- **Production**: 40% (core features, usuarios actuales)
+- **Experimentation**: 30% (testing, AI exploration)
 
-Breakdown por equipo (20 engineers):
-├─ Platform Team (4): $24K (20% of budget)
-│  └─ Ownership: MCP servers, performance optimization
-├─ Product Team (10): $48K (40% of budget)
-│  └─ Ownership: Feature development, AI-assisted design
-├─ QA Team (3): $18K (15% of budget)
-│  └─ Ownership: Test automation, compliance checks
-├─ Data Team (2): $18K (15% of budget)
-│  └─ Ownership: Analytics, data pipelines
-└─ Reserve (central): $12K (10% of budget)
-   └─ Overhead, emergencies, spike capacity
-```
+**Ejemplo: Budget total $10,000/mes**
+- R&D: $3,000
+- Production: $4,000
+- Experimentation: $3,000
 
 ### Governance: Alert Thresholds & Escalation
 
-```json
-{
-  "budget_alerts": {
-    "warning_threshold": 0.70,      // Alert at 70% spent
-    "critical_threshold": 0.85,     // Escalate at 85%
-    "hard_stop": 0.95,              // No new requests at 95%
-    "monthly_budget_usd": 10000,
-    "rollover_percentage": 0.10     // Carry over 10% to next month
-  },
-  "escalation_policy": {
-    "70%": "Email team lead with optimization suggestions",
-    "85%": "Freeze non-production requests, escalate to CFO",
-    "95%": "Block all usage except critical, CEO notified"
-  },
-  "anomaly_detection": {
-    "daily_limit_increase": 2.0,    // Alert if 2× daily average
-    "team_overspend_percent": 1.5   // Alert if team > 150% of allocated
+**Tier 1 Alert**: Team gastó 75% budget
+- Action: Email a team lead
+- Slack notification
+
+**Tier 2 Alert**: Team gastó 90% budget
+- Action: Freeze new features (use Haiku only)
+- Escalate to manager
+
+**Tier 3 Alert**: Team gastó 100% budget
+- Action: STOP all non-critical requests
+- Emergency meeting
+
+### Caso: "Equipo B gastó 3x budget en 2 semanas"
+
+**Timeline:**
+- Week 1: Equipo B asignado $500 budget
+- Day 3: Gastó $250 (on track)
+- Day 5: Gastó $500 (100%)
+- Day 7: Gastó $1,200 (240%)
+- Day 8: Alert: "Over budget by 140%"
+
+**Root Cause:**
+- Agent con retry loop (3-5 intentos)
+- Hook failing constantemente
+- Cada fallo = 5 reintentos
+
+**Fix:**
+- Deshabilitar retry en production
+- Implementar exponential backoff
+- Alert en caso de error rate > 5%
+
+**Resultado:**
+- Budget bajó a $600 (reasignación)
+- Error rate después fix: 0.5%
+
+---
+
+## Sección 4: ROI Analysis
+
+### Formula: ROI = (Time Saved - Cost) / Cost
+
+**Fórmula expandida:**
+```
+ROI % = [(Horas Guardadas × Hourly Rate) - Claude Cost] / Claude Cost × 100
+Breakeven: Claude Cost = Horas Guardadas × Hourly Rate
+```
+
+### Casos 5x: Dónde Vale la Pena
+
+**Caso 1: Code Review Automation**
+```
+Contexto: 50 PRs/día, 30 min c/u = 25 horas/día
+Claude: Revisar PR en 2 min (automated)
+Cost: $0.50/PR = $25/día
+Time saved: 25 horas × $50/hora = $1,250/día
+ROI: ($1,250 - $25) / $25 × 100 = 4,900%
+
+Breakeven: 2 horas (1 cost-only PR)
+```
+
+**Caso 2: Documentation Generation**
+```
+Contexto: Escribir docs = 1 hora/función, 20 funciones/mes
+Claude: Generar docs sketch en 5 min + human review 15 min
+Cost: $2/función = $40/mes
+Time saved: 20 × (1 - 0.33) = 13.3 horas × $50 = $665/mes
+ROI: ($665 - $40) / $40 × 100 = 1,562%
+
+Breakeven: 5 minutos
+```
+
+**Caso 3: Test Case Generation**
+```
+Contexto: Escribir test = 30 min, 100 tests/sprint
+Claude: Generar test scaffold en 2 min + edit 8 min = 10 min total
+Cost: $0.80/test = $80/sprint
+Time saved: 100 × (0.5 - 0.17) = 33 horas × $80 = $2,640/sprint
+ROI: ($2,640 - $80) / $80 × 100 = 3,200%
+
+Breakeven: 1 minuto
+```
+
+**Caso 4: Bug Investigation**
+```
+Contexto: Debug issue = 2 horas, 5 issues/sprint
+Claude: Analyze + suggest fixes = 10 min per issue
+Cost: $1.50/issue = $7.50/sprint
+Time saved: 5 × (2 - 0.17) = 9.15 horas × $80 = $732/sprint
+ROI: ($732 - $7.50) / $7.50 × 100 = 9,660%
+
+Breakeven: 30 segundos
+```
+
+**Caso 5: API Documentation**
+```
+Contexto: Write API docs = 4 horas, 10 APIs/quarter
+Claude: Generate from code + human review = 30 min total
+Cost: $5/API = $50/quarter
+Time saved: 10 × (4 - 0.5) = 35 horas × $50 = $1,750/quarter
+ROI: ($1,750 - $50) / $50 × 100 = 3,400%
+
+Breakeven: 1 minuto
+```
+
+---
+
+## Sección 5: Cost Optimization Playbook
+
+### 8 Técnicas Ordenadas por Effort vs Impact
+
+**Matriz (Effort bajo, Impact alto):**
+
+```
+       IMPACT
+       High
+        ↑
+        │  [Caching]    [Batch API]
+        │  [Compression] [Model Selection]
+        │
+        │  [Agent Pooling] [Monitoring]
+        └─────────────────────────→ EFFORT
+```
+
+### Deep Dives: Top 3 Técnicas
+
+**Técnica 1: Caching (40% ahorro)**
+
+Antes:
+```
+Request 1: "Summarize documento X" → 2,000 tokens
+Request 2: "Summarize documento X" → 2,000 tokens (again!)
+Cost: $0.12
+
+Con cache:
+Request 1: Write cache = 2,000 × $0.00375 = $0.0075
+Request 2: Read cache = 2,000 × $0.0003 = $0.0006
+Cost: $0.0081 → 93% más barato
+```
+
+**Implementación:**
+```javascript
+const claude = new Anthropic({
+  defaultHeaders: {
+    'Cache-Control': 'max-age=300'
   }
-}
-```
-
-### Caso: Budget Loop & Root Cause
-
-```
-Timeline:
-─────────
-May 1: Budget starts $10,000
-May 5: Spent $3,500 (35%) — normal pace
-May 10: Spent $8,000 (80%) — alert triggered! 🚨
-May 12: Spent $9,850 — almost out of budget in 12 days!
-
-Investigation:
-├─ Check who spent: `curl /api/usage?team_id=team-B`
-│  Result: Team B = $7,000 of $10,000 (70%)
-├─ Check what: Team B running agent tests all day
-│  Result: Agent retry loop (infinite retries, 1000 requests/day)
-├─ Cost impact: 1000 requests × $0.15/request = $150/day
-│  Total: 10 days × $150 = $1,500 wasted
-
-Root Cause: Agent config has max_retries=10 (should be 3)
-Fix: Update config, limit to 3 retries
-├─ Cost reduction: $150/day → $45/day (70% savings)
-├─ Monthly impact: $1,500/month saved
-└─ Lesson: Monitor team spend daily, not monthly
-```
-
----
-
-## SECCIÓN 4: ROI Analysis — "¿Vale la Pena?"
-
-### ROI Formula (Simple)
-
-```
-ROI = (Time Saved in Hours × Hourly Rate - Claude Cost) / Claude Cost
-
-Ejemplo:
-├─ Task: Code review (manual = 2h, avec Claude = 0.5h)
-├─ Time saved: 1.5h
-├─ Hourly rate: $50/h (senior engineer)
-├─ Time value: 1.5 × $50 = $75
-├─ Claude cost: $0.15 (code review invocation)
-├─ ROI = ($75 - $0.15) / $0.15 = **499x return**
-└─ Breakeven: 0.003 seconds of engineer time (trivial)
-```
-
-### 5 Casos: ROI por Use Case
-
-| Use Case | Effort | Time Saved | Cost | ROI | Verdict |
-|----------|--------|-----------|------|-----|---------|
-| **Code Review** | 2h → 0.5h | 1.5h | $0.15 | 500× | ✅ YES |
-| **Documentation** | 4h → 1h | 3h | $0.30 | 500× | ✅ YES |
-| **Testing/QA** | 6h → 1h | 5h | $0.80 | 312× | ✅ YES |
-| **Architecture Design** | 8h → 4h | 4h | $0.50 | 400× | ✅ YES |
-| **Debugging** | 3h → 1h | 2h | $0.20 | 500× | ✅ YES |
-
-**Patrón universal**: Si tarea > 30 minutos + manual, ROI es 100x+
-
-### Breakeven Calculator
-
-```javascript
-function calculateBreakeven(hourlyRate, claudeCost, timeSavedPercent) {
-  // timeSavedPercent: e.g., 75% para task completado 75% más rápido
-  
-  // Asumir: Tarea normal toma 1 hora, Claude reduces to (100-timeSavedPercent)%
-  const taskDuration = 1; // 1 hora
-  const actualTime = taskDuration * (1 - timeSavedPercent / 100);
-  const timeSaved = taskDuration - actualTime;
-  
-  const value = timeSaved * hourlyRate;
-  const roi = (value - claudeCost) / claudeCost;
-  
-  return {
-    timeSaved: timeSaved.toFixed(2) + " hours",
-    value: "$" + value.toFixed(2),
-    roiPercent: (roi * 100).toFixed(0) + "%",
-    breakeven: roi > 100 ? "✅ Excellent ROI" : roi > 10 ? "✅ Good ROI" : "❌ Not worth"
-  };
-}
-
-// Ejemplo
-console.log(calculateBreakeven(
-  hourlyRate = 50,      // $50/h engineer
-  claudeCost = 0.15,    // $0.15 per invocation
-  timeSavedPercent = 75 // 75% faster
-));
-// Output: { timeSaved: "0.75 hours", value: "$37.50", roiPercent: "24900%", breakeven: "✅ Excellent ROI" }
-```
-
----
-
-## SECCIÓN 5: Cost Optimization Playbook (8 Técnicas)
-
-### Matriz: Effort vs Impact
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    EFFORT vs IMPACT                     │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  LOW EFFORT / HIGH IMPACT (Do First)                   │
-│  ├─ Enable caching: 5min config = 40% savings ⭐      │
-│  ├─ Model downgrade: Opus→Sonnet = 5× cheaper        │
-│  └─ Batch API: 1h refactor = 15% savings              │
-│                                                         │
-│  MEDIUM EFFORT / HIGH IMPACT (Do Next)                │
-│  ├─ Context compression: 4h work = 25% savings        │
-│  ├─ Agent reuse: 2h architecture = 20% savings        │
-│  └─ Prompt optimization: 3h tuning = 15% savings      │
-│                                                         │
-│  HIGH EFFORT / MEDIUM IMPACT (Do Later)               │
-│  ├─ Custom MCP: 20h dev = 5% marginal gain            │
-│  └─ New vendor: 40h integration = uncertain ROI       │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-
-RECOMENDACIÓN: Aplicar 3-4 técnicas TOP (40-70% total savings)
-```
-
-### Deep Dive: Caching (40% Savings)
-
-```javascript
-// ❌ ANTES: Cada request computa caché desde cero
-async function summarizeReport(pdfContent) {
-  const response = await claude.messages.create({
-    model: "opus",
-    max_tokens: 1000,
-    system: "You are a report analyst.",  // No caché marker
-    messages: [
-      { role: "user", content: pdfContent }  // Variable cada vez
-    ]
-  });
-  return response.content[0].text;
-}
-
-// ✅ DESPUÉS: Primer request setup, siguiente reutiliza caché
-async function summarizeReportCached(pdfContent, reportType) {
-  // reportType = "financial" | "technical" | "legal"
-  const systemPrompt = `You are a ${reportType} report analyst.
-Your job: Extract key findings, risks, and recommendations.
-Format: JSON with sections for executive summary, key metrics, risks.`;
-
-  // Marcar sección para caché (no cambia entre requests)
-  const response = await claude.messages.create({
-    model: "opus",
-    max_tokens: 1000,
-    system: [
-      {
-        type: "text",
-        text: systemPrompt,
-        cache_control: { type: "ephemeral" }  // ← Cache marker
-      }
-    ],
-    messages: [
-      {
-        role: "user",
-        content: pdfContent  // ← Solo esto varía
-      }
-    ]
-  });
-  
-  return response.content[0].text;
-}
-
-// IMPACTO:
-// Req 1: 50K tokens input (setup) + 500 output = $0.15 + $0.1875 (write)
-// Req 2-10: 50K read (cached) + 500 output = $0.015 + $0.006 cada
-// Total 10 requests:
-//   - Sin caché: 10 × $0.15 = $1.50
-//   - Con caché: $0.3375 + (9 × $0.021) = $0.525
-//   - AHORRO: 65% (mejor que 40% estimate!)
-```
-
-### Deep Dive: Batch API (15% Savings)
-
-```bash
-# ❌ ANTES: Enviar requests uno por uno (latency overhead)
-for doc in reports/*.pdf; do
-  curl -X POST https://api.anthropic.com/v1/messages \
-    -H "Authorization: Bearer $KEY" \
-    -d "{\"model\": \"opus\", \"messages\": [{\"role\": \"user\", \"content\": \"Summarize $doc\"}]}"
-done
-# Time: 100 docs × 500ms latency = 50 seconds
-# Cost: 100 × $0.15 = $15
-
-# ✅ DESPUÉS: Batch API (amortizar latency, 20% discount)
-cat > batch.jsonl <<'EOF'
-{"custom_id": "doc-1", "params": {"model": "opus", "messages": [...]}}
-{"custom_id": "doc-2", "params": {"model": "opus", "messages": [...]}}
-...
-{"custom_id": "doc-100", "params": {"model": "opus", "messages": [...]}}
-EOF
-
-curl -X POST https://api.anthropic.com/v1/batch \
-  -H "Authorization: Bearer $KEY" \
-  -d @batch.jsonl
-# Time: ~2 minutes (batch processes async)
-# Cost: $15 × 0.80 = $12 (20% discount)
-# AHORRO: $3 per 100 requests (3%)
-```
-
-### Deep Dive: Context Compression (25% Savings)
-
-```javascript
-// ❌ ANTES: Contexto sin comprimir
-const query = "What are the top 3 issues?";
-const context = fs.readFileSync("200-page-report.txt").toString();
-// context = 200KB texto = 50,000 tokens
-
-// ✅ DESPUÉS: Comprimir contexto 70%
-function compressContext(fullText, maxSummaryTokens = 10000) {
-  // Paso 1: Extract estructura (títulos, tablas)
-  const structure = extractMarkdownStructure(fullText);
-  
-  // Paso 2: Comprimir secciones menos relevantes
-  const compressed = structure.map(section => {
-    if (section.type === "body") {
-      // Reducir descripciones a 1-2 líneas
-      return section.content.split('\n').slice(0, 2).join('\n');
-    }
-    return section.content;  // Mantener títulos/tablas íntegro
-  }).join('\n');
-  
-  return compressed;
-}
-
-const compressedContext = compressContext(context);
-// Resultado: 15,000 tokens (70% reduction!)
-
-// API call
-const response = await claude.messages.create({
-  model: "opus",
-  messages: [{
-    role: "user",
-    content: `${compressedContext}\n\nQuestion: ${query}`
-  }]
 });
 
-// IMPACTO:
-// Antes: 50K input tokens × $0.003 = $0.15
-// Después: 15K input tokens × $0.003 = $0.045
-// AHORRO: $0.105 per request (70% reduction!)
+const response = await claude.messages.create({
+  model: 'claude-sonnet-4-5',
+  system: LARGE_SYSTEM_PROMPT, // Cacheado
+  messages: [{ role: 'user', content: input }],
+  max_tokens: 1024
+});
 ```
 
-### Aplicación Real: Combinando 5 Técnicas = 70% Total
+**Técnica 2: Batch API (20% ahorro + 24h latencia)**
 
-```bash
-# BASELINE: $10,000/mes
-# ├─ 100K requests/month
-# ├─ Avg 400 input tokens/request = 40M total input tokens
-# ├─ Cost: 40M × $0.003 / 1000 = $120
-# ├─ Plus output: 500K × $0.012 / 1000 = $6
-# └─ TOTAL: $126/día ≈ $3,780/mes
-
-# APLICAR 5 TÉCNICAS:
-# 1. Enable caching (40% savings)
-#    └─ $3,780 × 0.60 = $2,268
-# 2. Switch Opus→Sonnet where possible (60% savings on 50% requests)
-#    └─ $2,268 × 0.80 = $1,814
-# 3. Batch API (15% savings)
-#    └─ $1,814 × 0.85 = $1,542
-# 4. Context compression (20% savings)
-#    └─ $1,542 × 0.80 = $1,234
-# 5. Agent reuse + prompt optimization (10% savings)
-#    └─ $1,234 × 0.90 = $1,110
-
-# FINAL: $3,780 → $1,110 = 71% TOTAL SAVINGS! ✅
-
-# Presupuesto mensual: $3,780 → $1,110
-# Año 1 savings: ($3,780 - $1,110) × 12 = $32,040/year
+Antes:
 ```
+100 requests = 100 API calls = $100
+Latencia: Inmediata
+```
+
+Después:
+```
+100 requests en batch = 1 API call
+Cost: $50 (50% descuento)
+Latencia: 24h (aceptable para analytics, reporting)
+```
+
+**Técnica 3: Context Compression (25% ahorro)**
+
+Antes:
+```
+System prompt: 5,000 tokens (verbose)
+Request context: 3,000 tokens (full history)
+Total: 8,000 tokens × $0.003 = $0.024/request
+```
+
+Después:
+```
+System prompt: 1,500 tokens (extracto clave)
+Request context: 1,000 tokens (resumen, no full)
+Total: 2,500 tokens × $0.003 = $0.0075/request
+Ahorro: 69%
+```
+
+### Antes/Después Code para c/u
+
+**Caching Before/After:**
+```javascript
+// BEFORE: Sin cache
+for (let i = 0; i < 100; i++) {
+  const r = await claude.messages.create({
+    system: 'You are helpful',
+    messages: [...]
+  });
+  totalCost += 0.024; // $2.40
+}
+
+// AFTER: Con cache
+const response = await claude.messages.create({
+  model: 'claude-sonnet-4-5',
+  system: 'You are helpful', // Cacheado
+  messages: [...]
+});
+for (let i = 0; i < 100; i++) {
+  const r = await claude.messages.create({
+    system: 'You are helpful', // Cache hit
+    messages: [...]
+  });
+  totalCost += 0.002; // $0.20 → 92% cheaper
+}
+```
+
+**Batch Before/After:**
+```javascript
+// BEFORE: Individual requests
+const requests = [...]; // 100 requests
+for (const req of requests) {
+  const result = await claude.messages.create(req);
+  totalCost += req.estimatedCost; // $100
+}
+
+// AFTER: Batch
+const batch = await claude.batches.create({
+  requests: requests.map(r => ({
+    custom_id: r.id,
+    params: r
+  }))
+});
+// Results available in 24h
+// Cost: $50 (50% discount)
+```
+
+**Compression Before/After:**
+```javascript
+// BEFORE: Full context
+const systemPrompt = `You are Claude...
+With expertise in: [200 lines of capabilities]
+Your instructions: [500 lines of rules]
+History so far: [${history.join('\n')}]
+`; // 5,000 tokens
+
+// AFTER: Compressed
+const systemPrompt = `You are Claude. 
+Expertise: Coding, Data, Writing.
+Key rule: Be concise.
+Relevant history: [Last 3 exchanges only]
+`; // 1,500 tokens
+```
+
+### Caso Real: "Aplicamos 5 técnicas → 69.7% ahorro"
+
+**Initial state:**
+- Monthly cost: $10,000
+- Requests: 100,000
+- Cost/request: $0.10
+
+**Optimizations applied:**
+1. **Caching**: $10k → $6.5k (-35%)
+2. **Model downgrade (Opus → Sonnet)**: $6.5k → $5.2k (-20%)
+3. **Batch API for analytics**: $5.2k → $4.5k (-15%)
+4. **Context compression**: $4.5k → $3.8k (-16%)
+5. **Agent pooling**: $3.8k → $3.0k (-21%)
+
+**Final state:**
+- Monthly cost: $3,000
+- Cost/request: $0.03
+- **Total savings: 70%**
 
 ---
 
-## SECCIÓN 6: Production Cost Monitoring
+## Sección 6: Production Cost Monitoring
 
-### Dashboards: 5 Métricas Clave
+### Dashboards: Métricas a Trackear
 
-```json
-{
-  "dashboard_metrics": {
-    "1_daily_cost": {
-      "label": "Daily Cost Trend",
-      "metric": "Cost / day",
-      "target": "$120-150",
-      "alert": "If > 2× historical average"
-    },
-    "2_cost_per_request": {
-      "label": "Avg Cost per Request",
-      "metric": "$0.15 (target: $0.08 with optimizations)",
-      "target": "$0.08-0.12",
-      "alert": "If > $0.20"
-    },
-    "3_cache_hit_rate": {
-      "label": "Cache Effectiveness",
-      "metric": "% requests using cached data",
-      "target": ">60%",
-      "alert": "If < 40%"
-    },
-    "4_cost_by_team": {
-      "label": "Team Spend Distribution",
-      "metric": "Platform 25%, Product 50%, QA 15%, Data 10%",
-      "target": "Within ±10% of allocation",
-      "alert": "If any team > 150% of budget"
-    },
-    "5_model_distribution": {
-      "label": "Model Usage Mix",
-      "metric": "Opus 20%, Sonnet 50%, Haiku 30%",
-      "target": "Optimal cost/performance ratio",
-      "alert": "If Opus > 40%"
-    }
-  },
-  "refresh_frequency": "Daily at 9am + Real-time alerts"
-}
+**Métrica 1: Cost per Request**
+```
+Formula: Total Cost / Total Requests
+Alert if: Cost per request > baseline × 1.5
+Example: Baseline $0.03 → Alert at $0.045
 ```
 
-### Alertas: Si Costo/Request > 50% Historical
-
-```bash
-#!/bin/bash
-# cost-monitor-alert.sh
-
-# Obtener histórico últimos 30 días
-HISTORICAL_AVERAGE=$(curl -s "https://api.anthropic.com/v1/usage?period=last_30_days" \
-  -H "Authorization: Bearer $KEY" | \
-  jq '.total_cost / .total_requests')
-
-# Obtener costo último día
-TODAY_AVG=$(curl -s "https://api.anthropic.com/v1/usage?period=last_1_day" \
-  -H "Authorization: Bearer $KEY" | \
-  jq '.total_cost / .total_requests')
-
-THRESHOLD=$(echo "$HISTORICAL_AVERAGE * 1.5" | bc)
-
-if (( $(echo "$TODAY_AVG > $THRESHOLD" | bc -l) )); then
-  echo "🚨 ALERT: Cost per request spike detected!"
-  echo "Historical avg: \$$HISTORICAL_AVERAGE"
-  echo "Today avg: \$$TODAY_AVG (+$(echo "scale=0; (($TODAY_AVG - $HISTORICAL_AVERAGE) / $HISTORICAL_AVERAGE) * 100" | bc)%)"
-  echo ""
-  echo "Possible causes:"
-  echo "1. Model switched to Opus (check settings.json)"
-  echo "2. Cache disabled (check alwaysThinkingEnabled)"
-  echo "3. Loop retry happening (check agent logs)"
-  echo ""
-  echo "Actions:"
-  echo "curl -X POST https://slack.webhook.url -d '{\"text\": \"Cost spike: \$$TODAY_AVG\"}"
-fi
+**Métrica 2: Cost per Feature**
+```
+Formula: (API costs + infrastructure) / Feature count
+Shows: Which features are "expensive"
+Action: Optimize expensive features or consolidate
 ```
 
-### Custom Skill: Cost Monitoring Automático
+**Métrica 3: Cost per User**
+```
+Formula: Monthly cost / Active users
+Benchmark: SaaS típico = $0.10-$1.00 per user per month
+Alert if: > $5 per user (unsustainable)
+```
 
-**Archivo: .claude/skills/cost-monitor/index.js**
+### Alertas: Si X, trigger investigation
+
+**Alert 1: Cost spike > 20% day-over-day**
+```
+IF cost_today > cost_yesterday × 1.2
+THEN send Slack alert
+AND trigger cost breakdown analysis
+```
+
+**Alert 2: Error rate > 5%**
+```
+IF error_count / total_requests > 0.05
+THEN disable retries (avoid amplification)
+AND page on-call engineer
+```
+
+**Alert 3: Slow P99 > baseline × 3**
+```
+IF p99_latency > baseline × 3
+THEN check cache hit rate
+AND profile CPU/memory
+```
+
+### Log Parsing: Extraer tokens reales
 
 ```javascript
-#!/usr/bin/env node
-const fs = require("fs");
-
-async function main() {
-  const usage = await fetch("https://api.anthropic.com/v1/usage", {
-    headers: { Authorization: `Bearer ${process.env.ANTHROPIC_API_KEY}` }
-  }).then(r => r.json());
-
-  const cost = (usage.input_tokens * 0.003 + usage.output_tokens * 0.012) / 1000;
-  const historyFile = `${process.env.HOME}/.claude/cost-history.json`;
-  
-  // Leer histórico últimos 30 días
-  let history = fs.existsSync(historyFile) 
-    ? JSON.parse(fs.readFileSync(historyFile, "utf8")) 
-    : [];
-  
-  history.push({ date: new Date().toISOString(), cost });
-  const avg = history.slice(-30).reduce((a,b) => a + b.cost, 0) / 30;
-  
-  // Alertar si spike
-  const spike = ((cost - avg) / avg) * 100;
-  
-  console.log(`Today: $${cost.toFixed(2)} | Avg: $${avg.toFixed(2)} | Change: ${spike > 0 ? '+' : ''}${spike.toFixed(0)}%`);
-  
-  if (spike > 50) {
-    console.log(`🚨 SPIKE DETECTED: ${spike.toFixed(0)}%`);
-    // Alert Slack...
-  }
-  
-  fs.writeFileSync(historyFile, JSON.stringify(history));
-}
-
-main().catch(console.error);
-```
-
-**Hook automático (.claude/hooks/PostToolUse.sh):**
-```bash
-#!/bin/bash
-# Auto-check costo cada 10 requests
-COUNT=$(($(cat /tmp/count 2>/dev/null || echo 0) + 1))
-echo $COUNT > /tmp/count
-[ $((COUNT % 10)) -eq 0 ] && node ~/.claude/skills/cost-monitor/index.js &
-cat
-```
-
-**Uso:** `/cost-monitor` → Reporte daily | Alertas Slack automáticas
-
-### Log Parsing: Token Count Real
-
-```javascript
-// Extract real token usage from API responses
-function parseTokensFromResponse(response) {
+// Procesar respuesta de API
+const parseUsage = (response) => {
   return {
     input_tokens: response.usage.input_tokens,
-    cache_creation_input_tokens: response.usage.cache_creation_input_tokens || 0,
-    cache_read_input_tokens: response.usage.cache_read_input_tokens || 0,
+    cache_creation: response.usage.cache_creation_input_tokens || 0,
+    cache_read: response.usage.cache_read_input_tokens || 0,
     output_tokens: response.usage.output_tokens,
-    total: response.usage.input_tokens + response.usage.output_tokens
+    cost: (
+      response.usage.input_tokens * 0.003 +
+      (response.usage.cache_creation_input_tokens || 0) * 0.00375 +
+      (response.usage.cache_read_input_tokens || 0) * 0.0003 +
+      response.usage.output_tokens * 0.015
+    ) / 1000
   };
-}
+};
 
-// Log en formato CSV para análisis
-function logTokensToCSV(response, requestId) {
-  const tokens = parseTokensFromResponse(response);
-  const cost = (tokens.input_tokens * 0.003 + 
-                tokens.output_tokens * 0.012) / 1000;
-  
-  const line = [
-    new Date().toISOString(),
-    requestId,
-    tokens.input_tokens,
-    tokens.cache_creation_input_tokens,
-    tokens.cache_read_input_tokens,
-    tokens.output_tokens,
-    cost.toFixed(4)
-  ].join(',');
-  
-  fs.appendFileSync('token-usage.csv', line + '\n');
-}
-
-// Analizar trend
-function analyzeTrend() {
-  const lines = fs.readFileSync('token-usage.csv', 'utf8').split('\n');
-  const costs = lines.map(l => parseFloat(l.split(',')[6])).filter(x => x);
-  
-  const average = costs.reduce((a,b) => a+b) / costs.length;
-  const latest = costs[costs.length - 1];
-  const trend = latest > average * 1.5 ? "📈 SPIKE" : "✅ Normal";
-  
-  console.log(`Average: $${average.toFixed(4)}, Latest: $${latest.toFixed(4)} ${trend}`);
-}
+// Ejemplo de salida
+// {
+//   input_tokens: 1200,
+//   cache_creation: 950,
+//   cache_read: 0,
+//   output_tokens: 150,
+//   cost: $0.0369
+// }
 ```
 
 ---
 
-## SECCIÓN 7: Vendor Comparison & Alternatives
+## Sección 7: Vendor Comparison
 
-### Tabla: Claude vs Groq vs OpenAI vs Llama
+### Claude vs Groq vs OpenAI vs Llama (Tabla 1 página)
 
-| Vendor | Model | Input Cost | Output Cost | Latency | Quality | Best For |
-|--------|-------|-----------|------------|---------|---------|----------|
-| **Anthropic** | Opus 4.7 | $0.003/1k | $0.012/1k | 500ms | 95% | Complex reasoning |
-| **Anthropic** | Sonnet 4.6 | $0.0008/1k | $0.0024/1k | 200ms | 85% | Balanced choice |
-| **Anthropic** | Haiku 4.5 | $0.00008/1k | $0.00024/1k | 50ms | 70% | Simple tasks |
-| **Groq** | LLaMA-2 70B | $0.00005/1k | $0.00015/1k | 20ms | 72% | Ultra-fast |
-| **OpenAI** | GPT-4 Turbo | $0.001/1k | $0.003/1k | 800ms | 92% | GPT-ecosystem |
-| **OpenAI** | GPT-3.5 | $0.00015/1k | $0.0002/1k | 100ms | 60% | Cheap baseline |
-| **Open Source** | LLaMA-2 (self-hosted) | $0 (compute cost) | 0 | 300ms | 72% | Full control |
+| Vendor | Input $/1M | Output $/1M | Latency | Accuracy | Cost/90% | Notes |
+|--------|-----------|------------|---------|----------|----------|-------|
+| Claude Sonnet | $3 | $15 | 2-3s | 95% | $0.04/req | Best balance |
+| Claude Opus | $15 | $45 | 3-5s | 98% | $0.12/req | Máx calidad |
+| OpenAI GPT-4 | $30 | $60 | 2s | 96% | $0.20/req | Cara |
+| Groq Mixtral | $0.27 | $0.81 | 0.3s | 85% | $0.001/req | Ultra rápido |
+| Llama 70B | Self-hosted | Self-hosted | 5s | 88% | $0.02/req | Privado |
 
-### Trade-offs Analysis
+### Trade-offs
 
+**Claude Sonnet (recommended for most):**
+- Pro: Quality + Cost balance, caching support
+- Con: Not ultra-cheap
+
+**Groq (for speed-critical):**
+- Pro: Latencia 0.3s, barato
+- Con: Lower quality, no caching
+
+**OpenAI (for specific use cases):**
+- Pro: Integrations, GPT-4 quality
+- Con: 10x más caro
+
+**Llama (for privacy/control):**
+- Pro: Self-hosted, private
+- Con: Manage infrastructure, lower quality
+
+### Caso: "Cambiamos Sonnet → Haiku para summarization, -60% cost"
+
+**Before:**
 ```
-¿Cuándo cambiar de vendor?
-
-STAY WITH CLAUDE:
-├─ Need complex reasoning (Opus quality gap)
-├─ Have budget, want optimal quality/cost (Sonnet)
-├─ Team knows Claude ecosystem
-└─ Security/compliance requirements (Anthropic track record)
-
-SWITCH TO GROQ:
-├─ Latency critical (<100ms required)
-├─ Simple classification/tagging tasks
-├─ High volume, cost-sensitive
-└─ Can tolerate 70% quality
-
-SWITCH TO OPENAI:
-├─ Team standardized on OpenAI (cost of switching > benefit)
-├─ Need GPT-specific features (vision, fine-tuning)
-└─ Enterprise contract requirements
-
-SELF-HOSTED (LLaMA):
-├─ Extreme security requirements (air-gapped)
-├─ Unlimited volume (compute owned)
-├─ Quality acceptable at 70-75%
-└─ 40+ engineers team (support cost)
+Task: Summarize 500 documents/día
+Model: Claude Sonnet
+Cost: 500 × $0.05/doc = $25/día = $750/mes
+Quality: 95% accuracy (overkill for summary)
 ```
 
-### Caso: Hybrid Strategy (Claude + Groq)
-
+**After:**
 ```
-Strategy: Use best tool for each job
-
-┌─ Request comes in
-├─ IF task="classification" → Route to Groq
-│  Cost: $0.0001, Latency: 20ms, Quality: 70% (acceptable)
-├─ ELIF task="code_review" → Route to Claude (Sonnet)
-│  Cost: $0.001, Latency: 200ms, Quality: 85% (needed)
-├─ ELIF task="reasoning" → Route to Claude (Opus)
-│  Cost: $0.015, Latency: 500ms, Quality: 95% (critical)
-└─ Else → Default to Sonnet
-
-Monthly cost breakdown:
-├─ 60% tasks to Groq: 60K requests × $0.0001 = $6
-├─ 30% tasks to Sonnet: 30K requests × $0.001 = $30
-├─ 10% tasks to Opus: 10K requests × $0.015 = $150
-└─ TOTAL: $186/month (vs $300 if all Opus)
-
-SAVINGS: 38% by intelligently routing tasks! ✅
+Task: Summarize 500 documents/día
+Model: Claude Haiku
+Cost: 500 × $0.02/doc = $10/día = $300/mes
+Quality: 88% accuracy (sufficient for summary)
+Savings: $450/mes (60%)
 ```
 
 ---
 
-## SECCIÓN 8: Governance Framework
+## Cierre: Checklist "Presupuesto Validado"
 
-### Policy Enforcement Table
+**Has completado L5.7: Cost Forecasting & Operations**
 
-```json
-{
-  "policies": [
-    {
-      "policy": "Model Selection",
-      "rule": "Default to Haiku unless reasoning required",
-      "enforcement": "Auto-downgrade if task is classification",
-      "exception": "Explicitly approved by PM"
-    },
-    {
-      "policy": "Caching",
-      "rule": "All production prompts must have cache markers",
-      "enforcement": "Pre-deployment check via hook",
-      "exception": "None (non-negotiable)"
-    },
-    {
-      "policy": "Token Limits",
-      "rule": "Max 100K input tokens per request",
-      "enforcement": "Hard stop in API middleware",
-      "exception": "CEO approval required"
-    },
-    {
-      "policy": "Team Budget",
-      "rule": "No requests if team budget exhausted",
-      "enforcement": "Automatic reject via cost monitor",
-      "exception": "CFO override with 24h notice"
-    },
-    {
-      "policy": "Audit Logging",
-      "rule": "All requests logged with team/cost/outcome",
-      "enforcement": "Middleware hook (mandatory)",
-      "exception": "None"
-    }
-  ]
-}
-```
+Checklist final:
+- ✅ Modelar costos con fórmula
+- ✅ Forecasting 90% accuracy
+- ✅ Dividir presupuesto entre teams
+- ✅ Calcular ROI por caso
+- ✅ 8 técnicas de optimización
+- ✅ Monitoreo en producción
+- ✅ Vendor comparison
 
----
+**Benchmark esperado:**
+- Antes: "¿Cuánto cuesta?" (no sabías)
+- Después: "Presupuesto $X validado" (sabes exactamente)
 
-## RESUMEN & PRÓXIMOS PASOS
+**Próximo**: L6.2 **Enterprise Playbook** — Escalar a 200+ developers, governance, post-mortems reales, métricas de éxito.
 
-### 5 Ideas Clave
-
-1. **Cost modeling** → Simple formula + 5 levers = control completo
-2. **Forecasting** → 3-step baseline/optimize/validate = 90% accuracy
-3. **Optimization** → 5-8 técnicas combinadas = 70% savings realista
-4. **ROI** → Casi todos los usos >100x return (hazlo)
-5. **Governance** → Budget allocation + alerts = predictable spend
-
-### Próximo Módulo
-
-→ **L6.2: Enterprise Playbook**  
-Aprenderás cómo escalar Claude Code a 200+ developers con security, governance, y adoption roadmap.
-
-### Checkpoint Completado
-
-```markdown
-✅ L5.7 Cost Forecasting & Operations
-
-Habilidades adquiridas:
-- Forecast costos con 90% accuracy
-- Ahorrar 50-70% con técnicas combinadas
-- Presupuestar por equipo con governance
-- ROI análisis para decisiones de inversión
-- Monitoreo operacional en producción
-
-Quiz pendiente: 12 preguntas (niveles Aplicar-Analizar)
-Próximo paso: L6.2 Enterprise Playbook
-```
-
----
-
-**Creado**: 2026-05-20  
-**Duración**: 90-120 minutos (lectura + calculadoras)  
-**Herramientas**: Excel templates, bash scripts, cost calculator  
-**Status**: ✅ Validado contra datos reales de 5+ empresas  
-**Feedback**: ¿Falta caso de uso? Reporta en [github-issues](https://github.com/anthropics/claude-code/issues)
+**Checkpoint L5.7**: ✅ Completado

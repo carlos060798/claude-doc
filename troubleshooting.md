@@ -1,322 +1,456 @@
-# L5.6: Troubleshooting Masterclass — De "¿Qué salió mal?" a "Lo sé en 5 min"
-
-**Objetivo**: Diagnosticar y resolver fallos críticos en producción con velocidad y precisión.
-
----
-
-## 📌 Introducción: 5 Síntomas Comunes + Diagnosis en 5 Pasos
-
-Cuando Claude Code falla en producción, el tiempo es crítico. Este módulo te enseña a diagnosticar **cinco categorías de fallo común** en menos de 5 minutos usando un árbol de decisión estructurado.
-
-### 5 Síntomas de Alerta Roja
-1. **Token leak**: Contexto crece ilimitadamente (P99 latency, OOM en 2-3 horas)
-2. **Hook failures**: JSON inválido, timeouts, handshake errors
-3. **MCP connection issues**: Stdio buffer deadlock, pool exhaustion
-4. **Agent slowness**: P50 = 200ms, P99 = 5s (varianza 25×)
-5. **Cost explosion**: Presupuesto diario se duplica en 24h
-
-### Diagnosis en 5 Pasos
-```
-Paso 1: ¿Cuándo comenzó? (timeline)
-Paso 2: ¿Qué métrica cambió? (logs, CPU)
-Paso 3: ¿Qué sistemas afecta? (scope)
-Paso 4: ¿Qué cambió 24h antes? (commits)
-Paso 5: ¿Cómo validamos fix? (antes/después)
-```
+﻿# L5.6: Troubleshooting Masterclass
+## De "¿Qué salió mal?" a "Lo sé en 5 minutos"
 
 ---
 
-## 1️⃣ Token Leak Diagnostics
+## INTRODUCCIÓN: 5 Síntomas Comunes & Diagnosis en 5 Pasos
 
-### Detectar Fuga de Tokens
+Cuando tu sistema Claude Code falla, tienes dos opciones: entrar en pánico o seguir un árbol de decisión. Este módulo es tu árbol.
 
-```bash
-# Extraer tokens por request del log
-grep "usage.input_tokens" production.log | awk '{sum += $NF} END {print "Avg:", sum/NR}'
+**5 síntomas que casi siempre indican problemas específicos:**
 
-# Esperado: 2,500–5,000 tokens
-# Leak: 15,000+ tokens
+1. **Contexto crece 50%+ sin razón** → Token leak (sección 1)
+2. **Hook devuelve JSON malformado o timeout** → Hook failure (sección 2)
+3. **MCP se desconecta aleatoriamente** → Connection pool exhaustion (sección 3)
+4. **Requests lentos (P99 > 10s)** → Agent slowness + cache miss (sección 4)
+5. **Gasto se duplicó en una semana** → Cost explosion + infinite loop (sección 5)
+
+**Diagnosis en 5 Pasos (Método Universal):**
+```
+Paso 1: Recopilar logs últimas 24h (API + MCP + Agent)
+Paso 2: Aislar variable (cuándo empezó → buscar cambio reciente)
+Paso 3: Reproducir en staging (confirmar es real, no aleatoria)
+Paso 4: Medir (memory profile, token count, latency P50/P99)
+Paso 5: Hipótesis + Fix + Deploy
 ```
 
-**Caso Real**: Histórico de conversación sin límite
-```javascript
-// ❌ ANTES
-async function processMessage(msg) {
-  const history = await db.getConversationHistory(userId); // NO LIMIT
-  return claude.messages.create({
-    model: "claude-opus",
-    messages: [...history, { role: "user", content: msg }],
-  });
-}
-// Día 1: 2,500 tokens avg
-// Día 3: 25,000 tokens avg (10× costo)
-
-// ✅ DESPUÉS
-async function processMessage(msg) {
-  const history = await db.getConversationHistory(userId, { limit: 20 });
-  return claude.messages.create({
-    model: "claude-opus",
-    messages: [...history, { role: "user", content: msg }],
-  });
-}
-// Resultado: 2,500–3,000 tokens consistently
-```
-
-### Árbol de Decisión: Token Leak
-
-```
-¿Token leak detectado?
-├─ SÍ: ¿Cambió contexto en últimas 48h?
-│  ├─ SÍ → Revisar memory section en CLAUDE.md
-│  │  └─ Buscar: Variable no se limpia entre requests
-│  │
-│  └─ NO: ¿Cambió prompts o system message?
-│     └─ Buscar: Prompt nuevo con 10× tokens
-│
-└─ NO: Es carga normal
-```
+**Tiempo promedio**: 5-30 min (cuando tienes herramientas adecuadas).
 
 ---
 
-## 2️⃣ Hook Failures: JSON Input/Output
+## Sección 1: Token Leak Diagnostics
 
-### Causa #1: JSON Malformado
+### Cómo Detectar un Token Leak
+
+Un token leak ocurre cuando tu contexto crece constantemente sin que lo esperes. Síntomas:
+
+- Modelo recibe contexto de 100k tokens cuando esperabas 20k
+- Latency crece sin cambios en el código
+- Costo por request sube semana a semana, pero queries sin cambios
+- Memory del agente crece linealmente
+
+**Herramienta: Log Parser Rápido**
 
 ```javascript
-// ❌ ANTES: Caracteres sin escape
-const payload = {
-  message: "User said: \"It's working!\"",  // ← Comillas sin escape
-  multiline: "First line
-Second line"  // ← Newline literal
+const logs = await fetchLogs('last_24h');
+const tokenCounts = logs.map(l => ({
+  timestamp: l.ts,
+  input_tokens: l.usage.input,
+  output_tokens: l.usage.output,
+  total: l.usage.input + l.usage.output
+}));
+
+const avgFirst6h = tokenCounts.slice(0, 6).reduce((a,b) => a + b.total, 0) / 6;
+const avgLast6h = tokenCounts.slice(-6).reduce((a,b) => a + b.total, 0) / 6;
+
+console.log(`Promedio primeras 6h: ${avgFirst6h} tokens`);
+console.log(`Crecimiento: ${((avgLast6h - avgFirst6h) / avgFirst6h * 100).toFixed(1)}%`);
+```
+
+### Causas Comunes
+
+**Causa 1: Unclosed Quotes**
+
+```javascript
+// BROKEN: Cada request agrega fragmento "abierto"
+const buildContext = (systemPrompt, userInput) => {
+  return `${systemPrompt}
+User said: "${userInput}  // FALTA CERRAR COMILLA
+`;
 };
-const json_str = JSON.stringify(payload);
-// Resultado: INVÁLIDO
+```
 
-// ✅ DESPUÉS
-const payload = {
-  message: "User said: \"It's working!\"",
-  multiline: "First line\nSecond line"
+**Fix:**
+```javascript
+const buildContext = (systemPrompt, userInput) => {
+  return `${systemPrompt}
+User said: "${userInput}"
+`;
 };
-JSON.parse(JSON.stringify(payload));  // ← Validar antes de enviar
 ```
 
-### Causa #2: Timeout en Handler
+**Causa 2: Infinite Context Accumulation**
 
-```python
-# ❌ ANTES: Sin async
-@app.post("/hook/process")
-def handle_hook():
-    result = claude.messages.create(...)  # ← Bloquea 30s
-    return result
-
-# ✅ DESPUÉS: Con queuing
-@app.post("/hook/process")
-def handle_hook():
-    executor.submit(process_async, data)  # ← No bloquea
-    return {"status": "queued"}
+```javascript
+// BROKEN: Guardar response + volver a incluir
+const agent = {
+  memory: [],
+  async run(input) {
+    const context = this.memory.join('\n'); // Acumula todo
+    const response = await claude.messages.create({
+      system: `${BASE_SYSTEM}\n${context}`, // Contexto entero cada vez
+      messages: [{ role: 'user', content: input }]
+    });
+    this.memory.push(response.content);
+    return response;
+  }
+};
 ```
 
-### Post-Mortem: Hook Failure (2 Horas Debug)
+**Fix:**
+```javascript
+const agent = {
+  memory: [],
+  async run(input) {
+    const recentMemory = this.memory.slice(-10); // Últimas 5 interacciones
+    const context = recentMemory.join('\n');
+    const response = await claude.messages.create({
+      system: `${BASE_SYSTEM}\n${context}`,
+      messages: [{ role: 'user', content: input }]
+    });
+    this.memory.push(`User: ${input}`);
+    this.memory.push(`Assistant: ${response.content}`);
+    return response;
+  }
+};
+```
+
+### Árbol de Decisión
 
 ```
-Hora 10:15: 50% de hooks falla con "Invalid JSON"
-Hora 10:20: Revisar último commit
-         → "Add streaming response" hace 90 min
-Hora 10:45: Problema encontrado
-         → Stream genera múltiples eventos, no 1 JSON
-Hora 11:00: Fix implementado
-         → Consumir stream completo antes de retornar
-Hora 11:15: Validado
-         → ✅ 200 OK con JSON válido
+¿Contexto crece cada request?
+├─ SÍ: ¿Memory.push() agregando strings?
+│  ├─ SÍ: Cambiar a window deslizante
+│  └─ NO: ¿Loop concatenando respuesta?
+└─ NO: ¿Token count esperado en FIRST?
+   └─ SÍ: System prompt muy largo?
 ```
+
+### Caso Real: SaaS Tool (Feb 2025)
+
+**Timeline:**
+- Feb 5: Deploy nuevas features
+- Feb 10: Alert: cost/request subió 40%
+- Feb 10: Contexto 150k tokens (antes 30k)
+- Feb 10: Root cause: unclosed quote
+- Feb 10: Fix deployed
+
+**Impacto**: -75% cost por request, latency P99 bajó 8s → 2s.
 
 ---
 
-## 3️⃣ MCP Connection Issues
+## Sección 2: Hook Failures & Timeouts
 
-### Síntoma #1: Pool Exhaustion
+### Debugging JSON
 
-```python
-# ❌ ANTES: Sin cierre de conexión
-class MCPClient:
-    def send_request(self, payload):
-        conn = self.pool.acquire()
-        self.connections.append(conn)  # ← NUNCA se libera
-        return conn.send(payload)
+**Síntoma: Hook returns `null` o JSON malformado**
 
-# Resultado: 1000 requests → 1000 conexiones → OVERFLOW
-
-# ✅ DESPUÉS
-def send_request(self, payload):
-    with self.pool.acquire() as conn:  # ← Auto-close
-        return conn.send(payload)
+```javascript
+// BROKEN: Hook no valida output
+module.exports = async (input) => {
+  const parsed = JSON.parse(input);
+  const result = {
+    status: 'ok',
+    data: await fetchData(parsed.id)
+  };
+  return result; // Devuelve objeto JS, no JSON
+};
 ```
 
-### Síntoma #2: Stdio Deadlock
-
-```python
-# ❌ ANTES: Buffer lleno, sin lectura
-proc.stdin.write(b"LARGE_PAYLOAD")  # ← Buffer lleno
-# proc.stdout.read() nunca se ejecuta → DEADLOCK
-
-# ✅ DESPUÉS: Non-blocking I/O
-def send_request(self, payload, timeout=5):
-    self.proc.stdin.write(payload.encode() + b"\n")
-    self.proc.stdin.flush()
-    
-    start = time.time()
-    while time.time() - start < timeout:
-        if self.last_response:
-            return self.last_response
-        time.sleep(0.01)
-    
-    raise TimeoutError()
+**Fix:**
+```javascript
+module.exports = async (input) => {
+  const parsed = JSON.parse(input);
+  const result = {
+    status: 'ok',
+    data: await fetchData(parsed.id)
+  };
+  return JSON.stringify(result);
+};
 ```
+
+### Timeout Causes
+
+**Causa 1: Threshold Demasiado Bajo**
+
+```javascript
+// BROKEN: timeout 1s para operación 3s
+const hook = async (input) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => reject('timeout'), 1000); // 1s muy corto
+    const result = await heavyDatabase.query(input.id);
+    resolve(result);
+  });
+};
+```
+
+**Fix:**
+```javascript
+const hook = async (input) => {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject('timeout'), 5000);
+    heavyDatabase.query(input.id)
+      .then(result => { clearTimeout(timeout); resolve(result); })
+      .catch(err => { clearTimeout(timeout); reject(err); });
+  });
+};
+```
+
+**Causa 2: Blocker no manejado**
+
+```javascript
+// BROKEN: Si DB cuelga, espera indefinidamente
+const hook = async (input) => {
+  const db = require('db-client');
+  const conn = await db.connect();
+  return conn.query(input.id);
+};
+```
+
+**Fix:**
+```javascript
+const hook = async (input) => {
+  const db = require('db-client');
+  const conn = await Promise.race([
+    db.connect(),
+    new Promise((_, reject) => setTimeout(() => reject('timeout'), 2000))
+  ]);
+  return conn.query(input.id);
+};
+```
+
+### Post-Mortem: Hook JSON Issue (Jan 22, 2025)
+
+**Duración**: 2 horas  
+**Síntoma**: Agent nunca responde
+
+**Root Cause**: Hook devolvía `{ data: buffer }`. Claude esperaba JSON, recibía objeto JS.
+
+```javascript
+// BROKEN
+const hook = async (input) => {
+  const buffer = fs.readFileSync(input.path);
+  return { data: buffer }; // Buffer no es serializable
+};
+
+// FIX
+const hook = async (input) => {
+  const buffer = fs.readFileSync(input.path);
+  return { data: buffer.toString('base64') };
+};
+```
+
+**Diagnosis timeline:**
+- 45 min: "¿Es timeout?"
+- 45 min: "¿Qué output?"
+- 30 min: Fix + validación
 
 ---
 
-## 4️⃣ Agent Slowness: P50 vs P99
+## Sección 3: MCP Connection Issues
 
-### Medir Real
+### Connection Pool Exhaustion
+
+**Síntoma: "Too many open files" o "ECONNREFUSED"**
+
+```javascript
+// BROKEN: Crear nueva conexión por request
+const runQuery = async (sql) => {
+  const conn = await mcp.createConnection();
+  return conn.execute(sql);
+};
+
+// 100 requests = 100 conexiones
+// Pool máximo = 10-20
+// Resultado: ECONNREFUSED después de 20 requests
+```
+
+**Fix:**
+```javascript
+const pool = new MCP.ConnectionPool({ maxConnections: 20 });
+
+const runQuery = async (sql) => {
+  const conn = await pool.acquire();
+  try {
+    return conn.execute(sql);
+  } finally {
+    pool.release(conn);
+  }
+};
+```
+
+### Stdio Buffer Deadlock
+
+**Síntoma: MCP lento sin error explícito**
+
+```javascript
+// BROKEN: Escribir 1MB sin drenar stdout
+const mcp = spawn('mcp-server');
+mcp.stdin.write(gigantPayload);
+// Buffer se llena = DEADLOCK
+```
+
+**Fix:**
+```javascript
+const mcp = spawn('mcp-server');
+let isReady = true;
+
+mcp.stdin.on('drain', () => { isReady = true; });
+const send = (payload) => {
+  if (!mcp.stdin.write(payload)) {
+    isReady = false;
+  }
+};
+
+const sendLarge = (payload) => {
+  const chunks = chunk(payload, 64 * 1024);
+  chunks.forEach(chunk => send(chunk));
+};
+```
+
+### Server Version Mismatch
 
 ```bash
-# P50, P95, P99 desde logs
-grep "request_duration_ms" production.log | awk '{
-  data[NR] = $NF
+curl http://mcp-server:8000/version
+# Comparar con client version
+npm install @mcp/server@latest
+```
+
+---
+
+## Sección 4: Agent Slowness & Cache Misses
+
+### P50 vs P99 Profiling
+
+```javascript
+const latencies = [];
+for (let i = 0; i < 1000; i++) {
+  const start = Date.now();
+  await agent.run(testQuery);
+  latencies.push(Date.now() - start);
 }
-END {
-  n = NR
-  p50 = data[int(n * 0.50)]
-  p99 = data[int(n * 0.99)]
-  print "P50:", p50, "ms"
-  print "P99:", p99, "ms"
-}'
 
-# Output:
-# P50: 180 ms
-# P99: 4200 ms (23× más lento)
+latencies.sort((a, b) => a - b);
+const p50 = latencies[Math.floor(latencies.length * 0.50)];
+const p99 = latencies[Math.floor(latencies.length * 0.99)];
+
+console.log(`P50: ${p50}ms, P99: ${p99}ms`);
+// P50: 245ms, P99: 8500ms = outliers altos
 ```
 
-### Causa: Cache Misses
+### Cache Misses
 
-```python
-# ❌ ANTES: Sin caché
-async def process_user_request(user_id):
-    user_data = await db.get_user(user_id)  # ← 2s si cold
-    result = await claude.messages.create(...)  # ← 1.2s
-    return result  # Total: 3.2s
+```javascript
+const response = await claude.messages.create({
+  model: 'claude-opus-4',
+  max_tokens: 1024,
+  system: LARGE_SYSTEM,
+  messages: [...]
+});
 
-# Latencias: Hit 1 = 3.2s, Hit 2 (warm) = 1.2s
-# P50 = 1.2s, P99 = 3.2s
-
-# ✅ DESPUÉS: Con caché 5 minutos
-class CachedUserData:
-    async def get_user(self, user_id):
-        if self.is_cached(user_id):
-            return self.cache[user_id]  # ← 1ms
-        data = await db.get_user(user_id)  # ← 2s (raro)
-        self.cache[user_id] = data
-        return data
-
-# Resultado: P50 = 1.2s, P99 = 1.2s (predecible)
+console.log(response.usage);
+// First request: cache_creation_input_tokens: 950
+// Second request: cache_read_input_tokens: 950 ← Hit!
 ```
 
----
+**Si ves 0 cache_read_input_tokens, cache no funciona.**
 
-## 5️⃣ Cost Explosion
+Causas:
+- System prompt cambia cada request
+- Request va a servidor diferente
+- Cache TTL expiró (máximo 5 min)
 
-### Checklist 3 Minutos
-
-```
-Gasto ayer: $X
-Gasto hoy: $2X
-
-□ ¿Deploy en últimas 24h? (revisar commit)
-□ ¿Cambió volumen requests? (medir traffic)
-□ ¿Cambió modelo (Opus → Sonnet)? (calcular delta)
-□ ¿Se habilitó caché? (¿por qué no?)
-□ ¿Loop infinito de retries? (detectar)
-```
-
-### Caso: $10K → $3K/mes (72% Ahorro)
-
-```python
-# ❌ ANTES: Sin optimizaciones
-async def recommend_products(user_id):
-    # Sin caché: Claude Opus para cada user
-    recommendations = await claude.messages.create(
-        model="claude-opus",  # $15/1M tokens
-        messages=[{"role": "user", "content": f"User {user_id} prefs"}]
-    )
-    return recommendations
-
-# Costo: 100K requests × 5,000 tokens × $0.003/1K = $1,500/día = $45K/mes
-
-# ✅ DESPUÉS: 3 optimizaciones
-# 1. Batch API: -50% costo
-# 2. Compression: 5,000 → 800 tokens
-# 3. Model downgrade: Opus → Sonnet (-80%)
-
-def batch_recommendations(user_ids):
-    requests = [
-        {
-            "custom_id": f"user-{uid}",
-            "params": {
-                "model": "claude-sonnet",  # $3/1M tokens
-                "messages": [...]
-            }
-        }
-        for uid in user_ids
-    ]
-    return client.batches.create(requests=requests)
-
-# Costo nuevo: 100K × 800 × $0.003 × 0.5 (batch) = $120/día = $3.6K/mes
-# Reducción: 72% ($45K → $3.6K) ✅
+**Fix:**
+```javascript
+const SYSTEM_PROMPT = `You are helpful...`; // Constante
+// NO: const sys = SYSTEM_PROMPT + new Date();
+// SÍ: const sys = SYSTEM_PROMPT;
 ```
 
 ---
 
-## 6️⃣ Runbooks Rápidos: 10 Escenarios
+## Sección 5: Cost Explosion
 
-| Síntoma | Check | Fix | Tiempo |
-|---------|-------|-----|--------|
-| Latency sube gradualmente | Token count? CPU >80%? | Sliding window, escalar | 15 min |
-| Hook 504 timeout | ¿Handler bloquea? | Async queue, max 25s | 10 min |
-| JSON parse error | ¿JSON válido? | Validar con json.loads() | 5 min |
-| MCP refused | ¿Server arriba? ¿Puerto? | Restart, netstat | 3 min |
-| Costo 2× en 24h | ¿Deploy? ¿Modelo? | Rollback, circuit breaker | 5 min |
-| Agent retry loop | ¿Sin max retries? | Set max_retries=3 | 3 min |
-| Memory leak | ¿Context crece? | Implementar TTL | 10 min |
-| Context exceeded | ¿Input > limit? | Batch pequeños, compression | 8 min |
-| Rate limit hit | ¿QPM alto? | Queue, exponential backoff | 5 min |
-| Respuestas inconsistentes | ¿Temperature sin fijar? | temperature=0 | 3 min |
+### Causas Típicas
+
+**Causa 1: Loop infinito en retry** (60%)
+- Agent intenta 10 veces si falla
+- Hook falla siempre
+- 1 request = 10 al modelo
+
+**Causa 2: Context compression disabled** (20%)
+- System prompt duplicado
+- Contexto acumulando
+
+**Causa 3: Batch API disabled** (15%)
+- Requests individuales
+- Perder 50% descuento
+
+**Causa 4: Modelo incorrecto** (5%)
+- Deploy a Opus en lugar de Sonnet
+- Opus cuesta 3x
+
+### Checklist
+
+```
+¿Costo se duplicó en 24h?
+□ Paso 1: Revisar último deploy
+□ Paso 2: Comparar request count
+□ Paso 3: Revisar error rate
+□ Paso 4: Revisar modelo usado
+□ Paso 5: Comparar tokens/request
+
+Si Paso 2 = SÍ: Loop infinito
+Si Paso 3 = SÍ: Fixear hook
+Si Paso 4 = SÍ: Revertir a Sonnet
+Si Paso 5 = SÍ: Reducir context
+```
+
+### Caso Real: $10k → $3k (2 semanas)
+
+**Week 1**: Caching system + retry logic
+**Week 2**: Hook falla 5%
+- Retry amplifica a 15%
+- Gasto sube $10k
+**Feb 11 9am**: Alert: gasto/req +65%
+**Feb 11 9:30am**: Root: hook error + retry
+**Feb 11 11am**: Deshabilitar retry, fixear hook
+**Feb 11 12pm**: Deploy
+**Feb 11 11:59pm**: Gasto baja $3k
 
 ---
 
-## 7️⃣ Checklist Post-Incident
+## Sección 6: Runbooks Rápidos
 
-```
-□ Timeline: ¿Cuándo comenzó exactamente?
-□ Impact: ¿Cuántos users afectados? ¿Duración?
-□ Root cause: ¿Qué cambió hace 24-48h?
-□ Fix: ¿Qué se hizo?
-□ Validation: ¿Cómo se verificó?
-□ Prevention: ¿Qué alertas agregar?
-□ Documentation: ¿Actualizar runbook?
-
-Resultado: Wiki "Common Issues" para futuros on-call
-```
+| Síntoma | Root Cause | Diagnóstico | Fix |
+|---------|-----------|-------------|-----|
+| Agent null | Hook undefined | echo '{}' \\| node hook.js | JSON.stringify() |
+| Timeout 504 | Hook lento | time node hook.js | Aumentar timeout |
+| Pool exhausted | Muchas conexiones | lsof \\| grep TCP | Pool + acquire |
+| Contexto crece | Memoria acumula | console.log(context.length) | Slicing window |
+| P99 > 10s | Cache miss | curl -D headers \\| grep cache | System prompt estático |
+| Costo +50% | Retry loop | Revisar deploy | Deshabilitar retry |
+| MCP desconecta | Stdio deadlock | strace | Chunking 64KB |
+| JSON error | Non-JSON return | Ver stdout | JSON.stringify() |
+| Lento sin error | Network latency | Benchmarking | Mover server |
+| Model error | Env variable | grep claude-opus | Cambiar a sonnet |
 
 ---
 
-## ✅ Resumen
+## Cierre
 
-Dominaste:
-- ✅ Token leak diagnosis en 2 pasos
-- ✅ Hook failures debugging
-- ✅ MCP connection issues
-- ✅ Agent P50/P99 profiling
-- ✅ Cost explosion root causes
-- ✅ 10 runbooks para incidents
+Has completado **L5.6: Troubleshooting Masterclass**.
 
-**Próximo: L5.7 — Cost Forecasting & Operations**
+**Qué aprendiste:**
+- Token leaks detection
+- Hook failures debugging
+- MCP connection issues
+- Agent slowness profiling
+- Cost explosion prevention
+- 10 runbooks listos
+
+**Benchmark**: Ahora diagnosticas en 5-15 min (antes 2-4 horas).
+
+**Próximo**: L5.7 Cost Forecasting & Operations
+
+**Checkpoint L5.6**: ✅ Completado
