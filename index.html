@@ -16736,10 +16736,52 @@ build/
             <div class="modal-content" id="modal-content"></div>
         </div>
     </div>
-</body>
-</html>
 
-<script>
+    <!-- NAVIGATION: Show selected section, hide others -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all section links and content sections
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        // Function to show/hide sections
+        function showSection(sectionId) {
+            // Hide ALL sections
+            contentSections.forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+
+            // Show ONLY the selected section
+            const selectedSection = document.querySelector(`[data-section="${sectionId}"]`);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+                selectedSection.classList.add('active');
+                // Scroll to top
+                selectedSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Add click handlers to all nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const sectionId = this.getAttribute('data-section');
+                if (sectionId) {
+                    showSection(sectionId);
+                    // Update active state
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Show dashboard by default
+        showSection('dashboard');
+    });
+    </script>
+
+    <script>
 class ModuleModal {
     constructor() {
         this.modal = document.getElementById('module-modal');
@@ -16797,3 +16839,5 @@ if (document.readyState === 'loading') {
     new ModuleModal();
 }
 </script>
+</body>
+</html>
