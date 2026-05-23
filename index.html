@@ -13682,33 +13682,186 @@ if (useNewRefactorEngine) {
                 <div class="section-header">
                     <span class="breadcrumb">Recursos / Laboratorios Prácticos</span>
                     <h2>🔬 Laboratorios Prácticos: 4 Labs Hands-On</h2>
-                    <p class="subtitle">Debugging real, MCP building, Skills creation, y GitHub automation</p>
+                    <p class="subtitle">De debugging a GitHub Actions — 4 labs progresivos (180 minutos total)</p>
                 </div>
                 <div class="section-intro">
-                    <p>La mejor forma de aprender es haciendo. Completa estos 4 laboratorios prácticos con guías paso a paso.</p>
+                    <p><strong>La mejor manera de aprender Claude Code es hacerlo.</strong> Este módulo tiene 4 labs progresivos que van desde debugging básico hasta mastery de GitHub Actions. Tiempo estimado: 180 minutos (45 min cada lab). Requisitos: Git, Node.js 18+, experiencia básica coding.</p>
                 </div>
 
-                <div class="topic-grid">
-                    <div class="subtopic-card">
-                        <h3>Lab 1: Debugging Complex Code</h3>
-                        <p>Repo deliberadamente roto. Usa Claude para aislarlo, reproducirlo, fixearlo. Prueba de maestría.</p>
+                <!-- LAB 1 -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-1); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">🐛 Lab 1: Debugging Asistido (45 min)</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">Objetivo: Usar Claude Code para diagnosticar y arreglar un bug real en una función de cálculo de descuentos.</p>
+
+                    <div style="background: var(--bg-base); padding: var(--sp-6); border-radius: var(--radius); margin: var(--sp-6) 0;">
+                        <strong style="display: block; margin-bottom: var(--sp-4); color: var(--level-1);">Escenario: Función de descuentos con bug</strong>
+                        <pre style="background: var(--bg-base); color: var(--text-primary); padding: var(--sp-4); overflow-x: auto; border-radius: var(--radius);"><code>// Premium user con "SUMMER20" debería pagar: $80
+// Está pagando: $70 (incorrecto!)
+// Bug: Premium tier multiplica discount por 1.5</code></pre>
                     </div>
-                    <div class="subtopic-card">
-                        <h3>Lab 2: Building an MCP Server</h3>
-                        <p>Build MCP from scratch: protocol, tools, error handling. Test it with Claude Code. Deploy it.</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); margin: var(--sp-6) 0;">
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-2);">Parte 1: Diagnóstico (15 min)</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0;">
+                                <li>Pega función en Claude</li>
+                                <li>Pide: ¿Cuál es el bug?</li>
+                                <li>Obtén: Root cause + fix</li>
+                                <li>Genera: Test cases</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-2);">Parte 2: Implementación (30 min)</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0;">
+                                <li>Clone starter repo</li>
+                                <li>Crea rama: fix/discount</li>
+                                <li>Implementa fix</li>
+                                <li>Corre: npm test</li>
+                                <li>Git commit + push</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="subtopic-card">
-                        <h3>Lab 3: Creating a Custom Skill</h3>
-                        <p>Diseña una skill útil para tu equipo. Estructura, testing, documentación. Haz que otros la usen.</p>
-                    </div>
-                    <div class="subtopic-card">
-                        <h3>Lab 4: GitHub Automation</h3>
-                        <p>Build CI/CD con Claude Code: auto-review PRs, generate CHANGELOG, deploy on merge. End-to-end.</p>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-4); border-radius: var(--radius); margin-top: var(--sp-6);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-2);">✓ Respuesta esperada:</strong>
+                        <ul style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6);">
+                            <li>Bug encontrado: discount * 1.5 incorrecto</li>
+                            <li>Fix: aplicar descuento flat sin multiplicación</li>
+                            <li>Tests: cases standard/premium/edge</li>
+                        </ul>
                     </div>
                 </div>
 
-                <div class="section-cta">
-                    <a href="laboratorios-practicos.md" class="btn btn-primary">📖 Acceder a los Laboratorios Prácticos</a>
+                <!-- LAB 2 -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-2); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">🔗 Lab 2: MCP Server Custom (45 min)</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">Objetivo: Crear un MCP server que normaliza URLs (remover params tracking, lowercase domain).</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); margin: var(--sp-6) 0;">
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-2);">Parte 1: Schema MCP (10 min)</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0;">
+                                <li>Crea: mcp-schema.json</li>
+                                <li>Define: tool normalize_url</li>
+                                <li>Input: URL + remove_params</li>
+                                <li>Output: cleaned URL</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-2);">Parte 2: Implementación (20 min)</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0;">
+                                <li>Pedir a Claude: generar server</li>
+                                <li>Framework: Node.js + MCP SDK</li>
+                                <li>Remover: params utm_*, ref</li>
+                                <li>Lowercase: domain</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-4); border-radius: var(--radius); margin-top: var(--sp-6);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-2);">✓ Ejemplo:</strong>
+                        <p style="color: var(--text-secondary); margin: var(--sp-2) 0;"><code>Input: https://MyDomain.COM/page?utm_source=fb&ref=x</code></p>
+                        <p style="color: var(--text-secondary); margin: var(--sp-2) 0;"><code>Output: https://mydomain.com/page</code></p>
+                    </div>
+                </div>
+
+                <!-- LAB 3 -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-3); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">⚙️ Lab 3: Skill con CI Pipeline (45 min)</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">Objetivo: Crear una Skill `/cleanup-logs` + GitHub Actions que automáticamente testea y deploye.</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); margin: var(--sp-6) 0;">
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-3);">Parte 1: Crear Skill (15 min)</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0;">
+                                <li>Crear: SKILL.md</li>
+                                <li>Definir: /cleanup-logs</li>
+                                <li>Funcionalidad: filtrar ERROR/WARN</li>
+                                <li>Ejemplo uso + output</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-3);">Parte 2: CI Pipeline (20 min)</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0;">
+                                <li>Crear: .github/workflows/</li>
+                                <li>Setup Node.js 18</li>
+                                <li>npm install + test</li>
+                                <li>Coverage report</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-4); border-radius: var(--radius); margin-top: var(--sp-6);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-2);">✓ Requisitos de testing:</strong>
+                        <ul style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6);">
+                            <li>3+ test cases (filtros, edge cases)</li>
+                            <li>80%+ coverage</li>
+                            <li>Manejo de errores</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- LAB 4 -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-surface); border-left: 4px solid var(--level-4); border-radius: var(--radius);">
+                    <h3 style="font-size: var(--fs-2xl); margin-top: 0; color: var(--text-primary);">🚀 Lab 4: GitHub Action + Workflow (45 min)</h3>
+                    <p style="color: var(--text-secondary); font-size: var(--fs-base);">Objetivo: Crear GitHub Action que automáticamente revisa PRs con Claude Code y postea comentarios.</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); margin: var(--sp-6) 0;">
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-4);">Parte 1: Action (15 min)</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0;">
+                                <li>Crear: action.yml</li>
+                                <li>Crear: index.js</li>
+                                <li>Inputs: github_token, api_key</li>
+                                <li>Output: comentario PR</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--bg-elevated); padding: var(--sp-6); border-radius: var(--radius);">
+                            <strong style="color: var(--level-4);">Parte 2: Workflow (20 min)</strong>
+                            <ul style="color: var(--text-secondary); margin: var(--sp-4) 0;">
+                                <li>Trigger: pull_request</li>
+                                <li>Jobs: review</li>
+                                <li>Integración: GitHub API</li>
+                                <li>Testing: act local runner</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-elevated); padding: var(--sp-4); border-radius: var(--radius); margin-top: var(--sp-6);">
+                        <strong style="color: var(--primary); display: block; margin-bottom: var(--sp-2);">✓ Flujo esperado:</strong>
+                        <ol style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6);">
+                            <li>PR abierto → Action ejecuta</li>
+                            <li>Archivos changed → Claude revisa</li>
+                            <li>Issues encontrados → Comentario</li>
+                            <li>Auto-approve si ≥ 3/5 stars</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- RECURSOS -->
+                <div style="margin: var(--sp-12) 0; padding: var(--sp-8); background: var(--bg-elevated); border-radius: var(--radius); border: 1px solid var(--border-default);">
+                    <h3 style="margin-top: 0; color: var(--accent);">📚 Recursos & Siguiente Pasos</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6);">
+                        <div>
+                            <strong style="color: var(--text-primary); display: block; margin-bottom: var(--sp-2);">Repositorios</strong>
+                            <ul style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6);">
+                                <li>Starter repos: github.com/curso-claude-code/labs</li>
+                                <li>Solutions (referencia): /labs/solutions</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong style="color: var(--text-primary); display: block; margin-bottom: var(--sp-2);">Criterio de Éxito</strong>
+                            <ul style="color: var(--text-secondary); margin: 0; padding-left: var(--sp-6);">
+                                <li>4 Labs completados = Certificación L6</li>
+                                <li>Rubric ≥3.0/4.0 = Passed</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: var(--sp-8); padding: var(--sp-6); background: var(--bg-overlay); border-radius: var(--radius); border-left: 3px solid var(--accent);">
+                    <strong style="color: var(--accent);">💡 Tip Pro:</strong>
+                    <p style="color: var(--text-secondary); margin: var(--sp-3) 0; font-size: var(--fs-sm);">No intentes todo de una. En cada lab: (1) Lee objetivo, (2) Entiende escenario, (3) Parte por parte. Goal: Learn by doing, not copy-pasting.</p>
                 </div>
             </section>
 
