@@ -111,6 +111,16 @@
                                 <span class="nav-icon">📈</span> Monitoreo de Costos</a></li>
                             <li><a href="#incident-response" class="nav-link" data-section="incident-response" data-mode="technical" data-level="4">
                                 <span class="nav-icon">🚨</span> Incident Response</a></li>
+                            <li><a href="#commands-reference" class="nav-link" data-section="commands-reference" data-mode="technical" data-level="4">
+                                <span class="nav-icon">⌨️</span> Referencia de Comandos</a></li>
+                            <li><a href="#marketplace-guide" class="nav-link" data-section="marketplace-guide" data-mode="technical" data-level="4">
+                                <span class="nav-icon">🛍️</span> MCP Marketplace</a></li>
+                            <li><a href="#decision-matrix" class="nav-link" data-section="decision-matrix" data-mode="technical" data-level="4">
+                                <span class="nav-icon">🗺️</span> Matriz de Decisión</a></li>
+                            <li><a href="#integration-examples" class="nav-link" data-section="integration-examples" data-mode="technical" data-level="4">
+                                <span class="nav-icon">🔗</span> Casos de Integración</a></li>
+                            <li><a href="#debugging-playbook" class="nav-link" data-section="debugging-playbook" data-mode="technical" data-level="4">
+                                <span class="nav-icon">🐛</span> Debugging Playbook</a></li>
                         </ul>
                     </div>
                 </div>
@@ -13400,6 +13410,96 @@ if (useNewRefactorEngine) {
                 <div class="section-cta">
                     <a href="#" class="btn btn-primary">Leer módulo Incident Response completo</a>
                 </div>
+            </section>
+
+            <!-- COMANDOS REFERENCE SECTION -->
+            <section class="content-section hidden" data-section="commands-reference" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 4 / Comandos</span>
+                    <h2>⌨️ Referencia Completa de Comandos</h2>
+                    <p class="section-lead">Domina los 14 comandos CLI para maximizar productividad: /fork, /branch, /task, /doctor, /plugin, y más.</p>
+                </div>
+                <div class="topic-grid">
+                    <div class="subtopic-card"><h3>/fork</h3><p>Subagente independiente. 10x costo reduction. TDD: 43 test cases.</p></div>
+                    <div class="subtopic-card"><h3>/branch</h3><p>Git branch automation. Feature dev con aislamiento.</p></div>
+                    <div class="subtopic-card"><h3>/task</h3><p>Async con retry automático. 50% menos costo. Batch API.</p></div>
+                    <div class="subtopic-card"><h3>/doctor</h3><p>Health check automático. Hooks, MCP servers, auth.</p></div>
+                    <div class="subtopic-card"><h3>/compact</h3><p>Comprimir contexto sin perder información.</p></div>
+                    <div class="subtopic-card"><h3>/plugin</h3><p>MCP marketplace browser. Buscar, instalar, verificar.</p></div>
+                </div>
+                <div class="section-cta"><a href="#" class="btn btn-primary">Ver referencia completa (14 comandos, 43 test cases)</a></div>
+            </section>
+
+            <!-- MARKETPLACE GUIDE SECTION -->
+            <section class="content-section hidden" data-section="marketplace-guide" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 4 / Marketplace</span>
+                    <h2>🛍️ MCP Marketplace — Descubre y Usa Extensiones</h2>
+                    <p class="section-lead">5 marketplaces: Smithery, Registry, Hunt, mpak, MCPFinder. 4 métodos de instalación. Trust scoring L1-L4.</p>
+                </div>
+                <div class="topic-grid">
+                    <div class="subtopic-card"><h3>Smithery</h3><p>Web UI clara. 100+ servers. ★★★★★ para discovery.</p></div>
+                    <div class="subtopic-card"><h3>MCP Registry</h3><p>Oficial Anthropic. 50+ high-quality. ★★★★☆</p></div>
+                    <div class="subtopic-card"><h3>MCP Hunt</h3><p>Community curated. GitHub-first. ★★★☆☆</p></div>
+                    <div class="subtopic-card"><h3>Trust Scoring</h3><p>L1 (Unsafe) → L4 (Excellent). Cómo evaluar.</p></div>
+                    <div class="subtopic-card"><h3>4 Métodos</h3><p>npm, local-path, HTTP, Git. Schema settings.json.</p></div>
+                    <div class="subtopic-card"><h3>Agente + MCP</h3><p>Integración con agent loop. 3 casos. TypeScript.</p></div>
+                </div>
+                <div class="section-cta"><a href="#" class="btn btn-primary">Guía completa (5 marketplaces, 4 métodos, 12 tests)</a></div>
+            </section>
+
+            <!-- DECISION MATRIX SECTION -->
+            <section class="content-section hidden" data-section="decision-matrix" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 4 / Arquitectura</span>
+                    <h2>🗺️ Matriz de Decisión — Cuándo Usar Qué</h2>
+                    <p class="section-lead">Matriz 7×7: Agent SDK vs Skills vs MCP vs /fork vs /branch vs /team vs /task. Decision trees. Patrones económicos.</p>
+                </div>
+                <div class="topic-grid">
+                    <div class="subtopic-card"><h3>Matriz 7×7</h3><p>7 herramientas × 7 casos. Score 1-5. Decisión objetiva.</p></div>
+                    <div class="subtopic-card"><h3>Tree 1: Clasificación</h3><p>Rápido → Agent SDK. Muchos → /fork + cache. Lento → Batch.</p></div>
+                    <div class="subtopic-card"><h3>Tree 2: 1M Docs</h3><p>Secuencial → /task. Paralelo → /team. Real-time → MCP.</p></div>
+                    <div class="subtopic-card"><h3>Tree 3: Seguridad</h3><p>PII → /fork + Hook. GDPR → MCP + encryption. No logs → /compact.</p></div>
+                    <div class="subtopic-card"><h3>Patrones Económicos</h3><p>$1 → /fork (10x). $10 → /task (50%). $100+ → /team (70%).</p></div>
+                    <div class="subtopic-card"><h3>Matriz Security</h3><p>Público vs sensible vs compliance. Cómo elegir.</p></div>
+                </div>
+                <div class="section-cta"><a href="#" class="btn btn-primary">Matriz completa (7×7, 3 trees, 7 patrones)</a></div>
+            </section>
+
+            <!-- INTEGRATION EXAMPLES SECTION -->
+            <section class="content-section hidden" data-section="integration-examples" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 4 / Casos Reales</span>
+                    <h2>🔗 Casos de Integración — 4 Ejemplos End-to-End</h2>
+                    <p class="section-lead">Repo analyzer, Code formatter, Multi-feature dev, Batch 10k. Código TypeScript, test cases, métricas reales.</p>
+                </div>
+                <div class="topic-grid">
+                    <div class="subtopic-card"><h3>Caso 1: Repo Analyzer</h3><p>Agent + GitHub MCP. Issues, complejidad, tests. $4.50 → $0.45 (90%).</p></div>
+                    <div class="subtopic-card"><h3>Caso 2: Code Formatter</h3><p>Skill + Hook + Prettier. Auto-format, lint, TDD tests.</p></div>
+                    <div class="subtopic-card"><h3>Caso 3: Multi-Feature</h3><p>/fork × 3 subagentes. Git worktrees. 2h → 25min (80%).</p></div>
+                    <div class="subtopic-card"><h3>Caso 4: Batch 10k</h3><p>10k docs. /task + Batch + /fork. $50 → $5. 2h → 20min.</p></div>
+                    <div class="subtopic-card"><h3>TDD en Producción</h3><p>20+ test cases. Jest format. Validación completa.</p></div>
+                    <div class="subtopic-card"><h3>Before/After</h3><p>Costo, tiempo, complejidad. Números reales. Éxito medible.</p></div>
+                </div>
+                <div class="section-cta"><a href="#" class="btn btn-primary">4 casos completos (TypeScript, tests, métricas)</a></div>
+            </section>
+
+            <!-- DEBUGGING PLAYBOOK SECTION -->
+            <section class="content-section hidden" data-section="debugging-playbook" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 4 / Troubleshooting</span>
+                    <h2>🐛 Debugging Playbook — Fix en 5 Minutos</h2>
+                    <p class="section-lead">8 síntomas: loop infinito, MCP down, hook fail, cost spike. Diagnosis trees, recovery patterns, post-mortems.</p>
+                </div>
+                <div class="topic-grid">
+                    <div class="subtopic-card"><h3>Síntoma 1: Loop Infinito</h3><p>Mismo tool 10+ veces. /compact, maxIterations, /doctor.</p></div>
+                    <div class="subtopic-card"><h3>Síntoma 2: MCP Down</h3><p>Connection refused. Tree: ¿corre? puerto? firewall? mcpb validate.</p></div>
+                    <div class="subtopic-card"><h3>Síntoma 3: Hook Fail</h3><p>Code no ejecuta. settings.json, evento, versión. /doctor --verbose.</p></div>
+                    <div class="subtopic-card"><h3>Síntoma 4: Cost 10x</h3><p>Context size, cache hits. Fix: /fork, /compact, Batch.</p></div>
+                    <div class="subtopic-card"><h3>Recovery Patterns</h3><p>Compact+resume, Fork+retry, Task+backoff. Cuándo cada una.</p></div>
+                    <div class="subtopic-card"><h3>Post-Mortem</h3><p>Timeline, root cause, fix, prevention. Template blameless.</p></div>
+                </div>
+                <div class="section-cta"><a href="#" class="btn btn-primary">Playbook completo (8 síntomas, trees, templates)</a></div>
             </section>
 
             <!-- ====== SECCIÓN: ADOPCIÓN EN EQUIPOS (Nivel 5) ====== -->
