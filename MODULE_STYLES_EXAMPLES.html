@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplos de Estilos para Módulos — Claude Code Mastery</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Si usas module-styles.css como archivo separado, descomenta: -->
+    <!-- <link rel="stylesheet" href="module-styles.css"> -->
+    <style>
+        .example-wrapper { margin: 40px 0; padding: 20px; background: rgba(255,122,89,0.02); border-radius: 8px; border: 1px solid rgba(255,122,89,0.2); }
+        .example-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #ff7a59; font-weight: 700; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar"></aside>
+        <div class="main-content">
+            <section class="content-section active" style="padding: 48px 40px;">
+                <h1 style="font-size: 2.25rem; margin-bottom: 10px;">Ejemplos de Estilos para Módulos</h1>
+                <p style="color: #9aa7b8; font-size: 1.125rem; margin-bottom: 40px;">Referencia visual de todas las clases CSS disponibles en module-styles.css</p>
+
+                <!-- ============================================
+                     SECCIÓN 1: MODULE-SECTION
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">1. Contenedor de módulo (.module-section)</div>
+
+                    <div class="module-section">
+                        <h2 class="module-title">Título del Módulo Ejemplo</h2>
+                        <p class="module-paragraph">Este es un contenedor estándar para una sección de módulo. Incluye padding, bordes, y animación fade-in al cargar.</p>
+
+                        <h3 class="section-subtitle">Subtítulo dentro del módulo</h3>
+                        <p class="module-paragraph">Puedes anidar múltiples niveles de contenido dentro de un módulo.</p>
+
+                        <h4>Nivel 4 (h4)</h4>
+                        <p class="module-paragraph small">Párrafo pequeño para detalles adicionales</p>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 2: TIPOGRAFÍA
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">2. Tipografía jerárquica</div>
+
+                    <div class="module-section">
+                        <h2 class="module-title">Título principal (h2 con barra naranja)</h2>
+                        <p class="module-paragraph lead">Párrafo destacado (lead) — mayor tamaño y color secundario</p>
+                        <p class="module-paragraph">Párrafo normal con altura de línea 1.7 para comodidad de lectura.</p>
+
+                        <h3 class="section-subtitle">Subtítulo (h3)</h3>
+                        <p class="module-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+                        <h4>Encabezado nivel 4</h4>
+                        <p class="module-paragraph small">Párrafo pequeño para notas o detalles</p>
+
+                        <h5>Encabezado nivel 5 (uppercase)</h5>
+                        <p class="module-paragraph">Contenido bajo h5</p>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 3: CAJAS DESTACADAS
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">3. Cajas destacadas</div>
+
+                    <div class="module-section">
+                        <div class="note-box">
+                            <p>Las cajas de nota contienen información contextual importante pero no crítica.</p>
+                        </div>
+
+                        <div class="example-box">
+                            <p>Las cajas de ejemplo muestran casos prácticos:</p>
+                            <code>const usuario = { nombre: 'Juan', nivel: 2 };</code>
+                        </div>
+
+                        <div class="warning-box">
+                            <p>Las advertencias destacan riesgos o algo que podría salir mal.</p>
+                        </div>
+
+                        <div class="tip-box">
+                            <p>Los consejos contienen optimizaciones o atajos útiles.</p>
+                        </div>
+
+                        <div class="info-box">
+                            <p>Las cajas info proporcionan contexto o detalles complementarios.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 4: LISTAS
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">4. Listas personalizadas</div>
+
+                    <div class="module-section">
+                        <h3 class="section-subtitle">Lista desordenada regular</h3>
+                        <ul>
+                            <li>Primer elemento</li>
+                            <li>Segundo elemento con <strong>texto destacado</strong></li>
+                            <li>Tercer elemento</li>
+                        </ul>
+
+                        <h3 class="section-subtitle">Lista con iconos (.list-with-icons)</h3>
+                        <ul class="list-with-icons">
+                            <li>Elementos con flecha naranja</li>
+                            <li>Útil para instrucciones</li>
+                            <li>Muy visual</li>
+                        </ul>
+
+                        <h3 class="section-subtitle">Lista de características (.feature-list)</h3>
+                        <ul class="feature-list">
+                            <li><strong>Característica 1</strong><br>Descripción breve de lo que ofrece.</li>
+                            <li><strong>Característica 2</strong><br>Otra descripción aquí.</li>
+                            <li><strong>Característica 3</strong><br>Última característica.</li>
+                        </ul>
+
+                        <h3 class="section-subtitle">Lista de pasos (.steps-list)</h3>
+                        <ol class="steps-list">
+                            <li><strong>Clonar el repositorio:</strong> <code>git clone ...</code></li>
+                            <li><strong>Instalar dependencias:</strong> <code>npm install</code></li>
+                            <li><strong>Iniciar desarrollo:</strong> <code>npm run dev</code></li>
+                            <li><strong>Abre el navegador:</strong> Visita http://localhost:3000</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 5: TABLAS
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">5. Tablas de datos</div>
+
+                    <div class="module-section">
+                        <h3 class="section-subtitle">Tabla estándar (.data-table)</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Comando</th>
+                                    <th>Descripción</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight"><code>/compact</code></td>
+                                    <td>Comprime la memoria para optimizar tokens</td>
+                                    <td><span class="table-badge success">Disponible</span></td>
+                                </tr>
+                                <tr>
+                                    <td><code>/memory</code></td>
+                                    <td>Gestiona archivos de memoria</td>
+                                    <td><span class="table-badge primary">Beta</span></td>
+                                </tr>
+                                <tr>
+                                    <td><code>/skill</code></td>
+                                    <td>Crea y ejecuta skills personalizados</td>
+                                    <td><span class="table-badge success">Disponible</span></td>
+                                </tr>
+                                <tr>
+                                    <td><code>/schedule</code></td>
+                                    <td>Programa tareas recurrentes</td>
+                                    <td><span class="table-badge warning">Próximamente</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3 class="section-subtitle">Matriz de comparación (.comparison-matrix)</h3>
+                        <table class="comparison-matrix">
+                            <thead>
+                                <tr>
+                                    <th>Nivel</th>
+                                    <th>Objetivos</th>
+                                    <th>Herramientas</th>
+                                    <th>Dificultad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="table-badge" style="background: rgba(61,220,151,0.12); border-color: #3ddc97; color: #3ddc97;">Nivel 1</span></td>
+                                    <td>Fundamentos, instalación, primeros pasos</td>
+                                    <td>CLI, CLAUDE.md, Git</td>
+                                    <td>Fácil</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="table-badge" style="background: rgba(94,184,255,0.12); border-color: #5eb8ff; color: #5eb8ff;">Nivel 2</span></td>
+                                    <td>MCP, Rules, Memory, Scripts</td>
+                                    <td>MCP, .rules, Settings</td>
+                                    <td>Intermedio</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="table-badge" style="background: rgba(208,132,252,0.12); border-color: #d084fc; color: #d084fc;">Nivel 3</span></td>
+                                    <td>Skills, Agentes, Arquitectura</td>
+                                    <td>Skills, APIs, Hooks</td>
+                                    <td class="danger">Avanzado</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 6: GRILLAS
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">6. Grillas de contenido</div>
+
+                    <div class="module-section">
+                        <h3 class="section-subtitle">Grid de 2 columnas (.grid-2)</h3>
+                        <div class="grid-2">
+                            <div class="grid-item">
+                                <h4>Elemento 1</h4>
+                                <p>Contenido del primer elemento en la grilla.</p>
+                            </div>
+                            <div class="grid-item">
+                                <h4>Elemento 2</h4>
+                                <p>Contenido del segundo elemento en la grilla.</p>
+                            </div>
+                        </div>
+
+                        <h3 class="section-subtitle">Grid de 3 columnas (.grid-3)</h3>
+                        <div class="grid-3">
+                            <div class="grid-item">
+                                <h4>A</h4>
+                                <p>Primer bloque</p>
+                            </div>
+                            <div class="grid-item">
+                                <h4>B</h4>
+                                <p>Segundo bloque</p>
+                            </div>
+                            <div class="grid-item">
+                                <h4>C</h4>
+                                <p>Tercer bloque</p>
+                            </div>
+                        </div>
+
+                        <h3 class="section-subtitle">Grid automático (.grid-auto)</h3>
+                        <div class="grid-auto">
+                            <div class="grid-item">Auto 1</div>
+                            <div class="grid-item">Auto 2</div>
+                            <div class="grid-item">Auto 3</div>
+                            <div class="grid-item">Auto 4</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 7: ELEMENTOS EXPANDIBLES
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">7. Elementos expandibles</div>
+
+                    <div class="module-section">
+                        <details class="collapsible-section">
+                            <summary>Haz clic para expandir este contenido</summary>
+                            <div class="collapsible-section-content">
+                                <p>Este contenido aparece cuando haces clic en la sección.</p>
+                                <p>Puedes poner cualquier cosa aquí: párrafos, listas, tablas, etc.</p>
+                                <ul>
+                                    <li>Elemento 1</li>
+                                    <li>Elemento 2</li>
+                                    <li>Elemento 3</li>
+                                </ul>
+                            </div>
+                        </details>
+
+                        <details class="collapsible-section">
+                            <summary>Otra sección expandible</summary>
+                            <div class="collapsible-section-content">
+                                <div class="note-box">
+                                    <p>Incluso puedes poner cajas destacadas dentro.</p>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 8: BADGES
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">8. Badges y etiquetas</div>
+
+                    <div class="module-section">
+                        <p>
+                            <span class="badge">Neutral</span>
+                            <span class="badge primary">Info</span>
+                            <span class="badge success">Éxito</span>
+                            <span class="badge warning">Advertencia</span>
+                            <span class="badge danger">Error</span>
+                            <span class="badge accent">Destacado</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 9: CÓDIGO
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">9. Bloques de código (referencia)</div>
+
+                    <div class="module-section">
+                        <p>Los bloques de código ya están definidos en styles.css</p>
+                        <div class="code-block" data-lang="bash" data-title="Ejemplo: Instalación">
+                            <pre><code>npm install -g @anthropic-ai/claude-code
+claude-code login
+claude-code --version</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 10: WITH SIDEBAR
+                     ============================================ -->
+                <div class="example-wrapper">
+                    <div class="example-label">10. Módulo con sidebar (.with-sidebar)</div>
+
+                    <div class="module-section with-sidebar">
+                        <div class="module-section__content">
+                            <h2 class="module-title">Contenido principal</h2>
+                            <p class="module-paragraph">Este es el área principal de contenido. Se adapta automáticamente en mobile.</p>
+                            <p class="module-paragraph">El sidebar aparece a la derecha en desktop, pero baja en mobile.</p>
+                        </div>
+                        <div class="module-section__sidebar">
+                            <div style="background: var(--bg-elevated); padding: 12px; border-radius: 8px; border: 1px solid var(--border-default);">
+                                <h4 style="margin-top: 0;">Resumen lateral</h4>
+                                <ul class="list-unstyled" style="font-size: 0.875rem;">
+                                    <li>• Punto importante</li>
+                                    <li>• Otro detalle</li>
+                                    <li>• Información clave</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-elevated); padding: 12px; border-radius: 8px; border: 1px solid var(--border-default);">
+                                <h4 style="margin-top: 0;">Enlaces rápidos</h4>
+                                <ul class="list-unstyled" style="font-size: 0.875rem;">
+                                    <li><a href="#">Enlace 1</a></li>
+                                    <li><a href="#">Enlace 2</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SECCIÓN 11: NOTAS FINALES
+                     ============================================ -->
+                <div class="module-section">
+                    <h2 class="module-title">Cómo usar estos estilos</h2>
+                    <ol class="steps-list">
+                        <li><strong>Copia el contenido de module-styles.css</strong> al final de styles.css</li>
+                        <li><strong>Usa las clases en tu HTML</strong> como se muestra en estos ejemplos</li>
+                        <li><strong>Verifica en responsive</strong> redimensionando el navegador</li>
+                        <li><strong>Personaliza colores</strong> editando las variables en :root si es necesario</li>
+                    </ol>
+
+                    <div class="info-box">
+                        <p><strong>Documentación completa:</strong> Revisa <code>MODULE_STYLES_GUIDE.md</code> para instrucciones detalladas.</p>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Collapsar y expandir detalles
+        document.querySelectorAll('.collapsible-section').forEach(section => {
+            section.addEventListener('toggle', function() {
+                const content = this.querySelector('.collapsible-section-content');
+                if (this.open) {
+                    content.style.animation = 'slideInLeft 0.25s ease-out';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

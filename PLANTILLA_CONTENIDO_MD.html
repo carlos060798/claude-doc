@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantilla Reutilizable para Contenido .md → HTML</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0d0d0d;
+            color: #e6edf3;
+            line-height: 1.6;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 { font-size: 2.5em; margin: 40px 0 20px; color: #ff7a59; border-bottom: 3px solid #ff7a59; padding-bottom: 15px; }
+        h2 { font-size: 1.8em; margin: 30px 0 15px; color: #5eb8ff; }
+        h3 { font-size: 1.3em; margin: 20px 0 10px; color: #d084fc; }
+        h4 { font-size: 1.1em; margin: 15px 0 8px; color: #3ddc97; }
+        p { margin: 15px 0; color: #9aa7b8; }
+        code { background: #1a1a1a; padding: 2px 6px; border-radius: 4px; font-family: 'Fira Code', monospace; color: #5eb8ff; }
+        pre {
+            background: #1a1a1a;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 3px solid #ff7a59;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+        pre code { background: transparent; padding: 0; color: #e6edf3; }
+
+        .plantilla-box {
+            background: #1a1a1a;
+            border: 2px solid #3a3a3a;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .plantilla-box h3 {
+            border-bottom: 1px solid #3a3a3a;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .ejemplo-html {
+            background: #262626;
+            border: 1px solid #3a3a3a;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .ejemplo-html pre {
+            border: none;
+            background: transparent;
+            margin: 0;
+        }
+
+        .notas-css {
+            background: rgba(61, 220, 151, 0.1);
+            border-left: 4px solid #3ddc97;
+            padding: 12px 16px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .warning {
+            background: rgba(255, 180, 84, 0.1);
+            border-left: 4px solid #ffb454;
+            padding: 12px 16px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        th {
+            background: #262626;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #3a3a3a;
+            color: #5eb8ff;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        tr:hover td {
+            background: rgba(94, 184, 255, 0.05);
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 24px;
+        }
+        li {
+            margin: 8px 0;
+            color: #9aa7b8;
+        }
+
+        .highlight-box {
+            background: rgba(255, 122, 89, 0.1);
+            border-left: 4px solid #ff7a59;
+            padding: 12px 16px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .structure-diagram {
+            font-family: 'Fira Code', monospace;
+            background: #1a1a1a;
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: #5eb8ff;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Plantilla HTML Reutilizable para Integración de Contenido .md</h1>
+
+<p>Este documento describe la estructura, clases CSS y patrones HTML para convertir sistemáticamente archivos .md a secciones HTML integradas en index.html.</p>
+
+<div class="notas-css">
+    <strong>Objetivo:</strong> Crear un sistema escalable donde cada sección de módulo .md se traduce a HTML siguiendo una plantilla consistente, permitiendo que cualquier contenido .md se integre sin rediseñar el layout.
+</div>
+
+<!-- ================================================================ -->
+<h2>1. Estructura de Sección Base</h2>
+<!-- ================================================================ -->
+
+<p>Cada sección de contenido .md debe estar envuelta en esta estructura HTML base:</p>
+
+<div class="ejemplo-html">
+<pre><code>&lt;!-- ====== SECCIÓN: [NOMBRE-DEL-MODULO] ====== --&gt;
+&lt;section class="content-section"
+         data-section="[nivel-X-modulo-Y]"
+         data-mode="technical"&gt;
+
+    &lt;!-- Header con navegación y descripción --&gt;
+    &lt;div class="section-header"&gt;
+        &lt;span class="breadcrumb"&gt;Nivel X / [Nombre]&lt;/span&gt;
+        &lt;h2&gt;[Icono] [Título Principal]&lt;/h2&gt;
+        &lt;p class="section-lead"&gt;
+            Párrafo introductorio de 1-2 líneas describiendo
+            el propósito del módulo.
+        &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Contenido estructurado (h3, p, listas, tablas, código) --&gt;
+    &lt;!-- ... (ver secciones 2-7 abajo) ... --&gt;
+
+&lt;/section&gt;</code></pre>
+</div>
+
+<div class="notas-css">
+    <strong>Atributos críticos:</strong>
+    <ul>
+        <li><code>data-section="nivel-X-modulo-Y"</code> — Identificador único, sincronizado con el nav del sidebar</li>
+        <li><code>data-mode="technical"</code> — "technical" | "accessible" | "both" (filtra visibilidad por modo)</li>
+        <li><code>class="content-section"</code> — Controlada por JavaScript para mostrar/ocultar</li>
+    </ul>
+</div>
+
+<!-- ================================================================ -->
+<h2>2. Componentes de Texto Base</h2>
+<!-- ================================================================ -->
+
+<h3>2.1 Títulos (h2, h3, h4)</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;!-- Título principal de sección --&gt;
+&lt;h2&gt;Icono Troubleshooting Avanzado&lt;/h2&gt;
+
+&lt;!-- Subtítulos de contenido --&gt;
+&lt;h3 class="block-title"&gt;🔧 Diagnóstico de Problemas&lt;/h3&gt;
+
+&lt;!-- Subsecciones de contenido --&gt;
+&lt;h4&gt;Paso 1: Recopilar evidencia&lt;/h4&gt;</code></pre>
+    </div>
+    <div class="notas-css">
+        <strong>Clases CSS aplicadas:</strong>
+        <ul>
+            <li><code>.block-title</code> — h3 principal con borde izquierdo orange (#ff7a59)</li>
+            <li>Los h2 heredan de <code>.section-header h2</code> (color azul, línea naranja debajo)</li>
+            <li>Los h4 heredan color púrpura (#d084fc)</li>
+        </ul>
+    </div>
+</div>
+
+<h3>2.2 Párrafos y Descripción</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;p&gt;
+    Texto normal de párrafo. Pueden contener &lt;strong&gt;bold&lt;/strong&gt;,
+    &lt;em&gt;italic&lt;/em&gt;, y &lt;code&gt;código inline&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;p class="section-lead"&gt;
+    Párrafo introductorio más grande. Usado después de h2 principal
+    para describir el módulo. Color secundario.
+&lt;/p&gt;</code></pre>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>3. Listas (ul, ol)</h2>
+<!-- ================================================================ -->
+
+<h3>3.1 Listas Desordenadas</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;h3 class="block-title"&gt;📋 Problemas Comunes&lt;/h3&gt;
+&lt;ul class="bullet-list"&gt;
+    &lt;li&gt;Token de contexto agotado&lt;/li&gt;
+    &lt;li&gt;Conexión a MCP rechazada&lt;/li&gt;
+    &lt;li&gt;Error de permisos en archivo&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+    </div>
+</div>
+
+<h3>3.2 Listas Ordenadas (Pasos)</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;h3 class="block-title"&gt;🔍 Flujo de Diagnóstico&lt;/h3&gt;
+&lt;ol class="step-list"&gt;
+    &lt;li&gt;&lt;strong&gt;Verificar contexto:&lt;/strong&gt; Usar /context para ver tokens restantes&lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;Revisar logs:&lt;/strong&gt; Activar DEBUG=1 para ver output detallado&lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;Aislar variable:&lt;/strong&gt; Reducir input hasta encontrar la causa&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+    </div>
+    <div class="notas-css">
+        <strong>Nota:</strong> Las listas heredan estilos de <code>ul, ol</code> en styles.css (márgenes, colores, font).
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>4. Bloques de Código</h2>
+<!-- ================================================================ -->
+
+<h3>4.1 Código Inline</h3>
+
+<p>Para código dentro de párrafos, usar <code>&lt;code&gt;</code> directo. Se estiliza con fondo oscuro y color azul.</p>
+
+<h3>4.2 Bloques de Código (pre/code)</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;h3 class="block-title"&gt;⚙️ Comando: Verificar Token&lt;/h3&gt;
+&lt;div class="code-block" data-lang="bash" data-title="Terminal"&gt;
+    &lt;pre&gt;&lt;code&gt;$ claude /context --tokens
+Token usage: 4,250 / 200,000 (2.1%)
+Window size: 3,900 tokens
+  - System: 800
+  - Conversation: 3,100&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+    <div class="notas-css">
+        <strong>Atributos del div.code-block:</strong>
+        <ul>
+            <li><code>data-lang="bash|python|javascript|text|json"</code> — Tipo de lenguaje (para syntax highlighting futuro)</li>
+            <li><code>data-title="Terminal|Código|Salida"</code> — Etiqueta visible en la esquina</li>
+            <li><code>data-note="typescript"</code> (opcional) — Nota adicional a mostrar</li>
+        </ul>
+    </div>
+</div>
+
+<h3>4.3 Variante: Código con explicación lado a lado</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;div class="grid-2col"&gt;
+    &lt;div&gt;
+        &lt;h4&gt;Problema&lt;/h4&gt;
+        &lt;div class="code-block" data-lang="text" data-title="Error"&gt;
+            &lt;pre&gt;&lt;code&gt;Error: ENOMEM (out of memory)&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+        &lt;h4&gt;Solución&lt;/h4&gt;
+        &lt;div class="code-block" data-lang="bash" data-title="Comando"&gt;
+            &lt;pre&gt;&lt;code&gt;claude /compact "mantén últimas 3 llamadas"&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>5. Cajas Destacadas (Info, Notas, Warnings, Ejemplos)</h2>
+<!-- ================================================================ -->
+
+<h3>5.1 Nota Importante (Naranja)</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;div class="highlight-box"&gt;
+    &lt;strong&gt;💡 Pro Tip:&lt;/strong&gt; Mantén logs de ejecución para
+    reconstruir contexto en sesiones futuras.
+&lt;/div&gt;</code></pre>
+    </div>
+    <div class="highlight-box">
+        💡 Pro Tip: Mantén logs de ejecución para reconstruir contexto en sesiones futuras.
+    </div>
+</div>
+
+<h3>5.2 Aviso / Warning (Amarillo)</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;div class="warning"&gt;
+    &lt;strong&gt;⚠️ Cuidado:&lt;/strong&gt; No uses /compact si hay tokens
+    sin procesar. Puede causar pérdida de contexto crítico.
+&lt;/div&gt;</code></pre>
+    </div>
+    <div class="warning">
+        ⚠️ Cuidado: No uses /compact si hay tokens sin procesar. Puede causar pérdida de contexto crítico.
+    </div>
+</div>
+
+<h3>5.3 Información (Verde)</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;div class="notas-css"&gt;
+    &lt;strong&gt;ℹ️ Información:&lt;/strong&gt; Este comando solo funciona
+    en sesiones nombradas o con CLAUDE.md activo.
+&lt;/div&gt;</code></pre>
+    </div>
+    <div class="notas-css">
+        ℹ️ Información: Este comando solo funciona en sesiones nombradas o con CLAUDE.md activo.
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>6. Tablas</h2>
+<!-- ================================================================ -->
+
+<h3>6.1 Tabla Simple (Matriz de Decisión)</h3>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;h3 class="block-title"&gt;📊 Matriz: ¿Cuándo usar cada comando?&lt;/h3&gt;
+&lt;table&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Comando&lt;/th&gt;
+            &lt;th&gt;Cuándo usarlo&lt;/th&gt;
+            &lt;th&gt;Costo (tokens)&lt;/th&gt;
+            &lt;th&gt;Alternativa&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;&lt;code&gt;/context&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Diagnosticar uso actual&lt;/td&gt;
+            &lt;td&gt;~100&lt;/td&gt;
+            &lt;td&gt;Ninguna&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;&lt;code&gt;/compact&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Sesiones largas (&gt;4h)&lt;/td&gt;
+            &lt;td&gt;~200&lt;/td&gt;
+            &lt;td&gt;Nueva sesión&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>7. Matrices de Decisión (Tablas Especiales)</h2>
+<!-- ================================================================ -->
+
+<p>Para matrices complejas con múltiples dimensiones, usar grid CSS:</p>
+
+<div class="plantilla-box">
+    <h3>Ejemplo HTML:</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;h3 class="block-title"&gt;🗺️ Matriz de Decisión: ¿Cuál es tu caso?&lt;/h3&gt;
+&lt;div class="grid-3col"&gt;
+    &lt;div class="decision-card"&gt;
+        &lt;h4&gt;📦 Caso: Token Budget&lt;/h4&gt;
+        &lt;p&gt;&lt;strong&gt;Síntoma:&lt;/strong&gt; Sesión mayor a 2 horas&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;Solución:&lt;/strong&gt;&lt;/p&gt;
+        &lt;ol&gt;
+            &lt;li&gt;Usar /compact&lt;/li&gt;
+            &lt;li&gt;Seleccionar qué preservar&lt;/li&gt;
+            &lt;li&gt;Continuar&lt;/li&gt;
+        &lt;/ol&gt;
+    &lt;/div&gt;
+
+    &lt;div class="decision-card"&gt;
+        &lt;h4&gt;🔗 Caso: MCP Falla&lt;/h4&gt;
+        &lt;p&gt;&lt;strong&gt;Síntoma:&lt;/strong&gt; "Connection refused"&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;Solución:&lt;/strong&gt;&lt;/p&gt;
+        &lt;ol&gt;
+            &lt;li&gt;Verificar puerto&lt;/li&gt;
+            &lt;li&gt;Restart servidor&lt;/li&gt;
+            &lt;li&gt;Reconectar&lt;/li&gt;
+        &lt;/ol&gt;
+    &lt;/div&gt;
+
+    &lt;div class="decision-card"&gt;
+        &lt;h4&gt;🚀 Caso: Rendimiento&lt;/h4&gt;
+        &lt;p&gt;&lt;strong&gt;Síntoma:&lt;/strong&gt; Respuestas lentas&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;Solución:&lt;/strong&gt;&lt;/p&gt;
+        &lt;ol&gt;
+            &lt;li&gt;Revisar logs&lt;/li&gt;
+            &lt;li&gt;Reducir input&lt;/li&gt;
+            &lt;li&gt;Perfilar tiempo&lt;/li&gt;
+        &lt;/ol&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>8. Estructura de Nodo de Sección Completa</h2>
+<!-- ================================================================ -->
+
+<p>Aquí está el árbol HTML completo de una sección (ejemplo: nivel-5-troubleshooting):</p>
+
+<div class="estructura-diagram">
+&lt;section data-section="nivel-5-troubleshooting" data-mode="technical"&gt;
+    &lt;div class="section-header"&gt;
+        &lt;span class="breadcrumb"&gt;Nivel 5 / Troubleshooting&lt;/span&gt;
+        &lt;h2&gt;🔧 Troubleshooting Avanzado&lt;/h2&gt;
+        &lt;p class="section-lead"&gt;...&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Bloque 1: Introducción --&gt;
+    &lt;h3 class="block-title"&gt;Diagnóstico 101&lt;/h3&gt;
+    &lt;p&gt;...&lt;/p&gt;
+    &lt;ul&gt;...&lt;/ul&gt;
+
+    &lt;!-- Bloque 2: Código --&gt;
+    &lt;h3 class="block-title"&gt;Comandos Útiles&lt;/h3&gt;
+    &lt;div class="code-block"&gt;...&lt;/div&gt;
+
+    &lt;!-- Bloque 3: Matriz --&gt;
+    &lt;h3 class="block-title"&gt;Matriz de Decisión&lt;/h3&gt;
+    &lt;div class="grid-3col"&gt;...&lt;/div&gt;
+
+    &lt;!-- Bloque 4: Tabla --&gt;
+    &lt;table&gt;...&lt;/table&gt;
+
+    &lt;!-- Bloque 5: Warnings --&gt;
+    &lt;div class="highlight-box"&gt;...&lt;/div&gt;
+&lt;/section&gt;
+</div>
+
+<!-- ================================================================ -->
+<h2>9. Clases CSS Esenciales</h2>
+<!-- ================================================================ -->
+
+<table>
+    <thead>
+        <tr>
+            <th>Clase CSS</th>
+            <th>Aplicar a</th>
+            <th>Propósito</th>
+            <th>Notas</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>content-section</code></td>
+            <td>&lt;section&gt;</td>
+            <td>Contenedor principal de cada módulo</td>
+            <td>Mostrado/ocultado por JS</td>
+        </tr>
+        <tr>
+            <td><code>section-header</code></td>
+            <td>&lt;div&gt;</td>
+            <td>Encabezado con breadcrumb + h2 + lead</td>
+            <td>Animación slideInDown</td>
+        </tr>
+        <tr>
+            <td><code>breadcrumb</code></td>
+            <td>&lt;span&gt;</td>
+            <td>Texto de navegación pequeño (Nivel X / Nombre)</td>
+            <td>Color muted, uppercase</td>
+        </tr>
+        <tr>
+            <td><code>section-lead</code></td>
+            <td>&lt;p&gt;</td>
+            <td>Párrafo introductorio grande</td>
+            <td>fs-lg, color-secondary</td>
+        </tr>
+        <tr>
+            <td><code>block-title</code></td>
+            <td>&lt;h3&gt;</td>
+            <td>Título de bloque de contenido</td>
+            <td>Borde izquierdo naranja</td>
+        </tr>
+        <tr>
+            <td><code>code-block</code></td>
+            <td>&lt;div&gt;</td>
+            <td>Contenedor de pre/code</td>
+            <td>Con data-lang, data-title</td>
+        </tr>
+        <tr>
+            <td><code>highlight-box</code></td>
+            <td>&lt;div&gt;</td>
+            <td>Caja destacada (naranja)</td>
+            <td>Para "Pro Tips"</td>
+        </tr>
+        <tr>
+            <td><code>warning</code></td>
+            <td>&lt;div&gt;</td>
+            <td>Caja de aviso (amarillo)</td>
+            <td>Para advertencias</td>
+        </tr>
+        <tr>
+            <td><code>notas-css</code></td>
+            <td>&lt;div&gt;</td>
+            <td>Caja de información (verde)</td>
+            <td>Para notas técnicas</td>
+        </tr>
+        <tr>
+            <td><code>grid-3col</code></td>
+            <td>&lt;div&gt;</td>
+            <td>Grid de 3 columnas responsive</td>
+            <td>Para matrices de decisión</td>
+        </tr>
+        <tr>
+            <td><code>grid-2col</code></td>
+            <td>&lt;div&gt;</td>
+            <td>Grid de 2 columnas</td>
+            <td>Para comparativas lado a lado</td>
+        </tr>
+        <tr>
+            <td><code>bullet-list</code></td>
+            <td>&lt;ul&gt;</td>
+            <td>Lista desordenada estilizada</td>
+            <td>Heredado de styles.css</td>
+        </tr>
+        <tr>
+            <td><code>step-list</code></td>
+            <td>&lt;ol&gt;</td>
+            <td>Lista ordenada para pasos</td>
+            <td>Heredado de styles.css</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- ================================================================ -->
+<h2>10. Atributos data-* Importantes</h2>
+<!-- ================================================================ -->
+
+<table>
+    <thead>
+        <tr>
+            <th>Atributo</th>
+            <th>Valores</th>
+            <th>Ubicación</th>
+            <th>Propósito</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>data-section</code></td>
+            <td>nivel-X-modulo-Y (ej: "nivel-5-troubleshooting")</td>
+            <td>&lt;section&gt;</td>
+            <td>ID único, enlazado con nav data-section</td>
+        </tr>
+        <tr>
+            <td><code>data-mode</code></td>
+            <td>"technical" | "accessible" | "both"</td>
+            <td>&lt;section&gt;</td>
+            <td>Filtra visibilidad por modo (toggle en topbar)</td>
+        </tr>
+        <tr>
+            <td><code>data-lang</code></td>
+            <td>bash, python, javascript, json, text, sql</td>
+            <td>&lt;div class="code-block"&gt;</td>
+            <td>Lenguaje para syntax highlighting</td>
+        </tr>
+        <tr>
+            <td><code>data-title</code></td>
+            <td>Terminal, Código, Salida, etc.</td>
+            <td>&lt;div class="code-block"&gt;</td>
+            <td>Etiqueta visible en esquina superior</td>
+        </tr>
+        <tr>
+            <td><code>data-note</code></td>
+            <td>Cualquier string</td>
+            <td>&lt;div class="code-block"&gt;</td>
+            <td>Nota adicional (ej: "typescript")</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- ================================================================ -->
+<h2>11. Ejemplo Concreto 1: Sección Troubleshooting (Parcial)</h2>
+<!-- ================================================================ -->
+
+<div class="plantilla-box">
+    <h3>HTML Generado (de nivel5-troubleshooting.md):</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;!-- ====== SECCIÓN: NIVEL 5 — TROUBLESHOOTING ====== --&gt;
+&lt;section class="content-section" data-section="nivel-5-troubleshooting" data-mode="technical"&gt;
+
+    &lt;div class="section-header"&gt;
+        &lt;span class="breadcrumb"&gt;Nivel 5 / Troubleshooting&lt;/span&gt;
+        &lt;h2&gt;🔧 Troubleshooting Avanzado&lt;/h2&gt;
+        &lt;p class="section-lead"&gt;
+            Herramientas sistemáticas y flujos de diagnóstico para resolver
+            problemas complejos en Claude Code. Desde agotamiento de tokens
+            hasta errores de integración con MCP.
+        &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- BLOQUE 1: Introducción --&gt;
+    &lt;h3 class="block-title"&gt;🎯 Metodología de Diagnóstico&lt;/h3&gt;
+    &lt;p&gt;
+        Todo problema tiene un patrón. La mayoría de errores en Claude Code
+        caen en 5 categorías: Token budget, MCP connectivity, Memory issues,
+        Permission errors, y Performance degradation.
+    &lt;/p&gt;
+    &lt;ul class="bullet-list"&gt;
+        &lt;li&gt;&lt;strong&gt;Recopilar evidencia:&lt;/strong&gt; Logs, stack traces, contexto&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Aislar variable:&lt;/strong&gt; Reduce el input hasta encontrar la causa&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Validar hipótesis:&lt;/strong&gt; Verifica tu solución antes de escalar&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;!-- BLOQUE 2: Comando clave --&gt;
+    &lt;h3 class="block-title"&gt;⚡ Comando Esencial: /context&lt;/h3&gt;
+    &lt;div class="code-block" data-lang="bash" data-title="Terminal"&gt;
+        &lt;pre&gt;&lt;code&gt;$ claude /context
+┌─────────────────────────────────────┐
+│ Context Usage (Sesión Actual)       │
+├─────────────────────────────────────┤
+│ Tokens Usados:    124,850 / 200,000 │
+│ % Utilización:    62.4%             │
+│ Sistema Prompt:   800 tokens        │
+│ Conversación:     124,050 tokens    │
+│ Ventana Activa:   ~40K              │
+└─────────────────────────────────────┘&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+
+    &lt;!-- BLOQUE 3: Matriz de Decisión --&gt;
+    &lt;h3 class="block-title"&gt;📊 Matriz: 5 Problemas Principales&lt;/h3&gt;
+    &lt;div class="grid-3col"&gt;
+        &lt;div class="decision-card"&gt;
+            &lt;h4&gt;📦 Token Budget Agotado&lt;/h4&gt;
+            &lt;p&gt;&lt;strong&gt;Síntoma:&lt;/strong&gt; "Context limit exceeded"&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;Verificar:&lt;/strong&gt;&lt;/p&gt;
+            &lt;ol&gt;
+                &lt;li&gt;Ejecutar: &lt;code&gt;/context&lt;/code&gt;&lt;/li&gt;
+                &lt;li&gt;Si &gt;85%: Usar &lt;code&gt;/compact&lt;/code&gt;&lt;/li&gt;
+            &lt;/ol&gt;
+        &lt;/div&gt;
+
+        &lt;div class="decision-card"&gt;
+            &lt;h4&gt;🔗 Conexión MCP Rechazada&lt;/h4&gt;
+            &lt;p&gt;&lt;strong&gt;Síntoma:&lt;/strong&gt; "Connection refused"&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;Verificar:&lt;/strong&gt;&lt;/p&gt;
+            &lt;ol&gt;
+                &lt;li&gt;Puerto activo: &lt;code&gt;lsof -i :5000&lt;/code&gt;&lt;/li&gt;
+                &lt;li&gt;Restart: &lt;code&gt;/mcp restart&lt;/code&gt;&lt;/li&gt;
+            &lt;/ol&gt;
+        &lt;/div&gt;
+
+        &lt;div class="decision-card"&gt;
+            &lt;h4&gt;🚨 Error de Permisos&lt;/h4&gt;
+            &lt;p&gt;&lt;strong&gt;Síntoma:&lt;/strong&gt; "Permission denied"&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;Verificar:&lt;/strong&gt;&lt;/p&gt;
+            &lt;ol&gt;
+                &lt;li&gt;Permisos: &lt;code&gt;ls -la archivo&lt;/code&gt;&lt;/li&gt;
+                &lt;li&gt;Conceder: &lt;code&gt;chmod +r archivo&lt;/code&gt;&lt;/li&gt;
+            &lt;/ol&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- BLOQUE 4: Warning --&gt;
+    &lt;div class="warning"&gt;
+        &lt;strong&gt;⚠️ Cuidado:&lt;/strong&gt; No comprimas contexto si hay tokens
+        sin procesar. Puede causar pérdida de datos críticos.
+    &lt;/div&gt;
+
+&lt;/section&gt;</code></pre>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>12. Ejemplo Concreto 2: Sección Cost Forecasting</h2>
+<!-- ================================================================ -->
+
+<div class="plantilla-box">
+    <h3>HTML Generado (de nivel5-cost-forecasting.md):</h3>
+    <div class="ejemplo-html">
+<pre><code>&lt;!-- ====== SECCIÓN: NIVEL 5 — COST FORECASTING ====== --&gt;
+&lt;section class="content-section" data-section="nivel-5-cost-forecasting" data-mode="technical"&gt;
+
+    &lt;div class="section-header"&gt;
+        &lt;span class="breadcrumb"&gt;Nivel 5 / Cost Forecasting&lt;/span&gt;
+        &lt;h2&gt;💰 Predicción de Costos y ROI&lt;/h2&gt;
+        &lt;p class="section-lead"&gt;
+            Predice costos de API antes de escalar. Modelos de presupuesto,
+            estimadores por caso de uso, y análisis de ROI para empresas.
+        &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;h3 class="block-title"&gt;🧮 Fórmula Base de Costo&lt;/h3&gt;
+    &lt;p&gt;
+        El costo de Claude API depende de dos factores: tokens de entrada
+        y tokens de salida. El input es más barato que el output.
+    &lt;/p&gt;
+    &lt;div class="code-block" data-lang="text" data-title="Fórmula"&gt;
+        &lt;pre&gt;&lt;code&gt;Costo Total = (Tokens Input × Precio Input) + (Tokens Output × Precio Output)
+
+Ejemplo (Claude 3.5 Sonnet):
+- Input:  $3.00 / 1M tokens
+- Output: $15.00 / 1M tokens
+
+Si procesas 1M tokens input + 500K tokens output:
+Costo = (1,000,000 × $0.000003) + (500,000 × $0.000015)
+Costo = $3.00 + $7.50 = $10.50&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+
+    &lt;h3 class="block-title"&gt;📊 Tabla Comparativa: Modelos y Costos&lt;/h3&gt;
+    &lt;table&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Modelo&lt;/th&gt;
+                &lt;th&gt;Precio Input (M)&lt;/th&gt;
+                &lt;th&gt;Precio Output (M)&lt;/th&gt;
+                &lt;th&gt;Mejor para&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;Claude 3.5 Haiku&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;$0.80&lt;/td&gt;
+                &lt;td&gt;$4.00&lt;/td&gt;
+                &lt;td&gt;Batch, análisis rápido&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;Claude 3.5 Sonnet&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;$3.00&lt;/td&gt;
+                &lt;td&gt;$15.00&lt;/td&gt;
+                &lt;td&gt;Producción, balanceado&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;Claude 3.5 Opus&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;$15.00&lt;/td&gt;
+                &lt;td&gt;$75.00&lt;/td&gt;
+                &lt;td&gt;Razonamiento complejo&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+
+    &lt;h3 class="block-title"&gt;🎯 Estimador Rápido: 3 Casos Reales&lt;/h3&gt;
+    &lt;div class="grid-2col"&gt;
+        &lt;div&gt;
+            &lt;h4&gt;Caso 1: Code Review Bot (100 PRs/mes)&lt;/h4&gt;
+            &lt;div class="code-block" data-lang="text" data-title="Cálculo"&gt;
+                &lt;pre&gt;&lt;code&gt;Input/PR:  15K tokens (código + contexto)
+Output/PR: 3K tokens (comentarios)
+
+Costo/PR = (15K × $0.000003) + (3K × $0.000015)
+Costo/PR = $0.045 + $0.045 = $0.09
+
+100 PRs × $0.09 = $9/mes&lt;/code&gt;&lt;/pre&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+            &lt;h4&gt;Caso 2: Data Analysis (50 análisis/mes)&lt;/h4&gt;
+            &lt;div class="code-block" data-lang="text" data-title="Cálculo"&gt;
+                &lt;pre&gt;&lt;code&gt;Input/análisis:  50K tokens (datos + SQL)
+Output/análisis: 10K tokens (insights)
+
+Costo = (50K × $0.000003) + (10K × $0.000015)
+Costo = $0.15 + $0.15 = $0.30/análisis
+
+50 análisis × $0.30 = $15/mes&lt;/code&gt;&lt;/pre&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="highlight-box"&gt;
+        &lt;strong&gt;💡 Insight:&lt;/strong&gt; El costo mensual típico de un developer
+        usando Claude Code es $20-80. Para un equipo de 100 developers,
+        presupuesta $3-5K/mes en API.
+    &lt;/div&gt;
+
+&lt;/section&gt;</code></pre>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>13. Checklist de Integración</h2>
+<!-- ================================================================ -->
+
+<div class="plantilla-box">
+    <h3>Antes de integrar sección .md a HTML:</h3>
+    <ol>
+        <li style="margin: 10px 0;">
+            <strong>Estructura:</strong> Verificar que data-section coincida con nav sidebar
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Encabezado:</strong> section-header con breadcrumb, h2, section-lead
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Bloques h3:</strong> Usar class="block-title" para h3 principales
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Código:</strong> Envolver pre/code en div.code-block con data-lang y data-title
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Tablas:</strong> Usar &lt;table&gt; con &lt;thead&gt; / &lt;tbody&gt;
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Cajas:</strong> Usar .highlight-box, .warning, o .notas-css según tipo
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Matrices:</strong> Usar div.grid-3col o grid-2col para decisión
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Listas:</strong> Usar class="bullet-list" (ul) o class="step-list" (ol)
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Validar:</strong> Abrir index.html en navegador, verificar que nav funciona
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Modo:</strong> Verificar data-mode ("technical", "accessible", "both")
+        </li>
+    </ol>
+</div>
+
+<!-- ================================================================ -->
+<h2>14. Sintaxis Rápida (Copy-Paste)</h2>
+<!-- ================================================================ -->
+
+<div class="plantilla-box">
+    <h3>Templates mínimos para copiar/pegar rápidamente:</h3>
+
+    <h4>Sección vacía:</h4>
+    <div class="ejemplo-html">
+<pre><code>&lt;section class="content-section" data-section="XXX" data-mode="technical"&gt;
+    &lt;div class="section-header"&gt;
+        &lt;span class="breadcrumb"&gt;Nivel X / Nombre&lt;/span&gt;
+        &lt;h2&gt;EMOJI Título&lt;/h2&gt;
+        &lt;p class="section-lead"&gt;Descripción breve (1-2 líneas)&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+    </div>
+
+    <h4>Caja destacada (Tip/Warning/Info):</h4>
+    <div class="ejemplo-html">
+<pre><code>&lt;div class="highlight-box"&gt;💡 &lt;strong&gt;Tip:&lt;/strong&gt; Texto&lt;/div&gt;
+&lt;div class="warning"&gt;⚠️ &lt;strong&gt;Cuidado:&lt;/strong&gt; Texto&lt;/div&gt;
+&lt;div class="notas-css"&gt;ℹ️ &lt;strong&gt;Info:&lt;/strong&gt; Texto&lt;/div&gt;</code></pre>
+    </div>
+
+    <h4>Bloque de código:</h4>
+    <div class="ejemplo-html">
+<pre><code>&lt;div class="code-block" data-lang="bash" data-title="Terminal"&gt;
+    &lt;pre&gt;&lt;code&gt;$ comando aquí&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <h4>Matriz de decisión (3 columnas):</h4>
+    <div class="ejemplo-html">
+<pre><code>&lt;div class="grid-3col"&gt;
+    &lt;div&gt;
+        &lt;h4&gt;Opción A&lt;/h4&gt;
+        &lt;p&gt;Descripción...&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div&gt;...&lt;/div&gt;
+    &lt;div&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>Resumen Final</h2>
+<!-- ================================================================ -->
+
+<div class="highlight-box">
+    <strong>Esta plantilla define un sistema reutilizable para:</strong>
+    <ul style="margin-top: 10px;">
+        <li>✅ Convertir contenido .md → HTML de forma consistente</li>
+        <li>✅ Mantener estructura visual y navegación coherente</li>
+        <li>✅ Escalar a 20+ módulos sin rediseñar layouts</li>
+        <li>✅ Usar clases CSS semánticas ya definidas en styles.css</li>
+        <li>✅ Integrar fácilmente en index.html existente</li>
+    </ul>
+</div>
+
+</body>
+</html>
