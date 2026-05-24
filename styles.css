@@ -1098,6 +1098,12 @@ kbd {
 }
 .info-banner--warn strong { color: white; }
 
+.info-banner--good {
+    background: rgba(61, 220, 151, 0.35);
+    border-left-color: var(--success);
+}
+.info-banner--good strong { color: white; }
+
 /* --- Code blocks (con resaltado) --- Subtle borders */
 .code-block {
     background: var(--bg-base);
@@ -6161,6 +6167,45 @@ blockquote {
     .module-section a {
         transition: none;
     }
+}
+
+/* ============================================================================
+   13. FRAMEWORK GRID & CARDS (Nivel 1 - Decision Framework)
+   ============================================================================ */
+
+.framework-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--sp-4);
+    margin: var(--sp-4) 0;
+}
+
+.framework-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 8px;
+    padding: var(--sp-4);
+    transition: all 0.2s ease;
+}
+
+.framework-card:hover {
+    border-color: var(--accent-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.framework-card strong {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: var(--sp-2);
+    color: var(--accent-primary);
+}
+
+.framework-card p {
+    margin: 0;
+    font-size: 0.95em;
+    line-height: 1.5;
+    color: var(--text-secondary);
 }
 
 /* ============================================================================

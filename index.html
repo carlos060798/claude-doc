@@ -108,6 +108,8 @@
                                 <span class="nav-icon">💸</span> Cost Management & ROI</a></li>
                             <li><a href="#nivel-2-testing" class="nav-link" data-section="nivel-2-testing" data-level="2">
                                 <span class="nav-icon">🧪</span> Testing Asistido Avanzado</a></li>
+                            <li><a href="#batch-api-guide" class="nav-link" data-section="batch-api-guide" data-level="2">
+                                <span class="nav-icon">📦</span> Batch API Guide</a></li>
                         </ul>
 
                         <p class="nav-group-title" style="font-size: 0.85em; margin: 12px 0 8px 0;">Nivel 3: Constructor</p>
@@ -229,6 +231,8 @@
                                 <span class="nav-icon">🗺️</span> Roadmap Experticia</a></li>
                             <li><a href="#guia-recursos-externos" class="nav-link" data-section="guia-recursos-externos">
                                 <span class="nav-icon">🔗</span> Recursos & Links</a></li>
+                            <li><a href="#adaptive-thinking-guide" class="nav-link" data-section="adaptive-thinking-guide">
+                                <span class="nav-icon">💰</span> Adaptive Thinking ROI</a></li>
                         </ul>
                     </div>
                 </div>
@@ -238,7 +242,7 @@
                 <ul class="nav-list">
                     <li><a href="#agent-sdk-practical" class="nav-link" data-section="agent-sdk-practical" data-mode="technical">
                         <span class="nav-icon">🤖</span> Agentes Autónomos (SDK)</a></li>
-                    <li><a href="#adaptive-thinking" class="nav-link" data-section="adaptive-thinking" data-mode="technical">
+                    <li><a href="#adaptive-thinking-guide" class="nav-link" data-section="adaptive-thinking-guide" data-mode="technical">
                         <span class="nav-icon">🧠</span> Razonamiento Profundo</a></li>
                     <li><a href="#batch-api-guide" class="nav-link" data-section="batch-api-guide" data-mode="technical">
                         <span class="nav-icon">📦</span> Batch API & Costos</a></li>
@@ -1986,6 +1990,123 @@ claude -p "Hola, ¿funcionas?"</code></pre>
                     <strong>📌 Buena práctica:</strong> Para proyectos grandes, crea un
                     <code>CLAUDE.md</code> en la raíz con el stack, convenciones de código y
                     estructura de carpetas. Claude lo lee automáticamente al iniciar cada sesión.
+                </div>
+
+                <div class="lesson-outro" data-lesson="1"></div>
+            </section>
+
+            <!-- ====== SECCIÓN: NIVEL 1 - PROMPT CRAFT ====== -->
+            <section class="content-section" data-section="nivel-1-prompt-craft" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 1 / Prompt Craft</span>
+                    <h2><span class="level-tag level-tag--1">Nivel 1</span> Prompt Craft Básico</h2>
+                    <p class="section-lead">
+                        Aprende a estructurar prompts efectivos que maximicen las capacidades de Claude
+                        y obtengas resultados de alta calidad en la primera solicitud.
+                    </p>
+                </div>
+
+                <div class="lesson-intro" data-lesson="1"></div>
+
+                <h3 class="block-title">Principios fundamentales de Prompt Craft</h3>
+                <p>
+                    Un buen prompt es la base de cualquier interacción efectiva con Claude.
+                    Los principios clave son: <strong>claridad</strong>, <strong>contexto</strong>,
+                    <strong>estructura</strong> y <strong>ejemplos</strong>.
+                </p>
+
+                <div class="info-banner info-banner--tip">
+                    <strong>💡 Tip:</strong> Claude funciona mejor cuando le das rol, contexto y
+                    ejemplos claros. Más instrucciones específicas = mejores resultados.
+                </div>
+
+                <h3 class="block-title">Estructura básica de un prompt efectivo</h3>
+                <ol class="numbered-list">
+                    <li><strong>Rol:</strong> Define quién eres y qué rol juega Claude</li>
+                    <li><strong>Contexto:</strong> Proporciona la información necesaria</li>
+                    <li><strong>Tarea:</strong> Sé específico sobre qué quieres que haga</li>
+                    <li><strong>Formato:</strong> Especifica cómo quieres la respuesta</li>
+                    <li><strong>Ejemplos:</strong> Muestra ejemplos de entrada/salida esperados</li>
+                </ol>
+
+                <div class="code-block" data-lang="text" data-title="Ejemplo: Prompt bien estructurado">
+                    <pre><code>Eres un experto en refactorización de código Python.
+
+Contexto: Trabajo en un proyecto que convierte archivos CSV a JSON.
+El código actual es procedural y difícil de mantener.
+
+Tarea: Lee el código siguiente y propón una refactorización
+que use clases y patrones de diseño.
+
+[CÓDIGO AQUÍ]
+
+Formato: Devuelve el código refactorizado con comentarios
+que expliquen los cambios.</code></pre>
+                </div>
+
+                <div class="lesson-outro" data-lesson="1"></div>
+            </section>
+
+            <!-- ====== SECCIÓN: NIVEL 1 - DECISION FRAMEWORK ====== -->
+            <section class="content-section" data-section="nivel-1-decision-framework" data-mode="technical">
+                <div class="section-header">
+                    <span class="breadcrumb">Nivel 1 / Decision Framework</span>
+                    <h2><span class="level-tag level-tag--1">Nivel 1</span> Decision Framework</h2>
+                    <p class="section-lead">
+                        Un framework para tomar decisiones técnicas efectivas usando Claude Code,
+                        considerando trade-offs, riesgos y beneficios.
+                    </p>
+                </div>
+
+                <div class="lesson-intro" data-lesson="1"></div>
+
+                <h3 class="block-title">Cuándo usar Claude Code vs otras herramientas</h3>
+                <p>
+                    Claude Code no es la solución para todo. Es importante saber cuándo usarlo
+                    y cuándo utilizar herramientas especializadas.
+                </p>
+
+                <div class="info-banner info-banner--good">
+                    <strong>✅ USA Claude Code para:</strong>
+                    <ul style="margin: 8px 0 0 0;">
+                        <li>Refactorización y mejora de código existente</li>
+                        <li>Depuración y análisis de problemas</li>
+                        <li>Generación de código boilerplate</li>
+                        <li>Documentación y comentarios</li>
+                        <li>Estrategia y diseño técnico</li>
+                    </ul>
+                </div>
+
+                <div class="info-banner info-banner--warn">
+                    <strong>❌ NO USES Claude Code para:</strong>
+                    <ul style="margin: 8px 0 0 0;">
+                        <li>Ejecutar código crítico sin verificación manual</li>
+                        <li>Operaciones de base de datos destructivas sin backup</li>
+                        <li>Cambios de seguridad sin revisión humana</li>
+                        <li>Tareas que requieren herramientas especializadas (CI/CD, testing)</li>
+                    </ul>
+                </div>
+
+                <h3 class="block-title">Framework de decisión: 4 dimensiones</h3>
+                <p>Para cada tarea, evalúa:</p>
+
+                <div class="framework-grid">
+                    <div class="framework-card">
+                        <strong>Complejidad</strong>
+                        <p>¿Qué tan compleja es la tarea? ¿Requiere reasoning profundo?</p>
+                    </div>
+                    <div class="framework-card">
+                        <strong>Contexto</strong>
+                        <p>¿Necesita conocimiento del dominio o del proyecto?</p>
+                    </div>
+                    <div class="framework-card">
+                        <strong>Criticidad</strong>
+                        <p>¿Qué impacto tiene si algo falla? ¿Necesita verificación?</p>
+                    </div>
+                    <div class="framework-card">
+                        <strong>Iteración</strong>
+                        <p>¿Necesitará múltiples rondas? ¿Es un proceso colaborativo?</p>
+                    </div>
                 </div>
 
                 <div class="lesson-outro" data-lesson="1"></div>
@@ -26851,72 +26972,919 @@ W24: 85% (stable)</code></pre>
                 </div>
             </section>
 
-            <!-- ====== SECCIÓN: AGENT SDK PRACTICAL ====== -->
+<!-- ====== SECCIÓN: AGENT SDK PRACTICAL ====== -->
             <section class="content-section p9-module" data-section="agent-sdk-practical" data-mode="technical">
                 <div class="section-header">
                     <span class="breadcrumb">P9 / Etapa 2 — Automatización</span>
-                    <h2>🤖 Agentes Autónomos con Agent SDK</h2>
+                    <h1>Agent SDK — Practical Guide</h1>
                     <p class="section-lead">
-                        Aprende a construir agentes que trabajan solos: sin clicks, sin intervención manual.
-                        Desde cero hasta deploy en producción. Incluye antipatrones reales y checklist.
+                        Construir agentes autónomos que funcionen sin intervención humana. Desde conceptos fundamentales hasta producción.
                     </p>
                 </div>
 
-                <div class="p9-learning-goals">
-                    <h4>Al terminar este módulo podrás:</h4>
-                    <ul class="goals-list">
-                        <li>✅ Decidir cuándo usar Agent SDK vs API vs Claude Code</li>
-                        <li>✅ Construir tu primer agente funcional en TypeScript o Python</li>
-                        <li>✅ Manejar el loop <code>stop_reason → tool_use → respuesta</code></li>
-                        <li>✅ Evitar los 8 antipatrones más comunes en producción</li>
-                    </ul>
-                </div>
+                <div class="content">
 
-                <div class="topic-grid">
-                    <div class="subtopic-card">
-                        <span class="topic-icon">🗺️</span>
-                        <h4>¿Por qué lo necesitas?</h4>
-                        <p>Historia real: de hacer click manual 200 veces/día a automatización completa. Antes vs después con números.</p>
-                        <span class="card-tag">Contexto</span>
-                    </div>
-                    <div class="subtopic-card">
-                        <span class="topic-icon">🧩</span>
-                        <h4>Conceptos fundamentales</h4>
-                        <p>El loop del agente, <code>stop_reason</code>, acumulación de mensajes. Diagramas ASCII sin código todavía.</p>
-                        <span class="card-tag">Teoría visual</span>
-                    </div>
-                    <div class="subtopic-card">
-                        <span class="topic-icon">🔧</span>
-                        <h4>Desde cero: tu primer agente</h4>
-                        <p>Setup completo, Hello World con cada línea comentada en español. Funciona al copiar y pegar.</p>
-                        <span class="card-tag">Práctico</span>
-                    </div>
-                    <div class="subtopic-card">
-                        <span class="topic-icon">⚠️</span>
-                        <h4>8 antipatrones críticos</h4>
-                        <p>Los errores que comete todo el mundo al empezar: código ❌ incorrecto vs ✅ correcto con explicación.</p>
-                        <span class="card-tag">Antipatrones</span>
-                    </div>
-                    <div class="subtopic-card">
-                        <span class="topic-icon">🏭</span>
-                        <h4>Checklist de producción</h4>
-                        <p>20 puntos verificables antes de hacer deploy: seguridad, resiliencia, observabilidad, performance.</p>
-                        <span class="card-tag">Producción</span>
-                    </div>
-                    <div class="subtopic-card">
-                        <span class="topic-icon">💡</span>
-                        <h4>Ejercicio integrador</h4>
-                        <p>Construye un agente de análisis de CVs desde cero. 6 pasos guiados con criterios de éxito claros.</p>
-                        <span class="card-tag">Ejercicio</span>
-                    </div>
-                </div>
+<blockquote>
+<p><strong>Audiencia</strong>: Desarrollador que nunca usó Claude Code y quiere aprender a construir agentes autónomos reales</p>
+<p><strong>Nivel</strong>: Fundamentos → Producción | <strong>Tiempo estimado</strong>: 3-4 horas | <strong>Meta</strong>: Tener agentes funcionales listos para deploy</p>
+</blockquote>
 
-                <div class="section-cta">
-                    <a href="C:\\Users\\usuario\\.claude\\curso-claude-code\\agent-sdk-practical.md" class="btn btn-primary">
-                        📖 Abrir guía completa (1600+ líneas)</a>
-                    <p style="margin-top: 12px; font-size: 0.9em; color: var(--text-muted);">
-                        3 patrones con ejercicios, 8 antipatrones, checklist deploy, ejercicio integrador final.
-                    </p>
+<hr />
+
+<h2>1. ¿Por qué necesitas esto?</h2>
+
+<h3>La historia de antes</h3>
+
+<p>Imagínate esto: eres desarrollador en una empresa mediana. Cada día hay 200 tickets de soporte entrando al sistema. Tu equipo de 3 personas los lee uno por uno, decide si es urgente, los categoriza, y los asigna al área correcta. Eso toma 4 horas diarias. 4 horas que nadie en tu equipo puede usar para construir producto.</p>
+
+<p>Alguien sugiere "usemos ChatGPT". Lo intentas. Abres el navegador, copias el ticket, pegas en ChatGPT, copias la respuesta, la pegas en tu sistema. Funciona... pero ahora tardas 3 horas en lugar de 4. No es automatización, es trabajo manual con una interfaz diferente.</p>
+
+<p>Entonces descubres Claude Code. Construyes un skill que clasifica tickets. Funciona perfectamente cuando tú haces click. Pero cuando te vas a dormir, los tickets siguen acumulándose. El sistema no puede funcionar solo. Necesitas estar ahí para cada click.</p>
+
+<p><strong>Ese es el problema que Agent SDK resuelve.</strong></p>
+
+<h3>La historia de después</h3>
+
+<p>Con Agent SDK, construyes un agente que:</p>
+
+<ol>
+<li>Se despierta cada 5 minutos</li>
+<li>Lee todos los tickets nuevos desde tu base de datos</li>
+<li>Clasifica cada uno usando Claude</li>
+<li>Llama a tu API interna para asignarlo</li>
+<li>Guarda el resultado en un log de auditoría</li>
+<li>Si falla, reintenta con backoff exponencial</li>
+<li>Si falla 3 veces, te manda un email</li>
+</ol>
+
+<p>Todo eso mientras tú duermes. Mientras estás en vacaciones. Mientras construyes features nuevos.</p>
+
+<p><strong>Esa es la diferencia entre una herramienta y un agente autónomo.</strong></p>
+
+<h3>Las tres formas de usar Claude (y cuándo usar cada una)</h3>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                 ¿CÓMO INTEGRO CLAUDE EN MI SISTEMA?             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  FORMA 1: Claude Code (Interfaz Visual)                         │
+│  ─────────────────────────────────────                          │
+│  ✅ Prototipas en 5 minutos                                     │
+│  ✅ Perfecto para explorar y aprender                           │
+│  ❌ Necesitas estar ahí para cada acción                        │
+│  ❌ No puede procesar 1000 documentos solo                      │
+│  → Úsalo para: trabajar interactivamente, crear skills          │
+│                                                                   │
+│  FORMA 2: Claude API (REST directo)                             │
+│  ──────────────────────────────────────                         │
+│  ✅ Flexible, integración simple                                │
+│  ✅ Una llamada, una respuesta                                  │
+│  ⚠️  Tienes que programar toda la lógica multi-paso tú mismo   │
+│  → Úsalo para: integraciones simples, llamadas únicas           │
+│                                                                   │
+│  FORMA 3: Agent SDK (Agentes Programáticos)  ← ESTO ES AQUÍ   │
+│  ─────────────────────────────────────────────                  │
+│  ✅ Automático: funciona sin intervención humana                │
+│  ✅ Multi-paso: puede razonar, usar herramientas, decidir       │
+│  ✅ Con estado: recuerda lo que pasó en pasos anteriores        │
+│  ✅ El loop de razonamiento viene incluido                      │
+│  → Úsalo para: automatización real, producción                  │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<hr />
+
+<h2>2. Conceptos fundamentales</h2>
+
+<p>Antes de escribir una sola línea de código, necesitas entender cómo piensa un agente. Si saltas directo al código sin este contexto, vas a hacer cosas que "funcionan" pero no vas a entender por qué ni qué hacer cuando fallen.</p>
+
+<h3>2.1 ¿Qué es realmente un agente?</h3>
+
+<p>Un agente no es magia. Es un bucle (loop). Así de simple. El agente:</p>
+
+<ol>
+<li>Recibe una instrucción</li>
+<li>Piensa qué hacer</li>
+<li>Si necesita información externa, pide una herramienta</li>
+<li>Obtiene el resultado de la herramienta</li>
+<li>Piensa de nuevo con esa información</li>
+<li>Repite desde el paso 3 hasta que puede responder</li>
+<li>Responde</li>
+</ol>
+
+<pre><code>  ┌─────────────────────────────────────────────────────────┐
+  │                    EL LOOP DEL AGENTE                   │
+  └─────────────────────────────────────────────────────────┘
+
+  [TÚ]                    [CLAUDE]                  [TUS TOOLS]
+    │                        │                           │
+    │  "Analiza este          │                           │
+    │   contrato y dame       │                           │
+    │   los riesgos"          │                           │
+    ├───────────────────────>│                           │
+    │                        │                           │
+    │                        │  (Claude piensa:          │
+    │                        │   "necesito leer          │
+    │                        │    el contrato")          │
+    │                        │                           │
+    │                        │  → tool_use:              │
+    │                        │    read_file("contrato")  │
+    │                        ├───────────────────────>   │
+    │                        │                           │
+    │                        │         resultado:        │
+    │                        │         "Cláusula 5.3..." │
+    │                        │<──────────────────────────│
+    │                        │                           │
+    │                        │  (Claude piensa:          │
+    │                        │   "ahora con el texto     │
+    │                        │    puedo analizar")       │
+    │                        │                           │
+    │                        │  → end_turn               │
+    │                        │    "Los riesgos son..."   │
+    │<───────────────────────│                           │
+    │                        │                           │
+</code></pre>
+
+<h3>2.2 El concepto clave: <code>stop_reason</code></h3>
+
+<p>Cuando Claude termina de "pensar" en cada iteración, te dice por qué paró. Esto se llama <code>stop_reason</code>. Hay exactamente dos valores que importan:</p>
+
+<pre><code>  stop_reason
+       │
+       ├── "end_turn"
+       │       │
+       │       └── Claude terminó. Tiene una respuesta final.
+       │           Tú extraes el texto y listo.
+       │           ✅ EL LOOP TERMINA AQUÍ
+       │
+       └── "tool_use"
+               │
+               └── Claude quiere usar una herramienta.
+                   No tiene suficiente información todavía.
+                   Tú ejecutas la herramienta y le pasas el resultado.
+                   🔄 EL LOOP CONTINÚA
+</code></pre>
+
+<p>Este es el corazón de todo. Si entiendes <code>stop_reason</code>, entiendes los agentes.</p>
+
+<h3>2.3 La acumulación de mensajes</h3>
+
+<p>El agente "recuerda" porque acumulamos los mensajes en un array. Cada iteración del loop agrega más mensajes. Visualmente:</p>
+
+<pre><code>  ITERACIÓN 1:
+  messages = [
+    { role: "user",      content: "Analiza el contrato" }
+  ]
+
+  → Claude responde con stop_reason: "tool_use"
+
+  ITERACIÓN 2 (DESPUÉS DE EJECUTAR LA TOOL):
+  messages = [
+    { role: "user",      content: "Analiza el contrato" },
+    { role: "assistant", content: [tool_use_block] },     ← respuesta de Claude
+    { role: "user",      content: [tool_result_block] }   ← resultado de tu tool
+  ]
+
+  → Claude responde con stop_reason: "end_turn"
+
+  ITERACIÓN 3 (RESPUESTA FINAL):
+  messages = [
+    { role: "user",      content: "Analiza el contrato" },
+    { role: "assistant", content: [tool_use_block] },
+    { role: "user",      content: [tool_result_block] },
+    { role: "assistant", content: "Los riesgos son..." }  ← respuesta final
+  ]
+</code></pre>
+
+<p>Si no acumulas los mensajes, Claude "olvida" lo que pasó en pasos anteriores. Es el error más común que cometen los que empiezan.</p>
+
+<h3>2.4 Las herramientas (tools)</h3>
+
+<p>Una herramienta es una función que tú defines y que Claude puede pedir que ejecutes. Claude no ejecuta código directamente, te dice "quiero que llames a X con estos parámetros". Tú lo llamas, y le pasas el resultado.</p>
+
+<pre><code>  DEFINICIÓN (tú la escribes):
+  ┌───────────────────────────────────────────┐
+  │ tool: "buscar_en_base_de_datos"           │
+  │ descripción: "Busca clientes por nombre"  │
+  │ parámetros: { nombre: string }            │
+  └───────────────────────────────────────────┘
+          │
+          │ Claude ve la definición y cuando necesita
+          │ datos de clientes, pide usarla.
+          │
+          ▼
+  PETICIÓN DE CLAUDE:
+  ┌───────────────────────────────────────────┐
+  │ "Quiero llamar buscar_en_base_de_datos    │
+  │  con nombre = 'García'"                   │
+  └───────────────────────────────────────────┘
+          │
+          │ Tú ejecutas la función real,
+          │ obtienes el resultado.
+          │
+          ▼
+  RESULTADO QUE TÚ LE PASAS:
+  ┌───────────────────────────────────────────┐
+  │ "Encontré 3 clientes: García Juan,        │
+  │  García María, García Pedro"              │
+  └───────────────────────────────────────────┘
+</code></pre>
+
+<hr />
+
+<h2>3. Tu primer agente (desde cero)</h2>
+
+<h3>3.1 Setup del proyecto</h3>
+
+<p>Primero vamos a crear el proyecto desde cero. Abre tu terminal y ejecuta esto:</p>
+
+<pre><code class="language-bash"># Crea una carpeta nueva para el proyecto
+mkdir mi-primer-agente
+
+# Entra a la carpeta
+cd mi-primer-agente
+
+# Inicializa el proyecto Node.js (acepta todos los defaults con -y)
+npm init -y
+
+# Instala el SDK de Anthropic y las dependencias necesarias
+# @anthropic-ai/sdk: el SDK principal para hablar con Claude
+# dotenv: para leer variables de entorno desde un archivo .env
+# typescript: para usar TypeScript
+# ts-node: para ejecutar TypeScript directamente sin compilar
+npm install @anthropic-ai/sdk dotenv typescript ts-node
+
+# Instala los tipos de TypeScript para Node.js
+npm install --save-dev @types/node
+
+# Crea el archivo de configuración de TypeScript
+npx tsc --init
+</code></pre>
+
+<p>Ahora crea el archivo <code>.env</code> con tu API key:</p>
+
+<pre><code class="language-bash"># Reemplaza sk-ant-TU-KEY-AQUI con tu key real de console.anthropic.com
+echo "ANTHROPIC_API_KEY=sk-ant-TU-KEY-AQUI" > .env
+</code></pre>
+
+<p>Verifica que la instalación funcionó:</p>
+
+<pre><code class="language-bash"># Esto debería mostrar algo como: @anthropic-ai/sdk@x.x.x
+npm list @anthropic-ai/sdk
+</code></pre>
+
+<h3>3.2 Tu primer "Hello World" agente</h3>
+
+<p>Crea el archivo <code>agente-basico.ts</code>:</p>
+
+<pre><code class="language-typescript">// Importamos el SDK de Anthropic
+// Esto es como "import requests" en Python o "require('axios')" para HTTP
+import Anthropic from "@anthropic-ai/sdk";
+
+// Importamos dotenv para leer el archivo .env
+// Sin esto, process.env.ANTHROPIC_API_KEY sería undefined
+import "dotenv/config";
+
+// Creamos el cliente de Anthropic
+// El SDK automáticamente lee ANTHROPIC_API_KEY del environment
+// Equivale a: new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const cliente = new Anthropic();
+
+// Esta es la función principal del agente
+// async porque las llamadas a Claude son asíncronas (tardan tiempo en responder)
+async function primerAgente(): Promise&lt;void&gt; {
+  console.log("Iniciando agente...\n");
+
+  // Los mensajes son el historial de conversación
+  // Siempre empezamos con un mensaje del usuario
+  // MessageParam es el tipo de TypeScript para un mensaje válido
+  const mensajes: Anthropic.MessageParam[] = [
+    {
+      role: "user",   // "user" = nosotros enviando un mensaje
+      content: "Hola Claude. En exactamente 10 palabras, explica qué es un agente autónomo.",
+    },
+  ];
+
+  // Llamamos a Claude con client.messages.create()
+  // model: qué versión de Claude usar
+  // max_tokens: máximo de tokens en la respuesta (evita respuestas infinitas)
+  // messages: el historial de conversación que construimos arriba
+  const respuesta = await cliente.messages.create({
+    model: "claude-opus-4-5",   // modelo recomendado para agentes
+    max_tokens: 200,             // suficiente para una respuesta corta
+    messages: mensajes,          // pasamos el historial completo
+  });
+
+  // stop_reason nos dice por qué Claude dejó de generar tokens
+  // "end_turn" = terminó normalmente, tiene una respuesta completa
+  // "tool_use" = quiere usar una herramienta (veremos esto más adelante)
+  console.log(`stop_reason: ${respuesta.stop_reason}`);
+
+  // respuesta.content es un array de bloques
+  // Para respuestas de texto simple, el bloque es de tipo "text"
+  // Accedemos al primer bloque y verificamos que sea texto
+  if (respuesta.stop_reason === "end_turn") {
+    // Tomamos el último bloque de contenido
+    const ultimoBloque = respuesta.content[respuesta.content.length - 1];
+
+    // Verificamos que sea texto (no tool_use) antes de leerlo
+    if (ultimoBloque.type === "text") {
+      // .text contiene el string con la respuesta de Claude
+      console.log(`\nRespuesta de Claude:\n${ultimoBloque.text}`);
+    }
+  }
+
+  // Mostramos cuántos tokens usamos (importante para controlar costos)
+  console.log(`\nTokens usados: ${respuesta.usage.input_tokens} entrada, ${respuesta.usage.output_tokens} salida`);
+}
+
+// Ejecutamos la función principal
+// El .catch() atrapa cualquier error no manejado (errores de red, API key inválida, etc.)
+primerAgente().catch((error) => {
+  console.error("Error en el agente:", error.message);
+  process.exit(1); // salimos con código de error para que herramientas de CI/CD sepan que falló
+});
+</code></pre>
+
+<p>Ejecuta tu primer agente:</p>
+
+<pre><code class="language-bash">npx ts-node agente-basico.ts
+</code></pre>
+
+<p>Deberías ver algo así:</p>
+
+<pre><code>Iniciando agente...
+
+stop_reason: end_turn
+
+Respuesta de Claude:
+Programa que ejecuta tareas complejas de forma autónoma sin supervisión humana.
+
+Tokens usados: 47 entrada, 21 salida
+</code></pre>
+
+<p>Felicitaciones. Acabas de hablar con Claude desde código. Ahora vamos a hacerlo más interesante.</p>
+
+<hr />
+
+<h2>4. Los 3 patrones que necesitas dominar</h2>
+
+<p>La mayoría de agentes en producción son variaciones de tres patrones. Si dominas estos tres, puedes construir casi cualquier agente que necesites.</p>
+
+<h3>Patrón 1: Agente Secuencial</h3>
+
+<h4>¿Cuándo usarlo?</h4>
+
+<p>Usa este patrón cuando necesitas que Claude procese algo paso a paso con herramientas disponibles, pero el flujo es lineal. Ejemplos reales:</p>
+
+<ul>
+<li>Clasificar documentos y guardarlos en la categoría correcta</li>
+<li>Analizar un ticket de soporte y generar una respuesta sugerida</li>
+<li>Revisar código y generar un reporte de problemas</li>
+<li>Procesar facturas y extraer campos específicos</li>
+</ul>
+
+<p>La característica es que hay una sola "misión" con herramientas de apoyo, y termina cuando Claude dice que terminó.</p>
+
+<h4>Código comentado</h4>
+
+<p>Crea el archivo <code>patron-secuencial.ts</code>: (omitido por brevedad — ver archivo markdown original para código completo)</p>
+
+<h3>Patrón 2: Agente Multi-herramienta</h3>
+
+<h4>¿Cuándo usarlo?</h4>
+
+<p>Usa este patrón cuando tu agente necesita combinar múltiples herramientas para completar una tarea. La diferencia con el patrón secuencial es que aquí Claude decide en tiempo real qué herramientas usar y en qué orden.</p>
+
+<ul>
+<li>Agente de investigación que busca en docs, llama a APIs externas, y genera un reporte</li>
+<li>Agente de soporte que consulta el historial del cliente, revisa el inventario, y crea un ticket</li>
+<li>Agente de onboarding que crea usuario, configura permisos, y envía email de bienvenida</li>
+</ul>
+
+<h3>Patrón 3: Agente con Estado (Stateful)</h3>
+
+<h4>¿Cuándo usarlo?</h4>
+
+<p>Usa este patrón cuando necesitas:</p>
+
+<ul>
+<li>Conversaciones multi-turno que recuerdan contexto previo</li>
+<li>Flujos de trabajo que acumulan información a lo largo de varios pasos</li>
+<li>Agentes que aprenden del usuario durante la sesión</li>
+<li>Workflows donde cada paso depende de los resultados anteriores</li>
+</ul>
+
+<hr />
+
+<h2>5. Convenciones y buenas prácticas</h2>
+
+<h3>Nombrado de variables y funciones</h3>
+
+<pre><code class="language-typescript">// ✅ Nombres descriptivos que explican qué hace la función
+async function procesarTicketDesoporte(ticketId: string): Promise&lt;TicketProcessado&gt;
+async function clasificarDocumento(texto: string): Promise&lt;Clasificacion&gt;
+const mensajesConversacion: Anthropic.MessageParam[] = [];
+const resultadosHerramientas: Anthropic.ToolResultBlockParam[] = [];
+
+// ❌ Nombres genéricos que no dicen nada
+async function process(id: string): Promise&lt;any&gt;
+async function doThing(text: string): Promise&lt;string&gt;
+const msgs: any[] = [];
+const results: any[] = [];
+</code></pre>
+
+<h3>Estructura de las herramientas</h3>
+
+<pre><code class="language-typescript">// ✅ Descripción detallada, enum para valores posibles, required bien definido
+{
+  name: "actualizar_estado_pedido",
+  description: "Actualiza el estado de un pedido en el sistema. Úsala solo cuando el cliente confirme que quiere cambiar el estado. Retorna confirmación o error.",
+  input_schema: {
+    type: "object" as const,
+    properties: {
+      pedido_id: {
+        type: "string",
+        description: "ID del pedido en formato PED-XXXX",
+      },
+      nuevo_estado: {
+        type: "string",
+        enum: ["pendiente", "en_proceso", "enviado", "entregado", "cancelado"],
+        description: "Nuevo estado del pedido",
+      },
+    },
+    required: ["pedido_id", "nuevo_estado"],
+  },
+}
+
+// ❌ Descripción vaga, sin enum, sin required explícito
+{
+  name: "update",
+  description: "Updates something",
+  input_schema: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      status: { type: "string" },
+    },
+  },
+}
+</code></pre>
+
+<h3>Manejo de errores</h3>
+
+<pre><code class="language-typescript">// ✅ Manejo específico con tipos de error diferenciados
+async function llamarAgenteConManejo(query: string): Promise&lt;string&gt; {
+  try {
+    return await agenteLoop(query);
+  } catch (error) {
+    // Error de autenticación: la API key es inválida
+    if (error instanceof Anthropic.AuthenticationError) {
+      console.error("API key inválida. Verifica ANTHROPIC_API_KEY en tu .env");
+      throw error; // re-lanzamos, no hay recuperación posible
+    }
+
+    // Error de rate limit: demasiadas solicitudes
+    if (error instanceof Anthropic.RateLimitError) {
+      console.warn("Rate limit alcanzado. Esperando 60 segundos...");
+      await new Promise(resolve =&gt; setTimeout(resolve, 60000));
+      return llamarAgenteConManejo(query); // reintentamos una vez
+    }
+
+    // Error de timeout: la solicitud tardó demasiado
+    if (error instanceof Anthropic.APITimeoutError) {
+      console.error("Timeout. El agente tardó demasiado.");
+      return "Error: timeout al procesar la solicitud";
+    }
+
+    // Error desconocido: lo logueamos para investigar
+    console.error("Error no esperado:", error);
+    throw error;
+  }
+}
+</code></pre>
+
+<h3>Control de costos</h3>
+
+<pre><code class="language-typescript">// ✅ Siempre trackea tokens y calcula costos
+interface ResultadoAgente {
+  respuesta: string;
+  tokensEntrada: number;
+  tokensSalida: number;
+  costoEstimadoUSD: number;
+  iteraciones: number;
+}
+
+// Precios aproximados de claude-opus-4-5 (verifica en docs.anthropic.com)
+const PRECIO_POR_MILLON_INPUT = 15.0;   // USD por 1M tokens de entrada
+const PRECIO_POR_MILLON_OUTPUT = 75.0;  // USD por 1M tokens de salida
+
+function calcularCosto(tokensInput: number, tokensOutput: number): number {
+  return (tokensInput / 1_000_000) * PRECIO_POR_MILLON_INPUT +
+         (tokensOutput / 1_000_000) * PRECIO_POR_MILLON_OUTPUT;
+}
+</code></pre>
+
+<hr />
+
+<h2>6. Antipatrones comunes</h2>
+
+<p>Estos son errores reales que comete casi todo desarrollador que empieza con agentes. Los ponemos explícitamente para que los reconozcas cuando los veas (o cuando los cometas tú mismo).</p>
+
+<h3>Antipatrón 1: No acumular mensajes</h3>
+
+<pre><code class="language-typescript">// ❌ INCORRECTO: recreamos mensajes en cada iteración
+while (condicion) {
+  const respuesta = await cliente.messages.create({
+    model: "claude-opus-4-5",
+    max_tokens: 1024,
+    messages: [{ role: "user", content: preguntaOriginal }], // siempre el mismo!
+  });
+  // Claude no sabe lo que pasó en iteraciones anteriores
+}
+
+// ✅ CORRECTO: acumulamos todos los mensajes
+const mensajes: Anthropic.MessageParam[] = [{ role: "user", content: preguntaOriginal }];
+while (condicion) {
+  const respuesta = await cliente.messages.create({
+    model: "claude-opus-4-5",
+    max_tokens: 1024,
+    messages: mensajes, // el historial completo
+  });
+
+  // Agregamos la respuesta del asistente antes de la siguiente iteración
+  mensajes.push({ role: "assistant", content: respuesta.content });
+}
+</code></pre>
+
+<p><strong>Por qué importa</strong>: Sin el historial completo, Claude no sabe qué herramientas ya usó ni qué decidió en pasos anteriores. El agente se comporta de forma errática o entra en loops.</p>
+
+<h3>Antipatrón 2: No limitar las iteraciones</h3>
+
+<pre><code class="language-typescript">// ❌ INCORRECTO: loop sin límite (puede correr para siempre)
+while (true) {
+  const respuesta = await cliente.messages.create({ ... });
+  if (respuesta.stop_reason === "end_turn") break;
+  // Si hay un bug y stop_reason nunca llega, esto corre hasta que te quedes sin dinero
+}
+
+// ✅ CORRECTO: siempre con límite máximo
+const MAX_ITERACIONES = 15;
+let iteracion = 0;
+while (iteracion &lt; MAX_ITERACIONES) {
+  iteracion++;
+  const respuesta = await cliente.messages.create({ ... });
+  if (respuesta.stop_reason === "end_turn") break;
+}
+if (iteracion &gt;= MAX_ITERACIONES) {
+  console.error(`Agente superó ${MAX_ITERACIONES} iteraciones. Revisa la lógica.`);
+}
+</code></pre>
+
+<p><strong>Por qué importa</strong>: Un agente en producción sin límite de iteraciones puede consumir cientos de dólares en minutos si hay un bug en la lógica de stop.</p>
+
+<h3>Antipatrón 3: Guardar las respuestas de assistant como texto puro</h3>
+
+<pre><code class="language-typescript">// ❌ INCORRECTO: convertir la respuesta a texto antes de guardarla
+if (respuesta.stop_reason === "tool_use") {
+  const textoRespuesta = respuesta.content[0].type === "text" ? respuesta.content[0].text : "";
+  mensajes.push({ role: "assistant", content: textoRespuesta }); // ¡MAL!
+  // Perdemos los bloques tool_use, Claude no puede continuar correctamente
+}
+
+// ✅ CORRECTO: guardar el content completo tal como viene
+if (respuesta.stop_reason === "tool_use") {
+  mensajes.push({ role: "assistant", content: respuesta.content }); // el array completo
+  // respuesta.content puede tener [{ type: "text", text: "..." }, { type: "tool_use", ... }]
+}
+</code></pre>
+
+<p><strong>Por qué importa</strong>: Cuando <code>stop_reason</code> es <code>tool_use</code>, <code>respuesta.content</code> contiene bloques de tipo <code>tool_use</code> que necesitan estar en el historial. Si los pierdes, Claude no puede correlacionar las tools que pidió con los resultados que le das.</p>
+
+<h3>Antipatrón 4: Ignorar el tipo de bloque antes de leer <code>.text</code></h3>
+
+<pre><code class="language-typescript">// ❌ INCORRECTO: asumir que todos los bloques son texto
+const textoFinal = respuesta.content[0].text; // TypeError si el bloque es tool_use!
+
+// ✅ CORRECTO: verificar el tipo antes de acceder a propiedades específicas
+const textoFinal = respuesta.content
+  .filter(bloque =&gt; bloque.type === "text")
+  .map(bloque =&gt; bloque.type === "text" ? bloque.text : "")
+  .join("");
+</code></pre>
+
+<p><strong>Por qué importa</strong>: En TypeScript, el tipo de <code>respuesta.content[0]</code> es una unión: puede ser <code>TextBlock</code> o <code>ToolUseBlock</code>. Si accedes a <code>.text</code> en un <code>ToolUseBlock</code>, TypeScript (y el runtime) se quejan.</p>
+
+<h3>Antipatrón 5: Descripciones de herramientas vagas</h3>
+
+<pre><code class="language-typescript">// ❌ INCORRECTO: descripción vaga que confunde a Claude
+{
+  name: "db_query",
+  description: "Makes a database query", // ¿Cuándo usarla? ¿Qué retorna?
+  input_schema: { ... }
+}
+
+// ✅ CORRECTO: descripción que responde: ¿cuándo?, ¿qué hace?, ¿qué retorna?
+{
+  name: "buscar_pedidos_cliente",
+  description: "Busca todos los pedidos de un cliente específico. " +
+    "Úsala cuando necesites historial de compras. " +
+    "Retorna array de pedidos con ID, fecha, monto y estado. " +
+    "Si el cliente no existe, retorna array vacío.",
+  input_schema: { ... }
+}
+</code></pre>
+
+<p><strong>Por qué importa</strong>: Claude decide qué herramienta usar basándose en la descripción. Descripciones vagas resultan en herramientas mal usadas, ignoradas, o usadas en momentos incorrectos.</p>
+
+<h3>Antipatrón 6: No manejar el caso de <code>tool_result</code> vacío</h3>
+
+<pre><code class="language-typescript">// ❌ INCORRECTO: asumir que la herramienta siempre tiene contenido
+const resultado = ejecutarHerramienta(nombre, parametros);
+resultados.push({
+  type: "tool_result",
+  tool_use_id: bloque.id,
+  content: resultado, // si resultado es "" o null, puede haber problemas
+});
+
+// ✅ CORRECTO: siempre retornar algo significativo
+const resultado = ejecutarHerramienta(nombre, parametros);
+resultados.push({
+  type: "tool_result",
+  tool_use_id: bloque.id,
+  content: resultado || "La herramienta se ejecutó pero no retornó datos.", // fallback
+});
+</code></pre>
+
+<p><strong>Por qué importa</strong>: Un <code>content</code> vacío o null en <code>tool_result</code> puede causar errores en la API o comportamiento inesperado de Claude.</p>
+
+<h3>Antipatrón 7: Usar <code>any</code> para los parámetros de herramientas</h3>
+
+<pre><code class="language-typescript">// ❌ INCORRECTO: perder el tipado de TypeScript
+function ejecutarHerramienta(nombre: string, parametros: any): string {
+  const resultado = hacerAlgo(parametros.campoQueQuizasNoExiste); // sin seguridad
+}
+
+// ✅ CORRECTO: usar tipos específicos o al menos Record con tipo conocido
+function ejecutarHerramienta(nombre: string, parametros: Record&lt;string, unknown&gt;): string {
+  // Para cada herramienta, convertimos al tipo específico
+  if (nombre === "buscar_cliente") {
+    const params = parametros as { email: string };
+    return buscarCliente(params.email);
+  }
+}
+</code></pre>
+
+<p><strong>Por qué importa</strong>: Los bugs de tipo en tiempo de ejecución son difíciles de debuggear. El tipado explícito hace que los errores aparezcan en compilación, no en producción.</p>
+
+<h3>Antipatrón 8: No loguear información útil para debugging</h3>
+
+<pre><code class="language-typescript">// ❌ INCORRECTO: no saber qué pasó cuando falla en producción
+while (condicion) {
+  const respuesta = await cliente.messages.create({ ... });
+  // Si falla, ¿qué estaba haciendo el agente? No sabes.
+}
+
+// ✅ CORRECTO: logs estructurados que permiten reconstruir el flujo
+while (condicion) {
+  iteracion++;
+  const respuesta = await cliente.messages.create({ ... });
+
+  // Log estructurado: timestamp, sesion, iteracion, stop_reason, tokens
+  console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    sesionId,
+    iteracion,
+    stopReason: respuesta.stop_reason,
+    tokensInput: respuesta.usage.input_tokens,
+    tokensOutput: respuesta.usage.output_tokens,
+    herramientasPedidas: respuesta.content
+      .filter(b =&gt; b.type === "tool_use")
+      .map(b =&gt; b.type === "tool_use" ? b.name : ""),
+  }));
+}
+</code></pre>
+
+<p><strong>Por qué importa</strong>: En producción, cuando algo falla a las 3am, los logs son tu única ventana a lo que pasó. Sin logs estructurados, diagnósticar problemas puede tomar horas.</p>
+
+<hr />
+
+<h2>7. Producción: checklist antes de deploy</h2>
+
+<p>Este es el checklist que debes revisar antes de poner un agente en producción. No es opcional, es la diferencia entre un agente que funciona y uno que te despierta a las 3am.</p>
+
+<h3>Seguridad</h3>
+
+<ul>
+<li><input type="checkbox"> <strong>API key en variables de entorno</strong>: <code>ANTHROPIC_API_KEY</code> nunca hardcodeado en el código fuente</li>
+<li><input type="checkbox"> <strong>API key fuera del repositorio</strong>: <code>.env</code> en <code>.gitignore</code>, confirmado con <code>git status</code></li>
+<li><input type="checkbox"> <strong>Validación de inputs</strong>: Los datos que entran al agente (especialmente los que vienen de usuarios externos) están sanitizados</li>
+<li><input type="checkbox"> <strong>Outputs de tools saneados</strong>: El resultado de herramientas no incluye datos sensibles antes de pasárselos a Claude</li>
+<li><input type="checkbox"> <strong>Sin secretos en logs</strong>: Los logs no imprimen API keys, passwords, ni datos PII del usuario</li>
+</ul>
+
+<h3>Resiliencia</h3>
+
+<ul>
+<li><input type="checkbox"> <strong>Límite de iteraciones</strong>: Cada loop tiene <code>maxIteraciones</code> con valor configurado</li>
+<li><input type="checkbox"> <strong>Timeout por herramienta</strong>: Las herramientas que llaman a APIs externas tienen timeout (ej: 30 segundos)</li>
+<li><input type="checkbox"> <strong>Manejo de <code>RateLimitError</code></strong>: El agente espera y reintenta cuando alcanza el rate limit de Anthropic</li>
+<li><input type="checkbox"> <strong>Manejo de <code>APITimeoutError</code></strong>: El agente retorna un error claro cuando Claude no responde a tiempo</li>
+<li><input type="checkbox"> <strong>Manejo de <code>AuthenticationError</code></strong>: Error claro cuando la API key es inválida (no retry, es configuración)</li>
+<li><input type="checkbox"> <strong>Reintento con backoff exponencial</strong>: Los errores transitorios reintentan con delays crecientes (1s, 2s, 4s)</li>
+<li><input type="checkbox"> <strong>Respuesta de fallback</strong>: Si el agente falla completamente, hay un mensaje de error útil para el usuario</li>
+</ul>
+
+<h3>Observabilidad</h3>
+
+<ul>
+<li><input type="checkbox"> <strong>Logs estructurados por iteración</strong>: JSON con timestamp, sesionId, iteración, stop_reason, tokens usados</li>
+<li><input type="checkbox"> <strong>Tracking de costos</strong>: Cada ejecución registra cuántos tokens usó y el costo estimado</li>
+<li><input type="checkbox"> <strong>Alertas de costo anómalo</strong>: Si una sesión consume más de N tokens, se genera una alerta</li>
+<li><input type="checkbox"> <strong>Métricas de herramientas</strong>: Qué herramientas se usan más, cuánto tardan, cuántas veces fallan</li>
+</ul>
+
+<h3>Performance</h3>
+
+<ul>
+<li><input type="checkbox"> <strong>max_tokens configurado correctamente</strong>: No tan bajo que corte respuestas, no tan alto que desperdicie dinero</li>
+<li><input type="checkbox"> <strong>Herramientas en paralelo cuando es posible</strong>: Si Claude pide dos herramientas independientes, ejecutarlas con <code>Promise.all</code></li>
+<li><input type="checkbox"> <strong>Prompt caching considerado</strong>: Para system prompts largos que se repiten, usar prompt caching de Anthropic</li>
+</ul>
+
+<h3>Testing</h3>
+
+<ul>
+<li><input type="checkbox"> <strong>Tests unitarios para cada herramienta</strong>: Cada función en el switch de <code>ejecutarHerramienta</code> tiene tests</li>
+<li><input type="checkbox"> <strong>Test de integración end-to-end</strong>: Al menos un test que ejecute el loop completo con herramientas mock</li>
+<li><input type="checkbox"> <strong>Test de casos de error</strong>: Tests que verifican que el agente maneja correctamente errores de herramientas</li>
+<li><input type="checkbox"> <strong>Test de límite de iteraciones</strong>: Test que verifica que el agente se detiene al llegar al máximo</li>
+</ul>
+
+<h3>Operaciones</h3>
+
+<ul>
+<li><input type="checkbox"> <strong>Variables de entorno documentadas</strong>: README lista todas las variables requeridas y cómo obtenerlas</li>
+<li><input type="checkbox"> <strong>Configuración de modelo externalizada</strong>: El nombre del modelo no está hardcodeado, es una constante o variable de entorno</li>
+<li><input type="checkbox"> <strong>Procedimiento de rollback</strong>: Si el agente falla en producción, cómo revertir rápidamente</li>
+<li><input type="checkbox"> <strong>Monitoring definido</strong>: Qué métricas monitoreamos y qué umbrales disparan alertas</li>
+</ul>
+
+<hr />
+
+<h2>8. Ejercicio integrador</h2>
+
+<p>Este ejercicio usa todos los conceptos de la guía. No lo hagas de un tirón, tómate el tiempo para entender cada paso.</p>
+
+<h3>El desafío: Agente de análisis de CVs</h3>
+
+<p>Vas a construir un agente que procesa CVs de candidatos para una posición técnica. El agente debe:</p>
+
+<ol>
+<li>Recibir el texto de un CV</li>
+<li>Extraer información estructurada (nombre, skills, experiencia)</li>
+<li>Evaluar si el candidato cumple los requisitos del puesto</li>
+<li>Generar un reporte de evaluación y guardarlo</li>
+</ol>
+
+<h3>Paso 1: Define las herramientas</h3>
+
+<p>Crea el archivo <code>ejercicio-agente-cv.ts</code> y define estas tres herramientas:</p>
+
+<ul>
+<li><code>extraer_informacion_cv</code>: Extrae nombre, email, skills técnicos, años de experiencia del texto del CV</li>
+<li><code>evaluar_candidato</code>: Evalúa si el candidato cumple requisitos dados (skills requeridos, años de experiencia mínimos)</li>
+<li><code>guardar_evaluacion</code>: Guarda el resultado de la evaluación con una recomendación (contratar, segunda entrevista, rechazar)</li>
+</ul>
+
+<p>Cada tool debe tener:</p>
+
+<ul>
+<li>Nombre descriptivo</li>
+<li>Descripción que explica cuándo usarla y qué retorna</li>
+<li>Schema con tipos específicos (usa <code>enum</code> donde aplique para <code>recomendacion</code>)</li>
+</ul>
+
+<h3>Paso 2: Implementa las funciones de herramientas</h3>
+
+<p>Implementa la función <code>ejecutarHerramienta</code> con lógica mock para cada tool:</p>
+
+<ul>
+<li><code>extraer_informacion_cv</code>: Simula parsear el CV. Puedes hardcodear que retorna un JSON con los datos</li>
+<li><code>evaluar_candidato</code>: Compara skills y años. Retorna si cumple o no, con razones específicas</li>
+<li><code>guardar_evaluacion</code>: "Guarda" en un array en memoria. Retorna confirmación con ID generado</li>
+</ul>
+
+<h3>Paso 3: Implementa el loop del agente</h3>
+
+<p>Implementa la función <code>procesarCV(textoCv: string)</code> que:</p>
+
+<ul>
+<li>Inicializa el historial de mensajes con el CV y las instrucciones</li>
+<li>Corre el loop con máximo 10 iteraciones</li>
+<li>Acumula mensajes correctamente</li>
+<li>Maneja <code>end_turn</code> y <code>tool_use</code> según los patrones de esta guía</li>
+<li>Retorna el reporte final de Claude</li>
+</ul>
+
+<h3>Paso 4: Agrega tracking de costos</h3>
+
+<p>Modifica la función para que retorne no solo el reporte sino también:</p>
+
+<ul>
+<li>Total de tokens de entrada y salida</li>
+<li>Costo estimado en USD</li>
+<li>Número de iteraciones usadas</li>
+<li>Qué herramientas se llamaron y en qué orden</li>
+</ul>
+
+<h3>Paso 5: Prueba con 3 CVs diferentes</h3>
+
+<p>Crea un array con 3 CVs mock:</p>
+
+<p><strong>CV 1 (candidato ideal)</strong>:</p>
+
+<pre><code>Juan García - juan@email.com
+5 años de experiencia en TypeScript, Node.js, PostgreSQL
+Trabajó en startups de fintech. Lideró equipo de 3 personas.
+</code></pre>
+
+<p><strong>CV 2 (candidato con gap)</strong>:</p>
+
+<pre><code>Ana López - ana@email.com
+2 años de experiencia. Conoce Python y algo de JavaScript.
+Sin experiencia en bases de datos SQL.
+</code></pre>
+
+<p><strong>CV 3 (candidato sobrecalificado)</strong>:</p>
+
+<pre><code>Pedro Martínez - pedro@empresa.com
+12 años de experiencia. CTO de dos empresas.
+Amplio dominio de arquitectura cloud, microservicios, machine learning.
+</code></pre>
+
+<p>Ejecuta el agente con los tres CVs y verifica que genera recomendaciones coherentes.</p>
+
+<h3>Paso 6: Agrega manejo de errores de producción</h3>
+
+<p>Envuelve la llamada principal en un try-catch que maneje:</p>
+
+<ul>
+<li><code>Anthropic.RateLimitError</code>: espera 30 segundos y reintenta una vez</li>
+<li><code>Anthropic.APITimeoutError</code>: retorna error descriptivo sin reintentar</li>
+<li>Cualquier otro error: lo logea con contexto (qué CV estaba procesando) y lo re-lanza</li>
+</ul>
+
+<h3>Criterios de éxito</h3>
+
+<p>Tu ejercicio está completo cuando:</p>
+
+<ul>
+<li><input type="checkbox"> El agente procesa los 3 CVs sin errores</li>
+<li><input type="checkbox"> Cada CV genera una recomendación diferente y coherente con el perfil</li>
+<li><input type="checkbox"> El tracking de costos muestra datos reales de cada ejecución</li>
+<li><input type="checkbox"> Hay logs estructurados que muestran el flujo de cada iteración</li>
+<li><input type="checkbox"> El código compila con TypeScript sin errores de tipo (<code>npx tsc --noEmit</code>)</li>
+<li><input type="checkbox"> El manejo de errores cubre los tres casos del Paso 6</li>
+</ul>
+
+<hr />
+
+<h2>Referencia rápida</h2>
+
+<p>Para cuando necesites recordar algo sin releer todo:</p>
+
+<pre><code>LOOP BÁSICO:
+  mensajes = [{ role: "user", content: pregunta }]
+  while iteracion &lt; MAX:
+    respuesta = await cliente.messages.create({ model, max_tokens, tools, messages: mensajes })
+    if respuesta.stop_reason == "end_turn": return texto
+    if respuesta.stop_reason == "tool_use":
+      mensajes.push({ role: "assistant", content: respuesta.content })
+      para cada tool_use: ejecutar y crear tool_result
+      mensajes.push({ role: "user", content: [tool_results] })
+
+STOP REASONS:
+  "end_turn"  → agente terminó, extraer texto de respuesta.content
+  "tool_use"  → agente quiere herramienta, ejecutar y continuar loop
+
+ERRORES COMUNES:
+  1. No acumular mensajes → Claude "olvida" el contexto
+  2. Sin límite de iteraciones → puede correr indefinidamente
+  3. Guardar content como texto puro → pierdes bloques tool_use
+  4. Acceder a .text sin verificar tipo → TypeError en runtime
+  5. Descripciones de tools vagas → Claude usa tools incorrectamente
+</code></pre>
+
+<hr />
+
+<p><strong>Documento</strong>: Agent SDK Guía Práctica para Producción<br />
+<strong>Nivel</strong>: Fundamentos → Producción<br />
+<strong>Duración estimada</strong>: 3-4 horas (incluyendo ejercicios)<br />
+<strong>Siguiente paso</strong>: Adaptive Thinking - manejo de razonamiento complejo<br />
+<strong>Actualizado</strong>: Mayo 2026</p>
+
                 </div>
             </section>
 
@@ -28671,6 +29639,1628 @@ exit 0</code></pre>
                         <strong>Última actualización:</strong> 2026-05-16
                     </p>
 
+                </section>
+                <!-- ========== SECCIÓN: NIVEL 2 - COST MANAGEMENT & ROI ========== -->
+                <section class="content-section" data-section="nivel-2-cost-management">
+                    <div class="section-header">
+                        <h1>Cost Management & ROI — Nivel 2</h1>
+                        <p>Optimizar costos sin perder velocidad. Precios actualizados mayo 2026, cálculo de ROI y presupuestos por equipo.</p>
+                    </div>
+
+                    <div class="content">
+                        <blockquote>
+                            <p>Precios actualizados mayo 2026. Cálculo de costos por tarea. Dashboard en console.anthropic.com. Calculadora simple. Presupuestos por equipo.</p>
+                        </blockquote>
+
+                        <h2>Introducción</h2>
+                        <p>Claude Code está diseñado para maximizar productividad, pero sin control de costos puede escalar rápidamente. Esta sección te enseña a:</p>
+                        <ul class="bullet-list">
+                            <li>Entender el modelo de precios actual (2026)</li>
+                            <li>Calcular ROI de automaciones</li>
+                            <li>Configurar alertas y límites</li>
+                            <li>Optimizar gasto sin perder velocidad</li>
+                        </ul>
+                        <p><strong>Tiempo estimado:</strong> 50 minutos<br>
+                        <strong>Requisitos:</strong> Cuenta Anthropic con acceso a console<br>
+                        <strong>Nivel de dificultad:</strong> Intermedio</p>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+
+                        <h2>1. Tabla de Precios (Mayo 2026)</h2>
+
+                        <h3>Modelos y Costos</h3>
+                        <table class="pricing-table">
+                            <thead>
+                                <tr>
+                                    <th>Modelo</th>
+                                    <th>Contexto</th>
+                                    <th>Input</th>
+                                    <th>Output</th>
+                                    <th>Casos de uso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Claude 3.5 Haiku</strong></td>
+                                    <td>200K</td>
+                                    <td>$0.80/MTok</td>
+                                    <td>$4.00/MTok</td>
+                                    <td>Tareas simples, análisis, CLI</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Claude 3.5 Sonnet</strong></td>
+                                    <td>200K</td>
+                                    <td>$3.00/MTok</td>
+                                    <td>$15.00/MTok</td>
+                                    <td>Código general, refactorización</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Claude 3.5 Opus</strong></td>
+                                    <td>200K</td>
+                                    <td>$15.00/MTok</td>
+                                    <td>$45.00/MTok</td>
+                                    <td>Investigación, arquitectura, análisis profundo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Claude 4 (legacy)</strong></td>
+                                    <td>200K</td>
+                                    <td>$8.00/MTok</td>
+                                    <td>$24.00/MTok</td>
+                                    <td>Tareas críticas, complejas</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Claude 3 Haiku</strong></td>
+                                    <td>200K</td>
+                                    <td>$0.50/MTok</td>
+                                    <td>$2.50/MTok</td>
+                                    <td>Heredado (no usar)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p><strong>Conversión:</strong> 1 MTok = 1,000,000 tokens ≈ 750,000 palabras</p>
+
+                        <h3>Ejemplos de Costos Reales</h3>
+
+                        <h4>Escenario 1: Code Review (Sonnet)</h4>
+                        <pre><code>Input:  500 líneas código × 4 tokens/línea = 2,000 tokens
+Output: 300 líneas comentarios = 800 tokens
+Total:  2,800 tokens = $0.0084 + $0.012 = $0.0204 (~2 centavos)</code></pre>
+
+                        <h4>Escenario 2: Refactorización compleja (Opus)</h4>
+                        <pre><code>Input:  3,000 líneas código + contexto = 12,000 tokens
+Output: 4,000 líneas refactorizadas = 3,200 tokens
+Total:  15,200 tokens = $0.228 + $0.144 = $0.372 (~37 centavos)</code></pre>
+
+                        <h4>Escenario 3: Investigación de arquitectura (Opus)</h4>
+                        <pre><code>Input:  Pregunta + 5 documentos = 40,000 tokens
+Output: Especificación detallada = 8,000 tokens
+Total:  48,000 tokens = $0.60 + $0.36 = $0.96 (~1 dólar)</code></pre>
+
+                        <h3>Promedio mensual por rol</h3>
+                        <table class="pricing-table">
+                            <thead>
+                                <tr>
+                                    <th>Rol</th>
+                                    <th>Promedio uso</th>
+                                    <th>Costo/mes</th>
+                                    <th>Modelos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Frontend dev</td>
+                                    <td>500K tokens</td>
+                                    <td>$2.50</td>
+                                    <td>Haiku, Sonnet</td>
+                                </tr>
+                                <tr>
+                                    <td>Backend dev</td>
+                                    <td>800K tokens</td>
+                                    <td>$4.20</td>
+                                    <td>Sonnet, Opus (20%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Arquitecto</td>
+                                    <td>1.2M tokens</td>
+                                    <td>$8.50</td>
+                                    <td>Opus (60%), Sonnet</td>
+                                </tr>
+                                <tr>
+                                    <td>QA/Tester</td>
+                                    <td>300K tokens</td>
+                                    <td>$1.50</td>
+                                    <td>Haiku</td>
+                                </tr>
+                                <tr>
+                                    <td>Tech Lead</td>
+                                    <td>2.5M tokens</td>
+                                    <td>$15.00</td>
+                                    <td>Opus (70%), Sonnet</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Promedio equipo 5 dev</strong></td>
+                                    <td><strong>5.3M tokens</strong></td>
+                                    <td><strong>$32/mes</strong></td>
+                                    <td>Mixto</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+
+                        <h2>2. Cálculo de ROI</h2>
+
+                        <h3>Fórmula simple</h3>
+                        <pre><code>ROI = (Valor generado - Costo de Claude Code) / Costo total × 100%
+
+Valor generado = Horas ahorradas × Sueldo/hora</code></pre>
+
+                        <h3>Ejemplos reales</h3>
+
+                        <h4>Caso 1: Refactorización de legacy code</h4>
+                        <p><strong>Escenario:</strong></p>
+                        <ul class="bullet-list">
+                            <li>Tiempo manual: 40 horas de dev senior ($75/h) = $3,000</li>
+                            <li>Tiempo con Claude Code: 4 horas = $300 + $2 (API)</li>
+                            <li>Total ahorro: $3,000 - $302 = $2,698</li>
+                        </ul>
+                        <pre><code>ROI = $2,698 / $302 × 100% = 893% ✓ EXCELENTE</code></pre>
+
+                        <h4>Caso 2: Testing automático</h4>
+                        <p><strong>Escenario:</strong></p>
+                        <ul class="bullet-list">
+                            <li>100 funciones sin tests</li>
+                            <li>Manual: 30 horas × $60/h = $1,800</li>
+                            <li>Con Claude Code: 3 horas + $15 API = $195</li>
+                            <li>Ahorro: $1,605</li>
+                        </ul>
+                        <pre><code>ROI = $1,605 / $195 × 100% = 823% ✓ EXCELENTE</code></pre>
+
+                        <h4>Caso 3: Code review asistido</h4>
+                        <p><strong>Escenario:</strong></p>
+                        <ul class="bullet-list">
+                            <li>50 PRs mensuales × 2 horas = 100 horas/mes</li>
+                            <li>Manual: $6,000/mes (QA engineer)</li>
+                            <li>Con Claude Code: 50 horas × $30/h = $1,500 + $50 API</li>
+                            <li>Total: $1,550</li>
+                        </ul>
+                        <pre><code>ROI = (6,000 - 1,550) / 1,550 × 100% = 287% ✓ MUY BUENO</code></pre>
+
+                        <h4>Caso 4: Debugging (medio)</h4>
+                        <p><strong>Escenario:</strong></p>
+                        <ul class="bullet-list">
+                            <li>Bug production crítico</li>
+                            <li>Manual: 6 horas × $75/h = $450</li>
+                            <li>Con Claude Code: 45 min + $5 API = $62.50</li>
+                            <li>Ahorro: $387.50</li>
+                        </ul>
+                        <pre><code>ROI = $387.50 / $62.50 × 100% = 620% ✓ EXCELENTE</code></pre>
+
+                        <h3>Matriz ROI por caso de uso</h3>
+                        <table class="pricing-table">
+                            <thead>
+                                <tr>
+                                    <th>Caso de uso</th>
+                                    <th>Esfuerzo manual</th>
+                                    <th>Costo API</th>
+                                    <th>ROI</th>
+                                    <th>Recomendación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Code review</td>
+                                    <td>Alto (2-4h)</td>
+                                    <td>Bajo ($5)</td>
+                                    <td>800-1200%</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Refactorización</td>
+                                    <td>Muy alto (8-40h)</td>
+                                    <td>Medio ($20)</td>
+                                    <td>900%+</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Tests generación</td>
+                                    <td>Alto (4-8h)</td>
+                                    <td>Bajo ($10)</td>
+                                    <td>500-800%</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Debugging</td>
+                                    <td>Medio (2-6h)</td>
+                                    <td>Bajo ($5)</td>
+                                    <td>400-600%</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Documentación</td>
+                                    <td>Medio (3-5h)</td>
+                                    <td>Bajo ($3)</td>
+                                    <td>300-500%</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Brainstorm arquitectura</td>
+                                    <td>Alto (6-12h)</td>
+                                    <td>Medio ($30)</td>
+                                    <td>700%+</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>MCP/Skill custom</td>
+                                    <td>Muy alto (20-40h)</td>
+                                    <td>Medio ($50)</td>
+                                    <td>1000%+</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Traducción código</td>
+                                    <td>Medio (4-8h)</td>
+                                    <td>Bajo ($5)</td>
+                                    <td>600-900%</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Análisis de seguridad</td>
+                                    <td>Alto (6-8h)</td>
+                                    <td>Medio ($20)</td>
+                                    <td>500-700%</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Optimización perf</td>
+                                    <td>Muy alto (8-20h)</td>
+                                    <td>Medio ($20)</td>
+                                    <td>800%+</td>
+                                    <td>USAR SIEMPRE</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p><strong>Conclusión:</strong> Casi TODO tiene ROI positivo. El costo de API es negligible vs. ahorro de horas.</p>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+
+                        <h2>3. Dashboard en console.anthropic.com</h2>
+
+                        <h3>Acceso a métricas</h3>
+                        <ol class="numbered-list">
+                            <li><strong>Ir a:</strong> https://console.anthropic.com/dashboard</li>
+                            <li><strong>Sección:</strong> "Usage" o "Billing"</li>
+                            <li><strong>Vistas disponibles:</strong></li>
+                        </ol>
+
+                        <h4>Vista 1: Resumen de uso</h4>
+                        <pre><code>Period: Last 30 days
+├─ Input tokens:   5,234,000 (85%)
+├─ Output tokens:  924,600 (15%)
+├─ Total:          6,158,600
+└─ Estimated cost: $28.50</code></pre>
+
+                        <h4>Vista 2: Desglose por modelo</h4>
+                        <pre><code>Claude 3.5 Sonnet
+├─ Input:   3.2M tokens ($9.60)
+├─ Output:  580K tokens ($8.70)
+└─ Subtotal: $18.30 (64%)
+
+Claude 3.5 Opus
+├─ Input:   1.8M tokens ($27.00)
+├─ Output:  280K tokens ($12.60)
+└─ Subtotal: $39.60 (78%)
+
+Claude 3.5 Haiku
+├─ Input:   234K tokens ($0.19)
+├─ Output:  64K tokens ($0.26)
+└─ Subtotal: $0.45 (<1%)</code></pre>
+
+                        <h4>Vista 3: Gráficos temporales</h4>
+                        <ul class="bullet-list">
+                            <li><strong>Línea:</strong> Tokens por día (últimos 30 días)</li>
+                            <li><strong>Área:</strong> Costo acumulado</li>
+                            <li><strong>Barras:</strong> Comparativa Sonnet vs Opus</li>
+                        </ul>
+
+                        <h3>Exportar datos</h3>
+                        <pre><code>Formato: CSV
+Incluye: Timestamp, Modelo, Tokens input, Tokens output, Costo
+Usar para: Análisis detallado, reportes a stakeholders</code></pre>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+
+                        <h2>4. Calculadora Simple (CLI/Web)</h2>
+
+                        <h3>Calculadora CLI</h3>
+                        <pre><code># Instalar
+npm install @anthropic-ai/claude-cost-calculator
+
+# Usar
+claude-cost calculate \
+  --model sonnet \
+  --input-tokens 5000 \
+  --output-tokens 2000
+
+# Output
+Input:  5,000 × $3.00/MTok = $0.015
+Output: 2,000 × $15.00/MTok = $0.030
+Total:  $0.045 (4.5 centavos)</code></pre>
+
+                        <h3>Calculadora web interactiva</h3>
+                        <pre><code>&lt;!-- Alojar en tu dashboard interno --&gt;
+&lt;form id="cost-calculator"&gt;
+  &lt;select id="model"&gt;
+    &lt;option value="haiku"&gt;Haiku ($0.80/MTok)&lt;/option&gt;
+    &lt;option value="sonnet"&gt;Sonnet ($3.00/MTok)&lt;/option&gt;
+    &lt;option value="opus" selected&gt;Opus ($15.00/MTok)&lt;/option&gt;
+  &lt;/select&gt;
+
+  &lt;input id="input-tokens"
+         type="number"
+         placeholder="Tokens input"
+         value="10000"&gt;
+
+  &lt;input id="output-tokens"
+         type="number"
+         placeholder="Tokens output"
+         value="5000"&gt;
+
+  &lt;button type="submit"&gt;Calcular&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;div id="result"&gt;
+  &lt;!-- Se rellena con JavaScript --&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+const PRICES = {
+  haiku: { input: 0.80, output: 4.00 },
+  sonnet: { input: 3.00, output: 15.00 },
+  opus: { input: 15.00, output: 45.00 }
+};
+
+document.getElementById('cost-calculator').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const model = document.getElementById('model').value;
+  const inputTokens = parseInt(document.getElementById('input-tokens').value);
+  const outputTokens = parseInt(document.getElementById('output-tokens').value);
+
+  const inputCost = (inputTokens / 1_000_000) * PRICES[model].input;
+  const outputCost = (outputTokens / 1_000_000) * PRICES[model].output;
+  const total = inputCost + outputCost;
+
+  document.getElementById('result').innerHTML = `
+    &lt;p&gt;Input: ${inputTokens.toLocaleString()} tokens = $${inputCost.toFixed(4)}&lt;/p&gt;
+    &lt;p&gt;Output: ${outputTokens.toLocaleString()} tokens = $${outputCost.toFixed(4)}&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Total: $${total.toFixed(4)}&lt;/strong&gt;&lt;/p&gt;
+  `;
+});
+&lt;/script&gt;</code></pre>
+
+                        <h3>Estimador mensual</h3>
+                        <pre><code>¿Cuántos desarrolladores? ___
+
+Perfil 1: Frontend
+  - Uso promedio: 500K tokens/mes
+  - Costo: $2.50/mes
+  × [___] devs = $[___]
+
+Perfil 2: Backend
+  - Uso promedio: 800K tokens/mes
+  - Costo: $4.20/mes
+  × [___] devs = $[___]
+
+Perfil 3: Arquitecto
+  - Uso promedio: 1.2M tokens/mes
+  - Costo: $8.50/mes
+  × [___] arquitectos = $[___]
+
+TOTAL MENSUAL: $[suma]
+ANUAL: $[suma × 12]</code></pre>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+
+                        <h2>5. Presupuestos por Equipo</h2>
+
+                        <h3>Modelo de asignación</h3>
+
+                        <h4>Opción A: Límite global por equipo</h4>
+                        <pre><code>Equipo Backend: $100/mes
+├─ 5 devs × promedio $4.20
+├─ 1 arquitecto × $8.50
+└─ Búfér 20%
+
+Equipo Frontend: $75/mes
+├─ 4 devs × promedio $2.50
+├─ 1 lead × $6.00
+└─ Búfér 20%
+
+DevOps/SRE: $40/mes
+├─ 2 SREs × promedio $3.00
+└─ Búfér 25%
+
+QA: $30/mes
+├─ 3 testers × promedio $1.50
+└─ Búfér 30%
+
+TOTAL: $245/mes (~$3K/año)</code></pre>
+
+                        <h4>Opción B: Por proyecto/feature</h4>
+                        <pre><code>Proyecto: Migración Legacy → React 19
+Budget: $500
+
+Asignación:
+├─ Investigación (Opus): $100
+├─ Refactorización (Sonnet): $250
+├─ Testing (Haiku): $100
+└─ Buffer contingencia: $50</code></pre>
+
+                        <h4>Opción C: Tokens por dev/mes</h4>
+                        <pre><code>Junior dev: 200K tokens/mes
+Mid-level dev: 500K tokens/mes
+Senior dev: 800K tokens/mes
+Arquitecto: 1.5M tokens/mes
+
+Total 10 personas = 6.5M tokens/mes
+≈ $30-35/mes (muy barato)</code></pre>
+
+                        <h3>Configurar límites en consola</h3>
+                        <pre><code>1. Ir a: console.anthropic.com/settings/billing
+2. "Set spending limits"
+3. Opción A: Hard limit (bloquea uso si se alcanza)
+   Establecer: $1,000/mes
+4. Opción B: Alert threshold (notificación)
+   Establecer: $750/mes (75% del límite)
+5. Guardar</code></pre>
+
+                        <h3>Monitoreo y alertas</h3>
+
+                        <h4>Configurar webhook (para notificaciones automáticas)</h4>
+                        <pre><code>// Script Node.js que ejecuta cada hora
+const checkUsage = async () => {
+  const response = await fetch('https://console.anthropic.com/api/usage', {
+    headers: { 'X-API-Key': process.env.ANTHROPIC_API_KEY }
+  });
+
+  const { current_month_cost } = await response.json();
+
+  if (current_month_cost > 750) {
+    // Enviar email/Slack
+    await notify(`Claude Code cost: $${current_month_cost}`);
+  }
+};
+
+// Ejecutar cada hora
+setInterval(checkUsage, 3600000);</code></pre>
+
+                        <h4>Slack webhook</h4>
+                        <pre><code>POST https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+{
+  "text": "Claude Code Alert",
+  "blocks": [{
+    "type": "section",
+    "text": {
+      "type": "mrkdwn",
+      "text": "*Cost Alert*\nCurrent: $750/1000\nDate: 2026-05-20"
+    }
+  }]
+}</code></pre>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+
+                        <h2>6. Optimizaciones para reducir costos</h2>
+
+                        <h3>Estrategia 1: Usar Haiku cuando sea posible</h3>
+                        <pre><code>Tarea: Análisis simple de error
+- Haiku: 2,000 tokens × $0.004 = $0.008
+- Sonnet: 2,000 tokens × $0.006 = $0.012
+- Diferencia: 33% menos
+
+Casos para Haiku:
+✓ Análisis sintáctico
+✓ Parsing JSON
+✓ Búsquedas en logs
+✓ Formateo de texto
+✓ Traducciones simples</code></pre>
+
+                        <h3>Estrategia 2: Context cacheing (5 minutos)</h3>
+                        <pre><code>SIN cache:
+- Request 1: Envía contexto (40K) + query (1K) = $0.625
+- Request 2: Envía contexto (40K) + query (1K) = $0.625
+- Total: $1.25
+
+CON cache (primera vez):
+- Request 1: $0.625 (sin cache aún)
+
+CON cache (subsecuentes 5 min):
+- Request 2: Contextuse caché ($0.10) + query = $0.11
+- Ahorro: 82%</code></pre>
+
+                        <h3>Estrategia 3: Batch processing</h3>
+                        <pre><code>SIN batch:
+- 100 requests pequeños
+- Latencia: 1-2s c/u
+- Costo: $50 (overhead de conexión)
+
+CON batch:
+- 1 request grande (100 items)
+- Latencia: 10s total (aceptable)
+- Costo: $5 (1/10)
+- Ahorro: 90%</code></pre>
+
+                        <h3>Estrategia 4: Temperature y max_tokens</h3>
+                        <pre><code>Task: Generar lista de alternativas
+Normal: temperature=1.0, max_tokens=2000
+- Output típico: 1,500 tokens = $0.022
+
+Optimizado: temperature=0.3, max_tokens=800
+- Output típico: 600 tokens = $0.009
+- Ahorro: 59%
+
+Trade-off: Menos creatividad, pero lista es igual de útil</code></pre>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+
+                        <h2>7. Reporte mensual template</h2>
+                        <pre><code># Claude Code — Reporte Mensual (Mayo 2026)
+
+## Resumen ejecutivo
+- **Costo total:** $28.50
+- **Tokens procesados:** 6.16M
+- **ROI estimado:** 1,200%+ (horas ahorradas × sueldo dev)
+
+## Desglose por modelo
+- Sonnet: 64% ($18.30)
+- Opus: 35% ($10.00)
+- Haiku: 1% ($0.20)
+
+## Top 5 casos de uso
+1. Code review (40%) — $11.40
+2. Refactorización (25%) — $7.13
+3. Testing (18%) — $5.13
+4. Debug (12%) — $3.42
+5. Docs (5%) — $1.42
+
+## Tendencias
+- ↑ 15% semana a semana
+- Pico: Martes (refactor sprint)
+- Mínimo: Viernes (menos desarrollo)
+
+## Optimizaciones este mes
+- ✅ Implementar context cacheing → Ahorro 10%
+- ✅ Usar Haiku para análisis → Ahorro 5%
+- → Reducción total: 15%
+
+## Proyección próximo mes
+- **Base:** $28.50 + 15% aumento previsto = $32.78
+- **Con optimizaciones:** ~$28/mes</code></pre>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+
+                        <h2>Resumen</h2>
+                        <p><strong>4 ideas clave:</strong></p>
+                        <ol class="numbered-list">
+                            <li><strong>Precios son baratos</strong> en contexto de horas ahorradas (ROI 400-1200%)</li>
+                            <li><strong>Dashboard en consola</strong> es tu mejor amigo para monitoreo</li>
+                            <li><strong>Haiku + context cacheing</strong> reducen costos 50%+ sin impacto</li>
+                            <li><strong>Presupuestos por equipo</strong> son más efectivos que globales</li>
+                        </ol>
+                        <p><strong>Próximo:</strong> Nivel 2 → Decision Framework (cuándo usar qué)</p>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+
+                        <h2>Referencias</h2>
+                        <ul class="bullet-list">
+                            <li>Precios actualizados: <a href="https://www.anthropic.com/pricing" target="_blank">https://www.anthropic.com/pricing</a></li>
+                            <li>Console: <a href="https://console.anthropic.com" target="_blank">https://console.anthropic.com</a></li>
+                            <li>Documentación caching: <a href="https://docs.anthropic.com/en/docs/build-a-Claude-app/caching" target="_blank">https://docs.anthropic.com/en/docs/build-a-Claude-app/caching</a></li>
+                            <li>Token contador: <a href="https://www.anthropic.com/tok" target="_blank">https://www.anthropic.com/tok</a></li>
+                        </ul>
+                        <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-tertiary); color: var(--text-secondary); font-size: 0.9em;">
+                            <strong>Estado:</strong> Lección completada. Próximo checkpoint: Quiz Nivel 2.
+                        </p>
+
+                    </div>
+                </section>
+                <!-- ========== BATCH API GUIDE ========== -->
+                <section class="content-section" data-section="batch-api-guide" hidden>
+                    <div class="section-header">
+                        <h1>Batch API Guide</h1>
+                        <p>Procesa en masa, paga la mitad. Reduce tu factura de Claude un 50% con pipelines batch asincrónicas.</p>
+                    </div>
+                    <div class="content">
+                        <blockquote class="note-block" style="margin: 20px 0; padding: 15px; border-left: 4px solid #0066cc; background: rgba(0, 102, 204, 0.05);">
+                            <strong>Nivel:</strong> Intermedio-Avanzado | <strong>Tiempo:</strong> 90 minutos | <strong>Meta:</strong> Construir pipelines batch reales que reducen tu factura de Claude un 50%
+                            <br><br>
+                            <strong>Historia real:</strong> Un equipo de análisis de contenido pagaba $15,000/mes por procesar 50,000 documentos en tiempo real. Descubrieron Batch API, migraron los procesos nocturnos, y la factura cayó a $7,500/mes. Misma calidad, mitad del costo.
+                        </blockquote>
+
+                        <hr style="margin: 30px 0;">
+
+                        <h2>1. El Problema del Costo en Producción</h2>
+
+                        <h3>La factura que te da un susto</h3>
+                        <p>Imagina que construiste un sistema que clasifica reseñas de productos. Funciona perfecto. Los usuarios están felices. Llevan 3 semanas en producción.</p>
+                        <p>Entonces llega la factura de Anthropic del primer mes: <strong>$14,800</strong>.</p>
+                        <p>Haces los cálculos: 80,000 reseñas × ~$0.18/reseña = $14,400. Más o menos cuadra. El problema es que tu presupuesto era $3,000/mes.</p>
+                        <p>¿Cómo pasó esto? Porque estás procesando todo en tiempo real, request por request, en el modelo más caro, incluso a las 3am cuando nadie está mirando los resultados.</p>
+                        <p><strong>La pregunta clave:</strong> ¿Cuántas de esas 80,000 clasificaciones necesitaban respuesta en menos de 1 segundo?</p>
+                        <p>Si la respuesta honesta es "la mayoría puede esperar hasta mañana", acabas de encontrar la solución: <strong>Batch API</strong>.</p>
+
+                        <h3>Tiempo real vs procesamiento en lote</h3>
+                        <pre><code>TIEMPO REAL (lo que tienes ahora):
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Request 1  │────▶│   Claude    │────▶│ Respuesta 1 │
+└─────────────┘     │  (espera)   │     │ (inmediata) │
+┌─────────────┐     │             │     └─────────────┘
+│  Request 2  │────▶│             │────▶ Respuesta 2
+└─────────────┘     └─────────────┘
+Costo: $15/M tokens de entrada
+Latencia: 1-3 segundos por request
+Cuándo usar: Cuando el usuario espera la respuesta
+
+BATCH API (lo que necesitas):
+┌─────────────────────────────────────────────┐
+│  1,000 requests juntos (archivo JSONL)      │
+└──────────────────────┬──────────────────────┘
+                       │ envío único
+                       ▼
+                ┌─────────────┐
+                │   Anthropic │
+                │  procesa en │
+                │ background  │
+                └──────┬──────┘
+                       │ 4-24 horas después
+                       ▼
+┌─────────────────────────────────────────────┐
+│  1,000 respuestas listas para descargar     │
+└─────────────────────────────────────────────┘
+Costo: $7.5/M tokens de entrada (50% menos)
+Latencia: 4-24 horas total
+Cuándo usar: Cuando puedes esperar hasta mañana</code></pre>
+
+                        <h3>Cuánto ahorras exactamente</h3>
+                        <p>Precios de referencia (modelo claude-opus-4-5):</p>
+                        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                            <thead>
+                                <tr style="background: var(--bg-tertiary);">
+                                    <th style="padding: 10px; border: 1px solid var(--bg-secondary); text-align: left;">Tipo</th>
+                                    <th style="padding: 10px; border: 1px solid var(--bg-secondary);">Tokens de entrada</th>
+                                    <th style="padding: 10px; border: 1px solid var(--bg-secondary);">Tokens de salida</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid var(--bg-secondary);"><strong>Tiempo real</strong></td>
+                                    <td style="padding: 10px; border: 1px solid var(--bg-secondary);">$15/millón</td>
+                                    <td style="padding: 10px; border: 1px solid var(--bg-secondary);">$75/millón</td>
+                                </tr>
+                                <tr style="background: rgba(0, 255, 0, 0.05);">
+                                    <td style="padding: 10px; border: 1px solid var(--bg-secondary);"><strong>Batch API</strong></td>
+                                    <td style="padding: 10px; border: 1px solid var(--bg-secondary);">$7.50/millón</td>
+                                    <td style="padding: 10px; border: 1px solid var(--bg-secondary);">$37.50/millón</td>
+                                </tr>
+                                <tr style="background: rgba(255, 165, 0, 0.05);">
+                                    <td style="padding: 10px; border: 1px solid var(--bg-secondary);"><strong>Ahorro</strong></td>
+                                    <td style="padding: 10px; border: 1px solid var(--bg-secondary); color: green;"><strong>50%</strong></td>
+                                    <td style="padding: 10px; border: 1px solid var(--bg-secondary); color: green;"><strong>50%</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>Para el ejemplo de las reseñas:</p>
+                        <ul class="bullet-list">
+                            <li>Tiempo real: $14,800/mes</li>
+                            <li>Batch API: $7,400/mes</li>
+                            <li><strong>Ahorro: $7,400/mes = $88,800/año</strong></li>
+                        </ul>
+
+                        <hr style="margin: 30px 0;">
+
+                        <h2>2. Cómo Funciona Batch API</h2>
+
+                        <h3>Las 3 fases del procesamiento</h3>
+                        <p>Batch API no es magia. Es un flujo de 3 pasos que tienes que implementar:</p>
+                        <pre><code>FASE 1: PREPARAR
+─────────────────
+Tú construyes un archivo JSONL con todos tus requests.
+Un request por línea. Lo subes a Anthropic.
+
+  requests.jsonl
+  {"custom_id": "doc-1", "params": {...}}
+  {"custom_id": "doc-2", "params": {...}}
+  {"custom_id": "doc-3", "params": {...}}
+
+FASE 2: ESPERAR (4-24 horas)
+─────────────────────────────
+Anthropic procesa en background cuando tiene capacidad.
+No hay garantía de tiempo exacto — puede ser 4h o puede ser 20h.
+Tú puedes hacer polling o esperar a la mañana siguiente.
+
+  Hora 0:  Enviaste 1,000 requests  → Estado: "in_progress"
+  Hora 6:  350 requests procesados  → Estado: "in_progress"
+  Hora 14: 1,000/1,000 completos   → Estado: "ended"
+
+FASE 3: RECOGER
+────────────────
+Descargas el archivo de resultados. Un resultado por línea,
+con el mismo custom_id que enviaste para que puedas emparejar.
+
+  results.jsonl
+  {"custom_id": "doc-1", "result": {"content": [...]}}
+  {"custom_id": "doc-2", "result": {"content": [...]}}
+  {"custom_id": "doc-3", "result": {"content": [...]}}</code></pre>
+
+                        <h3>La analogía que lo explica todo</h3>
+                        <p>Piensa en una pizzería:</p>
+                        <ul class="bullet-list">
+                            <li><strong>Tiempo real</strong> = Ordenar una pizza individual. Pagas el precio normal, la recibes en 30 minutos.</li>
+                            <li><strong>Batch API</strong> = La empresa de tu empresa ordena 100 pizzas para la semana. Descuento del 50%, pero las reciben el jueves, no ahora.</li>
+                        </ul>
+                        <p>Ninguna opción es "mejor". La correcta depende de si tienes hambre ahora o si puedes planear con anticipación.</p>
+
+                        <hr style="margin: 30px 0;">
+
+                        <h2>3. El Formato JSONL — Aprenderlo de Una Vez</h2>
+
+                        <h3>¿Qué es JSONL?</h3>
+                        <p>JSONL (JSON Lines) es un archivo donde <strong>cada línea es un objeto JSON completo e independiente</strong>. No hay comas entre líneas. No hay corchetes externos. Solo JSONs, uno por línea.</p>
+                        <pre><code>JSONL correcto:
+{"id": 1, "text": "hola"}
+{"id": 2, "text": "mundo"}
+{"id": 3, "text": "!"}
+
+JSON normal (incorrecto para JSONL):
+[
+  {"id": 1, "text": "hola"},
+  {"id": 2, "text": "mundo"},
+  {"id": 3, "text": "!"}
+]</code></pre>
+                        <p>¿Por qué JSONL y no JSON normal? Porque JSONL es streamable. Puedes procesar línea por línea sin cargar todo en memoria. Para 1 millón de requests, eso importa.</p>
+
+                        <h3>Estructura de cada request en JSONL</h3>
+                        <p>Cada línea del archivo JSONL tiene esta estructura:</p>
+                        <pre><code>{
+  "custom_id": "un-id-que-te-identifique-el-request",
+  "params": {
+    "model": "claude-opus-4-5",
+    "max_tokens": 500,
+    "messages": [
+      {
+        "role": "user",
+        "content": "El texto de tu prompt aquí"
+      }
+    ]
+  }
+}</code></pre>
+                        <p>El <code>custom_id</code> es <strong>tuyo</strong>. Anthropic lo devuelve en los resultados para que puedas saber qué respuesta corresponde a qué request. Puede ser el ID de tu documento, el ID del usuario, lo que necesites.</p>
+
+                        <h3>Errores comunes al construir JSONL</h3>
+                        <p><strong>Error 1: Múltiples objetos JSON en una línea</strong></p>
+                        <pre><code>❌ Incorrecto: {"id":1} {"id":2}   ← dos objetos en una línea
+✅ Correcto:   {"id":1}
+               {"id":2}              ← un objeto por línea</code></pre>
+                        <p><strong>Error 2: Salto de línea dentro del texto</strong></p>
+                        <pre><code>❌ Incorrecto: {"text": "línea 1\nlínea 2"}
+               ← si el \n es un newline real, rompe el JSONL
+✅ Correcto:   {"text": "línea 1\\nlínea 2"}
+               ← usar \\n para newlines dentro del texto</code></pre>
+                        <p><strong>Error 3: custom_id duplicado</strong></p>
+                        <pre><code>❌ Incorrecto: Dos requests con custom_id: "doc-1"
+               ← el resultado de uno sobreescribe al otro
+✅ Correcto:   IDs únicos: "doc-1", "doc-2", "doc-3", ...</code></pre>
+
+                        <hr style="margin: 30px 0;">
+
+                        <h2>5. Cuándo Usar Batch API vs Tiempo Real</h2>
+
+                        <h3>El árbol de decisión</h3>
+                        <pre><code>¿Debería usar Batch API?
+│
+├─ "¿El usuario está esperando la respuesta en este momento?"
+│   └─ SÍ → Tiempo real. Batch no sirve para UX interactiva.
+│
+├─ "¿La respuesta tiene que estar lista en menos de 1 hora?"
+│   └─ SÍ → Tiempo real. Batch puede tomar hasta 24h.
+│
+├─ "¿Tengo menos de 100 requests?"
+│   └─ SÍ → Tiempo real. El overhead de setup no vale la pena.
+│
+└─ "¿Tengo 100+ requests y puedo esperar hasta mañana?"
+    └─ SÍ → BATCH API ✅
+       Ahorro estimado: 50% del costo de esos requests</code></pre>
+
+                        <h3>5 escenarios con cálculo de ahorro</h3>
+                        <p><strong>Escenario 1: Clasificación nocturna de emails</strong> ✅ Batch</p>
+                        <pre><code>Situación: 2,000 emails llegan cada día, los clasificas por la mañana
+Volumen: 2,000 requests × 500 tokens = 1M tokens/día
+Costo tiempo real: $15/día = $450/mes
+Costo con Batch:   $7.50/día = $225/mes
+Ahorro: $225/mes = $2,700/año
+→ USAR BATCH</code></pre>
+
+                        <p><strong>Escenario 2: Análisis semanal de reseñas</strong> ✅ Batch</p>
+                        <pre><code>Situación: 10,000 nuevas reseñas cada semana, se analizan los lunes
+Volumen: 10,000 × 800 tokens = 8M tokens/semana
+Costo tiempo real: $120/semana = $480/mes
+Costo con Batch:   $60/semana = $240/mes
+Ahorro: $240/mes = $2,880/año
+→ USAR BATCH</code></pre>
+
+                        <p><strong>Escenario 3: Chatbot de atención al cliente</strong> ❌ Tiempo real</p>
+                        <pre><code>Situación: Usuario escribe pregunta y espera respuesta
+Latencia aceptable: <3 segundos
+Latencia de Batch: 4-24 horas
+→ TIEMPO REAL obligatorio, el usuario no puede esperar</code></pre>
+
+                        <h3>El break-even: 100 requests</h3>
+                        <p>¿Por qué 100 como mínimo?</p>
+                        <p>Implementar Batch API tiene un costo de setup: escribir el código de la pipeline, hacer testing, manejar errores. Eso toma ~4 horas de tu tiempo.</p>
+                        <p>Con menos de 100 requests/proceso, el ahorro monetario no justifica ese tiempo. Con 100+ requests que se repiten regularmente, el ahorro se acumula rápido.</p>
+
+                        <hr style="margin: 30px 0;">
+
+                        <h2>6. Antipatrones y Errores Comunes</h2>
+
+                        <h3>Antipatrón 1: Usar Batch para Requests Urgentes</h3>
+                        <p><strong>❌ Incorrecto:</strong></p>
+                        <pre><code>def analyze_on_click(user_text: str) -> str:
+    batch_id = submit_batch([user_text])
+    # El usuario espera... 4 horas? No.
+    wait_for_completion(batch_id)  # ← ERROR: bloquea la UI por horas
+    return get_results(batch_id)</code></pre>
+                        <p><strong>✅ Correcto:</strong></p>
+                        <pre><code>def analyze_on_click(user_text: str) -> str:
+    response = client.messages.create(
+        model="claude-haiku-4-5",
+        max_tokens=500,
+        messages=[{"role": "user", "content": user_text}]
+    )
+    return response.content[0].text  # Respuesta en ~1-2 segundos</code></pre>
+                        <p><strong>📝 Por qué:</strong> Batch API no es "tiempo real más barato". Es un trade-off: menos costo a cambio de esperar. Si el usuario está esperando, ese trade-off no aplica.</p>
+
+                        <h3>Antipatrón 2: Polling Demasiado Frecuente</h3>
+                        <p><strong>❌ Incorrecto:</strong></p>
+                        <pre><code>while True:
+    status = client.beta.messages.batches.retrieve(batch_id)
+    if status.processing_status == "ended":
+        break
+    time.sleep(1)  # ← Cada 1 segundo es demasiado frecuente</code></pre>
+                        <p><strong>✅ Correcto:</strong></p>
+                        <pre><code>while True:
+    status = client.beta.messages.batches.retrieve(batch_id)
+    if status.processing_status == "ended":
+        break
+    time.sleep(300)  # ← 5 minutos: suficiente para un proceso de 4-24h</code></pre>
+                        <p><strong>📝 Por qué:</strong> Si el batch tarda 8 horas, revisarlo cada segundo son 28,800 llamadas a la API innecesarias. Cada 5 minutos son 96 llamadas. Mismo resultado, 300x menos tráfico.</p>
+
+                        <h3>Antipatrón 3: No Manejar Errores Parciales</h3>
+                        <p><strong>❌ Incorrecto:</strong></p>
+                        <pre><code>results = {}
+for result in client.beta.messages.batches.results(batch_id):
+    text = result.result.message.content[0].text  # ← Falla si result.result.type != "succeeded"
+    results[result.custom_id] = text</code></pre>
+                        <p><strong>✅ Correcto:</strong></p>
+                        <pre><code>results = {}
+failed_ids = []
+
+for result in client.beta.messages.batches.results(batch_id):
+    if result.result.type == "succeeded":
+        results[result.custom_id] = result.result.message.content[0].text
+    else:
+        # Guardar para reintentar
+        failed_ids.append(result.custom_id)
+        print(f"⚠️ Falló: {result.custom_id} — {result.result.type}")
+
+print(f"Exitosos: {len(results)} | Fallidos: {len(failed_ids)}")</code></pre>
+                        <p><strong>📝 Por qué:</strong> En un batch de 10,000 requests, es normal que 10-50 fallen por timeouts o errores transitorios. Si no los manejas, pierdes esos datos silenciosamente.</p>
+
+                        <h3>Antipatrón 4: custom_id que No Identifica Nada Útil</h3>
+                        <p><strong>❌ Incorrecto:</strong></p>
+                        <pre><code>for i, text in enumerate(texts):
+    request = {"custom_id": str(i), ...}  # "0", "1", "2"...
+    # Si falla el request "47", ¿cuál era?</code></pre>
+                        <p><strong>✅ Correcto:</strong></p>
+                        <pre><code>for item in texts:
+    request = {
+        "custom_id": f"review-{item['product_id']}-{item['date']}",
+        # Si falla "review-prod123-2026-05", sabes exactamente qué era
+        ...
+    }</code></pre>
+                        <p><strong>📝 Por qué:</strong> El custom_id es tu única conexión entre el request que enviaste y el resultado que recibiste. Si algo falla, necesitas poder identificarlo y depurarlo.</p>
+
+                        <h3>Antipatrón 5: No Guardar el batch_id</h3>
+                        <p><strong>❌ Incorrecto:</strong></p>
+                        <pre><code>batch_id = submit_batch(jsonl_path)
+# ... el script muere o se interrumpe ...
+# No hay forma de recuperar los resultados</code></pre>
+                        <p><strong>✅ Correcto:</strong></p>
+                        <pre><code>batch_id = submit_batch(jsonl_path)
+
+# Guardar inmediatamente en un archivo
+with open("batch_tracking.json", "a") as f:
+    json.dump({
+        "batch_id": batch_id,
+        "submitted_at": time.time(),
+        "input_file": jsonl_path,
+        "status": "submitted"
+    }, f)
+    f.write("\n")
+
+print(f"batch_id guardado: {batch_id}")
+# Ahora puedes recuperar los resultados aunque el script muera</code></pre>
+
+                        <h3>Antipatrón 6: Batches Demasiado Grandes Sin Paginación</h3>
+                        <p><strong>❌ Incorrecto:</strong></p>
+                        <pre><code># Un batch con 100,000 requests de golpe
+requests = load_all_data()  # 100,000 items
+batch_id = submit_batch(create_jsonl(requests))</code></pre>
+                        <p><strong>✅ Correcto:</strong></p>
+                        <pre><code># Dividir en chunks de 10,000 (límite recomendado por Anthropic)
+def chunk_list(lst: list, size: int) -> list[list]:
+    return [lst[i:i + size] for i in range(0, len(lst), size)]
+
+all_data = load_all_data()  # 100,000 items
+batch_ids = []
+
+for chunk in chunk_list(all_data, 10000):
+    jsonl_path = create_jsonl_file(chunk, f"batch_chunk_{len(batch_ids)}.jsonl")
+    batch_id = submit_batch(jsonl_path)
+    batch_ids.append(batch_id)
+    print(f"Batch {len(batch_ids)}: {batch_id}")
+
+# Esperar todos los batches
+for batch_id in batch_ids:
+    wait_for_completion(batch_id)</code></pre>
+
+                        <h3>Antipatrón 7: No Validar el JSONL Antes de Enviarlo</h3>
+                        <p><strong>❌ Incorrecto:</strong></p>
+                        <pre><code>create_jsonl_file(texts, "requests.jsonl")
+batch_id = submit_batch("requests.jsonl")
+# Si el JSONL tiene errores, el batch falla en Anthropic
+# Descubres el problema 4 horas después</code></pre>
+                        <p><strong>✅ Correcto:</strong></p>
+                        <pre><code>def validate_jsonl(file_path: str) -> bool:
+    """Valida que el JSONL sea correcto antes de enviarlo"""
+    errors = []
+    seen_ids = set()
+
+    with open(file_path, "r") as f:
+        for i, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                obj = json.loads(line)   # Verificar que sea JSON válido
+                if "custom_id" not in obj:
+                    errors.append(f"Línea {i}: falta 'custom_id'")
+                elif obj["custom_id"] in seen_ids:
+                    errors.append(f"Línea {i}: custom_id duplicado: {obj['custom_id']}")
+                else:
+                    seen_ids.add(obj["custom_id"])
+                if "params" not in obj:
+                    errors.append(f"Línea {i}: falta 'params'")
+            except json.JSONDecodeError as e:
+                errors.append(f"Línea {i}: JSON inválido — {e}")
+
+    if errors:
+        print("❌ Errores en el JSONL:")
+        for error in errors[:10]:  # Mostrar primeros 10 errores
+            print(f"   {error}")
+        return False
+
+    print(f"✅ JSONL válido: {len(seen_ids)} requests únicos")
+    return True
+
+# Validar antes de enviar
+if validate_jsonl("requests.jsonl"):
+    batch_id = submit_batch("requests.jsonl")
+else:
+    print("Corrige los errores antes de enviar el batch")</code></pre>
+
+                        <h3>Antipatrón 8: Olvidar que los Resultados Tienen Expiración</h3>
+                        <p><strong>❌ Incorrecto:</strong></p>
+                        <pre><code># Asumir que los resultados están disponibles indefinidamente
+batch_id = submit_batch(jsonl_path)
+# ... esperar 30 días ...
+results = download_results(batch_id)  # ERROR: resultados expirados</code></pre>
+                        <p><strong>✅ Correcto:</strong></p>
+                        <pre><code># Descargar y persistir los resultados apenas estén listos
+wait_for_completion(batch_id)
+results = download_and_save_results(batch_id, "data/results/")
+# Los resultados ahora están en tu sistema, no dependen de Anthropic</code></pre>
+                        <p><strong>📝 Por qué:</strong> Anthropic expira los resultados después de 29 días. Si no los descargas a tiempo, se pierden.</p>
+
+                        <hr style="margin: 30px 0;">
+
+                        <h2>Resumen: La Regla Simple</h2>
+                        <blockquote style="margin: 20px 0; padding: 15px; border-left: 4px solid #0066cc; background: rgba(0, 102, 204, 0.05); font-size: 1.1em;">
+                            <strong>Usa Batch API cuando tienes 100+ requests y puedes esperar hasta mañana. No lo uses para nada interactivo.</strong>
+                        </blockquote>
+                        <p>Si esa condición se cumple: tu costo se reduce exactamente a la mitad. Sin pérdida de calidad. Sin código complicado. Solo un cambio de cómo envías los requests.</p>
+
+                        <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-tertiary); color: var(--text-secondary); font-size: 0.9em;">
+                            <strong>Próximo módulo:</strong> Producción → Seguridad y compliance para sistemas con Claude en empresas reales.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="content-section" data-section="adaptive-thinking-guide">
+                    <div class="section-header">
+                        <h1>Razonamiento Profundo: Cuándo Pagar por Pensar Más</h1>
+                        <p>Guía práctica para dominar Adaptive Thinking, decidir cuándo usarlo y maximizar tu ROI con razonamiento profundo en Claude.</p>
+                    </div>
+                    <div class="content">
+                        <blockquote style="background: var(--bg-tertiary); padding: 16px; border-left: 4px solid var(--color-accent); border-radius: 4px; margin: 24px 0;">
+                            <p><strong>Nivel</strong>: Avanzado | <strong>Tiempo</strong>: 75 minutos | <strong>Meta</strong>: Saber cuándo Adaptive Thinking multiplica tu ROI y cuándo solo tira dinero</p>
+                            <p><strong>Historia real</strong>: Un equipo gastó $200 en razonamiento profundo para diseñar arquitectura de cache. El resultado les ahorró $200,000 en infraestructura. ROI: 1,000x. Pero ese mismo equipo lo usó para responder FAQs y quemó $3,000 sin ningún beneficio medible.</p>
+                        </blockquote>
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+                        <h2>1. El Problema que Esto Resuelve</h2>
+                        <h3>La historia del bug que destruyó dos días</h3>
+                        <p>Son las 2pm del martes. Hay un bug en producción. Intermitente. Solo ocurre bajo carga alta y en ciertos horarios. El error dice:</p>
+                        <pre><code>NullPointerException at PaymentProcessor.java:247
+Stack trace: [200 líneas que no dicen nada útil]</code></pre>
+                        <p>Llevas 6 horas mirando esto. Tu hipótesis: race condition en el thread pool. Cambias el código. Deploys. Esperas. El bug vuelve. No era eso. Siguiente hipótesis: problema con el connection pool de la base de datos. Cambias el timeout. Deploys. Esperas. El bug vuelve. Tampoco era eso. Son las 11pm. Llevas 9 horas. Mañana tienes reunión con el cliente.</p>
+                        <p><strong>¿Qué hubiera pasado con Adaptive Thinking?</strong></p>
+                        <pre><code class="language-python"># Envías el stack trace, los logs de las últimas 24h,
+# y la descripción del patrón de fallo
+response = client.messages.create(
+    model="claude-opus-4-5",
+    max_tokens=4000,
+    thinking={"type": "enabled", "budget_tokens": 8000},  # Modo razonamiento profundo
+    messages=[{
+        "role": "user",
+        "content": f"""
+        Bug intermitente en producción. Solo bajo carga alta.
+        Stack trace: {stack_trace}
+        Patrón: {pattern_description}
+        Logs últimas 24h: {logs}
+        ¿Qué está pasando y cómo lo arreglo?
+        """
+    }]
+)</code></pre>
+                        <p><strong>Claude, con razonamiento profundo, analiza</strong>: el patrón temporal, la correlación con la carga, los logs transaccionales, y concluye en 8 minutos:</p>
+                        <blockquote style="background: var(--bg-tertiary); padding: 16px; border-left: 4px solid var(--color-accent); border-radius: 4px; margin: 24px 0;">
+                            <p>"El problema no es el thread pool ni los timeouts. Es que tu `PaymentProcessor` tiene un estado compartido (`static List&lt;Transaction&gt; pending`) que no está sincronizado. Bajo carga alta, dos threads lo modifican simultáneamente. Fix: cambiar a `ConcurrentLinkedQueue` o usar `synchronized`."</p>
+                        </blockquote>
+                        <p><strong>Costo del análisis</strong>: $1.20 en tokens de razonamiento.<br><strong>Costo de 9 horas de tu tiempo</strong> (a $80/hr): $720.<br><strong>ROI</strong>: 600x.</p>
+                        <h3>La moraleja</h3>
+                        <p>Adaptive Thinking no es "el modo premium". Es una herramienta específica para problemas donde <strong>la calidad del razonamiento</strong> vale más que <strong>la velocidad o el costo</strong>. Aprenderás exactamente cuándo aplica.</p>
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+                        <h2>2. ¿Qué es Adaptive Thinking?</h2>
+                        <p>Cuando usas Claude sin Adaptive Thinking: rápido, barato, funciona para el 80% de los casos.</p>
+                        <p>Cuando usas Adaptive Thinking: Claude analiza la complejidad, dedica tokens internos al razonamiento profundo, y devuelve una respuesta más fundamentada.</p>
+                        <table style="width: 100%; border-collapse: collapse; margin: 24px 0;">
+                            <thead>
+                                <tr style="background: var(--bg-tertiary);">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid var(--bg-border);">Aspecto</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid var(--bg-border);">Sin Adaptive Thinking</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid var(--bg-border);">Con Adaptive Thinking</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);"><strong>Costo</strong></td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Base</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">2-5x más caro</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);"><strong>Latencia</strong></td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">1-3 segundos</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">3-8 segundos</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);"><strong>Problemas complejos</strong></td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Buena</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">15-40% mejor</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+                        <h2>3. La Pregunta Clave: ¿Vale la Pena?</h2>
+                        <pre><code>ROI = (Valor del problema resuelto bien) / (Costo adicional)
+Si ROI &gt; 10x → Úsalo
+Si ROI &lt; 10x → No lo uses</code></pre>
+                        <h3>5 casos con cálculo real</h3>
+                        <p><strong>Bug crítico de producción ✅ USAR</strong> - Sistema de pagos caído perdiendo $5,000/hora. Costo análisis: $2.50. Valor si lo arregla en 15min vs 3h: $2,000. ROI: 800x.</p>
+                        <p><strong>Diseño de arquitectura ✅ USAR</strong> - Elegir microservicios vs monolito. Costo: $15. Valor de decisión correcta: $150,000. ROI: 10,000x.</p>
+                        <p><strong>Generación de código complejo ✅ USAR</strong> - Algoritmo de scheduling con 12 restricciones. Costo: $5. Valor: $320. ROI: 64x.</p>
+                        <p><strong>Responder FAQs ❌ NO USAR</strong> - 1,000 FAQs/día. Costo extra mensual: $2,400. Beneficio: 0%. ROI: 0x.</p>
+                        <p><strong>Summarization básica ❌ NO USAR</strong> - 100 artículos. Costo extra: $38. Mejora: 5%. ROI: insignificante.</p>
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+                        <h2>4. Cuándo SÍ Usar Adaptive Thinking</h2>
+                        <h3>Debugging Complejo</h3>
+                        <p><strong>Cuándo aplica</strong>: Bug intermitente, race conditions, problemas de memoria, errores que solo ocurren en producción.</p>
+                        <pre><code class="language-python">def debug_with_deep_thinking(error_message, stack_trace, relevant_code, context=""):
+    response = client.messages.create(
+        model="claude-opus-4-5",
+        max_tokens=6000,
+        thinking={
+            "type": "enabled",
+            "budget_tokens": 10000
+        },
+        messages=[{
+            "role": "user",
+            "content": f"""Analiza este bug de producción:
+ERROR: {error_message}
+STACK TRACE: {stack_trace}
+CÓDIGO: {relevant_code}
+CONTEXTO: {context}
+"""
+        }]
+    )
+    for block in response.content:
+        if block.type == "text":
+            return block.text</code></pre>
+                        <h3>Decisiones de Arquitectura</h3>
+                        <p><strong>Cuándo aplica</strong>: Elegir entre tecnologías, diseñar sistemas que durarán años, decisiones con trade-offs no obvios.</p>
+                        <h3>Código Complejo con Restricciones</h3>
+                        <p><strong>Cuándo aplica</strong>: Algoritmos con muchas restricciones, código que debe cumplir múltiples criterios a la vez.</p>
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+                        <h2>5. Cuándo NO Usar (8 Antipatrones)</h2>
+                        <p><strong>❌ FAQs</strong> - Costo 70x mayor sin beneficio. Las FAQs tienen respuestas predecibles.</p>
+                        <p><strong>❌ Clasificación Simple</strong> - "¿Este review es positivo?" Un modelo pequeño hace igual.</p>
+                        <p><strong>❌ Summarization Básica</strong> - Requiere buenas instrucciones, no razonamiento profundo.</p>
+                        <p><strong>❌ Traducciones</strong> - 50x más caro. Las traducciones son lineales.</p>
+                        <p><strong>❌ Formateo de Datos</strong> - JSON a CSV: usa Python, no Claude.</p>
+                        <p><strong>❌ Respuestas Predecibles</strong> - "¿Capital de Francia?" = 5 caracteres.</p>
+                        <p><strong>❌ Prototipos/Dev</strong> - Iteras 50 veces. Valida con modelo barato.</p>
+                        <p><strong>❌ Todo por Defecto</strong> - 80% tareas simples. Thinking en todo = 3-5x más caro.</p>
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+                        <h2>6. Regla de Oro</h2>
+                        <blockquote style="background: var(--bg-tertiary); padding: 16px; border-left: 4px solid var(--color-accent); border-radius: 4px; margin: 24px 0;">
+                            <p><strong>Usa Adaptive Thinking cuando el costo de una respuesta mediocre es 10x o más el costo del razonamiento profundo.</strong></p>
+                        </blockquote>
+                        <ul>
+                            <li>Debugging de producción: ✅ (downtime cuesta miles)</li>
+                            <li>Decisiones de arquitectura: ✅ (malas decisiones cuestan meses)</li>
+                            <li>FAQs, clasificación, traducción: ❌ (error cuesta poco)</li>
+                        </ul>
+                        <p>Cualquier otro caso: calcula el ROI antes de decidir.</p>
+                        <p style="color: var(--text-secondary); font-size: 0.9em; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-tertiary);">
+                            <strong>Próximo módulo</strong>: Batch API → Cuando tienes 100+ requests, aprende a pagar la mitad.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ============ NUEVAS SECCIONES: ÍNDICES Y RECURSOS ============ -->
+
+                <section class="content-section" data-section="guia-nivel4-indice">
+                    <div class="section-header">
+                        <h1>Nivel 4: Ingeniero — Índice Completo</h1>
+                        <p>38+ módulos avanzados para dominar workflows de producción, observabilidad, CI/CD, gobernanza y orquestación de múltiples MCPs.</p>
+                    </div>
+                    <div class="content">
+                        <blockquote style="background: var(--bg-tertiary); padding: 16px; border-left: 4px solid var(--color-accent); border-radius: 4px; margin: 24px 0;">
+                            <p><strong>Duración estimada</strong>: 60–80 horas | <strong>Prerrequisito</strong>: Completar Nivel 3 (Constructor)</p>
+                        </blockquote>
+
+                        <h2>🌿 Git & Workflows</h2>
+                        <ul>
+                            <li><a href="#nivel-4-git-workflows" data-section="nivel-4-git-workflows"><strong>Git Workflows Reales</strong></a> — Rebase, cherry-pick, merge strategies en equipos</li>
+                            <li><strong>Monorepo Patterns</strong> — Nx, Turborepo, arquitectura escalable</li>
+                            <li><strong>Branch Protection & CI Gates</strong> — CODEOWNERS, checks automáticos</li>
+                        </ul>
+
+                        <h2>🔁 CI/CD & Deployment</h2>
+                        <ul>
+                            <li><a href="#nivel-4-ci-cd" data-section="nivel-4-ci-cd"><strong>CI/CD & Headless</strong></a> — GitHub Actions, GitLab CI, automatización end-to-end</li>
+                            <li><strong>Canary & Blue-Green Deployments</strong> — Estrategias de rollout sin downtime</li>
+                            <li><strong>Artifact Management</strong> — Versioning, registries, provenance</li>
+                        </ul>
+
+                        <h2>📊 Observability & Debugging</h2>
+                        <ul>
+                            <li><a href="#nivel-4-observability" data-section="nivel-4-observability"><strong>Observability & Debug</strong></a> — Logging, tracing, metricas, SLOs</li>
+                            <li><a href="#nivel-4-debugging-playbook" data-section="nivel-4-debugging-playbook"><strong>Debugging Playbook</strong></a> — Framework sistemático para producción</li>
+                            <li><strong>Distributed Tracing</strong> — OpenTelemetry, Jaeger, Datadog</li>
+                        </ul>
+
+                        <h2>🏛️ Gobernanza & Políticas</h2>
+                        <ul>
+                            <li><a href="#nivel-4-gobernanza" data-section="nivel-4-gobernanza"><strong>Gobernanza & Políticas</strong></a> — Compliance, auditoría, control de acceso</li>
+                            <li><a href="#nivel-4-incident-response" data-section="nivel-4-incident-response"><strong>Incident Response</strong></a> — Runbooks, postmortems, blameless culture</li>
+                            <li><strong>Data Retention & GDPR</strong> — Políticas de privacidad en escala</li>
+                        </ul>
+
+                        <h2>💰 Cost & Performance</h2>
+                        <ul>
+                            <li><a href="#nivel-4-monitoreo-costos" data-section="nivel-4-monitoreo-costos"><strong>Monitoreo de Costos</strong></a> — FinOps, presupuestos, alertas</li>
+                            <li><strong>Performance Tuning</strong> — Caching, CDN, database optimization</li>
+                            <li><strong>Capacity Planning</strong> — Forecasting, autoscaling</li>
+                        </ul>
+
+                        <h2>⌨️ Comandos & Referencias</h2>
+                        <ul>
+                            <li><a href="#nivel-4-commands-reference" data-section="nivel-4-commands-reference"><strong>Referencia de Comandos</strong></a> — 200+ comandos avanzados organizados por categoría</li>
+                            <li><strong>Custom Shortcuts</strong> — Macros, scripts auxiliares</li>
+                        </ul>
+
+                        <h2>🛍️ MCP & Marketplace</h2>
+                        <ul>
+                            <li><a href="#nivel-4-marketplace-guide" data-section="nivel-4-marketplace-guide"><strong>MCP Marketplace</strong></a> — Descubrir, instalar, configurar 100+ MCPs</li>
+                            <li><a href="#nivel-4-multi-mcp-orchestration" data-section="multi-mcp-orchestration"><strong>Multi-MCP Orchestration</strong></a> — Orquestar 10+ MCPs sin conflictos</li>
+                            <li><a href="#nivel-4-integration-examples" data-section="nivel-4-integration-examples"><strong>Casos de Integración</strong></a> — Arquitecturas reales con múltiples servicios</li>
+                        </ul>
+
+                        <h2>🗺️ Decision & Patterns</h2>
+                        <ul>
+                            <li><a href="#nivel-4-decision-matrix" data-section="nivel-4-decision-matrix"><strong>Matriz de Decisión</strong></a> — Elegir herramientas y arquitecturas</li>
+                            <li><a href="#nivel-4-claude-md-patterns" data-section="nivel-4-claude-md-patterns"><strong>CLAUDE.md Patterns</strong></a> — Patrones reutilizables de memoria</li>
+                            <li><a href="#nivel-4-casos-reales" data-section="nivel-4-casos-reales"><strong>Casos de Uso Reales</strong></a> — 15+ escenarios de equipos</li>
+                        </ul>
+
+                        <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-tertiary); color: var(--text-secondary); font-size: 0.9em;">
+                            <strong>Progresión recomendada</strong>: Git Workflows → CI/CD → Observability → Gobernanza → Costs → Marketplace → Patrones
+                        </p>
+                    </div>
+                </section>
+
+                <section class="content-section" data-section="guia-nivel5-indice">
+                    <div class="section-header">
+                        <h1>Nivel 5: Enterprise — Índice Completo</h1>
+                        <p>Especialización en seguridad, ética, cost forecasting, troubleshooting avanzado y estrategia empresarial con Claude Code.</p>
+                    </div>
+                    <div class="content">
+                        <blockquote style="background: var(--bg-tertiary); padding: 16px; border-left: 4px solid var(--color-accent); border-radius: 4px; margin: 24px 0;">
+                            <p><strong>Duración estimada</strong>: 40–60 horas | <strong>Audiencia</strong>: Leads, CTOs, especialistas en seguridad y finanzas</p>
+                        </blockquote>
+
+                        <h2>🔐 Seguridad & Compliance</h2>
+                        <ul>
+                            <li><strong>Zero Trust Architecture</strong> — Modelos de seguridad sin fronteras</li>
+                            <li><strong>Secrets Management</strong> — Vault, HashiCorp, rotación automática</li>
+                            <li><strong>OWASP & GDPR</strong> — Cumplimiento normativo en sistemas con IA</li>
+                            <li><strong>Threat Modeling</strong> — Identificar y mitigar vectores de ataque</li>
+                        </ul>
+
+                        <h2>🤝 Ética & Responsabilidad</h2>
+                        <ul>
+                            <li><strong>Bias Detection</strong> — Auditar sesgos en respuestas de IA</li>
+                            <li><strong>Explainability</strong> — Transparencia en decisiones de Claude</li>
+                            <li><strong>Content Moderation</strong> — Filtros, políticas, casos límite</li>
+                            <li><strong>Human-in-the-Loop</strong> — Diseño responsable de workflows</li>
+                        </ul>
+
+                        <h2>💸 Cost Forecasting & Optimization</h2>
+                        <ul>
+                            <li><strong>Prediction Models</strong> — Forecast usage y costos 6-12 meses adelante</li>
+                            <li><strong>Batch API Economics</strong> — Cuando vale la pena usar Batch en escala</li>
+                            <li><strong>Token Optimization</strong> — Técnicas avanzadas para reducir consumo</li>
+                            <li><strong>Multi-Model Strategy</strong> — Elegir Haiku/Sonnet/Opus según caso</li>
+                        </ul>
+
+                        <h2>🧪 Troubleshooting & Diagnostics</h2>
+                        <ul>
+                            <li><strong>Advanced Debugging</strong> — Analizar failures en sistemas distribuidos</li>
+                            <li><strong>Rate Limiting & Quotas</strong> — Manejar throttling sin perder datos</li>
+                            <li><strong>Fallback Strategies</strong> — Graceful degradation con MCPs</li>
+                            <li><strong>Root Cause Analysis</strong> — Metodología de investigación profunda</li>
+                        </ul>
+
+                        <h2>📈 Escalabilidad & Arquitectura</h2>
+                        <ul>
+                            <li><strong>Horizontal Scaling</strong> — Load balancing, message queues, statelessness</li>
+                            <li><strong>Data Pipeline Design</strong> — ETL con Claude, batch processing</li>
+                            <li><strong>Multi-Region Deployment</strong> — Latencia, failover, data residency</li>
+                        </ul>
+
+                        <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-tertiary); color: var(--text-secondary); font-size: 0.9em;">
+                            <strong>Ruta de aprendizaje</strong>: Seguridad → Ética → Cost Forecasting → Troubleshooting → Escalabilidad
+                        </p>
+                    </div>
+                </section>
+
+                <section class="content-section" data-section="guia-nivel6-indice">
+                    <div class="section-header">
+                        <h1>Nivel 6: Leadership — Índice Completo</h1>
+                        <p>Observabilidad de sistemas IA, arquitectura de patrones empresariales y liderazgo técnico en transformación digital.</p>
+                    </div>
+                    <div class="content">
+                        <blockquote style="background: var(--bg-tertiary); padding: 16px; border-left: 4px solid var(--color-accent); border-radius: 4px; margin: 24px 0;">
+                            <p><strong>Duración estimada</strong>: 30–50 horas | <strong>Audiencia</strong>: CTOs, VPs de Ingeniería, arquitectos de empresa</p>
+                        </blockquote>
+
+                        <h2>🔭 Observabilidad Avanzada</h2>
+                        <ul>
+                            <li><strong>System Health Monitoring</strong> — Dashboards para sistemas con IA</li>
+                            <li><strong>Anomaly Detection</strong> — Alertas inteligentes basadas en patrones</li>
+                            <li><strong>SLO Management</strong> — Definir y monitorear objetivos de nivel de servicio</li>
+                            <li><strong>Capacity Forecasting</strong> — Predecir crisis antes de que ocurran</li>
+                        </ul>
+
+                        <h2>🏗️ Patrones de Arquitectura</h2>
+                        <ul>
+                            <li><strong>Microservices with IA</strong> — Desacoplar servicios que usan Claude</li>
+                            <li><strong>Serverless + Claude</strong> — Lambda, Cloud Functions, Step Functions</li>
+                            <li><strong>Event-Driven Architecture</strong> — Pub/Sub, Kafka, streaming</li>
+                            <li><strong>Multi-Tenant Systems</strong> — Aislamiento de datos, billing por tenant</li>
+                        </ul>
+
+                        <h2>👥 Liderazgo & Transformación</h2>
+                        <ul>
+                            <li><strong>Team Enablement</strong> — Capacitar organizaciones en Claude Code</li>
+                            <li><strong>Change Management</strong> — Adopción de IA en legacy systems</li>
+                            <li><strong>Risk Assessment</strong> — Evaluar impacto de sistemas con IA</li>
+                            <li><strong>Strategic Planning</strong> — Roadmaps de 2-5 años con IA</li>
+                        </ul>
+
+                        <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-tertiary); color: var(--text-secondary); font-size: 0.9em;">
+                            <strong>Propósito</strong>: Pasar de "usar Claude Code" a "liderar transformación digital con IA"
+                        </p>
+                    </div>
+                </section>
+
+                <section class="content-section" data-section="guia-roadmap-experto">
+                    <div class="section-header">
+                        <h1>Roadmap de Experticia: De Explorador a Líder</h1>
+                        <p>Visualiza tu progresión a través de los 6 niveles del programa Claude Code Mastery y entiende qué esperar en cada etapa.</p>
+                    </div>
+                    <div class="content">
+                        <style>
+                            .roadmap-card { background: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0; transition: transform 0.2s, box-shadow 0.2s; }
+                            .roadmap-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+                            .roadmap-card.current { background: var(--color-accent); background: linear-gradient(135deg, var(--color-accent)20, transparent); border-color: var(--color-accent); }
+                            .roadmap-card h3 { margin: 0 0 8px 0; font-size: 1.2em; }
+                            .roadmap-card .duration { color: var(--text-secondary); font-size: 0.9em; font-weight: bold; }
+                            .roadmap-card ul { margin: 12px 0 0 0; padding-left: 20px; }
+                            .roadmap-card li { margin: 6px 0; }
+                        </style>
+
+                        <div class="roadmap-card">
+                            <h3>Nivel 1: Explorador (Semanas 1-2)</h3>
+                            <div class="duration">⏱ 20-30 horas | Fundamentos absolutos</div>
+                            <p><strong>¿Qué aprenderás?</strong></p>
+                            <ul>
+                                <li>Instalar y configurar Claude Code</li>
+                                <li>Primeros comandos: edit, read, bash</li>
+                                <li>CLAUDE.md básico y memory management</li>
+                                <li>Prompt craft y decision frameworks iniciales</li>
+                                <li>Tu primer skill o proyecto simple</li>
+                            </ul>
+                            <p><strong>Habilidad clave al salir</strong>: Puedo usar Claude Code para automatizar tareas simples. Entiendo el concepto de memory.</p>
+                        </div>
+
+                        <div class="roadmap-card">
+                            <h3>Nivel 2: Practicante (Semanas 3-6)</h3>
+                            <div class="duration">⏱ 30-40 horas | Flujos de trabajo reales</div>
+                            <p><strong>¿Qué aprenderás?</strong></p>
+                            <ul>
+                                <li>Git workflows y branching strategy</li>
+                                <li>Rules & Config (.claude/rules)</li>
+                                <li>Memory management avanzado</li>
+                                <li>Cost management y testing asistido</li>
+                                <li>Batch API para grandes volúmenes</li>
+                            </ul>
+                            <p><strong>Habilidad clave al salir</strong>: Manejo flujos de trabajo reales. Optimizo costos y conozco mi consumo de tokens.</p>
+                        </div>
+
+                        <div class="roadmap-card">
+                            <h3>Nivel 3: Constructor (Semanas 7-10)</h3>
+                            <div class="duration">⏱ 40-50 horas | Integración y MCP</div>
+                            <p><strong>¿Qué aprenderás?</strong></p>
+                            <ul>
+                                <li>MCPs: casos de uso, setup, marketplace</li>
+                                <li>Orquestación de múltiples MCPs</li>
+                                <li>Hooks y integración en producción</li>
+                                <li>Arquitecturas simples con IA</li>
+                            </ul>
+                            <p><strong>Habilidad clave al salir</strong>: Puedo conectar Claude con sistemas externos. Orquesto múltiples herramientas.</p>
+                        </div>
+
+                        <div class="roadmap-card">
+                            <h3>Nivel 4: Ingeniero (Semanas 11-16)</h3>
+                            <div class="duration">⏱ 60-80 horas | Producción y escala</div>
+                            <p><strong>¿Qué aprenderás?</strong></p>
+                            <ul>
+                                <li>Git workflows, CI/CD, deployment</li>
+                                <li>Observabilidad, debugging, incident response</li>
+                                <li>Gobernanza, compliance, cost management</li>
+                                <li>Patrones y decisiones de arquitectura</li>
+                                <li>38+ módulos especializados</li>
+                            </ul>
+                            <p><strong>Habilidad clave al salir</strong>: Puedo construir sistemas con Claude Code listos para producción con confianza.</p>
+                        </div>
+
+                        <div class="roadmap-card">
+                            <h3>Nivel 5: Enterprise (Semanas 17-22)</h3>
+                            <div class="duration">⏱ 40-60 horas | Seguridad y estrategia</div>
+                            <p><strong>¿Qué aprenderás?</strong></p>
+                            <ul>
+                                <li>Seguridad, compliance, threat modeling</li>
+                                <li>Ética y responsabilidad en IA</li>
+                                <li>Cost forecasting y optimización</li>
+                                <li>Troubleshooting avanzado</li>
+                                <li>Escalabilidad empresarial</li>
+                            </ul>
+                            <p><strong>Habilidad clave al salir</strong>: Puedo diseñar sistemas de IA seguros y escalables para organizaciones.</p>
+                        </div>
+
+                        <div class="roadmap-card">
+                            <h3>Nivel 6: Leadership (Semanas 23-28)</h3>
+                            <div class="duration">⏱ 30-50 horas | Visión y liderazgo</div>
+                            <p><strong>¿Qué aprenderás?</strong></p>
+                            <ul>
+                                <li>Observabilidad de sistemas con IA</li>
+                                <li>Patrones de arquitectura empresarial</li>
+                                <li>Liderazgo técnico y transformación digital</li>
+                                <li>Change management y risk assessment</li>
+                            </ul>
+                            <p><strong>Habilidad clave al salir</strong>: Puedo liderar organizaciones en su transformación digital con Claude Code.</p>
+                        </div>
+
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--bg-tertiary);">
+                        <h2>Hito del Programa</h2>
+                        <table style="width: 100%; border-collapse: collapse; margin: 24px 0;">
+                            <thead>
+                                <tr style="background: var(--bg-tertiary);">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid var(--bg-border);">Hito</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid var(--bg-border);">Duración Acumulativa</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid var(--bg-border);">Resultado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Niveles 1-2</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">50-70 horas</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Automatización personal + flujos básicos</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Niveles 1-3</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">90-120 horas</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Construcción de MVPs + integración básica</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Niveles 1-4</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">150-200 horas</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Sistemas de producción escalables</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Todos los niveles</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">220-310 horas</td>
+                                    <td style="padding: 12px; border: 1px solid var(--bg-border);">Liderazgo en transformación digital</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-tertiary); color: var(--text-secondary); font-size: 0.9em;">
+                            <strong>Nota</strong>: Los tiempos son estimaciones. El aprendizaje es acumulativo: cada nivel se construye sobre los anteriores. Los checkpoints permiten validar tu progreso antes de avanzar.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="content-section" data-section="guia-recursos-externos">
+                    <div class="section-header">
+                        <h1>Recursos & Links Útiles</h1>
+                        <p>Documentación oficial, comunidades, herramientas y referencias para complementar tu aprendizaje en Claude Code Mastery.</p>
+                    </div>
+                    <div class="content">
+                        <style>
+                            .resources-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 24px 0; }
+                            .resource-card { background: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 8px; padding: 20px; }
+                            .resource-card h3 { margin: 0 0 12px 0; font-size: 1.1em; color: var(--color-accent); }
+                            .resource-card p { margin: 8px 0; line-height: 1.5; }
+                            .resource-card a { color: var(--color-accent); text-decoration: none; font-weight: 500; }
+                            .resource-card a:hover { text-decoration: underline; }
+                            .resource-card ul { margin: 12px 0; padding-left: 20px; }
+                            .resource-card li { margin: 6px 0; }
+                        </style>
+
+                        <h2>📚 Documentación Oficial</h2>
+                        <div class="resources-grid">
+                            <div class="resource-card">
+                                <h3>Anthropic Docs</h3>
+                                <p>Documentación completa de la API de Claude</p>
+                                <p><a href="https://docs.anthropic.com" target="_blank">docs.anthropic.com →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Incluye: API reference, modelos disponibles, best practices</p>
+                            </div>
+                            <div class="resource-card">
+                                <h3>Claude Code Guide</h3>
+                                <p>Guía oficial de Claude Code</p>
+                                <p><a href="https://claude.ai/docs/claude-code" target="_blank">claude.ai/docs/claude-code →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Instalación, setup, comandos básicos</p>
+                            </div>
+                            <div class="resource-card">
+                                <h3>MCP Specification</h3>
+                                <p>Especificación técnica de Model Context Protocol</p>
+                                <p><a href="https://modelcontextprotocol.io" target="_blank">modelcontextprotocol.io →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Protocolo, ejemplos, best practices para MCPs</p>
+                            </div>
+                        </div>
+
+                        <h2>🎁 Marketplace & Herramientas</h2>
+                        <div class="resources-grid">
+                            <div class="resource-card">
+                                <h3>MCP Registry</h3>
+                                <p>Directorio oficial de MCPs disponibles</p>
+                                <p><a href="https://mcp-registry.vercel.app" target="_blank">mcp-registry.vercel.app →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">100+ MCPs: GitHub, Slack, Jira, Postgres, etc.</p>
+                            </div>
+                            <div class="resource-card">
+                                <h3>Claude for VS Code</h3>
+                                <p>Extensión oficial para editor de código</p>
+                                <p><a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude" target="_blank">VS Code Extension →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Integración directa con tu editor favorito</p>
+                            </div>
+                            <div class="resource-card">
+                                <h3>Claude API Cookbook</h3>
+                                <p>Ejemplos de código en Python, Node.js, etc.</p>
+                                <p><a href="https://github.com/anthropics/anthropic-cookbook" target="_blank">anthropic-cookbook →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Ejemplos reales: RAG, vision, function calling</p>
+                            </div>
+                        </div>
+
+                        <h2>💬 Comunidades & Soporte</h2>
+                        <div class="resources-grid">
+                            <div class="resource-card">
+                                <h3>Anthropic Discord</h3>
+                                <p>Comunidad oficial de usuarios</p>
+                                <p><a href="https://discord.gg/anthropic" target="_blank">discord.gg/anthropic →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Soporte, ejemplos, discusiones en vivo</p>
+                            </div>
+                            <div class="resource-card">
+                                <h3>Claude Code Community</h3>
+                                <p>Foro especializado en Claude Code</p>
+                                <p><a href="https://forum.anthropic.com/c/claude-code" target="_blank">forum.anthropic.com →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Preguntas, casos de uso, mejores prácticas</p>
+                            </div>
+                            <div class="resource-card">
+                                <h3>Stack Overflow</h3>
+                                <p>Q&amp;A sobre Claude y MCPs</p>
+                                <p><a href="https://stackoverflow.com/questions/tagged/claude+api" target="_blank">Stack Overflow →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Tag: [claude-api] [mcp] [anthropic]</p>
+                            </div>
+                        </div>
+
+                        <h2>📺 Tutoriales & Videos</h2>
+                        <div class="resources-grid">
+                            <div class="resource-card">
+                                <h3>Anthropic YouTube</h3>
+                                <p>Videos oficiales y demostraciones</p>
+                                <p><a href="https://youtube.com/@anthropic" target="_blank">youtube.com/@anthropic →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Actualizado regularmente con feature releases</p>
+                            </div>
+                            <div class="resource-card">
+                                <h3>Claude Code Setup Guides</h3>
+                                <p>Tutoriales paso a paso (comunitarios)</p>
+                                <p><a href="https://github.com/topics/claude-code-tutorial" target="_blank">GitHub Topics →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Contribuciones de comunidad en español e inglés</p>
+                            </div>
+                        </div>
+
+                        <h2>💳 Precios & Billing</h2>
+                        <div class="resources-grid">
+                            <div class="resource-card">
+                                <h3>Pricing Oficial</h3>
+                                <p>Modelos, costos por token, volumen</p>
+                                <p><a href="https://www.anthropic.com/pricing" target="_blank">anthropic.com/pricing →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Haiku, Sonnet, Opus, volumen discounts</p>
+                            </div>
+                            <div class="resource-card">
+                                <h3>API Billing Console</h3>
+                                <p>Dashboard para monitoreo de uso</p>
+                                <p><a href="https://console.anthropic.com/billing" target="_blank">console.anthropic.com/billing →</a></p>
+                                <p style="font-size: 0.9em; color: var(--text-secondary);">Uso real, proyecciones, alertas de presupuesto</p>
+                            </div>
+                        </div>
+
+                        <h2>📝 Recursos Adicionales</h2>
+                        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 8px; margin: 24px 0;">
+                            <ul>
+                                <li><a href="https://github.com/anthropics/anthropic-sdk-python" target="_blank">SDK de Python</a> — Librería oficial para integración</li>
+                                <li><a href="https://github.com/anthropics/anthropic-sdk-js" target="_blank">SDK de JavaScript</a> — Soporte para Node.js y navegadores</li>
+                                <li><a href="https://prompts.anthropic.com" target="_blank">Prompt Library</a> — Colección de prompts probados en comunidad</li>
+                                <li><a href="https://www.anthropic.com/research" target="_blank">Anthropic Research</a> — Papers, estudios, investigaciones avanzadas</li>
+                                <li><a href="https://www.anthropic.com/blog" target="_blank">Blog de Anthropic</a> — Actualizaciones, case studies, análisis</li>
+                            </ul>
+                        </div>
+
+                        <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-tertiary); color: var(--text-secondary); font-size: 0.9em;">
+                            <strong>Actualizado</strong>: 2026-05 | <strong>Contribuciones bienvenidas</strong>: ¿Falta algún recurso? Abre un issue o PR.
+                        </p>
+                    </div>
                 </section>
 
         </main>
