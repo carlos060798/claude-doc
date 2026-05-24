@@ -223,6 +223,8 @@
                                 <span class="nav-icon">📚</span> Índice Nivel 5</a></li>
                             <li><a href="#guia-nivel6-indice" class="nav-link" data-section="guia-nivel6-indice">
                                 <span class="nav-icon">📚</span> Índice Nivel 6</a></li>
+                            <li><a href="#guia-mcp-advanced" class="nav-link" data-section="guia-mcp-advanced">
+                                <span class="nav-icon">🔗</span> MCP Hooks & Skills</a></li>
                             <li><a href="#guia-roadmap-experto" class="nav-link" data-section="guia-roadmap-experto">
                                 <span class="nav-icon">🗺️</span> Roadmap Experticia</a></li>
                             <li><a href="#guia-recursos-externos" class="nav-link" data-section="guia-recursos-externos">
@@ -28051,6 +28053,487 @@ build/
 
                 <p><strong>High Availability:</strong> Circuit breaker, Graceful degradation, Cached responses</p>
             </section>
+
+                <!-- MCP + Hooks + Skills Avanzado -->
+                <section class="content-section" data-section="guia-mcp-advanced" data-mode="technical">
+                    <div class="section-header">
+                        <span class="breadcrumb">Guías Avanzadas / MCP Hooks & Skills</span>
+                        <h2>🔗 MCP + Hooks + Skills — Patrones Avanzados</h2>
+                        <p class="section-lead">Profundización técnica para arquitectos de Claude Code.</p>
+                    </div>
+
+                    <!-- ========== MCP Servers — Deployment & Lifecycle ========== -->
+                    <h3 class="block-title">MCP Servers — Deployment & Lifecycle</h3>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Server Lifecycle Completo</h4>
+                    <div class="code-block" data-lang="plaintext">
+                        <pre><code>1. Register (CLI/settings.json)
+   ↓
+2. Startup sequence
+   - Spawn process (stdio, HTTP, SSE)
+   - Handshake (capabilities negotiation)
+   - Tools available (expose via schema)
+   ↓
+3. Ready state
+   - Claude can invoke tools
+   - Tool context isolation (per-session vs global)
+   ↓
+4. Tool invocation loop
+   - Tool call → Tool result → Next tool or end
+   ↓
+5. Shutdown / Cleanup
+   - Send stop signal
+   - Release resources
+   - Cleanup temp files</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Deployment Models (Decisión Arquitectónica)</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Cómo</th>
+                                <th>Cuándo</th>
+                                <th>Ventajas</th>
+                                <th>Desventajas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Stdio</strong></td>
+                                <td>Spawned process stdin/stdout</td>
+                                <td>Local dev, testing</td>
+                                <td>Simple, fast, debugging</td>
+                                <td>Memoria por sesión, no IPC</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HTTP</strong></td>
+                                <td>Server escucha puerto</td>
+                                <td>Microservices, prod scale</td>
+                                <td>Reutilizable, múltiples clientes</td>
+                                <td>Latencia, overhead, auth</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SSE</strong></td>
+                                <td>Server pushes events</td>
+                                <td>Real-time, streaming</td>
+                                <td>Bidireccional, event-driven</td>
+                                <td>Complexidad, troubleshooting</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Decisión:</strong></p>
+                    <ul class="bullet-list">
+                        <li>Desarrollo: stdio (más rápido iterar)</li>
+                        <li>Producción pequeña (&lt;10 sesiones/min): stdio con pooling</li>
+                        <li>Producción grande (&gt;100 sesiones/min): HTTP con load balancer</li>
+                    </ul>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Error Handling en MCP</h4>
+                    <p>MCP no tiene retry automático. Errores en tools están visibles al modelo:</p>
+                    <div class="code-block" data-lang="json">
+                        <pre><code>{
+  "content": [{
+    "type": "tool_result",
+    "tool_use_id": "tool_use_123",
+    "is_error": true,
+    "text": "Database connection timeout after 5s. Retrying in 10s recommended."
+  }]
+}</code></pre>
+                    </div>
+                    <p><strong>Patrón:</strong> Devuelve <code>is_error: true</code> + <code>text</code> accionable (qué pasó, qué hacer).</p>
+
+                    <!-- ========== Hooks — Casos de Uso Avanzados ========== -->
+                    <h3 class="block-title" style="margin-top: 40px;">Hooks — Casos de Uso Avanzados</h3>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">1. PreToolUse: Audit Log + Guardias de Seguridad</h4>
+                    <p><strong>Caso:</strong> Registrar CADA tool call antes de ejecutar. Bloquear destructivos.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code>#!/bin/bash
+# .claude/hooks/pre-tool-use-audit.sh
+
+LOG_FILE=~/.claude/audit.log
+
+# Log all tool invocations
+echo "[$(date -Iseconds)] TOOL=$CLAUDE_TOOL_NAME INPUT=$CLAUDE_TOOL_INPUT_COMMAND" >> "$LOG_FILE"
+
+# Block dangerous patterns (exit 2 blocks, stderr shown to Claude)
+if [[ "$CLAUDE_TOOL_NAME" == "Bash" ]]; then
+  cmd="$CLAUDE_TOOL_INPUT_COMMAND"
+
+  # Destructive patterns
+  if echo "$cmd" | grep -qE "(sudo.*rm|-rf|DROP TABLE|TRUNCATE|DELETE FROM)"; then
+    echo "BLOCKED: Destructive command detected. Use /confirm to override." >&2
+    exit 2  # Block this tool call
+  fi
+
+  # Cost patterns (expensive APIs)
+  if echo "$cmd" | grep -qE "(curl.*api.example.com|gcloud.*compute)"; then
+    echo "⚠️  EXPENSIVE: This API costs ~$10/call. Continue? (exit 0 to allow)" >&2
+    exit 0  # Allow, but warn (exit 1 = warn only, exit 0 = allow)
+  fi
+fi
+
+exit 0  # Allow everything else</code></pre>
+                    </div>
+
+                    <p><strong>En settings.json:</strong></p>
+                    <div class="code-block" data-lang="json">
+                        <pre><code>{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash",
+      "hooks": [{
+        "type": "command",
+        "command": "bash .claude/hooks/pre-tool-use-audit.sh"
+      }]
+    }]
+  }
+}</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">2. PostToolUse: Auto-Formatting + Testing</h4>
+                    <p><strong>Caso:</strong> Después de cada Edit/Write, ejecuta lint y tests.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code>#!/bin/bash
+# .claude/hooks/post-tool-use-format.sh
+
+FILE="$CLAUDE_TOOL_INPUT_FILE_PATH"
+
+# Auto-format by type
+if [[ "$FILE" == *.py ]]; then
+  python -m black "$FILE" 2>/dev/null
+elif [[ "$FILE" == *.js ]]; then
+  npx prettier --write "$FILE" 2>/dev/null
+elif [[ "$FILE" == *.go ]]; then
+  gofmt -w "$FILE" 2>/dev/null
+fi
+
+# Run tests if changed
+if git diff --quiet "$FILE" 2>/dev/null; then
+  : # No changes after formatting
+else
+  echo "Running tests..."
+  npm test -- --testPathPattern="$(basename "$FILE" .js)" 2>&1 | tail -3
+fi
+
+exit 0</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">3. UserPromptSubmit: Inyectar contexto dinámico</h4>
+                    <p><strong>Caso:</strong> Antes de cada prompt del usuario, inyecta contexto actual (branch, status, etc.).</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code>#!/bin/bash
+# .claude/hooks/user-prompt-inject-context.sh
+
+# Read STDIN (el prompt del usuario)
+USER_PROMPT=$(cat)
+
+# Build dynamic context
+CONTEXT="
+Current branch: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'not-a-repo')
+Uncommitted changes: $(git status --short 2>/dev/null | wc -l)
+Latest commit: $(git log -1 --oneline 2>/dev/null | cut -c1-50)
+"
+
+# Prepend context and re-output
+echo "📍 Context: $CONTEXT"
+echo ""
+echo "$USER_PROMPT"
+
+exit 0</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">4. PreCompact: Guardar scratchpad antes de perder contexto</h4>
+                    <p><strong>Caso:</strong> Antes de <code>/compact</code>, guardar hechos clave en un archivo para no perderlos.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code>#!/bin/bash
+# .claude/hooks/pre-compact-scratchpad.sh
+
+SCRATCHPAD=~/.claude/scratchpad-$(date +%s).json
+
+# Leer desde stdin el payload del hook (JSON)
+# Extraer hallazgos/hechos relevantes y guardarlos
+
+cat > "$SCRATCHPAD" << 'EOF'
+{
+  "timestamp": "$(date -Iseconds)",
+  "case_facts": [
+    "User ID 123 flagged for fraud",
+    "Transaction amount: $50,000 USD"
+  ],
+  "next_steps": [
+    "Verify payment method",
+    "Contact customer"
+  ]
+}
+EOF
+
+echo "✅ Scratchpad saved to $SCRATCHPAD"
+exit 0</code></pre>
+                    </div>
+
+                    <!-- ========== Skills — Anatomía Avanzada ========== -->
+                    <h3 class="block-title" style="margin-top: 40px;">Skills — Anatomía Avanzada + Templates</h3>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Cuando Auto-Invocar vs Manual</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Trigger</th>
+                                <th>Auto-invoke</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Palabra clave en prompt</strong></td>
+                                <td>✅ Sí</td>
+                                <td>Usuario dice "validate schema" → skill se auto-invoca</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Error detectado</strong></td>
+                                <td>✅ Sí (vía hook)</td>
+                                <td>PreToolUse detecta error JSON → skill corrector</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Temporal hook</strong></td>
+                                <td>✅ Sí</td>
+                                <td>Stop hook invoca skill de cleanup</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Slash command</strong></td>
+                                <td>Manual</td>
+                                <td><code>/invoice-generator</code> (siempre manual)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Context específico</strong></td>
+                                <td>✅ Sí</td>
+                                <td>Si contexto contiene "PR review" → skill code-reviewer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Template: Skill corrector de errores</h4>
+                    <div class="code-block" data-lang="yaml">
+                        <pre><code>---
+name: json-validator-fixer
+description: |
+  Automatically triggered when JSON parsing fails or validation error detected.
+  Analyzes the malformed JSON, reports the exact issue, and fixes it.
+  Triggers: "JSON error", "parse failed", "invalid schema"
+
+allowed-tools: Read, Write, Bash(jq:*)
+model: claude-opus-4-7  # Razonamiento complejo
+context: fork  # Aislado para no contaminar
+---
+
+# JSON Validator & Fixer
+
+## Objetivo
+Diagnosticar y reparar errores de sintaxis/schema en JSON.
+
+## Inputs
+- file_path: ruta al archivo JSON roto
+- expected_schema: (opcional) JSON Schema esperado
+
+## Pasos
+1. Leer archivo con `Read file_path`
+2. Intentar parse con `jq empty` — reportar línea exacta de error
+3. Si schema: validar con `jq -e 'schema_validate'`
+4. Proponer fix: mostrar 3 opciones de corrección
+5. Aplicar fix con `Write` si usuario confirma
+
+## Salida
+```json
+{
+  "status": "fixed" | "unfixable",
+  "error": "Unterminated string on line 42",
+  "fixes": [
+    { "description": "Add missing quote", "preview": "..." },
+    ...
+  ],
+  "applied": false  // Usuario debe confirmar
+}
+```</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Template: Skill code reviewer</h4>
+                    <div class="code-block" data-lang="yaml">
+                        <pre><code>---
+name: code-reviewer
+description: |
+  Use when user asks to "review code", "check for bugs", "audit", or "second opinion".
+  Performs multi-pass review: per-file static analysis → cross-file consistency → synthesis.
+
+allowed-tools: Read, Bash(grep:*), Bash(find:*)
+model: claude-sonnet-4-6
+context: fork
+---
+
+# Code Reviewer — Multi-Pass
+
+## Strategy
+- **Pass 1 (Parallel):** Each file → syntax, antipatterns, common bugs
+- **Pass 2 (Sequential):** Cross-file → inconsistencies, dependency issues
+- **Pass 3 (Synthesis):** Combined findings → risk assessment + recommendations
+
+## Tools Only
+- Read: para archivos cortos
+- Grep: para búsqueda de patrones
+- (NO Write/Edit — reviewer no modifica)
+
+## Output
+```json
+{
+  "files_reviewed": 42,
+  "critical_issues": [...],
+  "warnings": [...],
+  "suggestions": [...],
+  "overall_risk": "low|medium|high"
+}
+```</code></pre>
+                    </div>
+
+                    <!-- ========== Integration Patterns ========== -->
+                    <h3 class="block-title" style="margin-top: 40px;">Integration Patterns</h3>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Pattern 1: Hook → Skill (Autofix)</h4>
+                    <div class="code-block" data-lang="json">
+                        <pre><code>{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Write",
+      "hooks": [{
+        "type": "command",
+        "command": "bash -c 'if ! jq empty \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null; then echo \"ERROR: Invalid JSON detected. Invoking json-validator-fixer skill.\"; exit 1; fi'"
+      }]
+    }]
+  }
+}</code></pre>
+                    </div>
+                    <p>Cuando PostToolUse detecta JSON inválido (exit 1), Claude lee el error y <strong>auto-invoca</strong> el skill <code>json-validator-fixer</code>.</p>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Pattern 2: Skill → Tool → Hook (CI Pipeline)</h4>
+                    <div class="code-block" data-lang="yaml">
+                        <pre><code>---
+name: ci-validator
+description: "Validates code before commit"
+allowed-tools: Bash(npm test:*), Bash(eslint:*), Bash(git:*)
+context: fork
+---
+
+# CI Validator
+
+1. Run tests: `Bash(npm test)`
+2. Lint: `Bash(eslint . --fix)`
+3. Commit hook intercepts and verifies tests passed
+4. If failed: stop and report to user
+
+El hook PreToolUse intercepta `git commit` y valida tests.</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Pattern 3: Multi-Skill Orchestration</h4>
+                    <div class="code-block" data-lang="plaintext">
+                        <pre><code>User: "Review and fix this PR"
+  ↓
+Auto-trigger: code-reviewer skill (fork)
+  ↓ (Finds issues)
+  ↓
+Auto-trigger: code-fixer skill (fork)
+  ↓ (Applies fixes)
+  ↓
+Auto-trigger: tests-validator skill (fork)
+  ↓ (Runs tests)
+  ↓
+Return aggregated report</code></pre>
+                    </div>
+
+                    <!-- ========== Debugging Avanzado ========== -->
+                    <h3 class="block-title" style="margin-top: 40px;">Debugging Avanzado</h3>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Hook que no se ejecuta</h4>
+                    <p><strong>Checklist:</strong></p>
+                    <ol class="numbered-list">
+                        <li>¿JSON válido en settings.json? → <code>jq . .claude/settings.json</code></li>
+                        <li>¿Matcher correcto? → Busca lista de eventos: <code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, <code>Notification</code>, <code>SessionStart</code>, <code>SessionEnd</code>, <code>PreCompact</code>, <code>UserPromptSubmit</code>, <code>SubagentStop</code></li>
+                        <li>¿Script executable? → <code>chmod +x .claude/hooks/my-hook.sh</code></li>
+                        <li>¿Working directory correcto? → Claude corre hooks con <code>cwd</code> = project dir</li>
+                    </ol>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Hook ejecuta pero variables vacías</h4>
+                    <p><strong>Causas:</strong></p>
+                    <ul class="bullet-list">
+                        <li>Subshell no hereda <code>export</code>. Fix: agrega <code>export VAR</code> explícitamente.</li>
+                        <li>Variable name typo: <code>$CLAUDE_TOOL_NMAE</code> vs <code>$CLAUDE_TOOL_NAME</code></li>
+                    </ul>
+
+                    <p><strong>Debug:</strong></p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code>#!/bin/bash
+echo "Tool: $CLAUDE_TOOL_NAME" >> /tmp/hook-debug.log
+echo "File: $CLAUDE_TOOL_INPUT_FILE_PATH" >> /tmp/hook-debug.log</code></pre>
+                    </div>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Hook bloquea pero no quería</h4>
+                    <p><strong>Solución:</strong> Asegúrate de <code>exit 0</code> al final. Bash default es exit 0, pero si un comando falla, hereda su exit code.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code># ❌ Falla silenciosa
+cd /nonexistent
+echo "done"  # never runs, inherits exit 1 from cd
+
+# ✅ Seguro
+cd /nonexistent || true
+echo "done"
+exit 0</code></pre>
+                    </div>
+
+                    <!-- ========== Performance Tuning ========== -->
+                    <h3 class="block-title" style="margin-top: 40px;">Performance Tuning</h3>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Hook Latency</h4>
+                    <ul class="bullet-list">
+                        <li>Stdio hooks: &lt;100ms típico</li>
+                        <li>HTTP hooks: 500ms-2s</li>
+                        <li>Heavy bash: &gt;1s (linting, testing)</li>
+                    </ul>
+                    <p><strong>Tip:</strong> Async patterns (background jobs en PostToolUse, no bloquean).</p>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">Skill Startup</h4>
+                    <ul class="bullet-list">
+                        <li>Fork context: ~500ms overhead (new session context)</li>
+                        <li>Inherit context: &lt;100ms (reuse session)</li>
+                    </ul>
+                    <p><strong>Estrategia:</strong></p>
+                    <ul class="bullet-list">
+                        <li>Fork para aislamiento crítico (reviewer, auditor)</li>
+                        <li>Inherit para tasks rápidas (formateo, simple fixes)</li>
+                    </ul>
+
+                    <h4 style="margin-top: 24px; margin-bottom: 12px;">MCP Server Memory</h4>
+                    <ul class="bullet-list">
+                        <li>Stdio: por sesión</li>
+                        <li>HTTP: compartido (cuidado con state)</li>
+                    </ul>
+                    <p><strong>Patrón:</strong> Stateless tools. Si necesitas state → guardar en disk/DB.</p>
+
+                    <!-- ========== Security Checklist ========== -->
+                    <h3 class="block-title" style="margin-top: 40px;">Security Checklist</h3>
+                    <ul class="bullet-list">
+                        <li>Hooks no ejecutan comandos de entrada directa (sanitizar $VAR)</li>
+                        <li>Secrets NO en settings.json (gitignored)</li>
+                        <li>Permisos archivo .claude/hooks/* = 755</li>
+                        <li>Validar STDIN en hooks que reciben JSON</li>
+                        <li>Rate limit en MCP servers (no spam tool calls)</li>
+                        <li>Error messages no exponen paths internos o secrets</li>
+                    </ul>
+
+                    <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-tertiary); color: var(--text-secondary); font-size: 0.9em;">
+                        <strong>Última actualización:</strong> 2026-05-16
+                    </p>
+
+                </section>
 
         </main>
     </div>
