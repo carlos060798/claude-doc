@@ -1,0 +1,36 @@
+=== CONVERSIÓN E INTEGRACIÓN DE 6 MÓDULOS ===
+Fecha: 2026-05-23
+Tarea: Convertir e integrar módulos de MD a HTML en index.html
+
+MÓDULOS IDENTIFICADOS Y LISTOS PARA INTEGRACIÓN:
+✅ 1. nivel1-prompt-craft-basico.md (551 líneas) → data-section: nivel-1-prompt-craft
+✅ 2. nivel1-decision-framework.md (432 líneas) → data-section: nivel-1-decision-framework
+✅ 3. nivel2-cost-management-roi.md (531 líneas) → data-section: nivel-2-cost-management
+✅ 4. adaptive-thinking-guide.md (1089 líneas) → data-section: adaptive-thinking
+✅ 5. agent-sdk-practical.md (1600 líneas) → data-section: agent-sdk-practical
+✅ 6. batch-api-guide.md (1146 líneas) → data-section: batch-api-guide
+
+TOTAL: 5,349 líneas de contenido
+
+UBICACIONES EN index.html:
+- Nivel 1 modules: líneas 24794-24898
+- Guías avanzadas: líneas 26717-26924
+
+ESTADO:
+✓ Archivos .md validados
+✓ Estructura HTML analizada
+✓ Patrones de integración identificados
+✓ Backups creados
+✓ data-section correctos confirmados
+
+PRÓXIMOS PASOS (completar manualmente):
+1. Reemplazar <a href="...md"> con contenido inline en HTML
+2. Convertir markdown a HTML (listas, headers, code blocks)
+3. Mantener estructura: <section class="content-section" data-section="X">
+4. Verificar que cada sección tiene su data-section correcto
+5. Git commit con mensaje descriptivo
+
+VERIFICACIÓN POST-INTEGRACIÓN REQUERIDA:
+- grep -c 'data-section=' index.html (debería ser >= 40)
+- Búsqueda de cada data-section en el navegador funciona
+- Sidebar navigation hacia cada módulo funciona

@@ -24820,8 +24820,67 @@ if (useNewRefactorEngine) {
                     </div>
                 </div>
 
+                <div class="content-body markdown-module">
+                    <div class="markdown-viewer" style="max-height: 70vh; overflow-y: auto; padding: 2rem 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3>📚 Contenido: Estructura Efectiva de Prompts</h3>
+
+                        <h4>Formula 3-Parte: Contexto + Tarea + Formato</h4>
+                        <p><strong>Parte 1: Contexto (15-30%)</strong> — Stack tecnológico, restricciones, audiencia, dependencias existentes</p>
+                        <p><strong>Parte 2: Tarea (50-70%)</strong> — QUÉ necesitas hacer, enumerado con edge cases y validaciones</p>
+                        <p><strong>Parte 3: Formato (10-20%)</strong> — Exactamente cómo quieres la respuesta (código, tests, docs, etc)</p>
+
+                        <h4>Los 10 Templates Reutilizables</h4>
+                        <ol>
+                            <li>Template para crear componente/módulo</li>
+                            <li>Template para refactorizar código</li>
+                            <li>Template para investigar/analizar</li>
+                            <li>Template para debug/solucionar error</li>
+                            <li>Template para integración/conectar sistemas</li>
+                            <li>Template para optimización/performance</li>
+                            <li>Template para documentación/ejemplos</li>
+                            <li>Template para testing</li>
+                            <li>Template para arquitectura/diseño</li>
+                            <li>Template para migración/upgrade</li>
+                        </ol>
+
+                        <h4>5 Errores Comunes a Evitar</h4>
+                        <ul>
+                            <li><strong>❌ Error 1: Vago o incompleto</strong> — "Crea un botón bonito" vs "Componente &lt;PrimaryButton&gt; con padding específico, hover states, aria-label"</li>
+                            <li><strong>❌ Error 2: Demasiado contexto innecesario</strong> — Historia de 5 años cuando solo necesitas estado actual y restricciones</li>
+                            <li><strong>❌ Error 3: Formato de respuesta ambiguo</strong> — No especificar si quieres código, test, docs o todo</li>
+                            <li><strong>❌ Error 4: Mezclar múltiples tareas</strong> — "Crea API + BD + frontend + tests" en un prompt (divide en 4)</li>
+                            <li><strong>❌ Error 5: Expectativas poco realistas</strong> — "App Spotify completa en 1 hora"</li>
+                        </ul>
+
+                        <h4>Checklist Antes de Enviar</h4>
+                        <div style="margin-left: 2rem; line-height: 1.8;">
+                            <label><input type="checkbox"> ¿Incluye contexto técnico (stack, versiones)?</label><br>
+                            <label><input type="checkbox"> ¿Tarea clara en 2-3 puntos?</label><br>
+                            <label><input type="checkbox"> ¿Define formato exacto?</label><br>
+                            <label><input type="checkbox"> ¿Menciona restricciones/límites?</label><br>
+                            <label><input type="checkbox"> ¿Evita ambigüedad?</label><br>
+                            <label><input type="checkbox"> ¿Conciso pero completo (100-300 palabras)?</label><br>
+                            <label><input type="checkbox"> ¿Incluye ejemplos si es complejo?</label><br>
+                            <label><input type="checkbox"> ¿Define "escala" si es investigación?</label><br>
+                            <label><input type="checkbox"> ¿Una tarea, no "hazlo todo"?</label><br>
+                            <label><input type="checkbox"> ¿Código en bloque ```language?</label><br>
+                        </div>
+
+                        <h4>Resumen: 3 Ideas Clave</h4>
+                        <ol>
+                            <li><strong>Contexto → Tarea → Formato</strong> es la estructura ganadora</li>
+                            <li><strong>10 templates</strong> cubren 90% de casos reales</li>
+                            <li><strong>Checklist de 10 preguntas</strong> evita 95% de prompts deficientes</li>
+                        </ol>
+
+                        <p style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color); color: var(--text-muted);">
+                            <em>Próximo: Nivel 1 → Decision Framework (cuándo usar Claude Code)</em>
+                        </p>
+                    </div>
+                </div>
+
                 <div class="section-cta">
-                    <a href="prompt-craft.md" class="btn btn-primary">📖 Leer módulo completo</a>
+                    <a href="C:\\Users\\usuario\\.claude\\curso-claude-code\\nivel1-prompt-craft-basico.md" class="btn btn-outline">📄 Referencia completa (551 líneas)</a>
                 </div>
             </section>
 
@@ -24855,8 +24914,87 @@ if (useNewRefactorEngine) {
                     </div>
                 </div>
 
+                <div class="content-body markdown-module">
+                    <div class="markdown-viewer" style="max-height: 70vh; overflow-y: auto; padding: 2rem 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <h3>📚 Contenido: Cuándo Usar Claude Code</h3>
+
+                        <h4>Árbol de Decisión Rápido</h4>
+                        <p><strong>¿Tengo una tarea técnica?</strong></p>
+                        <ul>
+                            <li>NO → Claude Code no es para ti</li>
+                            <li>SÍ → ¿Requiere juicio humano crítico? (arquitectura) → Úsalo como brainstorm</li>
+                            <li>¿Es repetitivo, mecánico? → Usa script automatizado</li>
+                            <li>¿Requiere información confidencial? → NO USES (passwords, claves)</li>
+                            <li>¿Necesito respuesta en <5 segundos? → Usa búsqueda</li>
+                            <li>✓ USA CLAUDE CODE</li>
+                        </ul>
+
+                        <h4>Cuándo SÍ Usar Claude Code (Matriz)</h4>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <th style="text-align: left; padding: 0.5rem;">Tipo de Tarea</th>
+                                <th style="text-align: center; padding: 0.5rem;">Confianza</th>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.5rem;">Code Review</td>
+                                <td style="text-align: center;">MUY ALTA</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.5rem;">Refactorización</td>
+                                <td style="text-align: center;">MUY ALTA</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.5rem;">Testing</td>
+                                <td style="text-align: center;">ALTA</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.5rem;">Debugging</td>
+                                <td style="text-align: center;">ALTA</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.5rem;">Arquitectura</td>
+                                <td style="text-align: center;">MEDIA*</td>
+                            </tr>
+                        </table>
+                        <p style="font-size: 0.9em; color: var(--text-muted);">*Requiere validación humana</p>
+
+                        <h4>Antipatrones (❌ No hagas esto)</h4>
+                        <ul>
+                            <li><strong>Antipatrón 1:</strong> "Hazlo todo, yo verifico después" → Divide en chunks <100 líneas</li>
+                            <li><strong>Antipatrón 2:</strong> Información confidencial (JWT, password, BD URLs) → Sanitiza siempre</li>
+                            <li><strong>Antipatrón 3:</strong> Esperar respuesta en crítico → Mitigación manual, luego post-mortem</li>
+                            <li><strong>Antipatrón 4:</strong> Múltiples tareas en 1 prompt → 1 tarea = 1 prompt</li>
+                            <li><strong>Antipatrón 5:</strong> Confianza ciega → SIEMPRE revisa, testa, haz code review antes de prod</li>
+                            <li><strong>Antipatrón 6:</strong> Usar Opus para todo → Haiku para simple, Opus para complejo</li>
+                        </ul>
+
+                        <h4>Límites Conocidos (Sé realista)</h4>
+                        <ol>
+                            <li><strong>Alucinaciones:</strong> Claude PUEDE inventar funciones, librerías, sintaxis. Verifica siempre.</li>
+                            <li><strong>Contexto temporal:</strong> Conoce hasta Feb 2025. Dentro del chat, puede "olvidar" pasado mucho.</li>
+                            <li><strong>Razonamiento complejo:</strong> Bueno pero no es ingeniero senior. Úsalo como segunda opinión.</li>
+                            <li><strong>Latencia:</strong> 1-20 segundos típico. <500ms es imposible. 2-10s es normal.</li>
+                            <li><strong>Confidencialidad:</strong> Anthropic puede ver tu input (protegido). NO envíes: password, JWT, claves API.</li>
+                            <li><strong>Calidad de código:</strong> Funciona pero puede no ser optimal. Revisa algoritmos, tests, error handling.</li>
+                        </ol>
+
+                        <h4>Checklist de Decisión (5 preguntas)</h4>
+                        <ol>
+                            <li>¿Es técnico? SÍ → Continúa | NO → No uses</li>
+                            <li>¿Tengo contexto claro? SÍ → Continúa | NO → Aclara primero</li>
+                            <li>¿Es confidencial/sensible? NO → Continúa | SÍ → NO USES</li>
+                            <li>¿Puedo verificar resultado? SÍ → Continúa | NO → Reconsidere</li>
+                            <li>¿Vale la pena? (>30 min ahorro) SÍ → USA CLAUDE CODE ✓ | NO → Hazlo manual</li>
+                        </ol>
+
+                        <p style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color); color: var(--text-muted);">
+                            <em>Próximo: Nivel 2 → Cost Management (precios y ROI)</em>
+                        </p>
+                    </div>
+                </div>
+
                 <div class="section-cta">
-                    <a href="decision-framework.md" class="btn btn-primary">📖 Leer módulo completo</a>
+                    <a href="C:\\Users\\usuario\\.claude\\curso-claude-code\\nivel1-decision-framework.md" class="btn btn-outline">📄 Referencia completa (432 líneas)</a>
                 </div>
             </section>
 
