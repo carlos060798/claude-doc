@@ -34,13 +34,20 @@
         const links = document.querySelectorAll('.nav-link, [data-jump]');
 
         function goTo(sectionId) {
-            const sections = document.querySelectorAll('.content-section:not(.hidden)');
-            sections.forEach((s) => {
-                s.classList.toggle('active', s.dataset.section === sectionId);
+            // Remover .active de todas las secciones, agregar solo a la que coincide
+            document.querySelectorAll('.content-section').forEach((s) => {
+                s.classList.remove('active');
+                if (s.dataset.section === sectionId) {
+                    s.classList.add('active');
+                }
             });
 
+            // Remover .active de todos los links, agregar solo al que coincide
             document.querySelectorAll('.nav-link').forEach((l) => {
-                l.classList.toggle('active', l.dataset.section === sectionId);
+                l.classList.remove('active');
+                if (l.dataset.section === sectionId) {
+                    l.classList.add('active');
+                }
             });
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
