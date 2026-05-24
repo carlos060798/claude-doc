@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -2129,6 +2129,114 @@ Claude: Según tu memoria, usas PostgreSQL en AWS RDS con Redis de cache.
                     cuando una salida MCP supera 10.000 tokens. Configura
                     <code>MAX_MCP_OUTPUT_TOKENS</code> (por defecto 25.000) según tus necesidades.
                 </div>
+
+<!-- ====== MÓDULO: Testing Asistido ====== -->
+<section class="content-section" data-section="nivel-2-testing-asistido" data-mode="technical">
+    <div class="section-header">
+        <span class="breadcrumb">Nivel 2 / Testing Asistido</span>
+        <h2>🧪 Testing Asistido</h2>
+        <p class="section-lead">TDD inverso. Generar tests de código existente. Métricas de cobertura. CI pipeline para tests automáticos.</p>
+    </div>
+    <h3 class="block-title">Introducción</h3>
+    <p>Testing manual es tedioso. Testing por IA es rápido y confiable. Esta sección te enseña a:</p>
+    <ul class="bullet-list">
+        <li>Generar tests de código existente (TDD inverso)</li>
+        <li>Alcanzar 80%+ cobertura en 30 minutos</li>
+        <li>Configurar CI automático para tests</li>
+        <li>Documentar casos críticos</li>
+    </ul>
+    <p><strong>Tiempo estimado:</strong> 60 minutos | <strong>Requisitos:</strong> Conocimiento de Jest/Vitest, CI básico</p>
+
+    <h3 class="block-title">1. TDD Inverso (Código → Tests)</h3>
+    <strong>Concepto</strong>
+    <div class="code-block" data-lang="text">
+        <pre><code>Tradicionalmente: Tests PRIMERO → Código para pasar tests
+Con IA: Código EXISTENTE → Tests de cobertura</code></pre>
+    </div>
+
+    <h3 class="block-title">2. Flujo típico</h3>
+    <ol class="bullet-list">
+        <li>Prepara el código (función o componente)</li>
+        <li>Describe a Claude: framework, cobertura objetivo, casos críticos</li>
+        <li>Claude genera tests organizados por categoría</li>
+        <li>Integra y verifica: npm test</li>
+    </ol>
+
+    <h3 class="block-title">3. Métricas de Cobertura</h3>
+    <table class="data-table">
+        <thead>
+            <tr><th>Métrica</th><th>Qué mide</th><th>Objetivo</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Lines</td><td>Líneas de código ejecutadas</td><td>80%+</td></tr>
+            <tr><td>Statements</td><td>Sentencias ejecutadas</td><td>80%+</td></tr>
+            <tr><td>Branches</td><td>Caminos if/else ejecutados</td><td>75%+</td></tr>
+            <tr><td>Functions</td><td>Funciones llamadas</td><td>80%+</td></tr>
+        </tbody>
+    </table>
+
+    <strong>Configurar Jest</strong>
+    <div class="code-block" data-lang="json">
+        <pre><code>{
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  }
+}</code></pre>
+    </div>
+
+    <strong>Ejecutar</strong>
+    <div class="code-block" data-lang="bash">
+        <pre><code>npm test -- --coverage</code></pre>
+    </div>
+
+    <h3 class="block-title">4. CI Pipeline para Tests Automáticos</h3>
+    <strong>GitHub Actions (ejemplo)</strong>
+    <div class="code-block" data-lang="yaml">
+        <pre><code># .github/workflows/test.yml
+name: Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - run: npm ci
+      - run: npm test -- --coverage
+      - uses: codecov/codecov-action@v3</code></pre>
+    </div>
+
+    <h3 class="block-title">5. Checklist para Tests Generados</h3>
+    <ul class="bullet-list">
+        <li>[ ] ¿Cubren happy path?</li>
+        <li>[ ] ¿Cubren edge cases (null, undefined, 0, "")?</li>
+        <li>[ ] ¿Cubren errores esperados?</li>
+        <li>[ ] ¿Cobertura >= 80%?</li>
+        <li>[ ] ¿Tests son independientes?</li>
+        <li>[ ] ¿Nombres son descriptivos?</li>
+        <li>[ ] ¿Sin mocks innecesarios?</li>
+        <li>[ ] ¿Ejecutan localmente sin fallos?</li>
+    </ul>
+
+    <h3 class="block-title">Resumen</h3>
+    <p><strong>4 ideas clave:</strong></p>
+    <ul class="bullet-list">
+        <li><strong>TDD inverso</strong> (código → tests) es más rápido con IA</li>
+        <li><strong>Cobertura 80%+</strong> alcanzable en 1-2 horas</li>
+        <li><strong>CI automático</strong> previene regresiones</li>
+        <li><strong>Métricas claras</strong> para medir progreso</li>
+    </ul>
+</section>
 
                 <div class="lesson-outro" data-lesson="2"></div>
             </section>
@@ -28308,3 +28416,5 @@ if (document.readyState === 'loading') {
     new ModuleModal();
 }
 </script>
+
+
